@@ -115,10 +115,62 @@ select {
     height: 30px;
 }
 </style>
+<style>
+[type="radio"]:checked,
+[type="radio"]:not(:checked) {
+    position: absolute;
+    left: -9999px;
+}
+[type="radio"]:checked + label,
+[type="radio"]:not(:checked) + label
+{
+    position: relative;
+    padding-left: 28px;
+    cursor: pointer;
+    line-height: 20px;
+    display: inline-block;
+    color: #666;
+}
+[type="radio"]:checked + label:before,
+[type="radio"]:not(:checked) + label:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 18px;
+    height: 18px;
+    border: 1px solid #ddd;
+    border-radius: 100%;
+    background: #fff;
+}
+[type="radio"]:checked + label:after,
+[type="radio"]:not(:checked) + label:after {
+    content: '';
+    width: 12px;
+    height: 12px;
+    background: #F87DA9;
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    border-radius: 100%;
+    -webkit-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+}
+[type="radio"]:not(:checked) + label:after {
+    opacity: 0;
+    -webkit-transform: scale(0);
+    transform: scale(0);
+}
+[type="radio"]:checked + label:after {
+    opacity: 1;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+}
 
+</style>
 
 </head>
-<body>
+<body onload="showPdf(${billNo})">
 
 	<c:url var="setAllItemSelected" value="/setAllItemSelected" />
 
@@ -173,13 +225,25 @@ select {
 											class="fa fa-chevron-up"></i></a>
 									</div>
 								</div>
-
+		
+		<form action="${pageContext.request.contextPath}/generateManualBill" class="form-horizontal"
+										id="validation-form" method="post">
 
 								
 								<div class="box-content">
-									<form action="${pageContext.request.contextPath}/addManualOrder" class="form-horizontal"
-										id="validation-form" method="post">
-
+									<%-- <form action="${pageContext.request.contextPath}/addManualOrder" class="form-horizontal"
+										id="validation-form" method="post"> --%>
+						<div class="form-group">
+			<label class="col-sm-3 col-lg-2 control-label">Order Type</label>
+									  <label class="col-sm-3 col-lg-2 control-label">
+    <input type="radio" name="ordertype" class="order" value="0" id="or1" >
+  <label for="or1"> Manual Order</label>
+  </label>
+<label class="col-sm-3 col-lg-2 control-label">
+    <input type="radio" name="ordertype" class="order" value="1" id="or2">
+   <label for="or2"> Manual Bill </label>
+  </label>									    
+  </div>
 
 
 
@@ -215,7 +279,34 @@ select {
 												</select>
 											</div>
 										</div>
-
+										<div class="form-group">
+										<label class="col-sm-3 col-lg-2 control-label">Order</label>
+									  <label class="col-sm-3 col-lg-2 control-label">
+    <input type="radio" name="typename" class="type" value="0" checked="" id="t1">
+    <label for="t1">By Rate</label>
+  </label>
+<label class="col-sm-3 col-lg-2 control-label">
+    <input type="radio" name="typename" class="type" value="1" id="t2">
+    <label for="t2">By MRP</label>
+  </label>									    
+  </div>
+		<div class="form-group">
+											<label class="col-sm-3 col-lg-2 control-label">Party Name</label>
+											<div class="col-sm-9 col-lg-2 controls">
+				<input type="text" name="frName" value="-"	id="frName" class="form-control"/>
+											
+											</div>
+											<label class="col-sm-3 col-lg-1 control-label">GSTIN</label>
+											<div class="col-sm-9 col-lg-2 controls">
+				<input type="text" name="gstin" value="-"	id="gstin" class="form-control"/>								
+											</div>
+											<label class="col-sm-3 col-lg-1 control-label">Address</label>
+											<div class="col-sm-9 col-lg-2 controls">
+				<input type="text" name="address" value="-"	id="address" class="form-control"/>						
+											</div>
+		  <input type="button" class="btn btn-primary" value="Search" onclick="onSearch()" disabled >
+											
+		</div>								
 									<!-- 	<div class="form-group">
 											<label class="col-sm-3 col-lg-2 control-label">Item</label>
 											<div class="col-sm-9 col-lg-5 controls">
@@ -238,11 +329,11 @@ select {
 											<div
 												class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2">
 												<input type="button" class="btn btn-primary"
-													value="Add Item" id="add">
+													value="Add Item" onclick="onSearch(this.value)"  >
 												
 											</div>
 										</div>-->
-									</form>	</div>
+									<!-- </form> -->	</div>
                 <div align="center" id="loader" style="background-color:white;display: none; ">
 
 					<span style="background-color:white;font-size: 15px;text-align: center;" >
@@ -253,10 +344,8 @@ select {
 					<span class="l-6"></span>
 				</div>
 							
-				
-		<form action="${pageContext.request.contextPath}/generateManualBill" class="form-horizontal"
-										id="validation-form" method="post">
-		<div class=" box-content">
+		
+		<div class="box-content">
 					<div class="row">
 						<div class="col-md-12 table-responsive">
 							<table class="table table-bordered table-striped fill-head "
@@ -281,8 +370,8 @@ select {
 					</div>
 					<div class="row">
 						<div class="col-md-12" style="text-align: center">
-							<input type="submit" class="btn btn-info" value="Submit" name="Submit" id="Submit"  disabled>
-
+							<input type="submit" class="btn btn-info" value="ORDER" name="submitorder" id="submitorder"  disabled>
+<input type="submit" class="btn btn-info" value="ORDER_&_BILL" name="submitbill" id="submitbill"  disabled>
 						</div>
 					</div>
 
@@ -325,22 +414,28 @@ $(function() {
 });
 </script>
 <script type="text/javascript">
-$(document).ready(function() {
+/* $(document).ready(function() {
 	
 	
-    $('#menu').change(
-            function() {$('#table_grid td').remove();
+    $('#menu').change( */
+            function onSearch() {
+    	
+    	var type = $('.type:checked').val();
+    
+    	$('#table_grid td').remove();
+    
           	 $('#loader').show();
           	
                 $.getJSON('${findItemsByCatId}', {
-                    menuId : $(this).val(),
-                    frId : $('#fr_id').val(),
+                    menuId:$('#menu').val(),
+                    frId:$('#fr_id').val(),
+                    by:type,
                     ajax : 'true'
                 }, function(data) {
                 		 $('#loader').hide();
              		var len = data.length;
-             		document.getElementById("Submit").disabled = false;
-
+             		document.getElementById("submitorder").disabled = false;
+             		document.getElementById("submitbill").disabled = false;
              		$('#table_grid td').remove();
 
              		$.each(data,function(key, item) {
@@ -363,8 +458,7 @@ $(document).ready(function() {
              		  
              			$('#table_grid tbody').append(tr);
              		}); });
-            });
-});
+            }
 </script> 
 
 <script type="text/javascript">
@@ -638,6 +732,18 @@ function generateBill()
 }
 
 
+</script>
+<script type="text/javascript">
+function showPdf(billNo)
+{
+	if(billNo!=0)
+		{
+        window.open('${pageContext.request.contextPath}/pdf?url=pdf/showBillPdf/By-Road/0/'+billNo,'_blank');
+
+		}
+	
+
+}
 </script>
 </body>
 </html>

@@ -482,7 +482,7 @@ public class BillController {
 
 			System.out.println("Test data : " + postBillDataCommon.toString());
 
-		Info info = restTemplate.postForObject(Constants.url + "insertBillData", postBillDataCommon, Info.class);
+			List<PostBillHeader> info = restTemplate.postForObject(Constants.url + "insertBillData", postBillDataCommon, List.class);
 
 			System.out.println("Info Data " + info.toString());
 
@@ -712,7 +712,7 @@ public class BillController {
 					System.out.println("generate bill list All Fr" + generateBillList.toString());
 
 				} else {
-
+                    System.err.println("Menu Id:"+selectedMenu);
 					map.add("frId", selectedFr);
 					map.add("menuId", selectedMenu);
 					map.add("delDate", selectedDate);
