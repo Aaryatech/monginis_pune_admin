@@ -76,16 +76,22 @@ public class PostBillDetail {
 	
 	private Date expiryDate;
 	
+	private int isGrngvnApplied;
+	    
+	private float discPer;
+  
+	    
 	
+	public float getDiscPer() {
+		return discPer;
+	}
+	public void setDiscPer(float discPer) {
+		this.discPer = discPer;
+	}
 	
-	 private int isGrngvnApplied;
-	    
-	    
-	    
-	    
-		public int getIsGrngvnApplied() {
+	public int getIsGrngvnApplied() {
 			return isGrngvnApplied;
-		}
+	}
 		public void setIsGrngvnApplied(int isGrngvnApplied) {
 			this.isGrngvnApplied = isGrngvnApplied;
 		}

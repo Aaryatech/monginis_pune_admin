@@ -47,10 +47,19 @@ public class GenerateBill {
 	int itemShelfLife;//newly Added
 	int isSameState;
 	
-	
+	float discPer;//new
 	
 	String  deliveryDate;//newlyAdded
 	
+	
+	public float getDiscPer() {
+		return discPer;
+	}
+
+	public void setDiscPer(float discPer) {
+		this.discPer = discPer;
+	}
+
 	//@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
 	public String getDeliveryDate() {
 		return deliveryDate;
@@ -237,8 +246,10 @@ public class GenerateBill {
 				+ orderMrp + ", frName=" + frName + ", menuTitle=" + menuTitle + ", itemName=" + itemName + ", catId="
 				+ catId + ", frCode=" + frCode + ", rateType=" + rateType + ", subCatId=" + subCatId + ", itemTax1="
 				+ itemTax1 + ", itemTax2=" + itemTax2 + ", itemTax3=" + itemTax3 + ", grnType=" + grnType
-				+ ", itemShelfLife=" + itemShelfLife + ", isSameState=" + isSameState + ", deliveryDate=" + deliveryDate
-				+ "]";
+				+ ", itemShelfLife=" + itemShelfLife + ", isSameState=" + isSameState + ", discPer=" + discPer
+				+ ", deliveryDate=" + deliveryDate + "]";
 	}
+
+	
 
 }

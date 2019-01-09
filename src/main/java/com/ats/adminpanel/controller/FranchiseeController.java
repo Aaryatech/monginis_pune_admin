@@ -260,9 +260,12 @@ public class FranchiseeController {
 			RestTemplate restTemplate = new RestTemplate();
 			franchiseeAndMenuList = restTemplate.getForObject(Constants.url + "getFranchiseeAndMenu",
 					FranchiseeAndMenuList.class);
-
+			
+			List<Menu> menuList = restTemplate.getForObject(Constants.url + "getNonConfMenus",
+					List.class);
 			logger.info("Franchisee Response " + franchiseeAndMenuList.getAllFranchisee());
 
+			mav.addObject("menuList", menuList);
 			mav.addObject("allFranchiseeAndMenuList", franchiseeAndMenuList);
 
 		} catch (Exception e) {
@@ -389,9 +392,25 @@ public class FranchiseeController {
 
 		return itemList;
 	}
-
+	
+	
 	// ----------------------------------------END--------------------------------------------
-
+	@RequestMapping(value = "/setAllFrIdSelected", method = RequestMethod.GET)
+	public @ResponseBody List<FranchiseeList> setAllFrIdSelected() {
+		logger.info("inside ajax call for fr all selected");
+	
+		return franchiseeAndMenuList.getAllFranchisee();
+	}
+	@RequestMapping(value = "/setAllMenuSelected", method = RequestMethod.GET)
+	public @ResponseBody List<ConfigureFrBean> setAllMenuSelected() {
+		logger.info("inside ajax call for menu all selected");
+		RestTemplate restTemplate = new RestTemplate();
+		ConfigureFrListResponse congigureFrList = restTemplate.getForObject(Constants.url + "findConfiguredMenuFrList",
+				ConfigureFrListResponse.class);
+		List<ConfigureFrBean> configureFrList = new ArrayList<ConfigureFrBean>();
+		configureFrList = congigureFrList.getConfigureFrBean();
+		return configureFrList;
+	}
 	// -------------------------GET ALL CONFIGURED MENUS(AJAX METHOD)-------------------------
 	@RequestMapping(value = "/getAllMenus", method = RequestMethod.GET)
 	public @ResponseBody List<Menu> findAllMenu(@RequestParam(value = "fr_id", required = true) int frId) {
@@ -856,13 +875,13 @@ public class FranchiseeController {
 	// FRANCHISEE------------------------------
 
 	@RequestMapping(value = "/updateFranchiseeConf/updateFranchiseeProcess", method = RequestMethod.POST)
-	public String updateConfFr(HttpServletRequest request, HttpServletResponse response) {
+	public String updateConfFr(HttpServletRequest request, HttpServletResponse response) throws ParseException {
 		String[] date;
 		String[] day;
 		String convertedDate = "0";
 		String convertedDays = "0";
 		ModelAndView model = new ModelAndView("franchisee/configureFr");
-		try {
+	/*	try {*/
 			String fromTime = "";
 			fromTime = request.getParameter("frm_time");
 			logger.info("from time :get parameter =" + fromTime);
@@ -951,12 +970,12 @@ public class FranchiseeController {
 				return "redirect:/configureFranchiseesList";
 
 			}
-		} catch (Exception e) {
+		/*} catch (Exception e) {
 
 			logger.info("Exc is ==" + e.getMessage());
 		}
-
-		return "redirect:/configureFranchiseesList";
+*/
+		//return "redirect:/configureFranchiseesList";
 	}
 
 	// ----------------------------------------END--------------------------------------------

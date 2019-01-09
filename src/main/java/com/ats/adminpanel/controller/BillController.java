@@ -230,7 +230,7 @@ public class BillController {
 				header.setFrId(frId);
 				postBillDetailsList = new ArrayList();
 
-				float sumTaxableAmt = 0, sumTotalTax = 0, sumGrandTotal = 0;
+				float sumTaxableAmt = 0, sumTotalTax = 0, sumGrandTotal = 0;	float sumDiscAmt =0;
 				float sumT1 = 0;
 				float sumT2 = 0;
 				float sumT3 = 0;
@@ -291,6 +291,7 @@ public class BillController {
 
 						String billQty = request
 								.getParameter("" + "billQty" + tempGenerateBillList.get(j).getOrderId());
+						int discPer = Integer.parseInt(request.getParameter("" + "discPer" + tempGenerateBillList.get(j).getOrderId()));
 
 						// billQty = String.valueOf(gBill.getOrderQty());
 						Float orderRate = (float) gBill.getOrderRate();
@@ -302,13 +303,15 @@ public class BillController {
 						baseRate = roundUp(baseRate);
 
 						Float taxableAmt = (float) (baseRate * Integer.parseInt(billQty));
+						
+						System.out.println("taxableAmt: "+taxableAmt);
 						taxableAmt = roundUp(taxableAmt);
 
 						float sgstRs = (taxableAmt * tax1) / 100;
 						float cgstRs = (taxableAmt * tax2) / 100;
 						float igstRs = (taxableAmt * tax3) / 100;
 						Float totalTax = sgstRs + cgstRs;
-
+						float discAmt=0;
 						if (billQty == null || billQty == "") {// new code to handle hidden records
 							billQty = "0";
 						}
@@ -316,7 +319,13 @@ public class BillController {
 						if (gBill.getIsSameState() == 1) {
 							baseRate = (orderRate * 100) / (100 + (tax1 + tax2));
 							taxableAmt = (float) (baseRate * Integer.parseInt(billQty));
-
+							//----------------------------------------------------------
+							 discAmt = ((taxableAmt * discPer) / 100);		//new row added
+							System.out.println("discAmt: "+discAmt);//new row added
+							sumDiscAmt=sumDiscAmt+discAmt;
+							
+							taxableAmt = taxableAmt - discAmt;	//new row added
+							//----------------------------------------------------------
 							sgstRs = (taxableAmt * tax1) / 100;
 							cgstRs = (taxableAmt * tax2) / 100;
 							igstRs = 0;
@@ -327,7 +336,13 @@ public class BillController {
 						else {
 							baseRate = (orderRate * 100) / (100 + (tax3));
 							taxableAmt = (float) (baseRate * Integer.parseInt(billQty));
-
+							//----------------------------------------------------------
+							 discAmt = ((taxableAmt * discPer) / 100);		//new row added
+							System.out.println("discAmt: "+discAmt);//new row added
+							sumDiscAmt=sumDiscAmt+discAmt;
+							
+							taxableAmt = taxableAmt - discAmt;	//new row added
+							//----------------------------------------------------------
 							sgstRs = 0;
 							cgstRs = 0;
 							igstRs = (taxableAmt * tax3) / 100;
@@ -367,6 +382,8 @@ public class BillController {
 						billDetail.setRate((float) gBill.getOrderRate());
 						billDetail.setBaseRate(baseRate);
 						billDetail.setTaxableAmt(taxableAmt);
+						billDetail.setDiscPer(discPer);//new
+						billDetail.setRemark(""+discAmt);//new
 						billDetail.setSgstPer(tax1);
 						billDetail.setSgstRs(sgstRs);
 						billDetail.setCgstPer(tax2);
@@ -430,7 +447,8 @@ public class BillController {
 				// header.setIgstSum(sumT3);
 				header.setTaxableAmt(sumTaxableAmt);
 				header.setGrandTotal(Math.round(sumGrandTotal));
-				
+				header.setDiscAmt(sumDiscAmt);//new
+
 				System.err.println("sumof grand total beofre "+sumGrandTotal);
 				
 				System.err.println("Math round up Sum " +header.getGrandTotal());
@@ -2329,8 +2347,8 @@ public class BillController {
 		String url = request.getParameter("url");
 		System.out.println("URL " + url);
 		// http://monginis.ap-south-1.elasticbeanstalk.com
-		  File f = new File("/home/ats-12/bill.pdf");
-		 // File f = new File("/home/supertom/apache-tomcat-8.5.35/webapps/admin/bill.pdf");
+		 //  File f = new File("/home/ats-12/bill.pdf");
+		 File f = new File("/home/supertom/apache-tomcat-8.5.35/webapps/admin/bill.pdf");
 		//File f = new File("/Users/MIRACLEINFOTAINMENT/ATS/uplaods/reports/ordermemo221.pdf");
 
 		System.out.println("I am here " + f.toString());
@@ -2348,8 +2366,8 @@ public class BillController {
 		ServletContext context = request.getSession().getServletContext();
 		String appPath = context.getRealPath("");
 		String filename = "ordermemo221.pdf";
-		String filePath = "/home/ats-12/bill.pdf";
-		  // String filePath = "/home/supertom/apache-tomcat-8.5.35/webapps/admin/bill.pdf";
+		 // 	String filePath = "/home/ats-12/bill.pdf";
+		 String filePath = "/home/supertom/apache-tomcat-8.5.35/webapps/admin/bill.pdf";
 		//String filePath = "/Users/MIRACLEINFOTAINMENT/ATS/uplaods/reports/ordermemo221.pdf";
 
 		// construct the complete absolute path of the file

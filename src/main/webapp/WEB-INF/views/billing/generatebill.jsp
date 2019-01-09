@@ -208,11 +208,13 @@
 										<th>Order Qty</th>
 										<th>Bill Qty</th>
 										<th>Base Rate</th>
-										<th>Amount</th>
+										<th>Disc %</th>
+										<th>Disc</th>
+										<th>Taxable</th>
 										<th>Tax %</th>
 										<th>SGST Rs</th>
 										<th>CGST Rs</th>
-										<th>IGST Rs</th>
+										<!-- <th>IGST Rs</th> -->
 										<th>Total</th>
 									</tr>
 								</thead>
@@ -338,16 +340,20 @@
 																}
 																
 
-														var orderQty = "<td align=center>&nbsp;"
+														var orderQty = "<td>&nbsp;<input type=hidden name=sgstPer"+bill.orderId+" id=sgstPer"+bill.orderId+" value="+bill.itemTax1+" /><input type=hidden name=cgstPer"+bill.orderId+" id=cgstPer"+bill.orderId+" value="+bill.itemTax2+" /><input type=hidden name=igstPer"+bill.orderId+" id=igstPer"+bill.orderId+" value="+bill.itemTax3+" /> "
 																+ bill.orderQty
 																+ "</td>";
 
 														 var billQty = "<td align=center><input type=number min=0 max=500 style='width: 5em' class=form-control   onkeyup= updateTotal("
 																+ bill.orderId + ","
-																+ bill.orderRate + ") onchange= updateTotal("+ bill.orderId+ ","+ bill.orderRate+ ")  id= billQty"+ bill.orderId+ " name=billQty"+bill.orderId+" value = "+ bill.orderQty+ "></td>"; 
-																
+																+ bill.orderRate + ") onchange= updateTotal("+ bill.orderId+ ","+ bill.orderRate+ ")  id=billQty"+ bill.orderId+ " name=billQty"+bill.orderId+" value = "+ bill.orderQty+ "></td>"; 
+														
+												 var discPer = "<td align=center><input type=number min=0 max=500 style='width: 5em' class=form-control   onkeyup= updateTotal("
+																		+ bill.orderId + ","
+																		+ bill.orderRate + ") onchange= updateTotal("+ bill.orderId+ ","+ bill.orderRate+ ")  id=discPer"+ bill.orderId+ " name=discPer"+bill.orderId+" value ='0' ></td>"; 
+																	
 																//var billQty = "<td align=center><input name=newId id=newId value=21 type=number ></td>";
-
+                                                	var discAmt = "<td align=center  id=discAmt"+bill.orderId+">0</td>";    
 															var baseRateAmt	;
 														if(bill.isSameState==1)	{
 														 baseRateAmt=(bill.orderRate*100)/(100+bill.itemTax1+bill.itemTax2);	
@@ -376,7 +382,7 @@
 																
 																taxableAmt=taxableAmt.toFixed(2);
 																//var taxableAmount = "<td align=center"+taxableAmt+">"+"</td>";
-																var taxableAmount ="<td align=center>&nbsp;"
+																var taxableAmount ="<td align=center id=taxableAmount"+bill.orderId+">&nbsp;"
 																+ taxableAmt+ "</td>";
 																//alert("taxable amt "+taxableAmt);
 																
@@ -412,12 +418,12 @@
 																//var totalTax=sgstRS+cgstRS+igstRS;
 																//alert(totalTax);
 
-																var sgst = "<td align=center>&nbsp;"
+																var sgst = "<td align=center id=sgstRs"+bill.orderId+">&nbsp;"
 																	+ sgstRS+ "</td>";
 
-																var cgst = "<td align=center>&nbsp;"
+																var cgst = "<td align=center id=cgstRs"+bill.orderId+">&nbsp;"
 																	+ cgstRS+ "</td>";
-																var igst ="<td align=center>&nbsp;"
+																var igst ="<td align=center id=igstRs"+bill.orderId+">&nbsp;"
 																	+ igstRS+ "</td>";
 																var totTaxP;
 																
@@ -465,6 +471,13 @@
 														$('#table_grid tbody')
 																.append(
 																		baseRate);
+														
+														$('#table_grid tbody')
+														.append(
+																discPer);
+														$('#table_grid tbody')
+														.append(
+																discAmt);
 														$('#table_grid tbody')
 														.append(
 																taxableAmount);
@@ -480,10 +493,10 @@
 															.append(
 																	cgst); 
 														 
-														 $('#table_grid tbody')
+													/* 	 $('#table_grid tbody')
 															.append(
 																	igst); 
-														 
+														  */
 													
 														 
 														
@@ -534,12 +547,48 @@
 	<script type="text/javascript">
 		function updateTotal(orderId, rate) {
 			
-			var newQty = $("#billQty" + orderId).val();
+			var qty= parseFloat($("#billQty" + orderId).val());//alert(qty+"qty");
+			var discPer=parseFloat($("#discPer" + orderId).val());//alert(discPer+"discPer");
+			var sgstPer=parseFloat($("#sgstPer" + orderId).val());// alert(sgstPer+"sgstPer");
+			var cgstPer=parseFloat($("#cgstPer" + orderId).val());//alert(cgstPer+"cgstPer");
+    		var baseRate = ((rate * 100) / (100 + sgstPer+cgstPer));//alert(baseRate+"baseRate");
 
-			var total = parseFloat(newQty) * parseFloat(rate);
+			var taxableAmt = parseFloat(qty) * parseFloat(baseRate);//alert(taxableAmt+"taxableAmt");
+			 if(discPer>0){
+           	   var discAmt=((parseFloat(taxableAmt) * parseFloat(discPer)) /100);//alert(discAmt+"discAmt");
+           	  document.getElementById("discAmt" + orderId).innerHTML=discAmt.toFixed(2);
+           	 
+           	  taxableAmt=parseFloat(taxableAmt) - parseFloat(discAmt);//alert(taxableAmt+"taxableAmt");
+           	  var sgstRs=((parseFloat(taxableAmt) * parseFloat(sgstPer))/100);//alert(sgstRs+"sgstRs");
+              var cgstRs=((parseFloat(taxableAmt) * parseFloat(cgstPer))/100);//alert(cgstRs+"cgstRs");
+         	 var taxAmt=(parseFloat(sgstRs) + parseFloat(cgstRs));//alert(taxAmt+"taxAmt");
+         	 
+           	  var total=parseFloat(taxableAmt) + parseFloat(taxAmt);//alert("total"+total);
+           	  
+      		 document.getElementById("sgstRs"+orderId).innerHTML=sgstRs.toFixed(2);
+     		 document.getElementById("cgstRs"+orderId).innerHTML=cgstRs.toFixed(2);
 
+           	 $('#billTotal'+orderId).html(total.toFixed(2));
+           	 $('#taxableAmount'+orderId).html(taxableAmt.toFixed(2));
+           	 }
+           	 else
+           		 {
+           		  var discAmt=0.0;
+           		  document.getElementById("discAmt" + orderId).innerHTML=discAmt;
+           		 var sgstRs=((parseFloat(taxableAmt) * parseFloat(sgstPer))/100);
+                 var cgstRs=((parseFloat(taxableAmt) * parseFloat(cgstPer))/100);
+                 
+           		 var taxAmt=(parseFloat(sgstRs) + parseFloat(cgstRs));
+           		 var total=parseFloat(taxableAmt)+ parseFloat(taxAmt);//alert("total"+total);
+           		 
+           		 document.getElementById("sgstRs"+orderId).innerHTML=sgstRs.toFixed(2);
+         		 document.getElementById("cgstRs"+orderId).innerHTML=cgstRs.toFixed(2);
 
-			 $('#billTotal'+orderId).html(total);
+               	 $('#billTotal'+orderId).html(total.toFixed(2));
+               	 $('#taxableAmount'+orderId).html(taxableAmt.toFixed(2));
+           		 }
+
+			
 		}
 	</script>
 

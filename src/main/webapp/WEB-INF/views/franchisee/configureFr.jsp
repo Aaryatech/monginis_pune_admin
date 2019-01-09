@@ -213,8 +213,9 @@ select {
 	                                        <!--      <optgroup label="All Menus">         -->                                             
 <option value="">Select Menu</option>
 													<!-- </optgroup> -->
+													
 <c:forEach
-															items="${allFranchiseeAndMenuList.getAllMenu()}"
+															items="${menuList}"
 															var="menu">
 															<option value="${menu.menuId}">${menu.menuTitle}</option>
 

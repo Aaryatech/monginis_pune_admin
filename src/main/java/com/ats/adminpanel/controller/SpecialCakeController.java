@@ -1122,7 +1122,7 @@ public class SpecialCakeController {
 			try {
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			map.add("type", type);
-		    if(type!=0) {
+		    if(type!=0 && type<=3) {
 			flavoursList = restTemplate.postForObject(Constants.url + "getFlavoursByType", map,
 					List.class);
 		    }
@@ -1132,6 +1132,27 @@ public class SpecialCakeController {
 						Constants.url+"showFlavourList",
 						AllFlavoursListResponse.class);
 		    	flavoursList=allFlavoursListResponse.getFlavour();
+		    	if(type!=0) {
+		    	List<Flavour> flList=new ArrayList<Flavour>();
+		    	 for(Flavour flavour:allFlavoursListResponse.getFlavour())
+		    	 {
+		    		 if(type==4) {
+		    		   if(flavour.getSpType()==1 || flavour.getSpType()==2) {
+		    			 flList.add(flavour);
+		    		    }
+		    		 }else  if(type==5) {
+		    			 if(flavour.getSpType()==1 || flavour.getSpType()==3) {
+		    			  flList.add(flavour);
+		    			 }
+		    		 }else  if(type==6) {
+		    			 if(flavour.getSpType()==2 || flavour.getSpType()==3) {
+		    			  flList.add(flavour);
+		    			 }
+		    		 }
+		    	 }
+		    	 flavoursList=flList;
+		     }
+		    	
 		    }
 			}
 			catch (Exception e) {

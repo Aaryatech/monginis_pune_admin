@@ -211,13 +211,14 @@
 											<div class="col-sm-9 col-lg-10 controls">
 												<select class="form-control input-sm" name="spc_type" id="spc_type">
 													<option value="">Select Type</option>
+														<option value="0">All</option>
 													<option value="1">Chocolate</option>
 													<option value="2">FC</option>
 													<option value="3">BC</option>
 													<option value="4">Chocolate+FC</option>
 													<option value="5">Chocolate+BC</option>
 													<option value="6">FC+BC</option>
-													<option value="0">All</option>
+												
 												</select>
 											</div>
 											

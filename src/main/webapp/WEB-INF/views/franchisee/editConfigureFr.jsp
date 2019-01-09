@@ -186,13 +186,13 @@
 											<div class="col-sm-9 col-lg-10 controls">
 												<input type="text" name="fr_id" id="fr_id" value="${frName}"
 													placeholder="Franchisee Name" class="form-control"
-													data-rule-required="true" readonly="readonly" /> <input
-													type="hidden" id="settingId" name="settingId"
-													value="${franchiseeList.settingId}" />
+													data-rule-required="true" readonly="readonly" /> 
 											</div>
 										</div> --%>
 
-
+<input
+													type="hidden" id="settingId" name="settingId"
+													value="${franchiseeList.settingId}" />
 
 
 

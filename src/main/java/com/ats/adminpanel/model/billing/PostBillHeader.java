@@ -35,6 +35,7 @@ public class PostBillHeader {
 	
 	private float taxableAmt;
 	
+	private float discAmt;
 	
 	private float totalTax;
 	
@@ -57,7 +58,16 @@ public class PostBillHeader {
 
 	
 	List<PostBillDetail> postBillDetailsList;
+		
 	
+
+	public float getDiscAmt() {
+		return discAmt;
+	}
+
+	public void setDiscAmt(float discAmt) {
+		this.discAmt = discAmt;
+	}
 
 	public int getBillNo() {
 		return billNo;

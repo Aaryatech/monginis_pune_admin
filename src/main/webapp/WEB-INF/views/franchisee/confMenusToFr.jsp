@@ -120,6 +120,8 @@ select {
 </head>
 <body>
 
+    <c:url var="setAllMenuSelected"  value="/setAllMenuSelected" />
+    <c:url var="setAllFrIdSelected"  value="/setAllFrIdSelected" />
 	<c:url var="setAllItemSelected" value="/setAllItemSelected" />
 
 	<c:url var="findItemsByCatId" value="/getCommonByMenuId" />
@@ -190,15 +192,16 @@ select {
 													class="form-control chosen" tabindex="-1" id="fr_id" multiple="multiple"
 													data-rule-required="true">
 													<option value=""> </option>
-													<optgroup label="All Franchisee">
-														<option value=""></option>
+													<!-- <optgroup label="All Franchisee"> -->
+														<option value="">Select Franchise</option>
+														<option value="-1">ALL</option>
 														<c:forEach
 															items="${allFranchiseeAndMenuList.getAllFranchisee()}"
 															var="franchiseeList">
 															<option value="${franchiseeList.frId}">${franchiseeList.frName}</option>
 
 														</c:forEach>
-													</optgroup>
+												<!-- 	</optgroup> -->
 
 												</select>
 											</div>
@@ -210,9 +213,10 @@ select {
 												<select data-placeholder="Select Menu" name="menu"
 													class="form-control chosen" tabindex="-1" id="menu" multiple="multiple"
 													data-rule-required="true">
-	                                             <optgroup label="All Menus">                                                     
+	                                             <!-- <optgroup label="All Menus">                                                     
 
-													</optgroup>
+													</optgroup> -->
+														<option value="-1">ALL</option>
                                               <c:forEach items="${configureFrList}"
 															var="menu">
 															<option value="${menu.settingId}">${menu.menuTitle}</option>
@@ -255,5 +259,83 @@ select {
  <script
 	src="${pageContext.request.contextPath}/resources/assets/bootstrap/js/bootstrap.min.js"></script> 
 
+<script type="text/javascript">
+$(document).ready(function() { // if all label selected set all items selected
+	
+$('#fr_id').change(
+		function () {
+			 var selected=$('#fr_id').val();
+	
+        if(selected==-1){
+			$.getJSON('${setAllFrIdSelected}', {
+			//	selected : selected,
+				ajax : 'true'
+			}, function(data) {
+				var html = '<option value="">Select Franchise</option>';
+			
+				var len = data.length;
+				
+				$('#fr_id')
+			    .find('option')
+			    .remove()
+			    .end()
+				 $("#fr_id").append($("<option></option>").attr( "value",-1).text("ALL"));
+
+				for ( var i = 0; i < len; i++) {
+    
+                   $("#fr_id").append(
+                           $("<option selected></option>").attr(
+                               "value", data[i].frId).text(data[i].frName)
+                       );
+				}
+		
+				   $("#fr_id").trigger("chosen:updated");
+			});
+  }
+});
+});
+
+
+
+</script>
+<script type="text/javascript">
+$(document).ready(function() { // if all label selected set all items selected
+	
+$('#menu').change(
+		function () {
+			 var selected=$('#menu').val();
+	
+        if(selected==-1){
+			$.getJSON('${setAllMenuSelected}', {
+			//	selected : selected,
+				ajax : 'true'
+			}, function(data) {
+				var html = '<option value="">Select Menus</option>';
+			
+				var len = data.length;
+				
+				$('#menu')
+			    .find('option')
+			    .remove()
+			    .end()
+				 $("#menu").append($("<option></option>").attr( "value",-1).text("ALL"));
+
+				for ( var i = 0; i < len; i++) {
+    
+                   $("#menu").append(
+                           $("<option selected></option>").attr(
+                               "value", data[i].settingId).text(data[i].menuTitle)
+                       );
+				}
+		
+				   $("#menu").trigger("chosen:updated");
+			});
+  }
+});
+});
+
+
+
+</script>
 </body>
 </html>
