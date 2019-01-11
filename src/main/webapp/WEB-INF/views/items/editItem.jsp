@@ -490,7 +490,7 @@
 									<div class="col-sm-9 col-lg-10 controls">
 										<input type="text" name="item_mrp2" id="item_mrp2"
 											value="${item.itemMrp2}" placeholder="Item Mrp2"
-											class="form-control" data-rule-required="true" data-rule-number="true" onchange="calMrp()"/>
+											class="form-control" data-rule-required="true" data-rule-number="true" />
 									</div>
 								</div> 
 
@@ -641,7 +641,7 @@ function calMrp()
 	var calRate2=mrp2-((mrp2*margin)/100);  
 	var calRate3=mrp3-((mrp3*margin)/100);  
 	document.getElementById("item_rate1").setAttribute('value', (calRate1).toFixed(2));
-	document.getElementById("item_rate2").setAttribute('value',  (calRate2).toFixed(2));
+	//document.getElementById("item_rate2").setAttribute('value',  (calRate2).toFixed(2));
 	document.getElementById("item_rate3").setAttribute('value',  (calRate3).toFixed(2));
 }
 </script>

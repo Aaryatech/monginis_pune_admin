@@ -592,7 +592,7 @@ function calMrp()
 	var calRate2=mrp2-((mrp2*margin)/100);  
 	var calRate3=mrp3-((mrp3*margin)/100);  
 	document.getElementById("item_rate1").setAttribute('value', (calRate1).toFixed(2));
-	document.getElementById("item_rate2").setAttribute('value', (calRate2).toFixed(2));
+	//document.getElementById("item_rate2").setAttribute('value', (calRate2).toFixed(2));
 	document.getElementById("item_rate3").setAttribute('value', (calRate3).toFixed(2));
 }
 </script>

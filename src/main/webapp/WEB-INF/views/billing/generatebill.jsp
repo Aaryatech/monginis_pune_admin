@@ -348,12 +348,12 @@
 																+ bill.orderId + ","
 																+ bill.orderRate + ") onchange= updateTotal("+ bill.orderId+ ","+ bill.orderRate+ ")  id=billQty"+ bill.orderId+ " name=billQty"+bill.orderId+" value = "+ bill.orderQty+ "></td>"; 
 														
-												 var discPer = "<td align=center><input type=number min=0 max=500 style='width: 5em' class=form-control   onkeyup= updateTotal("
+												 var discPer = "<td align=center><input type=text  style='width: 5em' class=form-control   onkeyup= updateTotal("
 																		+ bill.orderId + ","
-																		+ bill.orderRate + ") onchange= updateTotal("+ bill.orderId+ ","+ bill.orderRate+ ")  id=discPer"+ bill.orderId+ " name=discPer"+bill.orderId+" value ='0' ></td>"; 
+																		+ bill.orderRate + ") onchange= updateTotal("+ bill.orderId+ ","+ bill.orderRate+ ")  id=discPer"+ bill.orderId+ " name=discPer"+bill.orderId+" value ="+bill.isPositive+" ></td>"; 
 																	
 																//var billQty = "<td align=center><input name=newId id=newId value=21 type=number ></td>";
-                                                	var discAmt = "<td align=center  id=discAmt"+bill.orderId+">0</td>";    
+                                                   
 															var baseRateAmt	;
 														if(bill.isSameState==1)	{
 														 baseRateAmt=(bill.orderRate*100)/(100+bill.itemTax1+bill.itemTax2);	
@@ -368,6 +368,7 @@
 														var baseRate = "<td align=center>&nbsp;"
 															+ baseRateAmt+ "</td>";
 															
+															
 														/* var orderRate = "<td align=center id=billRate"+bill.orderId+"  value="
 																+ bill.orderRate
 																+ ">"
@@ -379,7 +380,11 @@
 																//alert("taxes ="+t1+"-"+t2+"-"+t3);
 
 																var taxableAmt= baseRateAmt * bill.orderQty;
+																var disCalAmt=(taxableAmt * bill.isPositive) /100;//alert(discAmt+"discAmt");
+																disCalAmt=disCalAmt.toFixed(2);
+																var discAmt = "<td align=center  id=discAmt"+bill.orderId+">"+disCalAmt+"</td>"; //new
 																
+																taxableAmt=taxableAmt-disCalAmt;
 																taxableAmt=taxableAmt.toFixed(2);
 																//var taxableAmount = "<td align=center"+taxableAmt+">"+"</td>";
 																var taxableAmount ="<td align=center id=taxableAmount"+bill.orderId+">&nbsp;"

@@ -105,8 +105,8 @@
 
 									<div class="clearfix"></div>
 									<div class="table-responsive" style="border: 0">
-										<table width="100%" class="table table-advance" id="table1">
-											<thead>
+										<table width="100%" class="table table-bordered table-striped fill-head" id="table1"  border="1">
+											<thead style="background-color: #f3b5db; ">
 												<tr>
 
 													<th width="140" style="width: 30px" align="left">Sr No</th>
@@ -118,8 +118,10 @@
 													<th width="100" align="left">Rate</th>
 													<th width="105" align="left">SGST %</th>
 													<th width="105" align="left">CGST %</th>
-													<th width="130" align="left">Taxable Amount</th>
-													<th width="130" align="left">Tax Amount</th>
+														<th width="105" align="left">Disc %</th>
+															<th width="105" align="left">Disc Amt</th>
+													<th width="130" align="left">Taxable Amt</th>
+													<th width="130" align="left">Tax Amt</th>
 													<th width="105" align="left">Grand Total</th>
 													 
 													<th width="159" align="left">Remark</th>
@@ -157,10 +159,10 @@
 															data-rule-number="true"
 															name="billRate${billDetails.billDetailNo}"
 															id="billRate${billDetails.billDetailNo}" style="width: 60px"
-															value="${billDetails.rate}" onkeyup="changeValues(${billDetails.billDetailNo})"/></td>
+															value="${billDetails.rate}" onkeyup="changeValues(${billDetails.billDetailNo})"/>
 
-													
-
+											
+</td><input type="hidden"class="form-control"	name="discPer${billDetails.billDetailNo}"	id="discPer${billDetails.billDetailNo}" value="${billDetails.discPer}"/> 	
 														<td align="left" >
 														<input type="text"class="form-control"
 															data-rule-number="true"
@@ -177,7 +179,10 @@
 
 														<c:set var="billQty" value="${billDetails.billQty}"/>
 														<c:set var="rate" value="${billDetails.rate}"/>
- 
+ 															 <td align="center"  >
+															<c:out value="${billDetails.discPer}"/></td> 
+															 <td align="center" id="discAmt${billDetails.billDetailNo}"  >
+																			<c:out value="${billDetails.remark}"/></td> 
 														 <td align="center" id="taxableAmt${billDetails.billDetailNo}"  >
 															<c:out value="${billDetails.taxableAmt}"/></td> 
 																
@@ -297,8 +302,16 @@
 			var billRate=parseFloat($("#billRate"+detailNo).val()); 
 			var sgstPer=parseFloat($("#sgstPer"+detailNo).val()); 
 			var cgstPer=parseFloat($("#cgstPer"+detailNo).val());  
+			var discPer=parseFloat($("#discPer"+detailNo).val());  
+			
 			var baseRate=((billRate*100)/(100+sgstPer+cgstPer)).toFixed(2); 
 			var taxableAmt=(billQty*baseRate).toFixed(2); 
+			
+			 var discAmt=((parseFloat(taxableAmt) * parseFloat(discPer)) /100);//alert(discAmt+"discAmt");
+          	  document.getElementById("discAmt" + detailNo).innerHTML=discAmt.toFixed(2);
+          	 
+          	  taxableAmt=parseFloat(taxableAmt) - parseFloat(discAmt);//alert(taxableAmt+"taxableAmt");
+          	  
 			var sgstRs=((taxableAmt*sgstPer)/100).toFixed(2); 
 			var cgstRs=((taxableAmt*cgstPer)/100).toFixed(2); 
 			var totalTax=parseFloat(sgstRs)+parseFloat(cgstRs); 

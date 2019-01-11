@@ -37,10 +37,16 @@ public class GetBillDetail {
     
     private int isGrngvnApplied;
     
+    private float discPer;//new
     
     
     
-    
+	public float getDiscPer() {
+		return discPer;
+	}
+	public void setDiscPer(float discPer) {
+		this.discPer = discPer;
+	}
 	public int getIsGrngvnApplied() {
 		return isGrngvnApplied;
 	}

@@ -22,6 +22,8 @@ public class GetBillDetailPrint {
 	    private float cgstRs;
 	    private float igstPer;
 	    private float igstRs;
+	    private float discPer;//new
+	    private float discAmt;//new
 	    private float taxableAmt;
 	    private String remark;
 	    private Integer delStatus;
@@ -46,6 +48,19 @@ public class GetBillDetailPrint {
 		}
 		public void setBillDetailNo(Integer billDetailNo) {
 			this.billDetailNo = billDetailNo;
+		}
+		
+		public float getDiscPer() {
+			return discPer;
+		}
+		public void setDiscPer(float discPer) {
+			this.discPer = discPer;
+		}
+		public float getDiscAmt() {
+			return discAmt;
+		}
+		public void setDiscAmt(float discAmt) {
+			this.discAmt = discAmt;
 		}
 		public Integer getBillNo() {
 			return billNo;
@@ -239,14 +254,13 @@ public class GetBillDetailPrint {
 					+ ", catId=" + catId + ", itemId=" + itemId + ", orderQty=" + orderQty + ", billQty=" + billQty
 					+ ", orderId=" + orderId + ", rateType=" + rateType + ", rate=" + rate + ", mrp=" + mrp
 					+ ", grandTotal=" + grandTotal + ", sgstPer=" + sgstPer + ", sgstRs=" + sgstRs + ", cgstPer="
-					+ cgstPer + ", cgstRs=" + cgstRs + ", igstPer=" + igstPer + ", igstRs=" + igstRs + ", taxableAmt="
-					+ taxableAmt + ", remark=" + remark + ", delStatus=" + delStatus + ", itemName=" + itemName
-					+ ", catName=" + catName + ", billDate=" + billDate + ", baseRate=" + baseRate + ", totalTax="
-					+ totalTax + ", grnType=" + grnType + ", expiryDate=" + expiryDate + ", isGrngvnApplied="
-					+ isGrngvnApplied + ", itemHsncd=" + itemHsncd + ", itemUom=" + itemUom + ", subCatId=" + subCatId
-					+ "]";
+					+ cgstPer + ", cgstRs=" + cgstRs + ", igstPer=" + igstPer + ", igstRs=" + igstRs + ", discPer="
+					+ discPer + ", discAmt=" + discAmt + ", taxableAmt=" + taxableAmt + ", remark=" + remark
+					+ ", delStatus=" + delStatus + ", itemName=" + itemName + ", catName=" + catName + ", billDate="
+					+ billDate + ", baseRate=" + baseRate + ", totalTax=" + totalTax + ", grnType=" + grnType
+					+ ", expiryDate=" + expiryDate + ", isGrngvnApplied=" + isGrngvnApplied + ", itemHsncd=" + itemHsncd
+					+ ", itemUom=" + itemUom + ", subCatId=" + subCatId + "]";
 		}
-		
 		
 		
 		

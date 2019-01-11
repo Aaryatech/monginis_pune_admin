@@ -291,7 +291,7 @@ public class BillController {
 
 						String billQty = request
 								.getParameter("" + "billQty" + tempGenerateBillList.get(j).getOrderId());
-						int discPer = Integer.parseInt(request.getParameter("" + "discPer" + tempGenerateBillList.get(j).getOrderId()));
+						float discPer = Float.parseFloat(request.getParameter("" + "discPer" + tempGenerateBillList.get(j).getOrderId()));
 
 						// billQty = String.valueOf(gBill.getOrderQty());
 						Float orderRate = (float) gBill.getOrderRate();
@@ -392,7 +392,6 @@ public class BillController {
 						billDetail.setIgstRs(igstRs);
 						billDetail.setTotalTax(totalTax);
 						billDetail.setGrandTotal(grandTotal);
-						billDetail.setRemark("");
 						billDetail.setDelStatus(0);
 						billDetail.setIsGrngvnApplied(0);
 
@@ -2032,7 +2031,7 @@ public class BillController {
 
 			List<PostBillDetail> postBillDetailsList = new ArrayList<>();
 
-			float sumTaxableAmt = 0, sumTotalTax = 0, sumGrandTotal = 0, sumTotalCgst = 0,sumTotalSgst = 0;
+			float sumTaxableAmt = 0, sumTotalTax = 0, sumGrandTotal = 0, sumTotalCgst = 0,sumTotalSgst = 0,sumDiscAmt=0;
 
 			PostBillDetail postBillDetail = new PostBillDetail();
 			PostBillHeader postBillHeader = new PostBillHeader();
@@ -2082,6 +2081,13 @@ public class BillController {
 					float baseRate = postBillDetail.getBaseRate();
 
 					float taxableAmt = baseRate * newBillQty;
+					//----------------------------------------------------------
+				    float discAmt = ((taxableAmt * getBillDetail.getDiscPer()) / 100);		//new row added
+					System.out.println("discAmt: "+discAmt);//new row added
+					sumDiscAmt=sumDiscAmt+discAmt;
+					
+					taxableAmt = taxableAmt - discAmt;	//new row added
+					//----------------------------------------------------------
 					taxableAmt = roundUp(taxableAmt);
 
 					float sgstRs = (taxableAmt * postBillDetail.getSgstPer()) / 100;
@@ -2104,6 +2110,9 @@ public class BillController {
 					sumTaxableAmt = sumTaxableAmt + taxableAmt;
 					sumTotalTax = sumTotalTax + totalTax;
 					sumGrandTotal = sumGrandTotal + grandTotal;
+					
+					postBillDetail.setDiscPer(getBillDetail.getDiscPer());
+					postBillDetail.setRemark(Float.valueOf(df.format(discAmt))+"");
 					
 					postBillDetail.setSgstRs(Float.valueOf(df.format(sgstRs)));
 					postBillDetail.setCgstRs(Float.valueOf(df.format(cgstRs)));
@@ -2153,6 +2162,7 @@ public class BillController {
 					postBillHeader.setRemark(billHeadersList.get(j).getRemark());
 					postBillHeader.setSgstSum(sumTotalSgst);
 					postBillHeader.setCgstSum(sumTotalCgst);
+					postBillHeader.setDiscAmt(sumDiscAmt);//new
 					postBillHeader.setTime(billHeadersList.get(j).getTime());
 					break;
 				} // end of if
@@ -2347,8 +2357,8 @@ public class BillController {
 		String url = request.getParameter("url");
 		System.out.println("URL " + url);
 		// http://monginis.ap-south-1.elasticbeanstalk.com
-		 //  File f = new File("/home/ats-12/bill.pdf");
-		 File f = new File("/home/supertom/apache-tomcat-8.5.35/webapps/admin/bill.pdf");
+		   File f = new File("/home/ats-12/bill.pdf");
+		   // File f = new File("/home/supertom/apache-tomcat-8.5.35/webapps/admin/bill.pdf");
 		//File f = new File("/Users/MIRACLEINFOTAINMENT/ATS/uplaods/reports/ordermemo221.pdf");
 
 		System.out.println("I am here " + f.toString());
@@ -2366,8 +2376,8 @@ public class BillController {
 		ServletContext context = request.getSession().getServletContext();
 		String appPath = context.getRealPath("");
 		String filename = "ordermemo221.pdf";
-		 // 	String filePath = "/home/ats-12/bill.pdf";
-		 String filePath = "/home/supertom/apache-tomcat-8.5.35/webapps/admin/bill.pdf";
+		 	String filePath = "/home/ats-12/bill.pdf";
+		 //  String filePath = "/home/supertom/apache-tomcat-8.5.35/webapps/admin/bill.pdf";
 		//String filePath = "/Users/MIRACLEINFOTAINMENT/ATS/uplaods/reports/ordermemo221.pdf";
 
 		// construct the complete absolute path of the file
