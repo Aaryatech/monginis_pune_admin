@@ -73,6 +73,46 @@
 									</div>
 								</div>
 								<div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">ABC Type</label>
+									<div class="col-sm-9 col-lg-10 controls">
+										<select   class="form-control chosen" name="acbType"   id="acbType"  >
+											 <c:choose>
+											 	<c:when test="${route.abcType==1}">
+											 		<option   value="1" selected >A</option>
+													<option   value="2">B</option>
+													<option   value="3">C</option>
+											 	</c:when>
+											 	<c:when test="${route.abcType==2}">
+											 		<option   value="1"  >A</option>
+													<option   value="2" selected>B</option>
+													<option   value="3">C</option>
+											 	</c:when>
+											 	<c:when test="${route.abcType==3}">
+											 		<option   value="1"  >A</option>
+													<option   value="2" >B</option>
+													<option   value="3" selected>C</option>
+											 	</c:when>
+											 	<c:otherwise>
+											 		<option   value="1"  >A</option>
+													<option   value="2" >B</option>
+													<option   value="3"  >C</option>
+											 	</c:otherwise>
+											 </c:choose>
+											
+											 
+											</select>
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">Sequence No.</label>
+									<div class="col-sm-9 col-lg-10 controls">
+										<input type="number" name="seqNo" id="seqNo"
+											placeholder="Route" class="form-control" value="${route.seqNo}"
+											data-rule-required="true" />
+									</div>
+								</div>
+								<div class="form-group">
 
 									<div class="col-sm-9 col-lg-10 controls">
 										<input type="hidden" name="route_id" id="route_id"
@@ -112,6 +152,8 @@
 													<tr>
 														<th width="45" style="width: 18px">#</th>
 														<th width="939" align="left">Name</th>
+														<th width="81" align="right">Sequence No</th>
+														<th width="81" align="right">ABC Type</th>
 														<th width="81" align="left">Action</th>
 													</tr>
 												</thead>
@@ -121,6 +163,23 @@
 															<td>1</td>
 															<td align="left"><c:out
 																	value="${routeList.routeName}"></c:out></td>
+															<td align="right"><c:out
+																	value="${routeList.seqNo}"></c:out></td>
+																	<c:set value="-" var="type"> </c:set>
+															<c:choose>
+																<c:when test="${routeList.abcType==1}">
+																	<c:set value="A" var="type"> </c:set>
+																</c:when>
+																<c:when test="${routeList.abcType==2}">
+																	<c:set value="B" var="type"> </c:set>
+																</c:when>
+																<c:when test="${routeList.abcType==3}">
+																	<c:set value="C" var="type"> </c:set>
+																</c:when>
+															</c:choose>
+															
+															<td align="left"><c:out
+																	value="${type}"></c:out></td>
 															<td align="left"><a
 																href="${pageContext.request.contextPath}/updateRoute/${routeList.routeId}"><span
 																	class="glyphicon glyphicon-edit"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;

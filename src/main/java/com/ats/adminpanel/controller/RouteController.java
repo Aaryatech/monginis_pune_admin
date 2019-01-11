@@ -1,6 +1,7 @@
 package com.ats.adminpanel.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,22 +19,35 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ats.adminpanel.commons.Constants;
 import com.ats.adminpanel.model.AllRoutesListResponse;
 import com.ats.adminpanel.model.SpecialCake;
+import com.sun.tools.javac.code.Attribute.Array;
 import com.ats.adminpanel.model.Info;
 import com.ats.adminpanel.model.Route;
+import com.ats.adminpanel.model.RouteMaster;
 import com.ats.adminpanel.model.SpCakeResponse;
 @Controller
 public class RouteController {
-	@RequestMapping(value = "/addRouteProcess", method=RequestMethod.POST)
-
+	
+	@RequestMapping(value = "/addRouteProcess", method=RequestMethod.POST) 
 	public String addRouteProcess(HttpServletRequest request, HttpServletResponse response) {
 		
 		ModelAndView model = new ModelAndView("masters/route");
 		RestTemplate rest = new RestTemplate();
 		
 		String routeName = request.getParameter("route_name");
+		int acbType = Integer.parseInt(request.getParameter("acbType"));
+		int seqNo = Integer.parseInt(request.getParameter("seqNo"));
+		
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 		map.add("routeName", routeName);
-		String routeResponse = rest.postForObject(Constants.url+"insertRoute", map, String.class);
+		map.add("acbType", acbType);
+		map.add("seqNo", seqNo);
+		
+		RouteMaster save = new RouteMaster();
+		save.setRouteName(routeName);
+		save.setAbcType(acbType);
+		save.setSeqNo(seqNo); 
+		
+		RouteMaster routeResponse = rest.postForObject(Constants.url+"/saveRoute", save, RouteMaster.class);
 		model=new ModelAndView("masters/route");
 		return "redirect:/addroute";
 	}
@@ -48,16 +62,17 @@ public class RouteController {
 		RestTemplate restTemplate = new RestTemplate();
 		try {
 			
-			AllRoutesListResponse allRouteListResponse=restTemplate
-					.getForObject(Constants.url+"showRouteList", AllRoutesListResponse.class);
+			RouteMaster[] allRouteListResponse=restTemplate
+					.getForObject(Constants.url+"/showRouteListNew", RouteMaster[].class);
 			
-			List<Route> routeList=new  ArrayList<Route>();
-			routeList=allRouteListResponse.getRoute();
+			List<RouteMaster> routeList=new  ArrayList<RouteMaster>(Arrays.asList(allRouteListResponse));
+			 
 			model.addObject("routeList",routeList);
 		}
 		catch(Exception e)
 		{
 			System.out.println("Error in route list display"+e.getMessage());
+			e.printStackTrace();
 		}
 	
 		return model;
@@ -99,14 +114,14 @@ public class RouteController {
 		map.add("routeId", routeId);
 		RestTemplate restTemplate = new RestTemplate();
 		try {
-		Route route=restTemplate
-				.getForObject(""+Constants.url+"getRoute?routeId={routeId}",Route.class,routeId);
+			RouteMaster route=restTemplate
+				.getForObject(""+Constants.url+"getRouteNew?routeId={routeId}",RouteMaster.class,routeId);
 	
-		AllRoutesListResponse allRouteListResponse=restTemplate
-				.getForObject(Constants.url+"showRouteList", AllRoutesListResponse.class);
+		RouteMaster[] allRouteListResponse=restTemplate
+				.getForObject(Constants.url+"/showRouteListNew", RouteMaster[].class);
 		
-		List<Route> routeList=new  ArrayList<Route>();
-		routeList=allRouteListResponse.getRoute();
+		List<RouteMaster> routeList=new  ArrayList<RouteMaster>(Arrays.asList(allRouteListResponse));
+		
 		model.addObject("routeList",routeList);
 		model.addObject("route",route);
 		}
@@ -130,14 +145,18 @@ public class RouteController {
 		
 		String routeName = request.getParameter("route_name");
 		int routeId = Integer.parseInt(request.getParameter("route_id"));
-
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		int acbType = Integer.parseInt(request.getParameter("acbType"));
+		int seqNo = Integer.parseInt(request.getParameter("seqNo"));
+		 
 		
-		map.add("id", routeId);
-		map.add("routeName", routeName);
+		RouteMaster save = new RouteMaster();
+		save.setRouteName(routeName);
+		save.setAbcType(acbType);
+		save.setSeqNo(seqNo); 
+		save.setRouteId(routeId);
 		
-		String routeResponse=restTemplate
-				.postForObject(""+Constants.url+"updateRoute",map,String.class);
+		RouteMaster routeResponse=restTemplate
+				.postForObject(""+Constants.url+"saveRoute",save,RouteMaster.class);
 		
 		
 			   return "redirect:/addroute";
