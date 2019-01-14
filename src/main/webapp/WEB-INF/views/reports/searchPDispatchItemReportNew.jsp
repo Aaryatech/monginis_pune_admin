@@ -74,6 +74,7 @@
 						 <input id="stationId" name="stationId" value="${stationId}" type="hidden">
 						 <input id="abcType" name="abcType" value="${abcType}" type="hidden">
 						 <input id="routId" name="routId" value="${routId}" type="hidden">
+						 <input id="menuIds" name="menuIds" value="${menuIds}" type="hidden">
 						 
 					</div>
 
@@ -835,8 +836,9 @@ function routListByAbcType() {
 				 var stationId = $("#stationId").val();
 				 var abcType = $("#abcType").val();
 				 var routId = $("#routId").val();
+				 var menuIds = $("#menuIds").val();
 				 
-				window.open('pdfForDisReport?url=pdf/getPDispatchReportNewPdf/'+date+'/'+stationId+'/'+abcType+'/'+routId);
+				window.open('pdfForDisReport?url=pdf/getPDispatchReportNewPdf/'+date+'/'+stationId+'/'+abcType+'/'+routId+'/'+menuIds);
 
 			}
 			function exportToExcel()

@@ -133,6 +133,31 @@
 				
 				<div class="row">
 
+					<div class="form-group">
+
+						<label class="col-sm-3 col-lg-2 control-label">Select Menu </label>
+						<div class="col-sm-3 col-lg-4">
+
+							<select data-placeholder="Select Menu "
+								class="form-control chosen" 
+								id="menuId" name="menuId" multiple="multiple" required>
+
+								 <option value="0" selected>All</option>
+								<c:forEach items="${menuList}" var="menuList" >
+									<option value="${menuList.menuId}"><c:out value="${menuList.menuTitle}"/> </option>
+
+								</c:forEach>
+							</select>
+						</div>
+						 
+					</div>
+
+
+
+				</div><br>
+				
+				<div class="row">
+
 					<div class="form-group" align="center">
  
 					 <input type="submit" id="submit" class="btn btn-primary" value="Search"  >
