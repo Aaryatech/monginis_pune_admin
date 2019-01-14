@@ -42,13 +42,16 @@ import org.zefer.pd4ml.PD4PageMark;
 import com.ats.adminpanel.commons.Constants;
 import com.ats.adminpanel.commons.DateConvertor;
 import com.ats.adminpanel.model.AllFrIdNameList;
+import com.ats.adminpanel.model.AllMenus;
 import com.ats.adminpanel.model.AllRoutesListResponse;
+import com.ats.adminpanel.model.ErrorMessage;
 import com.ats.adminpanel.model.ItemListForDispatchReport;
 import com.ats.adminpanel.model.ItemListStatioinWise;
 import com.ats.adminpanel.model.PDispatchReport;
 import com.ats.adminpanel.model.PDispatchReportList;
 import com.ats.adminpanel.model.Route;
 import com.ats.adminpanel.model.RouteMaster;
+import com.ats.adminpanel.model.SectionMaster;
 import com.ats.adminpanel.model.StaionListWithFranchiseeList;
 import com.ats.adminpanel.model.TypeWiseItemTotal;
 import com.ats.adminpanel.model.franchisee.FrNameIdByRouteId;
@@ -70,7 +73,8 @@ public class DispachReport {
 	List<RouteMaster> list = new ArrayList<>();
 	List<Item> itemList = new ArrayList<Item>();
 	List<StaionListWithFranchiseeList> staionListWithFranchiseeList = new ArrayList<StaionListWithFranchiseeList>();
-	List<Menu> menuList = new ArrayList<Menu>(); 
+	List<AllMenus> menuList = new ArrayList<AllMenus>(); 
+	
 	
 	@RequestMapping(value = "/showPDispatchItemReportNew", method = RequestMethod.GET)
 	public ModelAndView showPDispatchItemReportNew(HttpServletRequest request, HttpServletResponse response) {
@@ -92,13 +96,18 @@ public class DispachReport {
 			 stationList = new ArrayList<Integer>(Arrays.asList(array)); 
 			model.addObject("stationList", stationList);  
 			
-			Menu[] allMenus = restTemplate.getForObject(Constants.url + "/getAllMenuList",
+			/*Menu[] allMenus = restTemplate.getForObject(Constants.url + "/getAllMenuList",
 					Menu[].class);
-			  menuList = new ArrayList<Menu>(Arrays.asList(allMenus)); 
+			  menuList = new ArrayList<Menu>(Arrays.asList(allMenus)); */
 			 
 			 model.addObject("menuList", menuList); 
 			model.addObject("stationList", stationList);  
 			model.addObject("todaysDate", todaysDate); 
+			
+			SectionMaster[] sectionMasterArray = restTemplate.getForObject(Constants.url + "/getSectionListOnly",
+					SectionMaster[].class);
+			 List<SectionMaster> sectionList = new ArrayList<SectionMaster>(Arrays.asList(sectionMasterArray)); 
+			model.addObject("sectionList", sectionList);
 
 		} catch (Exception e) {
 
@@ -107,6 +116,36 @@ public class DispachReport {
 		}
 
 		return model;
+
+	}
+	
+	@RequestMapping(value = "/getMenuListBySectionId", method = RequestMethod.GET)
+	@ResponseBody
+	public List<AllMenus> getMenuListBySectionId(HttpServletRequest request, HttpServletResponse response) {
+
+		 list = new ArrayList<>();
+ 
+
+		try {
+			 
+			int sectionId = Integer.parseInt(request.getParameter("sectionId"));
+
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+			map.add("sectionId", sectionId);
+			RestTemplate restTemplate = new RestTemplate();
+
+			SectionMaster routeMaster = restTemplate.postForObject(Constants.url + "/getSectionById",map,
+					SectionMaster.class);
+			 
+			 menuList =  routeMaster.getMenuList();
+
+		} catch (Exception e) {
+
+		 
+			e.printStackTrace();
+		}
+
+		return menuList;
 
 	}
 	
@@ -500,6 +539,143 @@ public class DispachReport {
 		return model;
 
 	}
+	 
+	 @RequestMapping(value = "/addSection", method = RequestMethod.GET)
+		public ModelAndView addSection(HttpServletRequest request, HttpServletResponse response) {
+
+			ModelAndView model = new ModelAndView("masters/addSection");
+	 
+
+			try {
+				 
+				RestTemplate restTemplate = new RestTemplate();
+
+				SectionMaster[] array = restTemplate.getForObject(Constants.url + "/getSectionList",
+						SectionMaster[].class);
+				 List<SectionMaster> sectionList = new ArrayList<SectionMaster>(Arrays.asList(array)); 
+				model.addObject("sectionList", sectionList);  
+				
+				Menu[] allMenus = restTemplate.getForObject(Constants.url + "/getAllMenuList",
+						Menu[].class);
+				List<Menu>  menuList = new ArrayList<Menu>(Arrays.asList(allMenus)); 
+				 
+				 model.addObject("menuList", menuList);  
+
+			} catch (Exception e) {
+
+				System.out.println("Exc in show sales report bill wise  " + e.getMessage());
+				e.printStackTrace();
+			} 
+			return model;
+
+		}
+	 
+	 @RequestMapping(value = "/insertSection", method = RequestMethod.POST)
+		public String deleteSection(HttpServletRequest request, HttpServletResponse response) {
+
+			 
+		 RestTemplate restTemplate = new RestTemplate();
+
+			try {
+				 
+				String sectionId = request.getParameter("sectionId");
+				String sectionName = request.getParameter("sectionName");
+				String[] menuId = request.getParameterValues("menuIds");
+				
+				String menuIds = new String();
+				
+				for(int i = 0 ; i < menuId.length ; i++) {
+					
+					menuIds=menuIds+","+menuId[i];
+					
+				}
+				menuIds.substring(1, menuIds.length());
+				
+				SectionMaster save = new SectionMaster();
+				
+				if(sectionId.equalsIgnoreCase("") || sectionId.equalsIgnoreCase(null)) {
+					 
+				}else {
+					save.setSectionId(Integer.parseInt(sectionId));
+				}
+				
+				save.setSectionName(sectionName);
+				save.setMenuIds(menuIds);
+				
+				SectionMaster res = restTemplate.postForObject(Constants.url + "/saveSection",save,
+						SectionMaster.class);
+
+			} catch (Exception e) {
+
+				 
+				e.printStackTrace();
+			} 
+			return "redirect:/addSection";
+
+		}
+	 
+	 @RequestMapping(value = "/deleteSection/{sectionId}", method = RequestMethod.GET)
+		public String deleteSection(@PathVariable int sectionId, HttpServletRequest request, HttpServletResponse response) {
+
+			ModelAndView model = new ModelAndView("masters/addSection");
+	 
+
+			try {
+				 
+				RestTemplate restTemplate = new RestTemplate();
+				
+				MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+				map.add("sectionId", sectionId);
+
+				ErrorMessage res = restTemplate.postForObject(Constants.url + "/deleteSection",map,
+						ErrorMessage.class);
+				 
+
+			} catch (Exception e) {
+
+				 
+				e.printStackTrace();
+			} 
+			return "redirect:/addSection";
+
+		}
+	 
+	 @RequestMapping(value = "/editSection/{sectionId}", method = RequestMethod.GET)
+		public ModelAndView editSection(@PathVariable int sectionId, HttpServletRequest request, HttpServletResponse response) {
+
+			ModelAndView model = new ModelAndView("masters/addSection");
+	 
+
+			try {
+				 
+				RestTemplate restTemplate = new RestTemplate();
+
+				SectionMaster[] array = restTemplate.getForObject(Constants.url + "/getSectionList",
+						SectionMaster[].class);
+				 List<SectionMaster> sectionList = new ArrayList<SectionMaster>(Arrays.asList(array)); 
+				model.addObject("sectionList", sectionList);  
+				
+				Menu[] allMenus = restTemplate.getForObject(Constants.url + "/getAllMenuList",
+						Menu[].class);
+				List<Menu>  menuList = new ArrayList<Menu>(Arrays.asList(allMenus)); 
+				 
+				 model.addObject("menuList", menuList);  
+				 
+				 MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+					map.add("sectionId", sectionId); 
+					SectionMaster editSection = restTemplate.postForObject(Constants.url + "/getSectionById",map,
+							SectionMaster.class);
+					model.addObject("editSection", editSection); 
+					model.addObject("isEdit", 1);
+
+			} catch (Exception e) {
+
+				System.out.println("Exc in show sales report bill wise  " + e.getMessage());
+				e.printStackTrace();
+			} 
+			return model;
+
+		}
 	
 	private Dimension format = PD4Constants.A4;
 	private boolean landscapeValue = false;

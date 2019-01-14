@@ -13,7 +13,10 @@
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 <c:url var="routListByAbcType" value="/routListByAbcType"></c:url>
 	<c:url var="getBillList" value="/getPDispatchReportByRoute"></c:url>
+   <c:url var="getMenuListBySectionId" value="/getMenuListBySectionId"></c:url>
    	<c:url var="getFranchisees" value="/getFranchiseByRoute"></c:url>
+   	
+   	
 	<!-- BEGIN Sidebar -->
 	<div id="sidebar" class="navbar-collapse collapse" >
 
@@ -134,6 +137,22 @@
 				<div class="row">
 
 					<div class="form-group">
+					
+					<label class="col-sm-3 col-lg-2 control-label">Select
+							Section</label>
+						<div class="col-sm-3 col-lg-4">
+
+							<select data-placeholder="Choose Category"
+								class="form-control chosen"   onchange="getMenuListBySectionId()"
+								id="sectionId" name="sectionId">
+
+								 <option value="" selected>Select Section</option>
+								 
+								  <c:forEach items="${sectionList}" var="sectionList" >
+									<option value="${sectionList.sectionId}"><c:out value="${sectionList.sectionName}"/></option>
+								</c:forEach>  
+							</select>
+						</div>
 
 						<label class="col-sm-3 col-lg-2 control-label">Select Menu </label>
 						<div class="col-sm-3 col-lg-4">
@@ -142,11 +161,11 @@
 								class="form-control chosen" 
 								id="menuId" name="menuId" multiple="multiple" required>
 
-								 <option value="0" selected>All</option>
+								<%--  <option value="0" selected>All</option>
 								<c:forEach items="${menuList}" var="menuList" >
 									<option value="${menuList.menuId}"><c:out value="${menuList.menuTitle}"/> </option>
 
-								</c:forEach>
+								</c:forEach> --%>
 							</select>
 						</div>
 						 
@@ -245,6 +264,51 @@
 
 <script type="text/javascript">
 
+
+
+function getMenuListBySectionId() {
+	
+	var sectionId = $("#sectionId").val();
+	
+	 
+		 if(sectionId=="" || sectionId==null){
+			 
+			  
+				$('#menuId')
+			    .find('option')
+			    .remove()
+			    .end()
+			    $("#menuId").trigger("chosen:updated");
+		 }else{
+				$.getJSON('${getMenuListBySectionId}', {
+					
+					sectionId : sectionId,
+					ajax : 'true'
+				}, function(data) {
+				 	var html = '<option value="">Select Section</option>';
+				
+					var len = data.length;
+					
+					$('#menuId')
+				    .find('option')
+				    .remove()
+				    .end()
+				    
+				$("#menuId").append(
+                 $("<option selected></option>").attr(
+                     "value", 0).text("All") );
+					
+					for ( var i = 0; i < len; i++) {
+			            $("#menuId").append(
+			                    $("<option></option>").attr(
+			                        "value", data[i].menuId).text(data[i].menuTitle)
+			                );
+					}
+					   $("#menuId").trigger("chosen:updated");
+				}); 
+		 }
+	 
+}
 
 function routListByAbcType() {
 	
