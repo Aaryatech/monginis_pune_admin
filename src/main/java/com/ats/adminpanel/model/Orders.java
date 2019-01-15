@@ -71,7 +71,7 @@ public class Orders {
 	
 	private int userId;
 	
-	private int isPositive;
+	private float isPositive;
 
 
 	private int menuId;
@@ -221,11 +221,11 @@ public class Orders {
 		this.userId = userId;
 	}
 
-	public int getIsPositive() {
+	public float getIsPositive() {
 		return isPositive;
 	}
 
-	public void setIsPositive(int isPositive) {
+	public void setIsPositive(float isPositive) {
 		this.isPositive = isPositive;
 	}
 

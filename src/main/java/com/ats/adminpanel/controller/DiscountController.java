@@ -77,7 +77,12 @@ public class DiscountController {
 
 		return mav;
 	}
-
+	@RequestMapping(value = "/setAllFrIdSelectedForDisc", method = RequestMethod.GET)
+	public @ResponseBody List<FranchiseeList> setAllFrIdSelectedForDisc() {
+		logger.info("inside ajax call for fr all selected");
+	
+		return franchiseeAndMenuList.getAllFranchisee();
+	}
 	@RequestMapping(value = "/addDiscountProcess", method = RequestMethod.POST)
 	public String SaveDiscount(HttpServletRequest request, HttpServletResponse response)
 	{

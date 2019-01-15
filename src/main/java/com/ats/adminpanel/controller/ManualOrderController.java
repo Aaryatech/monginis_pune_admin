@@ -184,7 +184,12 @@ public class ManualOrderController {
 			Item item = restTemplate.postForObject("" + Constants.url + "getItem", map,Item.class);
 			System.out.println("ItemResponse" + item);
 			
-			 map = new LinkedMultiValueMap<String, Object>();
+			map = new LinkedMultiValueMap<String, Object>();
+			map.add("id", itemId);
+			map.add("frId", frId);
+			float discPer=restTemplate.postForObject(Constants.url + "getDiscById", map,Float.class);
+			
+			map = new LinkedMultiValueMap<String, Object>();
 
 			map.add("frId", frId);
 
@@ -261,7 +266,7 @@ public class ManualOrderController {
 			}
 			order.setIsEdit(0);
 			order.setEditQty(qty);
-			order.setIsPositive(1);
+			order.setIsPositive(discPer);
 			order.setMenuId(menuId);
 			order.setOrderDate(sqlCurrDate);
 			order.setOrderDatetime(""+sqlCurrDate);

@@ -119,7 +119,7 @@ select {
 
 </head>
 <body>
-
+  <c:url var="setAllFrIdSelected"  value="/setAllFrIdSelectedForDisc" />
 	<c:url var="setAllItemSelected" value="/setAllItemSelected" />
 
 	<c:url var="findItemsByCatId" value="/getItemsByCatagoryID" />
@@ -165,8 +165,8 @@ select {
 									<h3>
 										<i class="fa fa-bars"></i> Add Discount
 									</h3>
-									<div class="box-tool">
-										<a href="${pageContext.request.contextPath}/showDiscountList">Back to
+									<div class="box-tool" style="background-color: blue;">
+										<a href="${pageContext.request.contextPath}/showDiscountList">Discount
 											List</a> <a data-action="collapse" href="#"><i
 											class="fa fa-chevron-up"></i></a>
 									</div>
@@ -198,9 +198,10 @@ select {
 													class="form-control chosen" tabindex="-1" id="fr_id" multiple="multiple"
 													data-rule-required="true">
 													<option value="">Select Franchise</option>
+													<option value="-1" >All</option>
 														<c:choose>
 														<c:when test="${isEdit==1}">
-														<option value="-1" >All</option>
+														
 														<c:forEach	items="${selectedFr}"	var="frList">
 															<option value="${frList.frId}" selected>${frList.frName}</option>
 														</c:forEach>
@@ -320,7 +321,7 @@ select {
 													<c:otherwise>
 														<label class="radio-inline"> <input type="radio"
 															name="is_active" id="optionsRadios1" 
-															value="1" /> Active
+															value="1" checked="checked"/> Active
 														</label>
 														<label class="radio-inline"> <input type="radio"
 															name="is_active" id="optionsRadios1" value="0" />
@@ -372,13 +373,13 @@ $(function() {
     });
 });
 </script>
-<script>
+<!-- <script>
 $('#select_all').click(function() {
-	alert("alert");
+	
     $('#items option').prop('selected', true);
     $('#items').chosen('destroy').val(["hola","mundo","cruel"]).chosen();
 });
-</script>
+</script> -->
 
 <script type="text/javascript">
 $(document).ready(function() {
@@ -413,7 +414,7 @@ $(document).ready(function() {
             });
 });
 </script>
-
+<!-- 
 
 <script type="text/javascript">
 $(document).ready(function() { 
@@ -449,7 +450,7 @@ $(document).ready(function() {
 			});
 });
 </script>
-
+ -->
 <script type="text/javascript">
 $(document).ready(function() { // if all label selected set all items selected
 	
@@ -476,11 +477,50 @@ $('#items').change(
     
                    $("#items").append(
                            $("<option selected></option>").attr(
-                               "value", data[i].id).text(data[i].name)
+                               "value", data[i].id).text(data[i].itemName)
                        );
 				}
 		
 				   $("#items").trigger("chosen:updated");
+			});
+  }
+});
+});
+
+
+
+</script>
+<script type="text/javascript">
+$(document).ready(function() { // if all label selected set all items selected
+	
+$('#fr_id').change(
+		function () {
+			 var selected=$('#fr_id').val();
+	
+        if(selected==-1){
+			$.getJSON('${setAllFrIdSelected}', {
+			//	selected : selected,
+				ajax : 'true'
+			}, function(data) {
+				var html = '<option value="">Select Franchise</option>';
+			
+				var len = data.length;
+				
+				$('#fr_id')
+			    .find('option')
+			    .remove()
+			    .end()
+				 $("#fr_id").append($("<option></option>").attr( "value",-1).text("ALL"));
+
+				for ( var i = 0; i < len; i++) {
+    
+                   $("#fr_id").append(
+                           $("<option selected></option>").attr(
+                               "value", data[i].frId).text(data[i].frName)
+                       );
+				}
+		
+				   $("#fr_id").trigger("chosen:updated");
 			});
   }
 });
