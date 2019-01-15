@@ -10,6 +10,7 @@
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 
 
+<c:url var="getMenuListBySectionId" value="/getMenuListBySectionId"></c:url>
 	<c:url var="getBillList" value="/generateNewBill"></c:url>
 
 	<!-- BEGIN Sidebar -->
@@ -75,7 +76,7 @@
 
 					<div class="form-group  "> -->
 
-						<label class="col-sm-3 col-lg-2	 control-label">Select
+						<%-- <label class="col-sm-3 col-lg-2	 control-label">Select
 							Menu</label>
 						<div class="col-sm-6 col-lg-4 controls">
 							<select data-placeholder="Choose Menu"
@@ -91,11 +92,54 @@
 
 
 							</select>
-						</div>
+						</div> --%>
 					</div>
 
 				</div>
 
+
+				<br>
+				
+				<div class="row">
+
+
+					<div class="form-group">
+						<label class="col-sm-3 col-lg-2	 control-label">Select Section</label>
+						<div class="col-sm-6 col-lg-4 controls date_select">
+							<select data-placeholder="Choose Menu"
+								class="form-control chosen"  
+								id="sectionId" name="sectionId" onchange="getMenuListBySectionId()">
+
+								<option value="">Select Section</option>
+
+								<c:forEach items="${sectionList}" var="sectionList" >
+									<option value="${sectionList.sectionId}"><c:out value="${sectionList.sectionName}"/></option>
+								</c:forEach>
+
+
+							</select>
+						</div>
+ 
+						<label class="col-sm-3 col-lg-2	 control-label">Select
+							Menu</label>
+						<div class="col-sm-6 col-lg-4 controls">
+							<select data-placeholder="Choose Menu"
+								class="form-control chosen" multiple="multiple" tabindex="6"
+								id="selectMenu" name="selectMenu">
+
+								<%-- <option value="-1"><c:out value="All"/></option>
+
+								<c:forEach items="${unSelectedMenuList}" var="unSelectedMenu"
+									varStatus="count">
+									<option value="${unSelectedMenu.menuId}"><c:out value="${unSelectedMenu.menuTitle}"/></option>
+								</c:forEach> --%>
+
+
+							</select>
+						</div>
+					</div>
+
+				</div> 
 
 				<br>
 
@@ -263,8 +307,51 @@
 
 
 	<script type="text/javascript">
+	
+	function getMenuListBySectionId() {
+		
+		var sectionId = $("#sectionId").val();
+		
+		 
+			 if(sectionId=="" || sectionId==null){
+				 
+				  
+					$('#selectMenu')
+				    .find('option')
+				    .remove()
+				    .end()
+				    $("#selectMenu").trigger("chosen:updated");
+			 }else{
+					$.getJSON('${getMenuListBySectionId}', {
+						
+						sectionId : sectionId,
+						ajax : 'true'
+					}, function(data) {
+					 	var html = '<option value="">Select Section</option>';
+					
+						var len = data.length;
+						
+						$('#selectMenu')
+					    .find('option')
+					    .remove()
+					    .end()
+					    
+					 
+						
+						for ( var i = 0; i < len; i++) {
+				            $("#selectMenu").append(
+				                    $("<option selected></option>").attr(
+				                        "value", data[i].menuId).text(data[i].menuTitle)
+				                );
+						}
+						   $("#selectMenu").trigger("chosen:updated");
+					}); 
+			 }
+		 
+	}
+	
 		function generateNewBill() {
-
+ 
 			var isValid = validate();
 
 			if (isValid) {
@@ -273,7 +360,7 @@
 				
 				var selectedMenu = $("#selectMenu").val();
 				var deliveryDate = $("#deliveryDate").val();
-
+				alert(selectedMenu);
 				$('#loader').show();
 
 				$

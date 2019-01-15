@@ -69,6 +69,7 @@ import com.ats.adminpanel.model.GetSellBillHeader;
 import com.ats.adminpanel.model.Info;
 import com.ats.adminpanel.model.Route;
 import com.ats.adminpanel.model.SalesVoucherList;
+import com.ats.adminpanel.model.SectionMaster;
 import com.ats.adminpanel.model.RawMaterial.GetItemSfHeader;
 import com.ats.adminpanel.model.billing.FrBillHeaderForPrint;
 import com.ats.adminpanel.model.billing.FrBillPrint;
@@ -551,6 +552,11 @@ public class BillController {
 
 			RestTemplate restTemplate = new RestTemplate();
 
+			SectionMaster[] sectionMasterArray = restTemplate.getForObject(Constants.url + "/getSectionListOnly",
+					SectionMaster[].class);
+			 List<SectionMaster> sectionList = new ArrayList<SectionMaster>(Arrays.asList(sectionMasterArray)); 
+			model.addObject("sectionList", sectionList);
+			
 			AllMenuResponse allMenuResponse = restTemplate.getForObject(Constants.url + "getAllMenu",
 					AllMenuResponse.class);
 
