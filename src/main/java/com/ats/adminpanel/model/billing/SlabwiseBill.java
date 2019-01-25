@@ -5,9 +5,12 @@ import java.io.Serializable;
 
 public class SlabwiseBill{
 
+	private String itemHsncd;
 
 	private float taxPer;
 	
+	private float billQty;
+
 	private float taxableAmt;
 	
 	private float cgstAmt;
@@ -17,6 +20,24 @@ public class SlabwiseBill{
 	private float totalTax;
 	
 	private float grandTotal;
+
+	
+	
+	public float getBillQty() {
+		return billQty;
+	}
+
+	public void setBillQty(float billQty) {
+		this.billQty = billQty;
+	}
+
+	public String getItemHsncd() {
+		return itemHsncd;
+	}
+
+	public void setItemHsncd(String itemHsncd) {
+		this.itemHsncd = itemHsncd;
+	}
 
 	public float getTaxPer() {
 		return taxPer;

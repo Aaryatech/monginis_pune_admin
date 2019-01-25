@@ -82,7 +82,9 @@ td {
 
 						<div class="box-content">
 							<form class="form-horizontal" method="get" id="validation-form">
-
+	                        <input type="hidden" class="form-control" name="billnumber" id="billnumber"	value="0"  />
+							<input type="hidden" class="form-control" name="issinglepdf" id="issinglepdf" 	value="0" />
+						
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">From
 										Date</label>

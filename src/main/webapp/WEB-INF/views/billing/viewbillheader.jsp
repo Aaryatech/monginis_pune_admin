@@ -119,7 +119,11 @@
 
 						<div class="box-content">
 							<form class="form-horizontal" method="get" id="validation-form">
-
+							<input type="hidden" class="form-control" id="transport_mode" name="transport_mode" value="By Road"/>
+							<input type="hidden" class="form-control" name="vehicle_no" id="vehicle_no"	value="0"  />
+							<input type="hidden" class="form-control" name="billnumber" id="billnumber"	value="0"  />
+							<input type="hidden" class="form-control" name="issinglepdf" id="issinglepdf" 	value="0" />
+							
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">From
 										Date</label>
@@ -198,7 +202,7 @@
 
 
 									</div>
-								</div>
+								
 
 
 
@@ -237,7 +241,7 @@
 										<div id="table-scroll" class="table-scroll">
 
 											<div id="faux-table" class="faux-table" aria="hidden">
-												<table id="table2" class="table table-advance" border="1" >
+											<!-- 	<table id="table2" class="table table-advance" border="1" >
 													<thead>
 														<tr class="bgpink">
 															<th class="col-sm-1" align="left">Sr No</th>
@@ -251,7 +255,7 @@
 															<th class="col-md-2" align="left">Action</th>
 														</tr>
 													</thead>
-												</table>
+												</table> -->
 
 											</div>
 											<div class="table-wrap">
@@ -259,15 +263,17 @@
 												<table id="table1" class="table table-advance" border="1" >
 													<thead>
 														<tr class="bgpink">
+														<th class="col-sm-1"><input type="checkbox"
+													onClick="selectBillNo(this)" /> All<br /></th>
 															<th class="col-sm-1" align="left">Sr No</th>
 															<th class="col-md-1" align="left">Inv No</th>
 															<th class="col-md-1" align="left">Date</th>
 															<th class="col-md-2" align="left">Franchise Name</th>
-															<th class="col-md-2" align="left">Taxable Amt</th>
-															<th class="col-md-2" align="left">Total tax</th>
+															<th class="col-md-1" align="left">Taxable Amt</th>
+															<th class="col-md-1" align="left">Total tax</th>
 															<th class="col-md-1" align="left">Total</th>
 															<th class="col-md-1" align="left">Status</th>
-															<th class="col-md-1" align="left">Action</th>
+															<th class="col-md-2" align="left">Action</th>
 														</tr>
 													</thead>
 													<tbody>
@@ -291,6 +297,9 @@
 															var="billHeadersList" varStatus="count">
 
 															<tr>
+															<td class="col-sm-1"><input type="checkbox" name="select_to_print"
+																id="${billHeadersList.billNo}"
+																value="${billHeadersList.billNo}"/></td>
 																<td class="col-sm-1"><c:out
 																		value="${count.index+1}" /></td>
 																<td class="col-md-1" align="left"><c:out
@@ -313,7 +322,7 @@
 
 																<c:choose>
 																	<c:when test="${isEdit==1 and isDelete==1}">
-																		<td align="left"><a
+																		<td align="left" class="col-md-2"><a
 																			href="${pageContext.request.contextPath}/updateBillDetails/${billHeadersList.billNo}/${billHeadersList.frName}"><abbr
 																				title='Update Bill'></abbr> <i
 																				class='fa fa-edit  fa-lg'></i></a>&nbsp; <a
@@ -322,12 +331,14 @@
 																				class='fa fa-info  fa-lg'></i></a>&nbsp; <a
 																			href="${pageContext.request.contextPath}/deleteBill/${billHeadersList.billNo}/${billHeadersList.frName}"><abbr
 																				title='Delete Bill'></abbr> <i
-																				class='fa fa-trash-o  fa-lg'></i></a></td>
-
+																				class='fa fa-trash-o  fa-lg'></i></a>
+														 &nbsp;&nbsp;<input type="button"  id="btn_submit_pdf" onclick="generateSinglePdf(${billHeadersList.billNo})"   style="padding: 0px 4px;font-size: 14px;"
+															class="btn btn-primary"
+															value="PDF" /></td>	
 																	</c:when>
 
 																	<c:when test="${isEdit==1 and isDelete==0}">
-																		<td align="left"><a
+																		<td align="left" class="col-md-2"><a
 																			href="${pageContext.request.contextPath}/updateBillDetails/${billHeadersList.billNo}/${billHeadersList.frName}"><abbr
 																				title='Update Bill'></abbr> <i
 																				class='fa fa-edit  fa-lg'></i></a>&nbsp; <a
@@ -336,12 +347,14 @@
 																				class='fa fa-info  fa-lg'></i></a>&nbsp; <a
 																			href="${pageContext.request.contextPath}/deleteBill/${billHeadersList.billNo}/${billHeadersList.frName}" class="disableClick"><abbr
 																				title='Delete Bill'></abbr> <i
-																				class='fa fa-trash-o  fa-lg'></i></a></td>
-
+																				class='fa fa-trash-o  fa-lg'></i></a>
+                                                                     &nbsp;&nbsp;<input type="button"  id="btn_submit_pdf"  onclick="generateSinglePdf(${billHeadersList.billNo})" style="padding: 0px 4px;font-size: 14px;"
+															class="btn btn-primary"
+															value="PDF" /></td>
 																	</c:when>
 
 																	<c:when test="${isEdit==0 and isDelete==1}">
-																		<td align="left"><a
+																		<td align="left" class="col-md-2"><a
 																			href="${pageContext.request.contextPath}/updateBillDetails/${billHeadersList.billNo}/${billHeadersList.frName}" class="disableClick"><abbr
 																				title='Update Bill'></abbr> <i
 																				class='fa fa-edit  fa-lg'></i></a>&nbsp; <a
@@ -350,13 +363,15 @@
 																				class='fa fa-info  fa-lg'></i></a>&nbsp; <a
 																			href="${pageContext.request.contextPath}/deleteBill/${billHeadersList.billNo}/${billHeadersList.frName}"><abbr
 																				title='Delete Bill'></abbr> <i
-																				class='fa fa-trash-o  fa-lg'></i></a></td>
-
+																				class='fa fa-trash-o  fa-lg'></i></a>
+                                                                            &nbsp;&nbsp;<input type="button"  id="btn_submit_pdf" onclick="generateSinglePdf(${billHeadersList.billNo})"   style="padding: 0px 4px;font-size: 14px;"
+															class="btn btn-primary"
+															value="PDF" />	</td>
 																	</c:when>
 
 																	<c:otherwise>
 
-																		<td align="left"><a
+																		<td align="left" class="col-md-2"><a
 																			href="${pageContext.request.contextPath}/updateBillDetails/${billHeadersList.billNo}/${billHeadersList.frName}" class="disableClick"><abbr
 																				title='Update Bill'></abbr> <i
 																				class='fa fa-edit  fa-lg'></i></a>&nbsp; <a
@@ -365,8 +380,10 @@
 																				class='fa fa-info  fa-lg'></i></a>&nbsp; <a
 																			href="${pageContext.request.contextPath}/deleteBill/${billHeadersList.billNo}/${billHeadersList.frName}" class="disableClick"><abbr
 																				title='Delete Bill'></abbr> <i
-																				class='fa fa-trash-o  fa-lg'></i></a></td>
-
+																				class='fa fa-trash-o  fa-lg'></i></a>
+                                                                       &nbsp;&nbsp;<input type="button"  id="btn_submit_pdf" onclick="generateSinglePdf(${billHeadersList.billNo})" style="padding: 0px 4px;font-size: 14px;"
+															class="btn btn-primary"
+															value="PDF" />	</td>
 																	</c:otherwise>
 																</c:choose>
 
@@ -404,11 +421,12 @@
 											</div>
 										</div>
 
+	<input type="button" id="btn_submit" class="btn btn-primary" onclick="submitBill()"	value="BillDetail" />
 
 									</div>
 							</form>
 						</div>
-					</div>
+					</div></div>
 				</div>
 			</div>
 			<!-- END Main Content -->
@@ -534,6 +552,59 @@
 
 	}
 	</script>
+		<script type="text/javascript">
+		function submitBill() {
+			var form = document.getElementById("validation-form").target="_blank";
+			var form = document.getElementById("validation-form");
+			form.action = "${pageContext.request.contextPath}/getBillDetailForPrint";
+			form.submit();
+		}
+		function submitBill1(selectedBills){
+			var vehicleNo = document.getElementById("vehicle_no").value;
+			var transportMode = document.getElementById("transport_mode").value;
+			
+			window.open("${pageContext.request.contextPath}/getBillDetailForPrint1/"+vehicleNo+'/'+transportMode+'/'+selectedBills);
+		}
+		$('#btn_submit')
+				.click(
+						function() {
+							var form = document.getElementById("validation-form")
+							form.action = "${pageContext.request.contextPath}/getBillDetailForPrint";
+							form.submit();
+						});	
+		 
+	</script>
+	<script type="text/javascript">
+	/* 	$('#btn_submit_pdf')
+				.click(
+						function() {
+							document.getElementById("validation-form").target = "_blank";
+
+							var form = document.getElementById("validation-form");
+
+							form.action = "${pageContext.request.contextPath}/getBillDetailForPrintPdf";
+							form.submit();
+						}); */
+		function submitBillPdf() {
+			document.getElementById("validation-form").target = "_blank";
+
+			var form = document.getElementById("validation-form");
+
+			form.action = "${pageContext.request.contextPath}/getBillDetailForPrintPdf";
+			form.submit();
+		}
+		function generateSinglePdf(billNo) {
+			
+			document.getElementById("billnumber").value=billNo;
+			document.getElementById("issinglepdf").value=1;
+			document.getElementById("validation-form").target = "_blank";
+
+			var form = document.getElementById("validation-form");
+
+			form.action = "${pageContext.request.contextPath}/getBillDetailForPrintPdf";
+			form.submit();
+		}
+	</script>
 	<script type="text/javascript">
 		function callSearch() {
 			
@@ -587,7 +658,13 @@
 													
 
 													var tr = $('<tr></tr>');
+													tr
+													.append($(
+															'<td class="col-sm-1"></td>')
+															.html(
+																	"<input type='checkbox' name='select_to_print' id="+bill.billNo+" value="+bill.billNo+" />"));
 
+				
 													tr
 															.append($(
 																	'<td class="col-sm-1"></td>')
@@ -683,7 +760,7 @@
 														// alert("in first");
 														 tr
 															.append($(
-																	'<td class="col-md-1"></td>')
+																	'<td class="col-md-2" ></td>')
 																	.html(
 																			"<a href='${pageContext.request.contextPath}/updateBillDetails/"
 																					+ bill.billNo
@@ -697,14 +774,14 @@
 																					+ bill.billNo
 																					+ "/"
 																					+ bill.frName
-																					+ "'<abbr title='Delete Bill'></abbr><i class='fa fa-trash-o  fa-lg'></i></a>"));
+																					+ "'<abbr title='Delete Bill'></abbr><i class='fa fa-trash-o  fa-lg'></i></a>&nbsp;&nbsp;<input type=button  style='padding: 0px 4px;font-size: 14px;' onclick=generateSinglePdf("+bill.billNo+")  id=btn_submit_pdf class='btn btn-primary' value=PDF />"));
 
 														 
 													 }else if(isDelete==1 && isEdit==0){
 														 //alert("in second");
 														 tr
 															.append($(
-																	'<td class="col-md-1"></td>')
+																	'<td class="col-md-2" ></td>')
 																	.html(
 																			"<a href=''javascript: void(0)'/"
 																					+ bill.billNo
@@ -718,14 +795,14 @@
 																					+ bill.billNo
 																					+ "/"
 																					+ bill.frName
-																					+ "'<abbr title='Delete Bill'></abbr><i class='fa fa-trash-o  fa-lg'></i></a>"));
+																					+ "'<abbr title='Delete Bill'></abbr><i class='fa fa-trash-o  fa-lg'></i></a>&nbsp;&nbsp;<input type=button  style='padding: 0px 4px;font-size: 14px;' onclick=generateSinglePdf("+bill.billNo+")  id=btn_submit_pdf class='btn btn-primary' value=PDF />"));
 
 														 
 													 }else if(isDelete==0 && isEdit==1){
 														// alert("in third");
 														 tr
 															.append($(
-																	'<td class="col-md-1"></td>')
+																	'<td class="col-md-2" ></td>')
 																	.html(
 																			"<a href='${pageContext.request.contextPath}/updateBillDetails/"
 																					+ bill.billNo
@@ -739,7 +816,7 @@
 																					+ bill.billNo
 																					+ "/"
 																					+ bill.frName
-																					+ "class='disableClick''<abbr title='Delete Bill'></abbr><i class='fa fa-trash-o  fa-lg'></i></a>"));
+																					+ "class='disableClick''<abbr title='Delete Bill'></abbr><i class='fa fa-trash-o  fa-lg'></i></a>&nbsp;&nbsp;<input type=button  style='padding: 0px 4px;font-size: 14px;' onclick=generateSinglePdf("+bill.billNo+")  id=btn_submit_pdf class='btn btn-primary' value=PDF />"));
 
 														 
 													 }else{
@@ -747,7 +824,7 @@
 														 
 														 tr
 															.append($(
-																	'<td class="col-md-1"></td>')
+																	'<td class="col-md-2" ></td>')
 																	.html(
 																			"<a href='javascript: void(0)/"
 																					+ bill.billNo
@@ -761,7 +838,7 @@
 																					+ bill.billNo
 																					+ "/"
 																					+ bill.frName
-																					+ "class='disableClick''<abbr title='Delete Bill'></abbr><i class='fa fa-trash-o  fa-lg'></i></a>"));
+																					+ "class='disableClick''<abbr title='Delete Bill'></abbr><i class='fa fa-trash-o  fa-lg'></i></a>&nbsp;&nbsp;<input type=button  style='padding: 0px 4px;font-size: 14px;' onclick=generateSinglePdf("+bill.billNo+")  id=btn_submit_pdf class='btn btn-primary' value=PDF />"));
 														 
 														 
 														 /* tr

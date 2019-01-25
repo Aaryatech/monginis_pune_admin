@@ -76,7 +76,16 @@ public class Orders {
 
 	private int menuId;
 
+	private int minQty;//extra for manual order at admin bean only
 	
+	public int getMinQty() {
+		return minQty;
+	}
+
+	public void setMinQty(int minQty) {
+		this.minQty = minQty;
+	}
+
 	public String getItemName() {
 		return itemName;
 	}

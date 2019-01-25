@@ -5,6 +5,7 @@
 	 
 
 	<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
+
 	<body>
 	
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
@@ -220,7 +221,7 @@
  -->										<th class="col-md-1">Rate</th>
 											<th class="col-md-1">MRP</th>
 											<th class="col-md-1">Status</th>
-											
+											<th class="col-md-1">Station No</th>
 											<th class="col-md-1">Action</th>
 												</tr>
 												</thead>
@@ -242,6 +243,7 @@
  -->											<th class="col-md-1">Rate</th>
 											<th class="col-md-1">MRP</th>
 												<th class="col-md-1">Status</th>
+													<th class="col-md-1">Station No</th>
 											<th class="col-md-1">Action</th>
 												</tr>
 												</thead>
@@ -276,6 +278,7 @@
 											
 												</td>
 												
+												<td align="left">${itemsList.itemMrp2}</td>
 												
 												
 												<c:choose>
@@ -529,4 +532,5 @@ else
 
 }
 </script>
+
 </html>

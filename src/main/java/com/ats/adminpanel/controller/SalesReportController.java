@@ -4996,9 +4996,9 @@ model.addObject("royPer",getRoyPer());
 		String url = request.getParameter("url");
 		System.out.println("URL " + url);
 		
-		//File f = new File("/home/supertom/apache-tomcat-8.5.35/webapps/admin/report.pdf");
-		//File f = new File("/opt/apache-tomcat-8.5.6/webapps/uploads/report.pdf");
-		File f = new File("/home/ats-12/Report.pdf");
+		File f = new File("/home/supertom/apache-tomcat-8.5.35/webapps/admin/report.pdf");
+		//  File f = new File("/opt/apache-tomcat-8.5.6/webapps/uploads/report.pdf");
+		//File f = new File("/home/ats-12/Report.pdf");
 
 		try {
 			runConverter1(Constants.ReportURL + url, f, request, response);
@@ -5012,9 +5012,9 @@ model.addObject("royPer",getRoyPer());
 		// get absolute path of the application
 		ServletContext context = request.getSession().getServletContext();
 		String appPath = context.getRealPath("");
-		//String filePath = "/home/supertom/apache-tomcat-8.5.35/webapps/admin/report.pdf";
+		String filePath = "/home/supertom/apache-tomcat-8.5.35/webapps/admin/report.pdf";
 
-		 String filePath = "/home/ats-12/Report.pdf";
+		// String filePath = "/home/ats-12/Report.pdf";
 
 		// construct the complete absolute path of the file
 		String fullPath = appPath + filePath;

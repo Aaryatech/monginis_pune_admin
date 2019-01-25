@@ -290,26 +290,15 @@ public class DumpOrderController {
 		public String submitDumpOrders(HttpServletRequest request, HttpServletResponse response) throws ParseException {
 			ModelAndView model = new ModelAndView("orders/dumporders");
 			Orders order=new Orders();
-			System.out.println("In Submit order call");
-		// List<Orders> oList=new ArrayList<>();
+			
 		String todaysDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-		
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		java.util.Date utilDate = new java.util.Date();
 		System.out.println(dateFormat.format(utilDate)); //2016/11/16 12:08:43
 		
 		java.sql.Date date=new java.sql.Date(utilDate.getTime());
-	//	java.sql.Date deliveryDate=new java.sql.Date(tomarrow().getTime());
+		java.sql.Date deliveryDate=new java.sql.Date(tomarrow().getTime());
 		
-		//--------------------------Date Added--------------------------------------------------
-		String dateStr = request.getParameter("order_date");
-		SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy");
-		java.util.Date udate = sdf1.parse(dateStr);
-		java.sql.Date sqlCurrDate = new java.sql.Date(udate.getTime()); 
-		java.sql.Date deliveryDate = new java.sql.Date(tomarrowDate(udate).getTime());
-		System.err.println("deliveryDate"+deliveryDate+"sqlCurrDate"+sqlCurrDate);
-		//-----------------------------------------------------------------------------
-		//java.sql.Date deliveryDate=new java.sql.Date(tomarrow1().getTime());
 		
 		//get all Franchisee details
 		RestTemplate restTemplate = new RestTemplate();
@@ -350,8 +339,8 @@ public class DumpOrderController {
 					order.setItemId(String.valueOf(items.get(j).getId()));
 					order.setOrderQty(qty);
 					order.setEditQty(qty);
-					order.setProductionDate(sqlCurrDate);
-					order.setOrderDate(sqlCurrDate);
+					order.setProductionDate(date);
+					order.setOrderDate(date);
 					order.setDeliveryDate(deliveryDate);
 					//order.setMenuId(0);
 					order.setGrnType(3);

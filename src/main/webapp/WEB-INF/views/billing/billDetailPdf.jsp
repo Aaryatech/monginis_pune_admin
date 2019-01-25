@@ -201,6 +201,7 @@
 									</div>
 								</div>
 							</c:forEach>
+							</div>
 							<div
 										class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-6">
 										

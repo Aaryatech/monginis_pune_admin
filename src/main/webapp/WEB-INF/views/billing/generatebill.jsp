@@ -360,7 +360,7 @@
 				
 				var selectedMenu = $("#selectMenu").val();
 				var deliveryDate = $("#deliveryDate").val();
-				alert(selectedMenu);
+				
 				$('#loader').show();
 
 				$

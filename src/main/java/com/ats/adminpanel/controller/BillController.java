@@ -1218,7 +1218,8 @@ public class BillController {
 		// Constants.mainAct = 8;
 		// Constants.subAct = 83;
 		try {
-
+			int isSinglePdf = Integer.parseInt(request.getParameter("issinglepdf"));
+			int billnumber = Integer.parseInt(request.getParameter("billnumber"));
 			vehicleNo = request.getParameter("vehicle_no");
 			transportMode = request.getParameter("transport_mode");
 			transportMode = transportMode.replaceAll("\\s", "-");
@@ -1231,6 +1232,11 @@ public class BillController {
 			String selectedBill = request.getParameter("select_to_print");
 			String[] selectedBills = request.getParameterValues("select_to_print");
 			
+			 if(isSinglePdf==1)
+			 {
+				 selectedBills=new String[1];
+				 selectedBills[0]=""+billnumber;
+			 }
 
 			for (int i = 0; i < selectedBills.length; i++) {
 				billList = selectedBills[i] + "," + billList;
@@ -1406,7 +1412,7 @@ public class BillController {
 		// Constants.mainAct = 8;
 		// Constants.subAct = 83;
 		try {
-
+		
 			vehicleNo = request.getParameter("vehicle_no");
 			transportMode = request.getParameter("transport_mode");
 			transportMode = transportMode.replaceAll("\\s", "-");
@@ -1419,7 +1425,6 @@ public class BillController {
 			String selectedBill = request.getParameter("select_to_print");
 			String[] selectedBills = request.getParameterValues("select_to_print");
 			
-
 			for (int i = 0; i < selectedBills.length; i++) {
 				billList = selectedBills[i] + "," + billList;
 			}
@@ -2363,8 +2368,8 @@ public class BillController {
 		String url = request.getParameter("url");
 		System.out.println("URL " + url);
 		// http://monginis.ap-south-1.elasticbeanstalk.com
-		   File f = new File("/home/ats-12/bill.pdf");
-		   // File f = new File("/home/supertom/apache-tomcat-8.5.35/webapps/admin/bill.pdf");
+		 //    File f = new File("/home/ats-12/bill.pdf");
+		 File f = new File("/home/supertom/apache-tomcat-8.5.35/webapps/admin/bill.pdf");
 		//File f = new File("/Users/MIRACLEINFOTAINMENT/ATS/uplaods/reports/ordermemo221.pdf");
 
 		System.out.println("I am here " + f.toString());
@@ -2382,8 +2387,8 @@ public class BillController {
 		ServletContext context = request.getSession().getServletContext();
 		String appPath = context.getRealPath("");
 		String filename = "ordermemo221.pdf";
-		 	String filePath = "/home/ats-12/bill.pdf";
-		 //  String filePath = "/home/supertom/apache-tomcat-8.5.35/webapps/admin/bill.pdf";
+		 //	String filePath = "/home/ats-12/bill.pdf";
+		 String filePath = "/home/supertom/apache-tomcat-8.5.35/webapps/admin/bill.pdf";
 		//String filePath = "/Users/MIRACLEINFOTAINMENT/ATS/uplaods/reports/ordermemo221.pdf";
 
 		// construct the complete absolute path of the file

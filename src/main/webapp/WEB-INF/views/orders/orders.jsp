@@ -40,7 +40,7 @@ td, th {
 	<c:url var="callSearchOrdersProcess" value="/searchOrdersProcess" />
 	<c:url var="callChangeQty" value="/callChangeQty" />
 	<c:url var="callDeleteOrder" value="/callDeleteOrder" />
-
+	<c:url var="updateOrderDetails" value="/updateOrderDetails" />
 
 
 
@@ -215,7 +215,7 @@ td, th {
 								<!-- </div>
 
 								<div class="form-group"> -->
-									<label class="col-sm-3 col-lg-1 control-label">Date</label>
+									<label class="col-sm-3 col-lg-1 control-label">Prod.Date</label>
 									<div class="col-sm-5 col-lg-2 controls">
 										<input class="form-control date-picker" id="date" size="16"
 											type="text" name="date" value="${date}" required />
@@ -267,11 +267,13 @@ td, th {
 										<div class="clearfix"></div>
 										<div id="table-scroll" class="table-scroll">
 
-											<div id="faux-table" class="faux-table" aria="hidden">
+							<!-- 				<div id="faux-table" class="faux-table" aria="hidden">
 												<table id="table2" class="table table-advance"  border="1">
 													<thead>
 														<tr class="bgpink">
-															<th width="148" style="width: 18px" align="left">No</th>
+													<th class="col-sm-1"><input type="checkbox" onClick="selectOrderIdNo(this)" /> All</th>
+														
+															<th width="148" style="width: 18px" align="left">Sr</th>
 															<th width="198" align="left">Franchisee Name</th>
 															<th width="190" align="left">Item Name</th>
 															<th width="199" align="left">Category</th>
@@ -281,17 +283,19 @@ td, th {
 													</thead>
 												</table>
 
-											</div>
+											</div> -->
 											<div class="table-wrap">
 
 												<table id="table1" class="table table-advance" border="1">
 													<thead>
 														<tr class="bgpink">
-															<th width="148" style="width: 18px" align="left">No</th>
+														<th class="col-sm-1"><input type="checkbox" onClick="selectOrderIdNo(this)" id="all"/> All</th>
+															<th width="148" style="width: 18px" align="left">Sr</th>
 															<th width="198" align="left">Franchisee Name</th>
 															<th width="190" align="left">Item Name</th>
 															<th width="199" align="left">Category</th>
 															<th width="199" align="left">Quantity</th>
+															<th width="199" align="left">Del. Date</th>
 															<th width="100" align="right">Action</th>
 														</tr>
 													</thead>
@@ -377,12 +381,23 @@ td, th {
 													</tbody>
 												</table>
 											</div>
-										</div>
+									
 
-
-									</div>
-									<div class="form-group"
-										style="display: <c:out value="${dis}" />;" id="range">
+<br>
+									
+									<div class="form-group" align="left" style="display: none;" id="opt">
+										<div >
+                                       <label class=" col-md-2">Delivery Date</label>
+										<div class="col-md-2">
+										<input class="form-control"	 name="delivery_date" id="delivery_date" type="date" />
+										  </div>
+									  </div>
+									    
+				<div class="col-md-1">
+				<input type="button" class="btn btn-primary"  value="Update"  disabled="disabled" id="callupdate" onclick="updateDetails()">
+						
+</div>	</div></div>
+<div class="form-group" 	style="display: <c:out value="${dis}" />;" id="range">
 
 
 
@@ -474,7 +489,44 @@ td, th {
 	<script type="text/javascript"
 		src="${pageContext.request.contextPath}/resources/assets/bootstrap-daterangepicker/daterangepicker.js"></script>
 
+<script type="text/javascript">
+function updateDetails()
+{
+	var delDate=$("#delivery_date").val();
+	/* var checkedVals = $('.selorder:checkbox:checked').map(function() {
+	    return this.value;
+	}).get(); */
+	var selectedItems = new Array();
+	/* $("input:checkbox[name=selorder]:checked").each(function () {
+		selectedItems.push(this.id);
+	}); */
+	var checkedVals = $('.selorder:checkbox:checked').map(function() {
+	    return this.value;
+	}).get();
+	//alert(checkedVals.join(","));
+//alert(JSON.stringify(selectedItems));
+	$.getJSON('${updateOrderDetails}', {
 
+		ids:checkedVals.join(","),
+		delDate:delDate,
+		ajax : 'true'
+
+	}, function(data) {
+		
+		if(data.error==false)
+			{
+			
+			  alert("Delivery Date updated Successfully.");
+			  callSearch();
+			}
+		else
+			{
+			 alert("Delivery Date Not Updated.");
+			}
+	});
+	
+}
+</script>
 <script type="text/javascript">
 	function validate() {
 	
@@ -504,7 +556,8 @@ td, th {
 
 function callSearch() {
 
-	
+	$('#all').prop('checked', false);
+
 	var isDelete=document.getElementById("isDelete").value;
 	var isEdit=document.getElementById("isEdit").value;
 	
@@ -536,6 +589,10 @@ $.getJSON('${callSearchOrdersProcess}', {
 
 }, function(data) {
 	document.getElementById("expExcel").disabled=true;
+	document.getElementById("callupdate").disabled=false;
+
+	$("#opt").css("display","block");
+
 	$('#loader').hide();
 	var len = data.length;
 
@@ -546,6 +603,8 @@ $.getJSON('${callSearchOrdersProcess}', {
 		document.getElementById("expExcel").disabled=false;
 		document.getElementById('range').style.display = 'block';
 	var tr = $('<tr></tr>');
+	
+	tr.append($('<td class="col-sm-1"></td>').html("<input type='checkbox' name='selorder' class='selorder' id="+orders.orderId+"   value="+orders.orderId+">"));
 
   	tr.append($('<td></td>').html(key+1));
 
@@ -562,7 +621,7 @@ $.getJSON('${callSearchOrdersProcess}', {
 	 	tr.append($('<td></td>').html("<input type=number onkeypress='return IsNumeric(event);' disabled ondrop='return false;' onpaste='return false;' style='text-align: center;    height: 24px;' class='form-control' min=0 id="+orders.orderId+" Value="+orders.orderQty+" disabled>"));
   		
   	}
-
+	tr.append($('<td></td>').html(orders.deliveryDate));
   	
 if(isDelete==1){
 tr.append($('<td></td>').html(' <a>   <span class="glyphicon glyphicon-edit" id="edit'+orders.orderId+'" onClick=editQty('+orders.orderId+');> </span> </a><a><span class="glyphicon glyphicon-remove" id="delete'+orders.orderId+'" onClick=deleteOrder('+orders.orderId+');> </span></a>'));

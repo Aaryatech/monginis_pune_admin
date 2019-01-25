@@ -66,7 +66,7 @@
 
 
 					<div class="form-group">
-						<label class="col-sm-3 col-lg-2	 control-label">Production Date</label>
+						<label class="col-sm-3 col-lg-2	 control-label">Delivery Date</label>
 						<div class="col-sm-6 col-lg-4 controls date_select">
 							<input class="form-control date-picker" id="billDate"
 								name="billDate" size="30" type="text" value="${todaysDate}" />
