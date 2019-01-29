@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -62,7 +63,7 @@ public class GrnGvnController {
 
 	GetAllRemarksList getAllRemarksList = new GetAllRemarksList();
 
-	public static String gateGrnFromDate, gateGrnToDate, accGrnFromDate, accGrnToDate;
+	//public static String gateGrnFromDate, gateGrnToDate, accGrnFromDate, accGrnToDate;
 
 	public static String gateGvnFromDate, gateGvnToDate, storeGvnFromDate, storeGvnToDate, accGvnFromDate, accGvnToDate;
 
@@ -86,6 +87,10 @@ public class GrnGvnController {
 	String accGrnHeaderFromDate, accGrnHeaderToDate;
 
 	int globalGateHeaderId, globalAccHeaderId;
+	
+	
+	LinkedHashMap<Integer,ArrayList<GetGrnGvnDetails>> hashMap=new LinkedHashMap<Integer,ArrayList<GetGrnGvnDetails>>();
+
 
 	@RequestMapping(value = "/getDateForGateHeader", method = RequestMethod.GET)
 	public String getDateForGateHeader(HttpServletRequest request, HttpServletResponse response) {
@@ -225,7 +230,7 @@ public class GrnGvnController {
 			System.out.println("Excep in Gate Header List /getGrnHeaderForGate " + e.getMessage());
 			e.printStackTrace();
 		}
-
+		gateGrnHeaderFromDate=null; gateGrnHeaderToDate=null;
 		return model;
 	}
 
@@ -250,12 +255,17 @@ public class GrnGvnController {
 		try {
 
 			map.add("grnGvnHeaderId", headerId);
+
 			GetGrnGvnDetailsList detailList = restTemplate.postForObject(Constants.url + "getFrGrnDetails", map,
 					GetGrnGvnDetailsList.class);
 
 			grnGateDetailList = new ArrayList<>();
 
 			grnGateDetailList = detailList.getGrnGvnDetails();
+			modelAndView.addObject("headerId", headerId);
+
+			hashMap.put(headerId, (ArrayList) grnGateDetailList);
+
 
 			System.out.println("GRN Detail   " + grnGateDetailList.toString());
 
@@ -285,6 +295,7 @@ public class GrnGvnController {
 				}
 			}
 			modelAndView.addObject("srNo", gateHeader.getGrngvnSrno());
+			modelAndView.addObject("srNo", gateHeader.getGrngvnSrno());
 
 
 		} catch (Exception e) {
@@ -300,7 +311,7 @@ public class GrnGvnController {
 
 		
 		modelAndView.addObject("remarkList", getAllRemarks);
-
+		gateGrnHeaderFromDate=null; gateGrnHeaderToDate=null;
 		return modelAndView;
 
 	}
@@ -351,6 +362,11 @@ public class GrnGvnController {
 			Info info = restTemplate.postForObject(Constants.url + "updateGateGrn", dataList, Info.class);
 
 			System.out.println("after calling web service of gate grn agree info response as String - " + info);
+			
+			int key=Integer.parseInt(request.getParameter("headerId"));
+			System.err.println("Key " +key);
+			grnGateDetailList=hashMap.get(key);
+			globalGateHeaderId=key;
 
 			if (info.getError() == false) {
 
@@ -445,7 +461,9 @@ public class GrnGvnController {
 			e.printStackTrace();
 		}
 
-		return "redirect:/getGateGrnDetail";
+		//return "redirect:/getGateGrnDetail";
+		gateGrnHeaderFromDate=null; gateGrnHeaderToDate=null;
+		return "redirect:/getGrnHeaderForGate";
 
 	}
 
@@ -499,6 +517,11 @@ public class GrnGvnController {
 			Info updateGateGrn = restTemplate.postForObject(Constants.url + "updateGateGrn", dataList, Info.class);
 
 			System.out.println("after calling web service of disagree" + updateGateGrn.toString());
+			
+			int key=Integer.parseInt(request.getParameter("headerId"));
+			System.err.println("Key " +key);
+			grnGateDetailList=hashMap.get(key);
+			globalGateHeaderId=key;
 
 			if (updateGateGrn.getError() == false) {
 
@@ -590,8 +613,9 @@ public class GrnGvnController {
 			e.printStackTrace();
 		}
 		System.out.println("INSERT GATE GRN DISAPPROVE : STATUS =3");
-
-		return "redirect:/getGateGrnDetail";
+		gateGrnHeaderFromDate=null; gateGrnHeaderToDate=null;
+		//return "redirect:/getGateGrnDetail";
+		return "redirect:/getGrnHeaderForGate";
 
 	}
 
@@ -649,6 +673,11 @@ public class GrnGvnController {
 			gIds = gIds.substring(1);
 
 			Info updateGateGrn = restTemplate.postForObject(Constants.url + "updateGateGrn", dataList, Info.class);
+			
+			int key=Integer.parseInt(request.getParameter("headerId"));
+			System.err.println("Key " +key);
+			grnGateDetailList=hashMap.get(key);
+			globalGateHeaderId=key;
 
 			if (updateGateGrn.getError() == false) {
 
@@ -747,7 +776,9 @@ public class GrnGvnController {
 
 		}
 
-		return "redirect:/getGateGrnDetail/" + globalGateHeaderId;
+		//return "redirect:/getGateGrnDetail/" + globalGateHeaderId;
+		gateGrnHeaderFromDate=null; gateGrnHeaderToDate=null;
+		return "redirect:/getGrnHeaderForGate";
 	}
 	// Acc Grn Started
 
@@ -899,6 +930,8 @@ public class GrnGvnController {
 			model.addObject("toDate", accGrnHeaderToDate);
 			model.addObject("grnList", grnAccHeaderList);
 			model.addObject("selectedFr", frList);
+			
+			accGrnHeaderFromDate=null; accGrnHeaderToDate=null;
 
 		} catch (Exception e) {
 
@@ -928,6 +961,9 @@ public class GrnGvnController {
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 
 		map.add("grnGvnHeaderId", headerId);
+		
+		modelAndView.addObject("headerId", headerId);
+
 		// getFrGrnDetail
 		try {
 
@@ -937,6 +973,9 @@ public class GrnGvnController {
 			grnAccDetailList = new ArrayList<>();
 
 			grnAccDetailList = detailList.getGrnGvnDetails();
+			
+			hashMap.put(headerId,(ArrayList)  grnAccDetailList);
+
 
 			System.out.println("GRN Detail   " + grnAccDetailList.toString());
 			statuses=new ArrayList<Integer>();
@@ -1068,6 +1107,8 @@ public class GrnGvnController {
 		modelAndView.addObject("grnList", grnAccDetailList);
 		modelAndView.addObject("grnDate", grnDate);
 		modelAndView.addObject("remarkList", getAllRemarks);
+		
+		accGrnHeaderFromDate=null; accGrnHeaderToDate=null;
 
 		return modelAndView;
 	}
@@ -1116,6 +1157,13 @@ public class GrnGvnController {
 			TempGrnGvnBeanUp data = new TempGrnGvnBeanUp();
 
 			GetGrnGvnDetails detail = new GetGrnGvnDetails();
+			
+			int key=Integer.parseInt(request.getParameter("headerId"));
+			globalAccHeaderId=key;
+			System.err.println("Key " +key);
+
+			grnAccDetailList=hashMap.get(key);
+
 
 			for (int i = 0; i < grnAccDetailList.size(); i++) {
 
@@ -1224,6 +1272,7 @@ public class GrnGvnController {
 			} // end of for Loop
 
 			Info info = restTemplate.postForObject(Constants.url + "updateAccGrn", dataList, Info.class);
+			
 
 			System.out.println("Response UPDATE " + info.toString());
 			// new code
@@ -1410,8 +1459,10 @@ public class GrnGvnController {
 			e.printStackTrace();
 
 		}
-
-		return "redirect:/getAccGrnDetail";
+		
+		//return "redirect:/getAccGrnDetail";
+		accGrnHeaderFromDate=null; accGrnHeaderToDate=null;
+		return "redirect:/getGrnHeaderForAcc";
 
 	}
 
@@ -1451,6 +1502,13 @@ public class GrnGvnController {
 			TempGrnGvnBeanUp data = new TempGrnGvnBeanUp();
 
 			GetGrnGvnDetails detail = new GetGrnGvnDetails();
+			
+			int key=Integer.parseInt(request.getParameter("headerId"));
+			globalAccHeaderId=key;
+			System.err.println("Key " +key);
+
+			grnAccDetailList=hashMap.get(key);
+
 			for (int i = 0; i < grnAccDetailList.size(); i++) {
 
 				if (grnAccDetailList.get(i).getGrnGvnId() == grnId) {
@@ -1741,7 +1799,9 @@ public class GrnGvnController {
 
 		}
 
-		return "redirect:/getAccGrnDetail";
+		//return "redirect:/getAccGrnDetail";
+		accGrnHeaderFromDate=null; accGrnHeaderToDate=null;
+		return "redirect:/getGrnHeaderForAcc";
 
 	}
 
@@ -1790,6 +1850,13 @@ public class GrnGvnController {
 			TempGrnGvnBeanUp data = new TempGrnGvnBeanUp();
 
 			GetGrnGvnDetails detail = new GetGrnGvnDetails();
+			
+			int key=Integer.parseInt(request.getParameter("headerId"));
+			globalAccHeaderId=key;
+			System.err.println("Key " +key);
+
+			grnAccDetailList=hashMap.get(key);
+
 
 			for (int j = 0; j < grnIdList.length; j++) {
 
@@ -2086,7 +2153,10 @@ public class GrnGvnController {
 
 		}
 
-		return "redirect:/getAccGrnDetail/" + globalAccHeaderId;
+		//return "redirect:/getAccGrnDetail/" + globalAccHeaderId;
+		
+		accGrnHeaderFromDate=null; accGrnHeaderToDate=null;
+		return "redirect:/getGrnHeaderForAcc";
 	}
 
 }

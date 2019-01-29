@@ -63,6 +63,8 @@
 							<form
 								action="${pageContext.request.contextPath}/insertAccGvnByCheckBoxes"
 								class="form-horizontal" method="post" id="validation-form">
+									<input type="hidden" value="${headerId}" id="headerId"
+									name="headerId">
 								<div class="box">
 									<div class="box-title">
 										<h3>
@@ -745,6 +747,7 @@ var grnId=grnGvnId;
 var approve_acc_login=$("#approve_acc_login"+grnGvnId).val();
 var acc_remark=$("#acc_remark"+grnId).val();
 var acc_gvn_qty=$("#acc_gvn_qty"+grnGvnId).val();
+var headerId=$("#headerId").val();
 
 
 if($("#acc_remark"+grnGvnId).val() == ''){
@@ -761,6 +764,7 @@ else{
 			approveAccLogin : approve_acc_login,
 			accRemark : acc_remark,	
 			acc_gvn_qty : acc_gvn_qty,
+			headerId : headerId,
 
 				ajax : 'true',
 			
@@ -811,6 +815,7 @@ var approve_acc_login=$("#approve_acc_login"+grnGvnId).val();
 var acc_remark=$("#acc_remark"+grnGvnId).val();
 var acc_gvn_qty=$("#acc_gvn_qty"+grnGvnId).val();
 
+var headerId=$("#headerId").val();
 
 /* alert(grnId);
 alert(approve_gate_login); */
@@ -823,8 +828,7 @@ alert(approve_gate_login); */
 							grnId : grnId,
 							approveAccLogin:approve_acc_login,
 							acc_gvn_qty : acc_gvn_qty,
-
-								
+							headerId : headerId,
 								ajax : 'true',
 							
 	 complete: function() {

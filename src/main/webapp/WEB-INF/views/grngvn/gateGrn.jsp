@@ -68,11 +68,15 @@
 							<form
 								action="${pageContext.request.contextPath}/insertGateGrnByCheckBoxes"
 								class="form-horizontal" method="post" id="validation-form">
+								<input type="hidden" value="${headerId}" id="headerId"
+									name="headerId">
+
 
 								<div class="box">
 									<div class="box-title">
 										<h3>
-											<i class="fa fa-table"></i> GRN List Date:${grnDate} SrNo:${srNo }
+											<i class="fa fa-table"></i> GRN List Date:${grnDate}
+											SrNo:${srNo}
 										</h3>
 										<div class="box-tool">
 											<a data-action="collapse" href="#"><i
@@ -88,9 +92,17 @@
 											<table width="100%"
 												class="table table-advance table-responsive table-position"
 												id="table1">
-												<thead style="background-color:#f3b5db; ">
+												<thead style="background-color: #f3b5db;">
 													<tr>
-														<th></th>
+														<c:choose>
+														<c:when test="${sts==1}">
+														 <th><input type="checkbox" onClick="selectedGrn(this)" disabled/>Select All<br/></th>
+														</c:when>
+														<c:otherwise>
+														<th><input type="checkbox"
+													onClick="selectedGrn(this)" />Select All<br/></th>
+														</c:otherwise>
+												</c:choose>
 														<th>Sr No</th>
 														<th align="center">Invoice No</th>
 														<th>Franchise Name</th>
@@ -106,19 +118,20 @@
 												</thead>
 												<tbody>
 													<c:forEach items="${grnList}" var="grnList"
-														varStatus="count"> 
-														
-														 <c:choose> 
-														<c:when test="${grnList.grnGvnQtyAuto!=grnList.grnGvnQty}">
-														<c:set var="color" value="red"></c:set> 
-														</c:when>
-														<c:otherwise>
-														<c:set var="color" value="white"></c:set>
-														</c:otherwise>
-														</c:choose> 
+														varStatus="count">
 
-													<tr bgcolor="${color}">
- 															<c:choose>
+														<c:choose>
+															<c:when
+																test="${grnList.grnGvnQtyAuto!=grnList.grnGvnQty}">
+																<c:set var="color" value="red"></c:set>
+															</c:when>
+															<c:otherwise>
+																<c:set var="color" value="white"></c:set>
+															</c:otherwise>
+														</c:choose>
+
+														<tr bgcolor="${color}">
+															<c:choose>
 																<c:when test="${grnList.grnGvnStatus==2}">
 																	<td><input type="checkbox" name="select_to_agree"
 																		disabled="disabled" id="${grnList.grnGvnId}"
@@ -180,7 +193,7 @@
 																name="approve_gate_login${grnList.grnGvnId}"
 																id="approve_gate_login${grnList.grnGvnId}"
 																value="${grnList.approvedLoginGate}" /></td>
-															
+
 															<c:set var="qty" value="0"></c:set>
 
 															<c:choose>
@@ -212,7 +225,8 @@
 															<td align="center"><input type="text"
 																name="gate_grn_qty${grnList.grnGvnId}"
 																class="form-control" style="width: 50px"
-																id='gate_grn_qty${grnList.grnGvnId}' onkeyup="checkQty(${grnList.grnGvnId},${grnList.grnGvnQty},${grnList.aprQtyGate},${qty})"
+																id='gate_grn_qty${grnList.grnGvnId}'
+																onkeyup="checkQty(${grnList.grnGvnId},${grnList.grnGvnQty},${grnList.aprQtyGate},${qty})"
 																value="${qty}" /></td>
 
 
@@ -223,17 +237,20 @@
 																</c:when>
 
 																<c:when test="${grnList.grnGvnStatus==2}">
-																	<td align="left"><c:out value="Approved From Dispatch"></c:out></td>
+																	<td align="left"><c:out
+																			value="Approved From Dispatch"></c:out></td>
 
 																</c:when>
 
 																<c:when test="${grnList.grnGvnStatus==3}">
-																	<td align="left"><c:out value="Reject From Dispatch"></c:out></td>
+																	<td align="left"><c:out
+																			value="Reject From Dispatch"></c:out></td>
 
 																</c:when>
 
 																<c:when test="${grnList.grnGvnStatus==4}">
-																	<td align="left"><c:out value="Approved From Sales"></c:out></td>
+																	<td align="left"><c:out
+																			value="Approved From Sales"></c:out></td>
 
 																</c:when>
 
@@ -243,12 +260,14 @@
 																</c:when>
 
 																<c:when test="${grnList.grnGvnStatus==6}">
-																	<td align="left"><c:out value="Approved From Account"></c:out></td>
+																	<td align="left"><c:out
+																			value="Approved From Account"></c:out></td>
 
 																</c:when>
 
 																<c:when test="${grnList.grnGvnStatus==7}">
-																	<td align="left"><c:out value="Reject From Account"></c:out></td>
+																	<td align="left"><c:out
+																			value="Reject From Account"></c:out></td>
 
 																</c:when>
 
@@ -659,7 +678,34 @@
 
 
 
-
+<script>
+	
+		function selectedGrn(source) {
+			checkboxes = document.getElementsByName('select_to_agree');
+			$.getJSON('${getStatus}', {
+				
+				ajax : 'true'
+			}, function(data) {
+				//alert(data);
+				//alert(data[0]);
+				
+				for(var i=0;i<data.length;i++){
+					checkboxes[data[i]].checked = source.checked;
+				}
+				
+			});	
+				
+		/* checkboxes = document.getElementsByName('select_to_agree');
+			
+			for (var i = 0, n = checkboxes.length; i < n; i++) {
+				checkboxes[i].checked = source.checked;
+				
+			} */
+			
+			
+		}
+		
+	</script>
 
 
 
@@ -683,6 +729,7 @@ var approve_gate_login=$("#approve_gate_login"+grnGvnId).val();
 var gate_remark=$("#gate_remark"+grnId).val();
 
 var gate_grn_qty=$("#gate_grn_qty"+grnGvnId).val();
+var headerId=$("#headerId").val();
 
 if($("#gate_remark"+grnGvnId).val() == ''){
 	alert("Please  Grn Remark!");
@@ -698,6 +745,8 @@ else{
 			approveGateLogin : approve_gate_login,
 			gateRemark : gate_remark,
 		 gate_grn_qty:gate_grn_qty,
+		 headerId : headerId,
+
 
 				ajax : 'true',
 			
@@ -747,6 +796,7 @@ var grnId=grnGvnId;
 var approve_gate_login=$("#approve_gate_login"+grnGvnId).val();
 var gate_remark=$("#gate_remark"+grnGvnId).val();
 var gate_grn_qty=$("#gate_grn_qty"+grnGvnId).val();
+var headerId=$("#headerId").val();
 
 /* alert(grnId);
 alert(approve_gate_login); */
@@ -759,7 +809,7 @@ alert(approve_gate_login); */
 							grnId : grnId,
 							approveGateLogin:approve_gate_login,
 							gate_grn_qty:gate_grn_qty,
-								
+							headerId : headerId,
 								ajax : 'true',
 							
 	 complete: function() {
@@ -873,7 +923,7 @@ function getDate(){
 	
 	
 </script>
-<script type="text/javascript">
+	<script type="text/javascript">
 
 function checkQty(grnId,grnQty,aprQty,qty){
 	//alert("JJJ");

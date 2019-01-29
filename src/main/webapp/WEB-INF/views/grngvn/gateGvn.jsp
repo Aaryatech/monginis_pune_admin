@@ -69,6 +69,8 @@
 							<form
 								action="${pageContext.request.contextPath}/insertGateGvnByCheckBoxes"
 								class="form-horizontal" method="post" id="validation-form">
+									<input type="hidden" value="${headerId}" id="headerId"
+									name="headerId">
 
 								<div class="box">
 									<div class="box-title">
@@ -103,7 +105,14 @@
 														<th width="100" align="left">Action</th> -->
 
 
-														<th></th>
+													<c:choose>
+														<c:when test="${sts==1}">
+														 <th><input type="checkbox" onClick="selectedGvn(this)" disabled/>Select All<br/></th>
+														</c:when>
+														<c:otherwise>
+														<th><input type="checkbox" onClick="selectedGvn(this)" />Select All</th>
+														</c:otherwise>
+												</c:choose>
 														<th>Sr No</th>
 														<th>Invoice No</th>
 														<th>Franchise Name</th>
@@ -767,6 +776,7 @@ var grnId=grnGvnId;
 var approve_gate_login=$("#approve_gate_login"+grnGvnId).val();
 var gate_remark=$("#gate_remark"+grnId).val();
 var gate_gvn_qty=$("#gate_gvn_qty"+grnGvnId).val();
+var headerId=$("#headerId").val();
 
 if($("#gate_remark"+grnGvnId).val() == ''){
 	alert("Please Enter Grn Remark!");
@@ -782,6 +792,7 @@ else{
 			approveGateLogin : approve_gate_login,
 			gateRemark : gate_remark,		
 			gate_gvn_qty : gate_gvn_qty,
+			headerId : headerId,
 				ajax : 'true',
 			
 
@@ -830,6 +841,7 @@ var grnId=grnGvnId;
 var approve_gate_login=$("#approve_gate_login"+grnGvnId).val();
 var gate_remark=$("#gate_remark"+grnGvnId).val();
 var gate_gvn_qty=$("#gate_gvn_qty"+grnGvnId).val();
+var headerId=$("#headerId").val();
 
 
 /* alert(grnId);
@@ -843,6 +855,7 @@ alert(approve_gate_login); */
 							grnId : grnId,
 							approveGateLogin:approve_gate_login,
 							gate_gvn_qty:gate_gvn_qty,	
+							headerId : headerId,
 								ajax : 'true',
 							
 	 complete: function() {
@@ -925,7 +938,7 @@ for (i = 0; i < acc.length; i++) {
 
 function showGateGvnDetails(){
 	
-	alert("hi");
+	//alert("hi");
 		var fromDate=$("#from_date").val();
 	
 		var toDate=$("#to_date").val();
@@ -1000,6 +1013,32 @@ function checkQty(grnId,grnQty,aprQty,qty){
 }
 
 </script>
+
+	<script>
+	
+		function selectedGvn(source) {
+			checkboxes = document.getElementsByName('select_to_agree');
+			$.getJSON('${getGvnStatus}', {
+				
+				ajax : 'true'
+			}, function(data) {
+				
+				for(var i=0;i<data.length;i++){
+					checkboxes[data[i]].checked = source.checked;
+				}
+			});	
+				
+		/* checkboxes = document.getElementsByName('select_to_agree');
+			
+			for (var i = 0, n = checkboxes.length; i < n; i++) {
+				checkboxes[i].checked = source.checked;
+				
+			} */
+			
+			
+		}
+		
+	</script>
 
 
 
