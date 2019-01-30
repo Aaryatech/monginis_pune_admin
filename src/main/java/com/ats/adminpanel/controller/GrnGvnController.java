@@ -1060,7 +1060,7 @@ public class GrnGvnController {
 			float grandTotal;
 			if (detail.getGrnType() == 0) {
 
-				grnRate = detail.getBaseRate() * 75 / 100;
+				grnRate = detail.getBaseRate() * 80 / 100;
 			}
 
 			if (detail.getGrnType() == 1) {
@@ -1184,7 +1184,7 @@ public class GrnGvnController {
 					float grandTotal;
 					if (detail.getGrnType() == 0) {
 
-						grnRate = detail.getBaseRate() * 75 / 100;
+						grnRate = detail.getBaseRate() * 80 / 100;
 					}
 
 					if (detail.getGrnType() == 1) {
@@ -1528,7 +1528,7 @@ public class GrnGvnController {
 					float grandTotal;
 					if (detail.getGrnType() == 0) {
 
-						grnRate = detail.getBaseRate() * 75 / 100;
+						grnRate = detail.getBaseRate() * 80 / 100;
 					}
 
 					if (detail.getGrnType() == 1) {
@@ -1879,7 +1879,7 @@ public class GrnGvnController {
 						float grandTotal;
 						if (detail.getGrnType() == 0) {
 
-							grnRate = detail.getBaseRate() * 75 / 100;
+							grnRate = detail.getBaseRate() * 80 / 100;
 						}
 
 						if (detail.getGrnType() == 1) {

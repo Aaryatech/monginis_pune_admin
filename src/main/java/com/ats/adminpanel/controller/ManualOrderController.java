@@ -26,6 +26,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ats.adminpanel.commons.Constants;
+import com.ats.adminpanel.model.ItemForMOrder;
 import com.ats.adminpanel.model.Orders;
 import com.ats.adminpanel.model.SpCakeResponse;
 import com.ats.adminpanel.model.SpecialCake;
@@ -123,24 +124,26 @@ public class ManualOrderController {
 
 				MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 				map.add("itemGrp1", selectedCatId);
-
-				Item[] itemRes = restTemplate.postForObject(Constants.url + "getItemsByCatId", map, Item[].class);
-				ArrayList<Item> itemList = new ArrayList<Item>(Arrays.asList(itemRes));
+				map.add("frId", frId);
+				ItemForMOrder[] itemRes = restTemplate.postForObject(Constants.url + "getItemListForMOrder", map, ItemForMOrder[].class);
+				ArrayList<ItemForMOrder> itemList = new ArrayList<ItemForMOrder>(Arrays.asList(itemRes));
 				System.out.println("Filter Item List " + itemList.toString());
 
-				for (Item item : itemList) {
-					
-					map = new LinkedMultiValueMap<String, Object>();
-					map.add("id", item.getId());
-					map.add("frId", frId);
-					float discPer=restTemplate.postForObject(Constants.url + "getDiscById", map,Float.class);
-					
-					map = new LinkedMultiValueMap<String, Object>();
-					map.add("frId", frId);
+				FranchiseeAndMenuList franchiseeListRes = restTemplate.getForObject(Constants.url + "getFranchiseeAndMenu",
+						FranchiseeAndMenuList.class);
+				System.out.println("franchiseeList" + franchiseeListRes.toString());
+				FranchiseeList franchiseeList=null;
 
-					FranchiseeList franchiseeList = restTemplate.getForObject(Constants.url + "getFranchisee?frId={frId}",
-							FranchiseeList.class, frId);
-					System.out.println("franchiseeList" + franchiseeList.toString());
+				for(int i=0;i<franchiseeListRes.getAllFranchisee().size();i++)
+				{
+					if(franchiseeListRes.getAllFranchisee().get(i).getFrId()==frId)
+					{
+						franchiseeList=franchiseeListRes.getAllFranchisee().get(i);
+					}
+				}
+				
+				for (ItemForMOrder item : itemList) {
+					
 
 					Orders order=new Orders();
 
@@ -212,7 +215,7 @@ public class ManualOrderController {
 					order.setMinQty(item.getMinQty());
 					order.setIsEdit(0);
 					order.setEditQty(0);///set order qty on submit
-					order.setIsPositive(discPer);
+					order.setIsPositive(item.getDiscPer());
 					order.setMenuId(menuId);
 					order.setOrderDate(sqlCurrDate);
 					order.setOrderDatetime(""+sqlCurrDate);
@@ -239,23 +242,23 @@ public class ManualOrderController {
 			try {
 			
 			int itemId=Integer.parseInt(request.getParameter("itemId"));
-			System.out.println("itemId"+itemId);
+		//	System.out.println("itemId"+itemId);
 			
 			int frId=Integer.parseInt(request.getParameter("frId"));
-			System.out.println("frId"+frId);
+		//	System.out.println("frId"+frId);
 			
 			int menuId=Integer.parseInt(request.getParameter("menuId"));
-			System.out.println("menuId"+menuId);
+		//	System.out.println("menuId"+menuId);
 			
 			int qty=Integer.parseInt(request.getParameter("qty"));
-			System.out.println("qty"+qty);
+		//	System.out.println("qty"+qty);
 			
 			RestTemplate restTemplate = new RestTemplate();
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			map.add("id", itemId);
 			
 			Item item = restTemplate.postForObject("" + Constants.url + "getItem", map,Item.class);
-			System.out.println("ItemResponse" + item);
+			//System.out.println("ItemResponse" + item);
 			
 			map = new LinkedMultiValueMap<String, Object>();
 			map.add("id", itemId);
@@ -268,7 +271,7 @@ public class ManualOrderController {
 
 			FranchiseeList franchiseeList = restTemplate.getForObject(Constants.url + "getFranchisee?frId={frId}",
 					FranchiseeList.class, frId);
-			System.out.println("franchiseeList" + franchiseeList.toString());
+			//System.out.println("franchiseeList" + franchiseeList.toString());
 
 			Orders order=new Orders();
 
@@ -287,7 +290,7 @@ public class ManualOrderController {
     			order.setOrderMrp(item.getItemMrp3());
             }
 			int frGrnTwo=franchiseeList.getGrnTwo();
-			System.err.println("frGrnTwo"+frGrnTwo+"item.getGrnTwo()"+item.getGrnTwo());
+			//System.err.println("frGrnTwo"+frGrnTwo+"item.getGrnTwo()"+item.getGrnTwo());
 			if(item.getGrnTwo()==1) {
 				
 				if(frGrnTwo==1) {
@@ -353,9 +356,7 @@ public class ManualOrderController {
 
 			orderList.add(order);
 			
-			System.out.println("orderListinserted:"+orderList.toString());
-			
-		
+		//	System.out.println("orderListinserted:"+orderList.toString());
 			}
 			catch (Exception e) {
 				e.printStackTrace();

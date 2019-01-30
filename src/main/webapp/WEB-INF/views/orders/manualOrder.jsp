@@ -385,10 +385,10 @@ $(document).ready(function() {
 				 var total =0;
 				 
 				alert("Please Enter Qty Multiple of Minimum Qty");
-				$('#'+id).val('0');
+				$('#qty'+id).val(0);
 				
 				$('#total'+id).html(total);
-				$('#'+id).focus();
+				$('#qty'+id).focus();
 			}
 		}
 	</script>
