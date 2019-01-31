@@ -121,6 +121,8 @@ select {
 <body>
 
 	<c:url var="getFlavourBySpfId" value="/getFlavourBySpfId" />
+	<c:url var="findAddOnRate" value="/getAddOnRate" />
+	
 
 	<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
 
@@ -227,7 +229,7 @@ select {
 										<div class="form-group">
 											<label class="col-sm-3 col-lg-2 control-label">Special
 												Cake List</label>
-											<div class="col-sm-9 col-lg-10 controls">
+											<div class="col-sm-6 col-lg-6 controls">
 												<select data-placeholder="Select Menu" name="sp_cake_id"
 													class="form-control chosen" tabindex="-1" id="sp_cake_id"
 													data-rule-required="true">
@@ -245,6 +247,28 @@ select {
 													</c:forEach>
 												</select>
 											</div>
+											<label class="col-sm-3 col-lg-2 control-label">
+											<c:choose>
+											<c:when test="${billBy==0}">
+											By Rate<input type="radio" name="sel_rate" id="sel_rate"
+													  value="1">
+											By MRP <input type="radio" name="sel_rate"
+													id="sel_rate" checked   value="0">
+											</c:when>
+											<c:otherwise>
+											
+											By Rate<input type="radio" name="sel_rate" id="sel_rate"
+													checked  value="1">
+											By MRP <input type="radio" name="sel_rate"
+													id="sel_rate"    value="0">
+											</c:otherwise>
+											
+											</c:choose>
+												
+											</label>
+											<div class="col-sm-9 col-lg-4 controls">
+												
+											</div>
 										</div>
 										<div class="form-group">
 											<div
@@ -253,6 +277,14 @@ select {
 												<button type="reset" class="btn">Cancel</button>
 											</div>
 										</div>
+										
+											<div class="fullform">
+								<div class="cackleft">Cake Name</div>
+								<div class="cackright" id="spDesc">
+								<span class="cakename">${specialCake.spName}</span>
+								</div>
+							</div>
+										
 										<div class="row">
 											<div class="col-md-1"></div>
 											<div class="col-md-1">Flavour TYPE</div>
@@ -317,7 +349,9 @@ select {
 											<div class="col-md-1">${specialCake.spMinwt} Kg</div>
 											<div class="col-md-1">Max Weight</div>
 											<div class="col-md-1">${specialCake.spMaxwt} Kg</div>
-											
+								 <c:set var = "dbRate" scope = "session" value = "${sprRate}"/>
+		      <input type="hidden" name="dbRate" id="dbRate" value="${sprRate}">
+		          <input type="hidden" name="spBackendRate" id="spBackendRate" value="${spBackendRate}">			
 			<div class="col-md-5">Weight <select name="spwt" id="spwt" class="form-control chosen" onchange="onChange('${dbRate}')">
             <c:forEach items="${weightList}" var="weightList">
                   <option value="${weightList}">${weightList}</option>
@@ -381,25 +415,49 @@ select {
 				</li>
 				
 				<li class="advance">
-					<div class="priceLeft">Advance</div>
-					<div class="priceRight"><input name="adv" id="adv" value="00" class="tableInput" type="text" onkeyup="advanceFun()"></div>
-					
+					<div class="priceLeft">Franchise Name</div>
+					<div class="priceRight"><input name="fr_name" id="fr_name" class="form-control" type="text"></div>
+					<div class="priceLeft">GST  No</div>
+					<div class="priceRight"><input name="gst_no" id="gst_no" class="form-control" type="text"></div>
 				</li>
 			</ul>
 		</div>
 		<div class="remainamount">
-			<div class="priceLeft">Remaining Amount</div>
+			<%-- <div class="priceLeft">Remaining Amount</div>
 					<div class="priceRight" id="rmAmt">${(sprRate*specialCake.spMinwt)}</div>
 				    <input type="hidden" name="rm_amount" id="rm_amount" value="${(sprRate*specialCake.spMinwt)}">
-		</div>
+		</div> --%>
 	</div>
 	
 	<div class="order-btn">
-		<input name="" class="btnSubmit" value="SUBMIT"  type="button" id="click" >
+		<input class="btn-btn primary" onclick="callSubmit()" value="SUBMIT"  type="button" id="click" >
 		<input name="" class="btnReset" value="RESET" type="hidden">
 	</div>
 	
 </div>
+
+<input type="hidden" id="tax1" name="tax1" value="${specialCake.spTax1}">
+<input type="hidden" id="tax2" name="tax2" value="${specialCake.spTax2}">
+
+
+<c:if test="${specialCake.spTax1==0 or specialCake.spTax1==0.00}">
+<input type="hidden" id="t1amt" name="t1amt" value="0.0">
+</c:if>
+<c:if test="${specialCake.spTax1!=0 or specialCake.spTax1!=0.00}">
+<input type="hidden" id="t1amt" name="t1amt" value="${(sprRate*specialCake.spMinwt)*(specialCake.spTax1)/100}">
+
+</c:if>
+<c:if test="${specialCake.spTax2==0 or specialCake.spTax2!=0.00}">
+<input type="hidden" id="t2amt" name="t2amt" value="0.0">
+</c:if>
+<c:if test="${specialCake.spTax2!=0 or specialCake.spTax2!=0.00}">
+<input type="hidden" id="t2amt" name="t2amt" value="${(sprRate*specialCake.spMinwt)*(specialCake.spTax2)/100}">
+
+</c:if>
+
+<input type="hidden" id="dbAdonRate" name="dbAdonRate">
+ <input type="hidden" id="dbPrice" name="dbPrice"  value="${sprRate}">
+<input type="hidden" id="sp_id" name="sp_id"  value="${specialCake.spId}">
 									</form>
 
 								</div>
@@ -422,7 +480,18 @@ select {
 	<!-- END Container -->
 	<script
 		src="${pageContext.request.contextPath}/resources/assets/bootstrap/js/bootstrap.min.js"></script>
+		<script type="text/javascript">
 		
+		function callSubmit() {
+			//alert("HI");
+			var form=document.getElementById("validation-form");
+			//alert("form "+form);
+			form.action=("insertManualSpBill");
+			form.submit();
+			
+		}
+		
+		</script>
 		<script type="text/javascript">
 $(document).ready(function() { 
 	$('#sptype').change(
@@ -432,7 +501,7 @@ $(document).ready(function() {
 					ajax : 'true'
 				}, function(data) {
 					var html = '<option value="">Flavour</option>';
-					alert(JSON.stringify(data));
+					//alert(JSON.stringify(data));
 					var len = data.length;
 					
 					for ( var i = 0; i < len; i++) {
@@ -450,6 +519,218 @@ $(document).ready(function() {
 			});
 });
 </script>
+<script type="text/javascript">
+$(document).ready(function() { 
+	$('#spFlavour').change(
+			function() {
+				$.getJSON('${findAddOnRate}', {
+					spfId : $(this).val(),
+					ajax : 'true'
+				}, function(data) {
+					 $('#rate').empty();	
+					 $("#dbAdonRate").val(data.spfAdonRate);
+					$("#rate").html(data.spfAdonRate);
+				
+					document.getElementById("sp_add_rate").setAttribute('value',data.spfAdonRate);
+				
+					
+					var wt = $('#spwt').find(":selected").text();
+					
+					var flavourAdonRate =data.spfAdonRate;
+					
+					var tax3 = parseFloat($("#tax3").val());
+					var tax1 = parseFloat($("#tax1").val());
+					var tax2 = parseFloat($("#tax2").val());
+					
+					var price = $("#dbPrice").val();
+				
+					var totalFlavourAddonRate= wt*flavourAdonRate;
+					var billBy=${billBy};
+					//alert("Bill by " +billBy);
+					
+					if(billBy==1){
+						totalFlavourAddonRate= wt*(flavourAdonRate*0.8).toFixed(2);
+					}	totalFlavourAddonRate.toFixed(2);
+					//alert("spFlavour .chnge " +totalFlavourAddonRate)
+					
+					//totalFlavourAddonRate.toFixed(2);
+
+					 var totalCakeRate= wt*price;
+					 var totalAmount=parseFloat(totalCakeRate+totalFlavourAddonRate);
+					 
+					 var mrpBaseRate=parseFloat((totalAmount*100)/(tax3+100));
+				    /*  var gstInRs=parseFloat((mrpBaseRate*tax3)/100);
+				     
+				        var taxPerPerc1=parseFloat((tax1*100)/tax3);
+						var taxPerPerc2=parseFloat((tax2*100)/tax3);
+			         
+						var tax1Amt=parseFloat((gstInRs*taxPerPerc1)/100);
+						var tax2Amt=parseFloat((gstInRs*taxPerPerc2)/100); */
+						var gstInRs=0;
+						var taxPerPerc1=0;
+						var taxPerPerc2=0;
+						var tax1Amt=0;
+						var tax2Amt=0;
+						if(tax3==0)
+							{
+							    gstInRs=0;
+							
+							}
+					    else
+						{
+						   gstInRs=(mrpBaseRate*tax3)/100;
+							
+						   if(tax1==0)
+							{
+							   taxPerPerc1=0;
+							}
+						   else
+							{
+							    taxPerPerc1=parseFloat((tax1*100)/tax3);
+							    tax1Amt=parseFloat((gstInRs*taxPerPerc1)/100);
+
+							}
+						   if(tax2==0)
+							{
+							   taxPerPerc2=0;
+							}
+						   else
+							{
+								taxPerPerc2=parseFloat((tax2*100)/tax3);
+								tax2Amt=parseFloat((gstInRs*taxPerPerc2)/100);
+
+							}
+						}
+						
+					  var grandTotal=parseFloat(totalCakeRate+totalFlavourAddonRate);
+					  
+					    $('#price').html(totalCakeRate);$('#sp_calc_price').html(totalCakeRate);
+						$('#rate').html(totalFlavourAddonRate);$('#sp_add_rate').html(totalFlavourAddonRate);
+						document.getElementById("sp_add_rate").setAttribute('value',totalFlavourAddonRate);
+						$('#subtotal').html(totalCakeRate+totalFlavourAddonRate);
+						
+						document.getElementById("sp_sub_total").setAttribute('value',totalCakeRate+totalFlavourAddonRate);
+						$('#INR').html('INR-'+grandTotal);
+						document.getElementById("sp_grand").setAttribute('value',grandTotal);
+						$('#tot').html('TOTAL-'+grandTotal);
+						document.getElementById("total_amt").setAttribute('value',grandTotal);
+						$('#rmAmt').html(grandTotal);
+						document.getElementById("rm_amount").setAttribute('value',grandTotal);
+						
+						document.getElementById("t1amt").setAttribute('value',tax1Amt.toFixed(2));
+						
+						document.getElementById("t2amt").setAttribute('value',tax2Amt.toFixed(2));
+						
+						$('#gstrs').html(gstInRs.toFixed(2)); 
+						document.getElementById("gst_rs").setAttribute('value',gstInRs.toFixed(2));
+						$('#mgstamt').html('AMT-'+mrpBaseRate.toFixed(2)); 
+						document.getElementById("m_gst_amt").setAttribute('value',mrpBaseRate.toFixed(2));
+						
+				});
+			});
+});
+</script>
+
+<script type="text/javascript">
+		function onChange(dbRate) {
+			//alert("db Rate "+dbRate);
+			var wt = $('#spwt').find(":selected").text();
+			
+			var flavourAdonRate =$("#dbAdonRate").val();
+			//alert(flavourAdonRate);
+			
+			
+			var tax3 = parseFloat($("#tax3").val());
+			var tax1 = parseFloat($("#tax1").val());
+			var tax2 = parseFloat($("#tax2").val());
+			//alert("tax1:"+tax1+"tax2"+tax2+"tax3"+tax3);
+			
+			
+			var totalCakeRate = wt*dbRate;
+		//	var totalFlavourAddonRate;//= wt*flavourAdonRate;
+			
+			var billBy=${billBy};
+			//alert("Bill by " +billBy);
+			var totalFlavourAddonRate = wt*flavourAdonRate;
+			//alert("totalFlavourAddonRate by " +totalFlavourAddonRate);
+			if(billBy==1){
+				totalFlavourAddonRate= wt*(flavourAdonRate*0.8);
+				
+				//alert("totalFlavourAddonRate in if by =1 " +totalFlavourAddonRate);
+			}	
+			//alert("spFlavour .chnge " +totalFlavourAddonRate)
+			totalFlavourAddonRate.toFixed(2);
+		    var add=parseFloat(totalCakeRate+totalFlavourAddonRate);
+		    var grandTotal=parseFloat(add);
+			var spSubtotal=add;
+			
+			var mrpBaseRate=parseFloat((spSubtotal*100)/(tax3+100));
+			
+			var gstInRs=0;
+			var taxPerPerc1=0;
+			var taxPerPerc2=0;
+			var tax1Amt=0;
+			var tax2Amt=0;
+			if(tax3==0)
+				{
+				    gstInRs=0;
+				
+				}
+		    else
+			{
+			   gstInRs=(mrpBaseRate*tax3)/100;
+				
+			   if(tax1==0)
+				{
+				   taxPerPerc1=0;
+				}
+			   else
+				{
+				    taxPerPerc1=parseFloat((tax1*100)/tax3);
+				    tax1Amt=parseFloat((gstInRs*taxPerPerc1)/100);
+
+				}
+			   if(tax2==0)
+				{
+				   taxPerPerc2=0;
+				}
+			   else
+				{
+					taxPerPerc2=parseFloat((tax2*100)/tax3);
+					tax2Amt=parseFloat((gstInRs*taxPerPerc2)/100);
+
+				}
+			}
+			
+         
+
+			$('#gstrs').html(gstInRs.toFixed(2));  document.getElementById("gst_rs").setAttribute('value',gstInRs.toFixed(2));
+
+			var mGstAmt=mrpBaseRate;
+			$('#mgstamt').html('AMT-'+mGstAmt.toFixed(2));  document.getElementById("m_gst_amt").setAttribute('value',mGstAmt.toFixed(2));
+			
+			$('#price').html(wt*dbRate);
+			$('sp_calc_price').html(wt*dbRate);
+			//$('#rate').html(wt*flavourAdonRate);	
+			//document.getElementById("sp_add_rate").setAttribute('value',wt*flavourAdonRate);
+			
+			$('#rate').html(totalFlavourAddonRate);$('#sp_add_rate').html(totalFlavourAddonRate);
+			document.getElementById("sp_add_rate").setAttribute('value',totalFlavourAddonRate);
+			$('#subtotal').html(grandTotal);	
+			document.getElementById("sp_sub_total").setAttribute('value',add);
+			
+			$('#INR').html('INR-'+grandTotal);
+			document.getElementById("sp_grand").setAttribute('value',grandTotal);
+			$('#tot').html('TOTAL-'+grandTotal);
+			document.getElementById("total_amt").setAttribute('value',grandTotal);
+			$('#rmAmt').html(grandTotal);
+			document.getElementById("rm_amount").setAttribute('value',grandTotal);
+			
+			document.getElementById("t1amt").setAttribute('value',tax1Amt.toFixed(2));
+			
+			document.getElementById("t2amt").setAttribute('value',tax2Amt.toFixed(2));
+			
+	}</script> 
 
 	<script type="text/javascript">
 		$(document)
