@@ -199,8 +199,8 @@ select {
 <input type="hidden" name="isSlotUsed" id="isSlotUsed" value="${specialCake.isSlotUsed}">
 
 										<div class="form-group">
-											<label class="col-sm-3 col-lg-2 control-label">Franchisee</label>
-											<div class="col-sm-9 col-lg-10 controls">
+											<div class="col-md-2">Select Franchisee</div>
+											<div class="col-md-4">
 												<select data-placeholder="Select Franchisee" name="fr_id"
 													class="form-control chosen" tabindex="-1" id="fr_id"
 													data-rule-required="true">
@@ -224,12 +224,10 @@ select {
 													</c:forEach>
 												</select>
 											</div>
-										</div>
-
-										<div class="form-group">
-											<label class="col-sm-3 col-lg-2 control-label">Special
-												Cake List</label>
-											<div class="col-sm-6 col-lg-6 controls">
+										
+											<div class="col-md-2">Special
+												Cake List</div>
+											<div class="col-md-4">
 												<select data-placeholder="Select Menu" name="sp_cake_id"
 													class="form-control chosen" tabindex="-1" id="sp_cake_id"
 													data-rule-required="true">
@@ -247,7 +245,14 @@ select {
 													</c:forEach>
 												</select>
 											</div>
-											<label class="col-sm-3 col-lg-2 control-label">
+											
+											<!-- <div class="col-sm-9 col-lg-4 controls">
+												
+											</div> -->
+										</div>
+										<div class="form-group">
+										
+										<div class="col-md-2">
 											<c:choose>
 											<c:when test="${billBy==0}">
 											By Rate<input type="radio" name="sel_rate" id="sel_rate"
@@ -265,29 +270,19 @@ select {
 											
 											</c:choose>
 												
-											</label>
-											<div class="col-sm-9 col-lg-4 controls">
-												
 											</div>
-										</div>
-										<div class="form-group">
 											<div
-												class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2">
+												class="col-md-5">
 												<input type="submit" class="btn btn-primary" value="Search">
 												<button type="reset" class="btn">Cancel</button>
 											</div>
 										</div>
 										
-											<div class="fullform">
-								<div class="cackleft">Cake Name</div>
-								<div class="cackright" id="spDesc">
-								<span class="cakename">${specialCake.spName}</span>
-								</div>
-							</div>
+											
 										
-										<div class="row">
-											<div class="col-md-1"></div>
-											<div class="col-md-1">Flavour TYPE</div>
+										<div class="form-group">
+										
+											<div class="col-md-2">Flavour Type</div>
 											<div class="col-md-4">
 
 												 <select name="sptype" tabindex="-1" id="sptype" class="form-control chosen" >
@@ -318,121 +313,118 @@ select {
               
             </select>
 											</div>
-											<div class="col-md-1"></div>
-											<div class="col-md-1">Select Flavour</div>
+											
+											<div class="col-md-2">Select Flavour</div>
 											<div class="col-md-4">
 
 												<select data-placeholder="Select Fla" name="spFlavour"
 													class="form-control chosen" tabindex="-1" id="spFlavour"
 													 onchange="onChangeFlavour()">
-													<%-- <c:forEach items="${specialCakeList}" var="spCake">
-														<c:choose>
-															<c:when test="${specialCake.spCode==spCake.spCode}">
-																<option selected value="${spCake.spCode}">${spCake.spCode}</option>
-
-															</c:when>
-															<c:otherwise>
-																<option value="${spCake.spCode}">${spCake.spCode}</option>
-
-															</c:otherwise>
-														</c:choose>
-													</c:forEach> --%>
+													
 												</select>
 											</div>
+										
 
 										</div>
-										<div class="form-group"></div>
-
-										<div class="row">
-											<div class="col-md-1"></div>
-											<div class="col-md-1">Min Weight</div>
-											<div class="col-md-1">${specialCake.spMinwt} Kg</div>
-											<div class="col-md-1">Max Weight</div>
-											<div class="col-md-1">${specialCake.spMaxwt} Kg</div>
-								 <c:set var = "dbRate" scope = "session" value = "${sprRate}"/>
-		      <input type="hidden" name="dbRate" id="dbRate" value="${sprRate}">
-		          <input type="hidden" name="spBackendRate" id="spBackendRate" value="${spBackendRate}">			
-			<div class="col-md-5">Weight <select name="spwt" id="spwt" class="form-control chosen" onchange="onChange('${dbRate}')">
+										<div class="form-group">
+										<div class="col-md-2">Select Weight</div> 
+			<div class="col-md-4">		      <input type="hidden" name="dbRate" id="dbRate" value="${sprRate}">
+			
+			<select name="spwt" id="spwt" class="form-control chosen" onchange="onChange('${sprRate}')">
             <c:forEach items="${weightList}" var="weightList">
                   <option value="${weightList}">${weightList}</option>
             </c:forEach> 
            
           </select>
+          
           </div>
+									
+											<div class="col-md-2">Min Weight ${specialCake.spMinwt} Kg </div>
+											
+											<div class="col-md-2">Max Weight ${specialCake.spMaxwt} Kg</div>
+												<div class="col-md-1"></div><div class="col-md-1"></div> 
+								 <c:set var = "dbRate" scope="session" value = "${sprRate}"/>
+		          <input type="hidden" name="spBackendRate" id="spBackendRate" value="${spBackendRate}">			
+			
+          </div>
+          
+          <div class="form-group">
+								<div class="col-md-2">Cake Name</div>
+								<div class="col-md-4" id="spDesc">
+					${specialCake.spName}
+								</div>
+							</div>
 
-										</div>
+										
 										
 										<!--rightForm-->	
 <div class="right">
-	<div class="priceBox">
+	<div class="box-content">
 		<h2 class="inrbox" id="INR">INR - ${(sprRate*specialCake.spMinwt)}</h2>
-		 <input type="hidden" name="sp_grand" id="sp_grand" value="${(sprRate*specialCake.spMinwt)}">   
-		<div class="inrboxmiddle">
-			<ul>
-				<li>
-					<div class="priceLeft">Type </div>
-					<div class="priceRight"><span>Premium</span></div>
-				</li>
-				<li>
-					<div class="priceLeft">Price </div>
-					<div class="priceRight" id="price">${sprRate*specialCake.spMinwt}</div>
+		 <input type="hidden" name="sp_grand" id="sp_grand" value="${(sprRate*specialCake.spMinwt)}">
+		 <section class="form-control">
+		    
+		<div class="form-group">
+								
+			
+					<div class="col-md-1">Type  </div>
+					<div class="col-md-1"><span>Premium</span></div>
+				
+					<div class="col-md-1">Price </div>
+					<div class="col-md-1" id="price">${sprRate*specialCake.spMinwt}</div>
 					<input name="sp_calc_price" id="sp_calc_price" value="${sprRate*specialCake.spMinwt}" type="hidden">
-				</li>
-				<li>
-					<div class="priceLeft">Add Rate </div>
-					<div class="priceRight"  id="rate" >00</div>
+			
+					<div class="col-md-1">Add Rate </div>
+					<div class="col-md-1"  id="rate" >00</div>
 					 <input name="sp_add_rate" id="sp_add_rate"  type="hidden" value="0">
-				</li>
-				<li>
-					<div class="priceLeft">Sub Total </div>
-					<div class="priceRight"id="subtotal">${sprRate*specialCake.spMinwt}</div>
+			
+					<div class="col-md-1">Sub Total </div>
+					<div class="col-md-1" id="subtotal">${sprRate*specialCake.spMinwt}</div>
 					<input name="sp_sub_total" id="sp_sub_total"  type="hidden"value="${sprRate*specialCake.spMinwt}">
-				</li>
-				<li>
-					<div class="priceLeft">GST (%)</div>
-					<div class="priceRight" id="taxPer3"> ${specialCake.spTax1+specialCake.spTax2} </div>
+					</div>
+					</section>
+					 <section class="form-control">
+					<div class="form-group">
+				
+					<div class="col-md-1">GST (%)</div>
+					<div class="col-md-1" id="taxPer3"> ${specialCake.spTax1+specialCake.spTax2} </div>
 					<input type="hidden" id="tax3" name="tax3" value="${specialCake.spTax1+specialCake.spTax2}">
-				</li>
-				<li>
-					<div class="priceLeft">GST IN RS.</div>
+					<div class="col-md-1">GST RS.</div>
 					<c:set var="varGstRs" value="${(((sprRate*specialCake.spMinwt)*100)/((specialCake.spTax1+specialCake.spTax2)+100))*(specialCake.spTax1+specialCake.spTax2)/100}" />  
 					<fmt:formatNumber var="fGstRs" minFractionDigits="2" maxFractionDigits="2" type="number" value="${varGstRs}" />  
 					
-					<div class="priceRight" id="gstrs"><c:out value="${fGstRs}" /></div>
+					<div class="col-md-1" id="gstrs"><c:out value="${fGstRs}" /></div>
 					<input type="hidden" id="gst_rs" name="gst_rs" value="${fGstRs}">
-				</li>
-				<li class="total">
 				<c:set var="varMgstamt" value="${(((sprRate*specialCake.spMinwt)*100)/((specialCake.spTax1+specialCake.spTax2)+100))}"/>
 					<fmt:formatNumber var="fMgstamt" minFractionDigits="2" maxFractionDigits="2" type="number" value="${varMgstamt}" />  
 					
-					<div class="priceLeft" id="mgstamt">AMT-<c:out value="${fMgstamt}"></c:out></div>
+					<div class="col-md-2" id="mgstamt">AMT-<c:out value="${fMgstamt}"></c:out></div>
 					
 				   <input type="hidden" name="m_gst_amt" id="m_gst_amt" type="hidden" value="${fMgstamt}">
 				
-					<div class="priceRight"id="tot">TOTAL-${(sprRate*specialCake.spMinwt)}</div>
-					
-					 <input type="hidden" name="total_amt" id="total_amt" value="${(sprRate*specialCake.spMinwt)}">
-				</li>
-				
-				<li class="advance">
-					<div class="priceLeft">Franchise Name</div>
-					<div class="priceRight"><input name="fr_name" id="fr_name" class="form-control" type="text"></div>
-					<div class="priceLeft">GST  No</div>
-					<div class="priceRight"><input name="gst_no" id="gst_no" class="form-control" type="text"></div>
-				</li>
-			</ul>
+					<div class="col-md-2"id="tot">TOTAL AMT -${(sprRate*specialCake.spMinwt)}</div>
+					</div>
+					</section>
+					 <section class="form-control" style="border-bottom: none; border-left: none;border-right: none;" >
+					<div class="form-group">
+					<div class="col-md-2">Franchise Name</div>
+					<div class="col-md-4"><input name="fr_name" id="fr_name" class="form-control" type="text"></div>
+					<div class="col-md-2">GST  No</div>
+					<div class="col-md-4"><input name="gst_no" id="gst_no" class="form-control" type="text"></div>
 		</div>
-		<div class="remainamount">
-			<%-- <div class="priceLeft">Remaining Amount</div>
+	<%-- 	<div class="remainamount">
+			<div class="priceLeft">Remaining Amount</div>
 					<div class="priceRight" id="rmAmt">${(sprRate*specialCake.spMinwt)}</div>
 				    <input type="hidden" name="rm_amount" id="rm_amount" value="${(sprRate*specialCake.spMinwt)}">
-		</div> --%>
+		</div>
 	</div>
+	 --%>
+	<div class="order-btn" style="text-align: center;">
+		<input class="btn btn-primary" onclick="callSubmit()" value="SUBMIT"  type="button" id="click" >
+		<input name="" class="btn btn-danger" class="btnReset" value="RESET" type="reset">
+	</div>
+	</section>
 	
-	<div class="order-btn">
-		<input class="btn-btn primary" onclick="callSubmit()" value="SUBMIT"  type="button" id="click" >
-		<input name="" class="btnReset" value="RESET" type="hidden">
-	</div>
 	
 </div>
 
@@ -458,6 +450,8 @@ select {
 <input type="hidden" id="dbAdonRate" name="dbAdonRate">
  <input type="hidden" id="dbPrice" name="dbPrice"  value="${sprRate}">
 <input type="hidden" id="sp_id" name="sp_id"  value="${specialCake.spId}">
+
+</div>
 									</form>
 
 								</div>
@@ -708,8 +702,9 @@ $(document).ready(function() {
 
 			var mGstAmt=mrpBaseRate;
 			$('#mgstamt').html('AMT-'+mGstAmt.toFixed(2));  document.getElementById("m_gst_amt").setAttribute('value',mGstAmt.toFixed(2));
-			
-			$('#price').html(wt*dbRate);
+		var x=wt*dbRate;
+		//alert("x" +x);
+			$('#price').html(x);
 			$('sp_calc_price').html(wt*dbRate);
 			//$('#rate').html(wt*flavourAdonRate);	
 			//document.getElementById("sp_add_rate").setAttribute('value',wt*flavourAdonRate);
