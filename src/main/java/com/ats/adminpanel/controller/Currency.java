@@ -7,8 +7,8 @@ import java.util.HashMap;
 
 
 public class Currency {
-
-    public static String convertToIndianCurrency(String num) {
+ 
+   public static String convertToIndianCurrency(String num) {
         BigDecimal bd = new BigDecimal(num);
         long number = bd.longValue();
         long no = bd.longValue();
