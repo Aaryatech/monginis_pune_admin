@@ -2,6 +2,8 @@ package com.ats.adminpanel.model.billing;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 
 
 
@@ -105,7 +107,7 @@ public class PostBillDetail {
 		this.grnType = grnType;
 	}
 
-
+	@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
 	public Date getExpiryDate() {
 		return expiryDate;
 	}
