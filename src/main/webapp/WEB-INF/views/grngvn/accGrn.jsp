@@ -290,7 +290,7 @@
 																class="form-control" id='acc_grn_qty${grnList.grnGvnId}'
 																value="${qty}"
 																onkeyup="calcGrn(${grnList.grnType},${grnList.baseRate},${grnList.grnGvnId},
-																	${grnList.sgstPer},${grnList.cgstPer},${grnList.grnGvnQty},${qty})"/></td>
+																	${grnList.sgstPer},${grnList.cgstPer},${grnList.grnGvnQty},${qty},${grnList.itemMrp})"/></td>
 
 
 
@@ -909,7 +909,7 @@ function getDate(){
 </script>
 
 	<script>
-function calcGrn(grnType,baseRate,grnId,sgstPer,cgstPer,grnQty,curQty){
+function calcGrn(grnType,baseRate,grnId,sgstPer,cgstPer,grnQty,curQty,discPer){
 	
 	var grandTotal;
 	var aprTotalTax;
@@ -920,7 +920,7 @@ function calcGrn(grnType,baseRate,grnId,sgstPer,cgstPer,grnQty,curQty){
 	var acc_grn_qty=$("#acc_grn_qty"+grnId).val();
 
 	if(grnType==0){
-		grnRate=baseRate*75/100;
+		grnRate=baseRate*80/100;
 	}
 	
 	if(grnType==1){
@@ -932,6 +932,8 @@ function calcGrn(grnType,baseRate,grnId,sgstPer,cgstPer,grnQty,curQty){
 	}
 	
 	aprTaxableAmt = grnRate * acc_grn_qty;
+	var discAmt=(aprTaxableAmt*discPer)/100;
+	aprTaxableAmt=aprTaxableAmt-discAmt;
 	aprTotalTax = ((aprTaxableAmt) * (sgstPer + cgstPer))/ 100;
 	grandTotal = aprTaxableAmt + aprTotalTax;
 	document.getElementById('grnAmt'+grnId).innerText=grandTotal.toFixed(2);

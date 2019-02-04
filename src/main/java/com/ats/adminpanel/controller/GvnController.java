@@ -1786,8 +1786,12 @@ public class GvnController {
 				float gvnAmt = qty * baseRate;
 
 				float aprTaxableAmt = baseRate * qty;
+				float discAmt = (aprTaxableAmt * detail.getItemMrp()) / 100;// 4 FEB 2019
 
+				aprTaxableAmt = aprTaxableAmt - discAmt;
 				aprTotalTax = (aprTaxableAmt * (detail.getSgstPer() + detail.getCgstPer())) / 100;
+				
+				
 
 				grandTotal = aprTaxableAmt + aprTotalTax;
 
@@ -1936,7 +1940,9 @@ public class GvnController {
 					float gvnAmt = accGvnQty * baseRate;
 
 					float aprTaxableAmt = baseRate * accGvnQty;
+					float discAmt = (aprTaxableAmt * detail.getItemMrp()) / 100;// 4 FEB 2019
 
+					aprTaxableAmt = aprTaxableAmt - discAmt;
 					aprTotalTax = (aprTaxableAmt * (detail.getSgstPer() + detail.getCgstPer())) / 100;
 
 					grandTotal = aprTaxableAmt + aprTotalTax;
@@ -2256,7 +2262,9 @@ public class GvnController {
 					float gvnAmt = accGvnQty * baseRate;
 
 					float aprTaxableAmt = baseRate * accGvnQty;
+					float discAmt = (aprTaxableAmt * detail.getItemMrp()) / 100;// 4 FEB 2019
 
+					aprTaxableAmt = aprTaxableAmt - discAmt;
 					aprTotalTax = (aprTaxableAmt * (detail.getSgstPer() + detail.getCgstPer())) / 100;
 
 					grandTotal = aprTaxableAmt + aprTotalTax;
@@ -2582,7 +2590,9 @@ public class GvnController {
 						float gvnAmt = accGvnQty * baseRate;
 
 						float aprTaxableAmt = baseRate * accGvnQty;
+						float discAmt = (aprTaxableAmt * detail.getItemMrp()) / 100;// 4 FEB 2019
 
+						aprTaxableAmt = aprTaxableAmt - discAmt;
 						aprTotalTax = (aprTaxableAmt * (detail.getSgstPer() + detail.getCgstPer())) / 100;
 
 						grandTotal = aprTaxableAmt + aprTotalTax;

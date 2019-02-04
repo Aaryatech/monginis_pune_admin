@@ -187,7 +187,7 @@
 																name="acc_gvn_qty${gvnList.grnGvnId}"
 																style="width: 50px" class="form-control"
 																onkeyup="calcGvn(${gvnList.baseRate},${gvnList.grnGvnId},
-																	${gvnList.sgstPer},${gvnList.cgstPer},${gvnList.grnGvnQty},${qty})"
+																	${gvnList.sgstPer},${gvnList.cgstPer},${gvnList.grnGvnQty},${qty},${gvnList.itemMrp})"
 																id='acc_gvn_qty${gvnList.grnGvnId}' value="${qty}" /></td>
 
 															<td id='gvnAmt${gvnList.grnGvnId}' align="left"><c:out
@@ -705,7 +705,7 @@
 	<!-- insertGrnDisAgree -->
 	<script type="text/javascript">
 
-function calcGvn(baseRate,grnId,sgstPer,cgstPer,gvnQty,curQty){
+function calcGvn(baseRate,grnId,sgstPer,cgstPer,gvnQty,curQty,discPer){
 	
 	
 //alert("HII");
@@ -726,6 +726,9 @@ function calcGvn(baseRate,grnId,sgstPer,cgstPer,gvnQty,curQty){
 	//$("#gvn_amt"+itemId).html(gvnAmt.toFixed(2));
 
 	 var taxableAmt=baseRate*gvnQty;
+	 
+	 var discAmt=(taxableAmt*discPer)/100;
+	 taxableAmt=taxableAmt-discAmt;
 		
 		var totalTax=(taxableAmt*(sgstPer+cgstPer))/100;
 		
