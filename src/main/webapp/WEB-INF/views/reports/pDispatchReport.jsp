@@ -138,7 +138,8 @@
 								class="form-control"  tabindex="6"
 								id="fraId" name="fraId" >
 								<option value="">Select Franchise</option>
-                                
+								
+                                 --%>
 							</select>
 						</div>
 
@@ -243,6 +244,7 @@
 					ajax : 'true'
 				}, function(data) {
 				 	var html = '<option value="">Select Franchisee</option>';
+				/*  	var html1 = '<option value="-1">All</option>'; */
 				
 					var len = data.length;
 					
@@ -256,6 +258,7 @@
                                     "value", 0).text("Select Franchisee")
                             );
 					
+						
 					for ( var i = 0; i < len; i++) {
                         $("#fraId").append(
                                 $("<option></option>").attr(

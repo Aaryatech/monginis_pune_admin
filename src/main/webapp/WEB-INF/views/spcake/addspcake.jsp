@@ -191,22 +191,22 @@
 							
 
 								<div class="form-group">
-									<label class="col-sm-3 col-lg-2 control-label">Cut
-										Section</label>
+									<label class="col-sm-3 col-lg-2 control-label"> 
+									Type</label>
 									<div class="col-sm-9 col-lg-10 controls">
 										<select name="cut_section" id="cut_section"
 											class="form-control" data-rule-required="true">
-											<option value="">Select Cut Section</option>
+											<option value=""> Type</option>
 
-													<option value="0" selected>Not Applicable</option>
-													<option value="1">Single Cut</option>
-													<option value="2">Double Cut</option>
+													<option value="0" selected>Alphabetical</option>
+													<option value="1">Numerical</option>
+													<option value="2">Regular</option>
 												
 										</select>
 									</div>
 								</div>
 										<div class="form-group">
-											<label class="col-sm-3 col-lg-2 control-label">Type</label>
+											<label class="col-sm-3 col-lg-2 control-label">Flavour Type</label>
 
 											<div class="col-sm-9 col-lg-10 controls">
 												<select class="form-control input-sm" name="spc_type" id="spc_type">

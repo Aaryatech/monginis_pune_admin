@@ -3360,8 +3360,8 @@ model.addObject("royPer",getRoyPer());
 				System.out.println("cateList" + selectedCat.toString());
 				System.out.println("selectedFr" + selectedFr.toString());
 				System.out.println("productionDate" + billDate.toString());
+			
 				
-
 				map.add("categories", selectedCat);
 				map.add("productionDate", billDate);
 				map.add("frId", selectedFr);
@@ -3396,7 +3396,6 @@ model.addObject("royPer",getRoyPer());
 
 			} else {
 				System.out.println("selectedCat" + selectedCat.toString());
-				System.out.println("selectedFr" + selectedFr.toString());
 
 				map.add("categories", selectedCat);
 				map.add("productionDate", billDate);
