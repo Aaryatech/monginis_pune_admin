@@ -29,7 +29,10 @@ import com.ats.adminpanel.model.ConfigureFrListResponse;
 import com.ats.adminpanel.model.Discount;
 import com.ats.adminpanel.model.Info;
 import com.ats.adminpanel.model.Route;
+import com.ats.adminpanel.model.SpCakeResponse;
+import com.ats.adminpanel.model.SpecialCake;
 import com.ats.adminpanel.model.franchisee.AllFranchiseeAndMenu;
+import com.ats.adminpanel.model.franchisee.CommonConf;
 import com.ats.adminpanel.model.franchisee.FranchiseeAndMenuList;
 import com.ats.adminpanel.model.franchisee.FranchiseeList;
 import com.ats.adminpanel.model.franchisee.Menu;
@@ -147,25 +150,62 @@ public class DiscountController {
 		
 	}
 	@RequestMapping(value = "/getItemsByCatagoryID", method = RequestMethod.GET)
-	public @ResponseBody List<Item> getItemsByCatagoryID(HttpServletRequest request, HttpServletResponse response) {
+	public @ResponseBody List<CommonConf> getItemsByCatagoryID(HttpServletRequest request, HttpServletResponse response) {
+		List<CommonConf> commonConfList = new ArrayList<CommonConf>();
 
-		try {
+		//try {
 			int catId = Integer.parseInt(request.getParameter("cat_id"));
 			System.out.println("cat Id " + catId);
-
-			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			RestTemplate restTemplate = new RestTemplate();
+			List<SpecialCake> specialCakeList = new ArrayList<SpecialCake>();
+			/*MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			map.add("itemGrp1", catId);
 
-			RestTemplate restTemplate = new RestTemplate();
 
 			Item[] item = restTemplate.postForObject(Constants.url + "getItemsByCatIdAndSortId", map, Item[].class);
 
 			itemsList = new ArrayList<Item>(Arrays.asList(item));
-			System.out.println("Item List: "+itemsList.toString());
+			System.out.println("Item List: "+itemsList.toString());*/
+
+			if (catId == 5) {
+				SpCakeResponse spCakeResponse = restTemplate.getForObject(Constants.url + "showSpecialCakeList",
+						SpCakeResponse.class);
+				logger.info("SpCake Controller SpCakeList Response " + spCakeResponse.toString());
+
+				specialCakeList = spCakeResponse.getSpecialCake();
+
+				for (SpecialCake specialCake : specialCakeList) {
+					CommonConf commonConf = new CommonConf();
+					commonConf.setId(specialCake.getSpId());
+					commonConf.setName(specialCake.getSpCode() + "-" + specialCake.getSpName());
+					commonConfList.add(commonConf);
+					logger.info("spCommonConf" + commonConf.toString());
+				}
+
+				logger.info("------------------------");
+			} else {
+				MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+				map.add("itemGrp1",catId);
+
+				Item[] item = restTemplate.postForObject(Constants.url + "getItemsByCatId", map, Item[].class);
+				ArrayList<Item> itemList = new ArrayList<Item>(Arrays.asList(item));
+				logger.info("Filter Item List " + itemList.toString());
+
+				for (Item items : itemList) {
+					CommonConf commonConf = new CommonConf();
+					commonConf.setId(items.getId());
+					commonConf.setName(items.getItemName());
+					commonConfList.add(commonConf);
+					logger.info("itemCommonConf" + commonConf.toString());
+				}
+				logger.info("------------------------");
+			}
+		/*	
 		} catch (Exception e) {
 			System.out.println("Exception in /AJAX getItemsByCatId");
-		}
-		return itemsList;
+		}*/
+			System.err.println("commonConfList"+commonConfList.toString());
+		return commonConfList;
 	}
 	
 	@RequestMapping(value="/showDiscountList", method=RequestMethod.GET)
@@ -203,8 +243,12 @@ public String deleteCustomer(@PathVariable("discId") int id) {
 @RequestMapping(value = "/updateDiscount/{discId}", method = RequestMethod.GET)
 public ModelAndView updateDiscount(@PathVariable int discId) {
 	ModelAndView model = new ModelAndView("masters/addDiscount");
+	List<CommonConf> commonConfList = new ArrayList<CommonConf>();
+
 	try {
 		RestTemplate restTemplate = new RestTemplate();
+		List<SpecialCake> specialCakeList = new ArrayList<SpecialCake>();
+
 		franchiseeAndMenuList = restTemplate.getForObject(Constants.url + "getFranchiseeAndMenu",
 				FranchiseeAndMenuList.class);	
 		categoryListResponse = restTemplate.getForObject(Constants.url + "showAllCategory",
@@ -222,7 +266,7 @@ public ModelAndView updateDiscount(@PathVariable int discId) {
 	Discount discount = restTemplate.postForObject(Constants.url + "getDiscountById",map,
 			Discount.class);
 	
-	 map = new LinkedMultiValueMap<String, Object>();
+/*	 map = new LinkedMultiValueMap<String, Object>();
 	map.add("itemGrp1", discount.getCategoryId());
 
 	Item[] item = restTemplate.postForObject(Constants.url + "getItemsByCatIdAndSortId", map, Item[].class);
@@ -253,7 +297,69 @@ public ModelAndView updateDiscount(@PathVariable int discId) {
 	   }
 	}
 	model.addObject("nonSelectedItems", nonSelected);
+	model.addObject("selectedItems", selected);*/
+	
+	if (discount.getCategoryId() == 5) {
+		SpCakeResponse spCakeResponse = restTemplate.getForObject(Constants.url + "showSpecialCakeList",
+				SpCakeResponse.class);
+		logger.info("SpCake Controller SpCakeList Response " + spCakeResponse.toString());
+
+		specialCakeList = spCakeResponse.getSpecialCake();
+
+		for (SpecialCake specialCake : specialCakeList) {
+			CommonConf commonConf = new CommonConf();
+			commonConf.setId(specialCake.getSpId());
+			commonConf.setName(specialCake.getSpCode() + "-" + specialCake.getSpName());
+			commonConfList.add(commonConf);
+			logger.info("spCommonConf" + commonConf.toString());
+		}
+
+		
+	} else {
+		 map = new LinkedMultiValueMap<String, Object>();
+		map.add("itemGrp1",discount.getCategoryId());
+
+		Item[] item = restTemplate.postForObject(Constants.url + "getItemsByCatIdAndSortId", map, Item[].class);
+		ArrayList<Item> itemList = new ArrayList<Item>(Arrays.asList(item));
+		logger.info("Filter Item List " + itemList.toString());
+
+		for (Item items : itemList) {
+			CommonConf commonConf = new CommonConf();
+			commonConf.setId(items.getId());
+			commonConf.setName(items.getItemName());
+			commonConfList.add(commonConf);
+			logger.info("itemCommonConf" + commonConf.toString());
+		}
+		
+	}
+	
+
+	List<Integer> frids = Stream.of(discount.getFranchId().split(","))
+            .map(Integer::parseInt)
+            .collect(Collectors.toList());
+	List<Integer> itemids = Stream.of(discount.getItemId().split(","))
+            .map(Integer::parseInt)
+            .collect(Collectors.toList());
+	List<CommonConf> nonSelected=new ArrayList<CommonConf>();
+	nonSelected.addAll(commonConfList);
+	List<CommonConf> selected=new ArrayList<CommonConf>();
+	if(itemids.size()>0) {
+	for(int i=0;i<itemids.size();i++) {
+		
+		 for(int j=0;j<commonConfList.size();j++)
+		 {
+		    if(commonConfList.get(j).getId()==itemids.get(i))
+		    {
+		    	selected.add(commonConfList.get(j));
+		    	nonSelected.remove(commonConfList.get(j));
+		    }
+		 }
+		
+	   }
+	}
+	model.addObject("nonSelectedItems", nonSelected);
 	model.addObject("selectedItems", selected);
+	
 	
 	List<FranchiseeList> nonSelectedFr=new ArrayList<FranchiseeList>();
 	nonSelectedFr.addAll(franchiseeAndMenuList.getAllFranchisee());

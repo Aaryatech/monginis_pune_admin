@@ -2,6 +2,7 @@ package com.ats.adminpanel.model;
 
 import java.util.Date;
 
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class GenerateBill {
@@ -49,7 +50,37 @@ public class GenerateBill {
 	
 	String  deliveryDate;//newlyAdded
 	
+	private String  partyName;//new
 	
+	private String  partyGstin;//new
+	
+	private String  partyAddress;//new
+	
+	
+
+	public String getPartyName() {
+		return partyName;
+	}
+
+	public void setPartyName(String partyName) {
+		this.partyName = partyName;
+	}
+
+	public String getPartyGstin() {
+		return partyGstin;
+	}
+
+	public void setPartyGstin(String partyGstin) {
+		this.partyGstin = partyGstin;
+	}
+
+	public String getPartyAddress() {
+		return partyAddress;
+	}
+
+	public void setPartyAddress(String partyAddress) {
+		this.partyAddress = partyAddress;
+	}
 
 	//@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
 	public String getDeliveryDate() {
@@ -238,10 +269,8 @@ public class GenerateBill {
 				+ catId + ", frCode=" + frCode + ", rateType=" + rateType + ", subCatId=" + subCatId + ", itemTax1="
 				+ itemTax1 + ", itemTax2=" + itemTax2 + ", itemTax3=" + itemTax3 + ", grnType=" + grnType
 				+ ", itemShelfLife=" + itemShelfLife + ", isSameState=" + isSameState + ", deliveryDate=" + deliveryDate
-				+ "]";
+				+ ", partyName=" + partyName + ", partyGstin=" + partyGstin + ", partyAddress=" + partyAddress + "]";
 	}
-     
 
 	
-
 }

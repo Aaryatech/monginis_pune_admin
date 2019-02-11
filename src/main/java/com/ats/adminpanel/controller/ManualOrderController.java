@@ -11,20 +11,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.TimeZone;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.context.annotation.Scope;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -37,21 +30,15 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.ats.adminpanel.commons.Constants;
 import com.ats.adminpanel.model.GenerateBill;
-import com.ats.adminpanel.model.Info;
 import com.ats.adminpanel.model.ItemForMOrder;
 import com.ats.adminpanel.model.Orders;
-import com.ats.adminpanel.model.SpCakeResponse;
-import com.ats.adminpanel.model.SpecialCake;
-import com.ats.adminpanel.model.RawMaterial.ItemDetail;
 import com.ats.adminpanel.model.billing.PostBillDataCommon;
 import com.ats.adminpanel.model.billing.PostBillDetail;
 import com.ats.adminpanel.model.billing.PostBillHeader;
-import com.ats.adminpanel.model.franchisee.CommonConf;
 import com.ats.adminpanel.model.franchisee.FranchiseeAndMenuList;
 import com.ats.adminpanel.model.franchisee.FranchiseeList;
 import com.ats.adminpanel.model.franchisee.Menu;
 import com.ats.adminpanel.model.item.Item;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 @Scope("session")
@@ -61,7 +48,7 @@ public class ManualOrderController {
 	FranchiseeAndMenuList franchiseeAndMenuList;
 	
 	@RequestMapping(value = "/showManualOrder", method = RequestMethod.GET)
-	public ModelAndView showManualOrder(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView showManualOrder(HttpServletRequest request, HttpServletResponse response)  throws IOException{
 
 		ModelAndView model = new ModelAndView("orders/manualOrder");
 		try {
@@ -78,9 +65,10 @@ public class ManualOrderController {
 			System.out.println("Franchisee Controller Exception " + e.getMessage());
 		}
 		return model;
-
+	
 	}
-	// METHOD)-------------------------
+	
+	//----------------------------------( METHOD)-------------------------
 		@RequestMapping(value = "/getMenuForOrder", method = RequestMethod.GET)
 		public @ResponseBody List<Menu> findAllMenu(@RequestParam(value = "fr_id", required = true) int frId) {
 
@@ -119,12 +107,19 @@ public class ManualOrderController {
 		}
 		// ----------------------------------------END--------------------------------------------
 		@RequestMapping(value = "/getItemsOfMenuId", method = RequestMethod.GET)
-		public @ResponseBody List<Orders> commonItemById(@RequestParam(value = "menuId", required = true) int menuId,@RequestParam(value = "frId", required = true) int frId,@RequestParam(value = "by", required = true) int by) {
+		public @ResponseBody List<Orders> commonItemById(@RequestParam(value = "menuId", required = true) int menuId,@RequestParam(value = "frId", required = true) int frId,@RequestParam(value = "by", required = true) int by,@RequestParam(value = "ordertype", required = true) int ordertype) throws ParseException {
 
-			System.out.println("menuId " + menuId);
+			try {
+			//System.out.println("menuId " + menuId);
 			orderList=new ArrayList<Orders>();
 			RestTemplate restTemplate = new RestTemplate();
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
+			Date today = new Date();
+			Date tomorrow = new Date(today.getTime() + (1000 * 60 * 60 * 24));
+			java.sql.Date sqlCurrDate = new java.sql.Date(today.getTime()); 
+			java.sql.Date sqlTommDate = new java.sql.Date(tomorrow.getTime()); 
+			
 			List<Menu> menuList = franchiseeAndMenuList.getAllMenu();
 			Menu frMenu = new Menu();
 			for (Menu menu : menuList) {
@@ -137,10 +132,14 @@ public class ManualOrderController {
 
 			System.out.println("Finding Item List for Selected CatId=" + selectedCatId);
 
+			java.util.Date utilDate = new java.util.Date(sqlCurrDate.getTime());
 
 				MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 				map.add("itemGrp1", selectedCatId);
+				map.add("menuId", menuId);
 				map.add("frId", frId);
+				map.add("prodDate",formatter.format(utilDate));
+				map.add("ordertype",ordertype);
 				ItemForMOrder[] itemRes = restTemplate.postForObject(Constants.url + "getItemListForMOrder", map, ItemForMOrder[].class);
 				ArrayList<ItemForMOrder> itemList = new ArrayList<ItemForMOrder>(Arrays.asList(itemRes));
 				System.out.println("Filter Item List " + itemList.toString());
@@ -178,6 +177,7 @@ public class ManualOrderController {
 		            	order.setOrderRate(item.getItemRate3());
 		    			order.setOrderMrp(item.getItemMrp3());
 						}
+						
 					}else
 						{
 						
@@ -195,7 +195,17 @@ public class ManualOrderController {
 								order.setOrderRate(item.getItemMrp3());
 								order.setOrderMrp(item.getItemMrp3());
 							}
+							
 					}
+					if(ordertype==0)
+					{
+						order.setRefId(0);
+					}else
+					{
+						order.setRefId(1);
+					}
+					
+					
 					int frGrnTwo=franchiseeList.getGrnTwo();
 					System.err.println("frGrnTwo"+frGrnTwo+"item.getGrnTwo()"+item.getGrnTwo());
 					if(item.getGrnTwo()==1) {
@@ -231,10 +241,7 @@ public class ManualOrderController {
 						order.setGrnType(4);
 					}
 					
-					Date today = new Date();
-					Date tomorrow = new Date(today.getTime() + (1000 * 60 * 60 * 24));
-					java.sql.Date sqlCurrDate = new java.sql.Date(today.getTime()); 
-					java.sql.Date sqlTommDate = new java.sql.Date(tomorrow.getTime()); 
+					
 					
 					order.setOrderId(0);
 					order.setItemId(String.valueOf(item.getId()));
@@ -255,19 +262,21 @@ public class ManualOrderController {
 					order.setOrderDate(sqlCurrDate);
 					order.setOrderDatetime(""+sqlCurrDate);
 					order.setUserId(0);
-					order.setOrderQty(0);
+					order.setOrderQty(item.getOrderQty());
 					order.setOrderStatus(0);
 					order.setOrderType(item.getItemGrp1());
 					order.setOrderSubType(item.getItemGrp2());
 					order.setProductionDate(sqlCurrDate);
-					order.setRefId(item.getId());
+					//order.setRefId(item.getId());
 
 					orderList.add(order);
 					
 					
 				}
 				System.out.println("------------------------"+orderList.toString());
-		
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
 
 			return orderList;
 		}
@@ -420,7 +429,7 @@ public class ManualOrderController {
 		
 		GenerateBill[] orderListResponse=null;
 			List<Orders> orderListSave=new ArrayList<>();
-			//String submitorder=request.getParameter("submitorder");
+			String submitorder=request.getParameter("submitorder");
 			String submitbill=request.getParameter("submitbill");
 			int frId=Integer.parseInt(request.getParameter("fr_id"));
 		try {
@@ -437,17 +446,23 @@ public class ManualOrderController {
 						orderListSave.add(orderList.get(i));
 						}
 					}
-					
+					if(submitorder!=null)
+					{
 					orderListResponse = restTemplate.postForObject(Constants.url + "placeManualOrder", orderListSave,GenerateBill[].class);
-					orderList=new ArrayList<Orders>();
+					}else
+					{//placeManualOrderNew --- not updates prev avail item order -each time new entry
+						orderListResponse = restTemplate.postForObject(Constants.url + "placeManualOrderNew", orderListSave,GenerateBill[].class);
+
+					}
+					orderList=new ArrayList<Orders>();//LIST CLEARED
 					List<GenerateBill> tempGenerateBillList=new ArrayList<GenerateBill>(Arrays.asList(orderListResponse));
 
 					if(submitbill!=null)
 					{
 						
-						String frName=request.getParameter("frName");
-						String gstin=request.getParameter("gstin");
-						String frAddress=request.getParameter("address");
+						String partyName=request.getParameter("frName");
+						String partyGstin=request.getParameter("gstin");
+						String partyAddress=request.getParameter("address");
 						//System.out.println("Place Order Response" + orderListResponse.toString());
 					
 						PostBillDataCommon postBillDataCommon = new PostBillDataCommon();
@@ -640,6 +655,9 @@ public class ManualOrderController {
 
 						header.setRemark(dateFormat.format(cal.getTime()));
 						header.setTime(strtime);
+						header.setPartyName(partyName);
+						header.setPartyGstin(partyGstin);
+						header.setPartyAddress(partyAddress);
 						postBillHeaderList.add(header);
 						postBillDataCommon.setPostBillHeadersList(postBillHeaderList);
 

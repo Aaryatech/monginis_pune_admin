@@ -14,22 +14,71 @@ contentType="text/html; charset=ISO8859_1"%>
 </head>
 <body>
   	<c:forEach items="${crnPrint}" var="headerH" varStatus="count">
-						<h4 align="center">Credit Note</h4>
+					<%-- 	<h4 align="center">Credit Note</h4>
     <h4 style="color:#000; font-size:16px; text-align:center; margin:0px;">${FACTORYNAME}</h4>
    <p style="color:#000; font-size:10px; text-align:center;margin:0px;">${FACTORYADDRESS}</p>
-<br></br> 
+<br></br>  --%>
 <table width="100%" border="0"  cellpadding="0" cellspacing="0" style="border-left:1px solid #313131;border-right:1px solid #313131;">
-  <tr>
-    <td width="54.8%" colspan="5" style="border-top:1px solid #313131;padding:8px;color:#FFF; font-size:14px;">
+   <tr >
+    <td   width="100%" colspan="12" align="left" style="border-top:1px solid #313131;padding:4px;font-size:16px;font-weight:bold;"><img src="${pageContext.request.contextPath}/resources/img/monginislogo.png" alt="logo" width="70px" height="37px"></img>&nbsp;&nbsp;&nbsp;LUTF FOOD PVT LTD</td>
+  
+  </tr>
+   <tr >
+    <td   width="100%" colspan="12" align="left" style="border-top:1px solid #313131;padding:4px;font-size:10px;font-weight:bold;">&nbsp;&nbsp;${FACTORYADDRESS}</td>
+  
+  </tr>
+  <tr bgcolor="lightgrey">
+    <td   width="100%" colspan="12" align="center" style="border-top:1px solid #313131;padding:4px;font-size:10px;font-weight:bold;">CREDIT NOTE</td>
+  
+  </tr>
+    <tr >
+    <td   width="30%" colspan="3" align="left"  style="border-top:1px solid #313131;padding:4px;font-size:10px;font-weight:bold;">&nbsp;GSTIN Number&nbsp;&nbsp;&nbsp;: 27AAACM5120A127</td>
+      <td   width="70%" colspan="6" align="left"  style="border-top:1px solid #313131;border-left:1px solid #313131;padding:4px;font-size:10px;font-weight:bold;"></td>
+  
+  </tr>
+    <tr >
+    <td   width="30%" colspan="3" align="left"  style="border-top:1px solid #313131;padding:4px;font-size:10px;font-weight:bold;">&nbsp;Credit Note No.&nbsp;&nbsp;&nbsp;: ${headerH.creditHeader.crnId}</td>
+      <td   width="70%" colspan="6" align="left"  style="border-top:1px solid #313131;border-left:1px solid #313131;padding:4px;font-size:10px;font-weight:bold;"></td>
+  
+  </tr>
+    <tr >
+    <td   width="30%" colspan="3" align="left"  style="border-top:1px solid #313131;padding:4px;font-size:10px;font-weight:bold;">&nbsp;Date&nbsp;&nbsp;&nbsp;: ${headerH.creditHeader.crnDate}</td>
+      <td   width="70%" colspan="6" align="left"  style="border-top:1px solid #313131;border-left:1px solid #313131;padding:4px;font-size:10px;font-weight:bold;">&nbsp;Tax is Payble on reverse charges(Yes/No):No</td>
+  
+  </tr>
+    <tr  bgcolor="lightgrey">
+    <td   width="30%" colspan="3" align="left"  style="border-top:1px solid #313131;padding:4px;font-size:10px;font-weight:bold;">&nbsp;Details Of Receiver </td>
+      <td   width="70%" colspan="6" align="left"  style="border-top:1px solid #313131;border-left:1px solid #313131;padding:4px;font-size:10px;font-weight:bold;">&nbsp;Details Of Returns of Goods </td>
+  
+  </tr>
+   <tr >
+    <td   width="30%" colspan="3" align="left"  style="border-top:1px solid #313131;padding:4px;font-size:10px;font-weight:bold;"><b>${headerH.creditHeader.frName}</b>&nbsp;${headerH.creditHeader.frAddress}</td>
+      <td   width="70%" colspan="6" align="left"  style="border-top:1px solid #313131;border-left:1px solid #313131;padding:4px;font-size:10px;font-weight:bold;"><b>${headerH.creditHeader.frName}</b>&nbsp;${headerH.creditHeader.frAddress}</td>
+  
+  </tr>
+
+  <tr >
+    <td   width="30%" colspan="3" align="left"  style="border-top:1px solid #313131;padding:4px;font-size:10px;font-weight:bold;">Pune Gr. Maharashtra 1</td>
+      <td   width="70%" colspan="6" align="left"  style="border-top:1px solid #313131;border-left:1px solid #313131;padding:4px;font-size:10px;font-weight:bold;">Pune Gr. Maharashtra 1</td>
+  
+  </tr>
+  
+  <tr >
+    <td   width="30%" colspan="3" align="left"  style="border-top:1px solid #313131;padding:4px;font-size:10px;font-weight:bold;">GSTIIN: &nbsp;<b>${headerH.creditHeader.frGstNo}</b></td>
+      <td   width="70%" colspan="6" align="left"  style="border-top:1px solid #313131;border-left:1px solid #313131;padding:4px;font-size:10px;font-weight:bold;">GSTIIN: &nbsp;<b>${headerH.creditHeader.frGstNo}</b>&nbsp;&nbsp;&nbsp;&nbsp;State: &nbsp;<b>Maharashtra</b></td>
+  
+  </tr>
+<%--   <tr>
+    <td  colspan="3" width="30%" style="border-top:1px solid #313131;padding:8px;color:#FFF; font-size:14px;">
        <p style="color:#000; font-size:13px; text-align:left;margin:0px;">To, &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>${headerH.creditHeader.frName}</b>&nbsp;${headerH.creditHeader.frAddress}</p>
-        <p style="color:#000; font-size:13px; text-align:;left;margin:0px;">GSTIIN: &nbsp;<b>${headerH.creditHeader.frGstNo}</b>&nbsp;&nbsp;&nbsp;&nbsp;<span> State:&nbsp;27 Maharashtra </span> </p>
+        <p style="color:#000; font-size:13px; text-align:;left;margin:0px;">GSTIIN: &nbsp;<b>${headerH.creditHeader.frGstNo}</b>&nbsp;&nbsp;&nbsp;&nbsp;State: &nbsp;<b>Maharashtra</b><!-- &nbsp;&nbsp;&nbsp;&nbsp;<span> State:&nbsp;27 Maharashtra </span> --> </p>
     </td>
 
-    <td width="50%" colspan="5" style="border-top:1px solid #313131;border-left:1px solid #313131; padding:8px;color:#FFF; font-size:15px;">
-        <p style="color:#000; font-size:13px; text-align:;left;margin:0px;"> Credit Note No. : &nbsp;&nbsp;&nbsp;&nbsp;<b>${headerH.creditHeader.crnId}</b></p>
-        <p style="color:#000; font-size:13px; text-align:left;margin:0px;">Date :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>${headerH.creditHeader.crnDate}</b></p>
+    <td  colspan="6" width="70%"style="border-top:1px solid #313131;border-left:1px solid #313131; padding:8px;color:#FFF; font-size:15px;">
+        <p style="color:#000; font-size:13px; text-align:;left;margin:0px;">Pune Gr. Maharashtra 1 Credit Note No. : &nbsp;&nbsp;&nbsp;&nbsp;<b>${headerH.creditHeader.crnId}</b></p>
+        <p style="color:#000; font-size:13px; text-align:left;margin:0px;">GSTIIN: &nbsp;<b>${headerH.creditHeader.frGstNo}</b>Date :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>${headerH.creditHeader.crnDate}</b></p>
     </td>
-  </tr>
+  </tr> --%>
   <tr>
   <c:choose>
   <c:when test="${headerH.creditHeader.isGrn==1}">
@@ -40,7 +89,7 @@ contentType="text/html; charset=ISO8859_1"%>
   </c:otherwise>
   </c:choose>
     <td width="58.9%" colspan="4" style="border-top:1px solid #313131;border-right:1px solid #313131;padding:7px;color:#FFF; font-size:15px;">
-        <p style="color:#000; font-size:13px; text-align:;left;margin:0px;"><b>Being the amount Credited to your Account towards ${type} as &nbsp; &nbsp;</b></p>
+        <p style="color:#000; font-size:12px; text-align:;left;margin:0px;"><b>Being the amount Credited to your Account towards ${type} as &nbsp; &nbsp;</b></p>
     </td>
     
       </tr>
@@ -48,7 +97,7 @@ contentType="text/html; charset=ISO8859_1"%>
       
       <table width="100%" border="0"  cellpadding="0" cellspacing="0" style="border-top:1px solid #313131;border-right:1px solid #313131">
       
-  <tr>
+  <tr  bgcolor="lightgrey">
     <td rowspan="2"  width="2%"  style="border-bottom:1px solid #313131; border-bottom:1px solid #313131;border-left:1px solid #313131; padding:5px;color:#000; font-size:10px;">No.</td>
     <td align="left" width="23%" rowspan="2" style="border-bottom:1px solid #313131; border-left:1px solid #313131; padding:15px;color:#000; font-size:10px;text-align: left">Item Decription</td>
    <td align="center" width="5%" rowspan="2" style="border-bottom:1px solid #313131; border-left:1px solid #313131; padding:0.2px;color:#000; font-size:10px;">HSN Code</td>
@@ -57,11 +106,13 @@ contentType="text/html; charset=ISO8859_1"%>
  <td align="center" width="5%" rowspan="2" style=" border-bottom:1px solid #313131; border-left:1px solid #313131; padding:10px;color:#000; font-size:10px;">Qty</td>
     <td align="center" width="5%" rowspan="2" style="border-bottom:1px solid #313131; border-left:1px solid #313131; padding:10px;color:#000; font-size:10px;">UOM </td>
     <td align="center" width="5.3%" rowspan="2" style="border-bottom:1px solid #313131; border-left:1px solid #313131; padding:10px;color:#000; font-size:10px;">Rate</td>
+     <td align="center" width="5.3%" rowspan="2" style="border-bottom:1px solid #313131; border-left:1px solid #313131; padding:10px;color:#000; font-size:10px;">Total</td>
+         <td align="center" width="5.3%" rowspan="2" style="border-bottom:1px solid #313131; border-left:1px solid #313131; padding:10px;color:#000; font-size:10px;">Rtd%</td>
     <td align="center" width="5%" rowspan="2" style="border-bottom:1px solid #313131; border-left:1px solid #313131; padding:10px;color:#000; font-size:10px;">Value</td>
     <td align="center" width="10%" colspan="2" style="border-left:1px solid #313131; padding:10px;color:#000; font-size:10px; text-align:center;"> CGST</td>
     <td align="center" width="10%" colspan="2" style="border-left:1px solid #313131; padding:10px;color:#000; font-size:10px;text-align:center;">SGST</td>
   </tr>
-  <tr>
+  <tr  bgcolor="lightgrey">
     <td align="center" style="border-top:1px solid #313131;border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:#000; font-size:10px;">Rate% </td>
     <td align="center" style="border-top:1px solid #313131;border-left:1px solid #313131;border-bottom:1px solid #313131;  padding:4px;color:#000; font-size:10px;">Amount</td>
     <td align="center" style="border-top:1px solid #313131;border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:#000; font-size:10px;">Rate%</td>
@@ -75,20 +126,22 @@ contentType="text/html; charset=ISO8859_1"%>
       
        <c:forEach items="${headerH.creditHeader.srNoDateList}" var="srNos">
        <tr>
-           <td  style="border-left:1px solid #313131; padding:3px 5px;color:#000; font-size:0px;">-</td>
+           <td  style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 5px;color:#000; font-size:0px;">-</td>
        
-          <td style="border-left:1px solid #313131;  padding:3px 5px;color:#000; font-size:10px;">Ref No&nbsp; &nbsp;<b><c:out value="${srNos.srNo}"></c:out></b>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;<c:out value="${srNos.grnGvnDate}"></c:out></td>
+          <td style="border-bottom:1px solid #313131;border-left:1px solid #313131;  padding:3px 5px;color:#000; font-size:10px;">Ref No&nbsp; &nbsp;<b><c:out value="${srNos.srNo}"></c:out></b>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;<c:out value="${srNos.grnGvnDate}"></c:out></td>
     
-        <td style="border-left:1px solid #313131;  padding:3px 5px;color:#000; font-size:0px;">-</td>
+        <td style="border-bottom:1px solid #313131;border-left:1px solid #313131;  padding:3px 5px;color:#000; font-size:0px;">-</td>
     
-    <td align="left" style="border-left:1px solid #313131;  padding:3px 5px;color:#000; font-size:0px;">-</td>
-        <td align="center" style="border-left:1px solid #313131; padding:3px 5px;color:#000; font-size:0px;">-</td>
-    <td align="right" style="border-left:1px solid #313131; padding:3px 5px;color:#000;font-size:0px;">-</td>
-    <td align="right" style="border-left:1px solid #313131; padding:3px 4px;color:#000; font-size:0px;">-</td>
-    <td align="right" style="border-left:1px solid #313131; padding:3px 4px;color:#000;font-size:0px;">-</td>
-    <td align="right" style="border-left:1px solid #313131; padding:3px 5px;color:#000; font-size:0px;">-</td>
-    <td align="right" style="border-left:1px solid #313131; padding:3px 5px;color:#000; font-size:0px;">-</td>
-    <td align="right" style="border-left:1px solid #313131; padding:3px 5px;color:#000;font-size:0px;">-</td>
+    <td align="left" style="border-bottom:1px solid #313131;border-left:1px solid #313131;  padding:3px 5px;color:#000; font-size:0px;">-</td>
+        <td align="center" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 5px;color:#000; font-size:0px;">-</td>
+           <td align="center" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 5px;color:#000; font-size:0px;">-</td>
+           <td align="center" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 5px;color:#000; font-size:0px;">-</td>
+    <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 5px;color:#000;font-size:0px;">-</td>
+    <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 4px;color:#000; font-size:0px;">-</td>
+    <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 4px;color:#000;font-size:0px;">-</td>
+    <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 5px;color:#000; font-size:0px;">-</td>
+    <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 5px;color:#000; font-size:0px;">-</td>
+    <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 5px;color:#000;font-size:0px;">-</td>
   </tr>
         <c:forEach items="${headerH.creditHeader.crnDetails}" var="crnDetail" varStatus="count1">
   
@@ -96,30 +149,35 @@ contentType="text/html; charset=ISO8859_1"%>
     <c:when test="${srNos.srNo eq crnDetail.grngvnSrno}">
     <tr>
  
-    <td  style="border-left:1px solid #313131; padding:3px 5px;color:#000; font-size:10px;">${count1.index+1}</td>
+    <td  style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 5px;color:#000; font-size:10px;">${count1.index+1}</td>
   
     
-        <td style="border-left:1px solid #313131;  padding:3px 5px;color:#000; font-size:10px;"><c:out value="${crnDetail.itemName}"></c:out></td>
+        <td style="border-bottom:1px solid #313131;border-left:1px solid #313131;  padding:3px 5px;color:#000; font-size:10px;"><c:out value="${crnDetail.itemName}"></c:out></td>
     
-        <td style="border-left:1px solid #313131;  padding:3px 5px;color:#000; font-size:10px;"><c:out value="${crnDetail.itemHsncd}"></c:out></td>
+        <td style="border-bottom:1px solid #313131;border-left:1px solid #313131;  padding:3px 5px;color:#000; font-size:10px;"><c:out value="${crnDetail.itemHsncd}"></c:out></td>
     
-    <td align="left" style="border-left:1px solid #313131;  padding:3px 5px;color:#000; font-size:10px;">${crnDetail.grnGvnQty}</td>
-        <td align="center" style="border-left:1px solid #313131; padding:3px 5px;color:#000; font-size:10px;">${crnDetail.itemUom}</td>
+    <td align="left" style="border-bottom:1px solid #313131;border-left:1px solid #313131;  padding:3px 5px;color:#000; font-size:10px;">${crnDetail.grnGvnQty}</td>
+        <td align="center" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 5px;color:#000; font-size:10px;">${crnDetail.itemUom}</td>
     
-    <td align="right" style="border-left:1px solid #313131; padding:3px 5px;color:#000;font-size:10px;"><fmt:formatNumber type="number"
+    <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 5px;color:#000;font-size:10px;"><fmt:formatNumber type="number"
 								maxFractionDigits="2" minFractionDigits="2" value="${crnDetail.baseRate}"/></td>
+    <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 4px;color:#000; font-size:10px;"><fmt:formatNumber type="number"
+								maxFractionDigits="2" minFractionDigits="2" value="${crnDetail.baseRate*crnDetail.grnGvnQty}"/></td>
+   
+    <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 4px;color:#000; font-size:10px;"><fmt:formatNumber type="number"
+								maxFractionDigits="0" minFractionDigits="0" value="${((crnDetail.baseRate*crnDetail.grnGvnQty)-(crnDetail.taxableAmt+crnDetail.cgstRs+crnDetail.sgstRs))/((crnDetail.baseRate*crnDetail.grnGvnQty)/100)}"/></td>
 			  <c:set var = "totalQty" value = "${totalQty+crnDetail.grnGvnQty}"/>					
-    <td align="right" style="border-left:1px solid #313131; padding:3px 4px;color:#000; font-size:10px;"><fmt:formatNumber type="number"
+    <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 4px;color:#000; font-size:10px;"><fmt:formatNumber type="number"
 								maxFractionDigits="2" minFractionDigits="2" value="${crnDetail.taxableAmt}"/></td>
-    <td align="right" style="border-left:1px solid #313131; padding:3px 4px;color:#000;font-size:10px;"><fmt:formatNumber type="number"
+    <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 4px;color:#000;font-size:10px;"><fmt:formatNumber type="number"
 								maxFractionDigits="2" minFractionDigits="2" value="${crnDetail.cgstPer}"/></td>
 								   <c:set var = "totalAmt" value = "${totalAmt+crnDetail.taxableAmt}"/>
-    <td align="right" style="border-left:1px solid #313131; padding:3px 5px;color:#000; font-size:10px;"><fmt:formatNumber type="number"
+    <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 5px;color:#000; font-size:10px;"><fmt:formatNumber type="number"
 								maxFractionDigits="2" minFractionDigits="2" value="${crnDetail.cgstRs}"/></td>
-    <td align="right" style="border-left:1px solid #313131; padding:3px 5px;color:#000; font-size:10px;"><fmt:formatNumber type="number"
+    <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 5px;color:#000; font-size:10px;"><fmt:formatNumber type="number"
 								maxFractionDigits="2" minFractionDigits="2" value="${crnDetail.sgstPer}"/></td>
 								  <c:set var = "totalCgst" value = "${totalCgst+crnDetail.cgstRs}"/>
-    <td align="right" style="border-left:1px solid #313131; padding:3px 5px;color:#000;font-size:10px;"><fmt:formatNumber type="number"
+    <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 5px;color:#000;font-size:10px;"><fmt:formatNumber type="number"
 								maxFractionDigits="2" minFractionDigits="2" value="${crnDetail.sgstRs}"/></td>
 								
 								 <c:set var = "totalSgst" value = "${totalSgst+crnDetail.sgstRs}"/>
@@ -149,59 +207,101 @@ contentType="text/html; charset=ISO8859_1"%>
   </c:forEach>
   </c:forEach>
    <tr>
-    <td  align="left" style="border-top:1px solid #313131;border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:white; font-size:10px;">-</td>
-    <td align="left" style="border-top:1px solid #313131;border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:#000; font-size:12px;"><b>Total</b></td>
-    <td align="center" style="border-top:1px solid #313131;border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:white; font-size:10px;">-</td>
-    <td align="right" style="border-top:1px solid #313131;border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:#000; font-size:12px;"><b><fmt:formatNumber type="number"
+    <td  align="left" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:white; font-size:10px;">-</td>
+    <td align="left" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:#000; font-size:12px;"><b>Total</b></td>
+    <td align="center" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:white; font-size:10px;">-</td>
+    <td align="right" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:#000; font-size:12px;"><b><fmt:formatNumber type="number"
 								maxFractionDigits="2" minFractionDigits="2" value="${totalQty}"/></b></td>
-    <td align="center" style="border-top:1px solid #313131;border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:white; font-size:10px;">-</td>
-    <td align="center" style="border-top:1px solid #313131;border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:white; font-size:10px;">-</td>
-    <td align="right" style="border-top:1px solid #313131;border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:#000; font-size:12px;"><b><fmt:formatNumber type="number"
+    <td align="center" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:white; font-size:10px;">-</td>
+    <td align="center" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:white; font-size:10px;">-</td>
+    
+    <td align="center" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:white; font-size:10px;">-</td>
+    <td align="center" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:white; font-size:10px;">-</td>
+    <td align="right" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:#000; font-size:12px;"><b><fmt:formatNumber type="number"
 								maxFractionDigits="2" minFractionDigits="2" value="${totalAmt}"/></b></td>
-    <td align="center" style="border-top:1px solid #313131;border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:white; font-size:10px;">-</td>
-    <td align="right" style="border-top:1px solid #313131;border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:#000; font-size:12px;"><b><fmt:formatNumber type="number"
+    <td align="center" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:white; font-size:10px;">-</td>
+    <td align="right" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:#000; font-size:12px;"><b><fmt:formatNumber type="number"
 								maxFractionDigits="2" minFractionDigits="2" value="${totalCgst}"/></b></td>
-    <td align="center" style="border-top:1px solid #313131;border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:white; font-size:10px;">-</td>
-    <td align="right" style="border-top:1px solid #313131;border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:#000; font-size:12px;"><b><fmt:formatNumber type="number"
+    <td align="center" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:white; font-size:10px;">-</td>
+    <td align="right" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:#000; font-size:12px;"><b><fmt:formatNumber type="number"
 								maxFractionDigits="2" minFractionDigits="2" value="${totalSgst}"/></b></td>
   </tr>
    <tr>
    
     <td align="right" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:white; font-size:10px;">-</td>
         <td align="right" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:white; font-size:10px;">-</td>
-    <td style="border-bottom:1px solid #313131; font-size:0px;">-</td><td style="border-bottom:1px solid #313131; font-size:10px;">-</td><td style="border-bottom:1px solid #313131;font-size:0px;">-</td><td style="border-bottom:1px solid #313131;padding:4px;color:#000; font-size:0px;">-</td><td style="border-bottom:1px solid #313131;font-size:0px;">-</td><td style="border-bottom:1px solid #313131;padding:4px;color:#000; font-size:0px;">-</td><td style="border-bottom:1px solid #313131;font-size:0px;">-</td><td style="border-bottom:1px solid #313131;font-size:12px;"><b>Grand Total:</b></td>
-    <td align="right" style="border-left:1px solid #313131;border-bottom:0px solid #313131; padding:4px;color:#000; font-size:12px;"><b><fmt:formatNumber type="number"
-								maxFractionDigits="0" value="${totalAmt+totalCgst+totalSgst}"/></b></td>
+    <td style="border-bottom:1px solid #313131; font-size:0px;">-</td><td style="border-bottom:1px solid #313131; font-size:10px;">-</td><td style="border-bottom:1px solid #313131;font-size:0px;">-</td><td style="border-bottom:1px solid #313131;padding:4px;color:#000; font-size:0px;">-</td><td style="border-bottom:1px solid #313131;padding:4px;color:#000; font-size:0px;">-</td><td style="border-bottom:1px solid #313131;padding:4px;color:#000; font-size:0px;">-</td><td style="border-bottom:1px solid #313131;font-size:0px;">-</td><td style="border-bottom:1px solid #313131;padding:4px;color:#000; font-size:0px;">-</td><td style="border-bottom:1px solid #313131;font-size:0px;">-</td><td style="border-bottom:1px solid #313131;font-size:12px;"><b>Gross Value:</b></td>
+    <td align="right" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:#000; font-size:12px;"><b><fmt:formatNumber type="number"
+								minFractionDigits="2" maxFractionDigits="2" value="${totalAmt+totalCgst+totalSgst}"/></b></td>
   </tr>
-</table>
-
-  <table width="100%" border="0"  cellpadding="0" cellspacing="0" style="border-top:1px solid #313131;border-right:1px solid #313131;">
-  
   <tr>
+   <fmt:formatNumber type="number"
+							minFractionDigits="0" 	maxFractionDigits="0" value="${totalAmt+totalCgst+totalSgst}" var="grossValue"/>
+    <td align="right" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:white; font-size:10px;">-</td>
+        <td align="right" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:white; font-size:10px;">-</td>
+    <td style="border-bottom:1px solid #313131; font-size:0px;">-</td><td style="border-bottom:1px solid #313131; font-size:10px;">-</td><td style="border-bottom:1px solid #313131;font-size:0px;">-</td><td style="border-bottom:1px solid #313131;padding:4px;color:#000; font-size:0px;">-</td><td style="border-bottom:1px solid #313131;padding:4px;color:#000; font-size:0px;">-</td><td style="border-bottom:1px solid #313131;padding:4px;color:#000; font-size:0px;">-</td><td style="border-bottom:1px solid #313131;font-size:0px;">-</td><td style="border-bottom:1px solid #313131;padding:4px;color:#000; font-size:0px;">-</td><td style="border-bottom:1px solid #313131;font-size:0px;">-</td><td style="border-bottom:1px solid #313131;font-size:12px;"><b>Round Off:</b></td>
+    <td align="right" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:#000; font-size:12px;"><b><fmt:formatNumber type="number"
+							minFractionDigits="2" 	maxFractionDigits="2" value="${grossValue-(totalAmt+totalCgst+totalSgst)}"/></b></td>
+  </tr>
+   <tr>
+   
+    <td align="right" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:white; font-size:10px;">-</td>
+        <td align="right" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:white; font-size:10px;">-</td>
+    <td style="border-bottom:1px solid #313131; font-size:0px;">-</td><td style="border-bottom:1px solid #313131; font-size:10px;">-</td><td style="border-bottom:1px solid #313131;font-size:0px;">-</td><td style="border-bottom:1px solid #313131;padding:4px;color:#000; font-size:0px;">-</td><td style="border-bottom:1px solid #313131;padding:4px;color:#000; font-size:0px;">-</td><td style="border-bottom:1px solid #313131;padding:4px;color:#000; font-size:0px;">-</td><td style="border-bottom:1px solid #313131;font-size:0px;">-</td><td style="border-bottom:1px solid #313131;padding:4px;color:#000; font-size:0px;">-</td><td style="border-bottom:1px solid #313131;font-size:0px;">-</td><td style="border-bottom:1px solid #313131;font-size:12px;"><b>Net Value:</b></td>
+    <td align="right" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:#000; font-size:12px;"><b><fmt:formatNumber type="number"
+								minFractionDigits="0" maxFractionDigits="0" value="${totalAmt+totalCgst+totalSgst}"/></b></td>
+  </tr>
+  
+</table>
+  <table width="100%" border="0"  cellpadding="0" cellspacing="0" style="border-right:1px solid #313131">
+    <tr bgcolor="lightgrey">
+    <td   width="100%" colspan="12" align="left" style="border-left:1px solid #313131; border-bottom:1px solid #313131;padding:4px;font-size:10px;font-weight:bold;">Tax Summary</td>
+  
+  </tr>    
+  <tr  bgcolor="lightgrey">
+    <td rowspan="2"  width="10%"  style="border-bottom:1px solid #313131; border-bottom:1px solid #313131;border-left:1px solid #313131; padding:5px;color:#000; font-size:10px;">HSN</td>
+    <td align="left" width="20%" rowspan="2" style="border-bottom:1px solid #313131; border-left:1px solid #313131; padding:15px;color:#000; font-size:10px;text-align: left">HSN Description</td> 
+     
+ <td align="center" width="5%" rowspan="2" style=" border-bottom:1px solid #313131; border-left:1px solid #313131; padding:10px;color:#000; font-size:10px;">Qty</td>
+    <td align="center" width="10%" rowspan="2" style="border-bottom:1px solid #313131; border-left:1px solid #313131; padding:10px;color:#000; font-size:10px;">Taxable Value</td>
+    <td align="center" width="20%" colspan="2" style="border-left:1px solid #313131; padding:10px;color:#000; font-size:10px; text-align:center;"> CGST</td>
+    <td align="center" width="20%" colspan="2" style="border-left:1px solid #313131; padding:10px;color:#000; font-size:10px;text-align:center;">SGST</td>
+        <td align="center" width="25%" rowspan="2" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:#000; font-size:10px;">HSN Total</td>
+    
+  </tr>
+  <tr  bgcolor="lightgrey">
+    <td align="center" style="border-top:1px solid #313131;border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:#000; font-size:10px;">Rate% </td>
+    <td align="center" style="border-top:1px solid #313131;border-left:1px solid #313131;border-bottom:1px solid #313131;  padding:4px;color:#000; font-size:10px;">Amount</td>
+    <td align="center" style="border-top:1px solid #313131;border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:#000; font-size:10px;">Rate%</td>
+    <td align="center" style="border-top:1px solid #313131;border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:#000; font-size:10px;">Amount</td>
+  </tr>
+  
+  </table>
+  <table width="100%" border="0"  cellpadding="0" cellspacing="0" style="border-right:1px solid #313131;">
+  
+ <%--  <tr>
     <td colspan="6" width="50%" style="border-left:1px solid #313131; padding:8px;color:#000; font-size:12px;">
-     <p style="color:#000; font-size:12px; text-align:left;margin:0px;">Narration<br>Being ${type} For the period of the dated <%-- ${headerH.creditHeader.fromDate} to ${headerH.creditHeader.toDate} --%></p>
+     <p style="color:#000; font-size:12px; text-align:left;margin:0px;">Narration<br>Being ${type} For the period of the dated ${headerH.creditHeader.fromDate} to ${headerH.creditHeader.toDate}</p>
 </td>
     <td colspan="5" width="38%" rowspan="2" style="border-left:1px solid #313131; padding:8px;color:#000;font-size:15px;">&nbsp;</td>
-  </tr>
+  </tr> --%>
   
     <tr>
-    <td colspan="6" width="50%"  style="border-top:1px solid #313131;border-left:1px solid #313131; padding:8px;color:#000; font-size:15px;">&nbsp;</td>
+    <td colspan="6" width="50%"  style="border-left:1px solid #313131; padding:8px;color:#000; font-size:15px;">&nbsp;</td>
   </tr>
   
     
   <tr>
-    <td colspan="6" width="50%"  style="border-top:1px solid #313131;border-left:1px solid #313131; padding:8px;color:#000; font-size:15px;">&nbsp;
-
-</td>
-    <td colspan="5" width="38%" style="border-top:1px solid #313131;border-left:1px solid #313131; padding:8px;color:#000;font-size:15px;">     
-    <p style="color:#000; font-size:11px; text-align:left;margin:0px;">Continue...</p></td>
+   
+    <td colspan="12" width="100%" style="border-top:1px solid #313131;border-left:1px solid #313131; padding:8px;color:#000;font-size:15px;">     
+    <p style="color:#000; font-size:11px; text-align:left;margin:0px;text-align: right;"><b>For LUTF FOOD PVT LTD&nbsp;</b></p></td>
   </tr>
   
   <tr>
-    <td colspan="6"  width="50%" style="border-bottom:1px solid #313131;border-top:1px solid #313131;border-left:1px solid #313131; padding:10px;color:#000; font-size:11px;">
-     <p style="color:#000; font-size:11px; text-align:left;margin:0px;">Subject to Aurangabad Jurisdiction &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Receiver's Signature</p>
+    <td colspan="7"  width="90%" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:10px;color:#000; font-size:11px;">
+     <p style="color:#000; font-size:11px; text-align:left;margin:0px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Subject to Pune Jurisdiction</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Receiver's Signature</b></p>
 </td>
-    <td  align="center" colspan="5" width="38%" style="border-bottom:1px solid #313131;border-top:1px solid #313131;border-left:1px solid #313131; padding:10px;color:#000;font-size:11px;">Authorised Signature</td>
+    <td  align="center" colspan="4" width="38%" style="border-bottom:1px solid #313131;padding:10px;color:#000;font-size:11px;text-align: right;"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Authorised Signature</b></td>
   </tr>
   
 </table>

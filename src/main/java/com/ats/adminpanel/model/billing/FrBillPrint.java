@@ -21,12 +21,32 @@ public class FrBillPrint {
 	String amtInWords;
 	
 	float grandTotal;
-	
+	private String partyName;//new -08 feb 19
+	private String partyGstin;//new -08 feb 19
+	private String partyAddress;//new -08 feb 19
 	public List<SubCategory> subCatList;
 	
 	Company company;
 	
 	
+	public String getPartyName() {
+		return partyName;
+	}
+	public void setPartyName(String partyName) {
+		this.partyName = partyName;
+	}
+	public String getPartyGstin() {
+		return partyGstin;
+	}
+	public void setPartyGstin(String partyGstin) {
+		this.partyGstin = partyGstin;
+	}
+	public String getPartyAddress() {
+		return partyAddress;
+	}
+	public void setPartyAddress(String partyAddress) {
+		this.partyAddress = partyAddress;
+	}
 	public Company getCompany() {
 		return company;
 	}
@@ -106,6 +126,7 @@ public class FrBillPrint {
 		return "FrBillPrint [billDetailsList=" + billDetailsList + ", frId=" + frId + ", billNo=" + billNo + ", frName="
 				+ frName + ", frAddress=" + frAddress + ", invoiceNo=" + invoiceNo + ", isSameState=" + isSameState
 				+ ", billDate=" + billDate + ", amtInWords=" + amtInWords + ", grandTotal=" + grandTotal
+				+ ", partyName=" + partyName + ", partyGstin=" + partyGstin + ", partyAddress=" + partyAddress
 				+ ", subCatList=" + subCatList + ", company=" + company + "]";
 	}
 	

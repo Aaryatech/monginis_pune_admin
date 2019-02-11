@@ -6,7 +6,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <!DOCTYPE html>
-<html>
+<html oncontextmenu="return false">
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -260,20 +260,20 @@ select {
 														<c:when test="${isEdit==1}">
 															<option value="-1" >All</option>
 														<c:forEach	items="${selectedItems}"	var="item">
-															<option value="${item.id}" selected>${item.itemName}</option>
+															<option value="${item.id}" selected>${item.name}</option>
 														</c:forEach>
 														
 														<c:forEach	items="${nonSelectedItems}"	var="item">
-															<option value="${item.id}" >${item.itemName}</option>
+															<option value="${item.id}" >${item.name}</option>
 														</c:forEach>
 														</c:when>
 														<c:otherwise>
 																<c:forEach	items="${selectedItems}"	var="item">
-															<option value="${item.id}" >${item.itemName}</option>
+															<option value="${item.id}" >${item.name}</option>
 														</c:forEach>
 														
 														<c:forEach	items="${nonSelectedItems}"	var="item">
-															<option value="${item.id}" >${item.itemName}</option>
+															<option value="${item.id}" >${item.name}</option>
 														</c:forEach>
 														</c:otherwise>
 														</c:choose>
@@ -405,7 +405,7 @@ $(document).ready(function() {
                                 
                         $("#items").append(
                                 $("<option></option>").attr(
-                                    "value", data[i].id).text(data[i].itemName)
+                                    "value", data[i].id).text(data[i].name)
                             );
                     }
 
@@ -457,11 +457,11 @@ $(document).ready(function() { // if all label selected set all items selected
 $('#items').change(
 		function () {
 			 var selected=$('#items').val();
-			 var menu=$('#menu').val();
-	
+			 var catId=$('#catId').val();
+			 
         if(selected==-1){
 			$.getJSON('${findItemsByCatId}', {
-				 menuId : menu,
+				cat_id :catId,
 				ajax : 'true'
 			}, function(data) {
 				var html = '<option value="">Items</option>';
@@ -477,7 +477,7 @@ $('#items').change(
     
                    $("#items").append(
                            $("<option selected></option>").attr(
-                               "value", data[i].id).text(data[i].itemName)
+                               "value", data[i].id).text(data[i].name)
                        );
 				}
 		
@@ -534,6 +534,15 @@ $( "#date" ).datepicker({
     // Add this line
 
     stepMonths: 0,
+});
+
+$(document).keydown(function(e){
+    if(e.which === 123){
+ 
+       return false;
+ 
+    }
+ 
 });
 </script>
 </body>

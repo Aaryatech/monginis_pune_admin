@@ -101,20 +101,20 @@ page-break-inside: auto !important
 					style="border-top: 1px solid #313131; padding: 7px; color: #FFF; font-size: 15px;">
 					<p
 						style="color: #000; font-size: 13px; text-align:; left; margin: 0px;">
-						<b> Billed To:&nbsp; &nbsp; ${frDetails.frName}</b>
+						<b> Billed To:&nbsp; &nbsp; ${frDetails.partyName}  [GSTIN:   ${frDetails.partyGstin}]</b>
 					</p>
 					<p
-						style="color: #000; font-size: 11px; text-align:; left; margin: 0px;">${frDetails.frAddress}</p>
+						style="color: #000; font-size: 11px; text-align:; left; margin: 0px;">${frDetails.partyAddress}</p>
 
 				</td>
 				<td width="50%" colspan="5"
 					style="border-top: 1px solid #313131; border-left: 1px solid #313131; padding: 7px; color: #FFF; font-size: 15px;">
 					<p
 						style="color: #000; font-size: 13px; text-align:; left; margin: 0px;">
-						<b> Ship To:&nbsp; &nbsp; ${frDetails.frName}</b>
+						<b> Ship To:&nbsp; &nbsp; ${frDetails.partyName}  [GSTIN:   ${frDetails.partyGstin}]</b>
 					</p>
 					<p
-						style="color: #000; font-size: 11px; text-align:; left; margin: 0px;">${frDetails.frAddress}</p>
+						style="color: #000; font-size: 11px; text-align:; left; margin: 0px;">${frDetails.partyAddress}</p>
 
 				</td>
 			</tr>
@@ -300,7 +300,7 @@ page-break-inside: auto !important
 					style="padding: 10px; color: #FFF; font-size: 15px;"><p
 						style="color: #000; font-size: 13px; text-align: left; margin: 0px;">
 						Invoice No: &nbsp;<b>${frDetails.invoiceNo}</b>
-		</p>
+	            	</p>
 					<p
 						style="color: #000; font-size: 13px; text-align: left; margin: 0px;"> 
 						Invoice Date: &nbsp;<b>${frDetails.billDate}</b>

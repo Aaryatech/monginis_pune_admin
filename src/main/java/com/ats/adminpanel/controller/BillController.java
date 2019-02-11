@@ -435,6 +435,9 @@ public class BillController {
 						header.setFrCode(gBill.getFrCode());
 						header.setBillDate(billDate);
 						header.setRemark("");
+						header.setPartyName(gBill.getPartyName());//new
+						header.setPartyGstin(gBill.getPartyGstin());//new
+						header.setPartyAddress(gBill.getPartyAddress());//new
 						header.setTaxApplicable((int) (gBill.getItemTax1() + gBill.getItemTax2()));
 
 					}
@@ -1783,6 +1786,9 @@ public class BillController {
 						billPrint.setIsSameState(billHeadersListForPrint.get(i).getIsSameState());
 						billPrint.setBillDate(billHeadersListForPrint.get(i).getBillDate());
 						billPrint.setGrandTotal(billHeadersListForPrint.get(i).getGrandTotal());
+						billPrint.setPartyName(billHeadersListForPrint.get(i).getPartyName());//new
+						billPrint.setPartyAddress(billHeadersListForPrint.get(i).getPartyAddress());//new
+						billPrint.setPartyGstin(billHeadersListForPrint.get(i).getPartyGstin());//new
 						billPrint.setCompany(billHeadersListForPrint.get(i).getCompany());
 						billDetails.add(billDetailsListForPrint.get(j));
 

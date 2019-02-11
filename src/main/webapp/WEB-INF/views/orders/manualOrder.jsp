@@ -173,7 +173,7 @@ select {
 <body onload="showPdf(${billNo})">
 
 	<c:url var="setAllItemSelected" value="/setAllItemSelected" />
-
+	<c:url var="findFranchiseeData" value="/findFranchiseeData" />
 	<c:url var="findItemsByCatId" value="/getItemsOfMenuId" />
 	<c:url var="findAllMenus" value="/getMenuForOrder" />
 	<c:url var="insertItem" value="/insertItem" />
@@ -236,11 +236,11 @@ select {
 						<div class="form-group">
 			<label class="col-sm-3 col-lg-2 control-label">Order Type</label>
 									  <label class="col-sm-3 col-lg-2 control-label">
-    <input type="radio" name="ordertype" class="order" value="0" id="or1" >
+    <input type="radio" name="ordertype" class="order" value="0" id="or1" onchange="checkCheckedStatus()">
   <label for="or1"> Manual Order</label>
   </label>
 <label class="col-sm-3 col-lg-2 control-label">
-    <input type="radio" name="ordertype" class="order" value="1" id="or2">
+    <input type="radio" name="ordertype" class="order" value="1" id="or2" onchange="checkCheckedStatus()">
    <label for="or2"> Manual Bill </label>
   </label>									    
   </div>
@@ -253,7 +253,7 @@ select {
 											<div class="col-sm-9 col-lg-5 controls">
 												<select data-placeholder="Select Franchisee" name="fr_id"
 													class="form-control chosen" tabindex="-1" id="fr_id"
-													data-rule-required="true">
+													data-rule-required="true" onchange="findFranchiseeData(this.value)">
 													<option value="0">Select Franchisee </option>
 														<c:forEach
 															items="${allFranchiseeAndMenuList.getAllFranchisee()}"
@@ -282,11 +282,11 @@ select {
 										<div class="form-group">
 										<label class="col-sm-3 col-lg-2 control-label">Order</label>
 									  <label class="col-sm-3 col-lg-2 control-label">
-    <input type="radio" name="typename" class="type" value="0" checked="" id="t1">
+    <input type="radio" name="typename" class="type" value="0" checked="" id="t1" onchange="checkOrderByStatus()">
     <label for="t1">By Rate</label>
   </label>
 <label class="col-sm-3 col-lg-2 control-label">
-    <input type="radio" name="typename" class="type" value="1" id="t2">
+    <input type="radio" name="typename" class="type" value="1" id="t2" onchange="checkOrderByStatus()">
     <label for="t2">By MRP</label>
   </label>									    
   </div>
@@ -304,7 +304,7 @@ select {
 											<div class="col-sm-9 col-lg-2 controls">
 				<input type="text" name="address" value="-"	id="address" class="form-control"/>						
 											</div>
-		  <input type="button" class="btn btn-primary" value="Search" onclick="onSearch()" disabled >
+		  <input type="button" class="btn btn-primary" id="searchBtn" value="Search" onclick="onSearch()" disabled >
 											
 		</div>								
 									<!-- 	<div class="form-group">
@@ -394,7 +394,7 @@ select {
 			<!-- END Main Content -->
 
 			<footer>
-				<p>2018 © MONGINIS.</p>
+				<p>2019 © MONGINIS.</p>
 			</footer>
 
 			<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
@@ -420,8 +420,11 @@ $(function() {
     $('#menu').change( */
             function onSearch() {
     	
+    	var isValid=validation();
+    	if(isValid){
     	var type = $('.type:checked').val();
-    
+    	var ordertype = $('.order:checked').val();//alert(ordertype);
+    	
     	$('#table_grid td').remove();
     
           	 $('#loader').show();
@@ -430,6 +433,7 @@ $(function() {
                     menuId:$('#menu').val(),
                     frId:$('#fr_id').val(),
                     by:type,
+                    ordertype:ordertype,
                     ajax : 'true'
                 }, function(data) {
                 		 $('#loader').hide();
@@ -447,7 +451,7 @@ $(function() {
 
              		  	tr.append($('<td></td>').html(item.itemName));
              		  	tr.append($('<td></td>').html(item.minQty+'<input type="hidden" value='+item.minQty+'	id=minqty'+item.itemId+'  />'));
-             		  	tr.append($('<td style="text-align:right;" class="col-md-1"></td>').html('<input type="number" class="form-control" onchange="onChange('+item.orderRate+','+item.itemId+')"   width=20px;  name=qty'+item.itemId+' id=qty'+item.itemId+' value=0 > '));
+             		  	tr.append($('<td style="text-align:right;" class="col-md-1"></td>').html('<input type="number" class="form-control" onchange="onChange('+item.orderRate+','+item.itemId+')"   width=20px;  name=qty'+item.itemId+' id=qty'+item.itemId+' value='+item.orderQty+' > '));
              		  	
              		  	tr.append($('<td style="text-align:right;"></td>').html(item.orderMrp.toFixed(2)));
              		  	
@@ -458,6 +462,7 @@ $(function() {
              		  
              			$('#table_grid tbody').append(tr);
              		}); });
+    	}
             }
 </script> 
 
@@ -641,8 +646,8 @@ function validation() {
 	
 	var frId = $('#fr_id').val();
 	var menuId = $('#menu').val();
-	var itemId=$('#items').val();
-	var qty=$("#qty").val();
+	//var itemId=$('#items').val();
+	//var qty=$("#qty").val();
 
 	var isValid = true;
 	if (frId == ""||frId==0) { 
@@ -651,12 +656,6 @@ function validation() {
 	} else if (menuId == ""||menuId ==0) {
 		isValid = false;
 		alert("Please Select Menu ");
-	}else if (itemId == ""||itemId=='0' ) {
-		isValid = false;
-		alert("Please Select Item");
-	}else if (qty == ""||isNaN(qty) || qty < 1) {
-		isValid = false;
-		alert("Please Enter Valid Item Qty.");
 	}
 	return isValid;
 }
@@ -734,6 +733,29 @@ function generateBill()
 
 </script>
 <script type="text/javascript">
+function findFranchiseeData(frId)
+{
+	$.getJSON(
+					'${findFranchiseeData}',
+					{
+						fr_id:frId,
+						ajax : 'true'
+					},
+					function(data) {
+						if(data.length!=0)
+							{
+                              document.getElementById("frName").value=data.frName;
+                              document.getElementById("gstin").value=data.frGstNo;
+                              document.getElementById("address").value=data.frAddress;
+							}
+						
+					});
+	
+}
+
+
+</script>
+<script type="text/javascript">
 function showPdf(billNo)
 {
 	if(billNo!=0)
@@ -745,5 +767,44 @@ function showPdf(billNo)
 
 }
 </script>
+<script type="text/javascript">
+function checkCheckedStatus()
+{
+	   if($('#or1').is(':checked')) { 
+		   document.getElementById("searchBtn").disabled = false;
+		   document.getElementById("submitbill").style.display = "none";
+		   	 $("#submitorder").show();
+
+   		document.getElementById("submitorder").style.backgroundColor = "blue";
+   	// document.getElementById("submitbill").style.backgroundColor = "#ffeadd";
+	   }else
+	   if($('#or2').is(':checked')) { 
+		   document.getElementById("searchBtn").disabled = false;
+		   $("#submitbill").show();
+
+		   document.getElementById("submitbill").style.backgroundColor = "blue";
+		  // document.getElementById("submitorder").style.backgroundColor = "#ffeadd";
+		   document.getElementById("submitorder").style.display = "none";
+
+
+	   }
+	   
+	
+}
+function checkOrderByStatus()
+{
+	    var isConfirm=confirm('Do you want to change order By ?');
+
+	 if(isConfirm){
+	   if($('#t1').is(':checked')) { 
+		   onSearch();
+	   }else
+	   if($('#t2').is(':checked')) { 
+		   onSearch();
+	   }
+      }
+}
+</script>
+
 </body>
 </html>

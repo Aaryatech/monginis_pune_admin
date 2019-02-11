@@ -1,9 +1,5 @@
 package com.ats.adminpanel.model;
 
-import java.util.Date;
-
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class GetSpCkOrder {
  
@@ -50,6 +46,56 @@ public class GetSpCkOrder {
 	
 	private String orderPhoto;
 	
+	private String slipMrp;//new for slip
+	
+	private float slipNo;//new for slip
+	
+	private String frCity;//new for slip
+	
+	private String frRType;//new for slip
+
+	
+	
+	public String getFrRType() {
+		return frRType;
+	}
+
+
+	public void setFrRType(String frRType) {
+		this.frRType = frRType;
+	}
+
+
+	public String getSlipMrp() {
+		return slipMrp;
+	}
+
+
+	public void setSlipMrp(String slipMrp) {
+		this.slipMrp = slipMrp;
+	}
+
+
+	public float getSlipNo() {
+		return slipNo;
+	}
+
+
+	public void setSlipNo(float slipNo) {
+		this.slipNo = slipNo;
+	}
+
+
+	public String getFrCity() {
+		return frCity;
+	}
+
+
+	public void setFrCity(String frCity) {
+		this.frCity = frCity;
+	}
+
+
 	public String getItemId() {
 		return itemId;
 	}
@@ -264,8 +310,10 @@ public class GetSpCkOrder {
 				+ ", rmAmount=" + rmAmount + ", spDeliveryDate=" + spDeliveryDate + ", itemId=" + itemId
 				+ ", spDeliveryPlace=" + spDeliveryPlace + ", spCustName=" + spCustName + ", spEvents=" + spEvents
 				+ ", spEventsName=" + spEventsName + ", spCustMobNo=" + spCustMobNo + ", spfName=" + spfName
-				+ ", cusChoicePhoto=" + cusChoicePhoto + ", orderPhoto=" + orderPhoto + "]";
+				+ ", cusChoicePhoto=" + cusChoicePhoto + ", orderPhoto=" + orderPhoto + ", slipMrp=" + slipMrp
+				+ ", slipNo=" + slipNo + ", frCity=" + frCity + ", frRType=" + frRType + "]";
 	}
+
     
 	}
 	

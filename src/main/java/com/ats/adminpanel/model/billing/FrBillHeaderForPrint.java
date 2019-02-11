@@ -1,5 +1,6 @@
 package com.ats.adminpanel.model.billing;
 
+
 public class FrBillHeaderForPrint {
 
 	private Integer billNo;
@@ -17,9 +18,38 @@ public class FrBillHeaderForPrint {
 	private Integer delStatus;
 	private int isSameState;
 	private String frAddress;
-
+	private String partyName;//new -08 feb 19
+	private String partyGstin;//new -08 feb 19
+	private String partyAddress;//new -08 feb 19
+	
 	Company company;
 	
+	
+	
+	public String getPartyName() {
+		return partyName;
+	}
+
+	public void setPartyName(String partyName) {
+		this.partyName = partyName;
+	}
+
+	public String getPartyGstin() {
+		return partyGstin;
+	}
+
+	public void setPartyGstin(String partyGstin) {
+		this.partyGstin = partyGstin;
+	}
+
+	public String getPartyAddress() {
+		return partyAddress;
+	}
+
+	public void setPartyAddress(String partyAddress) {
+		this.partyAddress = partyAddress;
+	}
+
 	public Company getCompany() {
 		return company;
 	}
@@ -157,8 +187,9 @@ public class FrBillHeaderForPrint {
 				+ ", invoiceNo=" + invoiceNo + ", billDate=" + billDate + ", frId=" + frId + ", frCode=" + frCode
 				+ ", grandTotal=" + grandTotal + ", taxableAmt=" + taxableAmt + ", totalTax=" + totalTax + ", status="
 				+ status + ", remark=" + remark + ", delStatus=" + delStatus + ", isSameState=" + isSameState
-				+ ", frAddress=" + frAddress + ", company=" + company + "]";
+				+ ", frAddress=" + frAddress + ", partyName=" + partyName + ", partyGstin=" + partyGstin
+				+ ", partyAddress=" + partyAddress + ", company=" + company + "]";
 	}
-    
 
+	
 }

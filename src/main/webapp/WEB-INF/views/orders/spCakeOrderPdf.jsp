@@ -1,13 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
     
     
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Dashboard - MONGINIS Admin</title>
+<title>MONGINIS Admin</title>
 
 <html lang="en">
   <head>
@@ -15,6 +16,25 @@
     <title>
     </title>
     <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.12.0/semantic.min.css" />
+ <style type="text/css">
+ table {
+	background-color:white;
+page-break-inside: auto !important;
+ 
+
+} 
+.floatedTable {
+           display: inline-block; float: left; 
+        }
+        .floatedTable1 {
+           display: inline-block;
+        }
+       .neo_main_container1
+{
+   width: 100%; //fallback
+   width: 100vw;
+}
+</style>
   </head>
   <body>
     <!-- code goes here -->
@@ -35,7 +55,97 @@
 
  	<c:forEach items="${spCakeOrder}" var="spCakeOrder"
 														varStatus="count"> 
-														
+	<c:set var="cls" value=""></c:set><c:choose><c:when test="${count.index/2==0}"><c:set var="cls" value="floatedTable"></c:set></c:when><c:otherwise><c:set var="cls" value="floatedTable1"></c:set></c:otherwise></c:choose>
+
+<table style=" border-bottom: 1px dashed grey;"   class="${cls}" >
+<tbody><tr style="height: 21px;">
+<td style="width: 125px; height: 21px;">
+<div style="border-bottom-style: dashed; font-size: 13px;padding-bottom: 5px; padding-top: 5px; border-bottom-color: grey;">&nbsp; &nbsp;&nbsp;SLIP.No-&gt;</div>
+</td>
+<td style="width: 425px; height: 21px;font-size: 14px;">&nbsp; ${spCakeOrder.slipNo}&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<b><c:choose><c:when test="${spCakeOrder.frRType==1}">A</c:when><c:when test="${spCakeOrder.frRType==2}">B</c:when><c:when test="${spCakeOrder.frRType==3}">C</c:when></c:choose></b></td>
+</tr>
+
+
+<tr style="height: 20px;">
+<td style="width: 125px; height: 20px; border-bottom: 1px dashed; font-size: 13px;">&nbsp;</td>
+<td style="width: 425px; height: 20px; border-bottom: 1px dashed; font-size: 13px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; M.R.P<strong>:</strong>&nbsp; &nbsp; ${spCakeOrder.slipMrp}</td>
+</tr>
+
+<tr style="height: 20px;">
+<td style="width: 125px; height: 20px;  border-left: 1px dashed; border-right: 1px dashed;  font-size: 13px;">&nbsp; &nbsp;&nbsp;DEL DT&nbsp; &nbsp;&nbsp;<strong>:</strong></td>
+<td style="width: 425px; height: 20px; font-size: 13px; font-weight: bold; border: 1px dashed;">&nbsp; &nbsp; ${spCakeOrder.spDeliveryDate}</td>
+</tr>
+<tr style="height: 20px;">
+<td style="width: 125px; height: 20px; border: 1px dashed; font-size: 13px;">&nbsp; &nbsp;&nbsp;ORD DT &nbsp;<strong>:</strong></td>
+<td style="width: 425px; height: 20px; font-size: 13px; border: 1px dashed;">&nbsp; &nbsp; ${spCakeOrder.orderDate}</td>
+</tr>
+<tr style="height: 20px;">      <c:set var = "frName" value = "${fn:toUpperCase(spCakeOrder.frName)}" />
+<td style="width: 125px; height: 20px;  border-top: 1px dashed; border-left: 1px dashed; border-right: 1px dashed; font-size: 13px;">&nbsp; &nbsp;&nbsp;SHOP&nbsp; &nbsp; &nbsp;&nbsp;&nbsp;<strong>:</strong></td>
+<td style="width: 425px; height: 20px; border-top: 1px dashed; border-left: 1px dashed; border-right: 1px dashed; font-size: 13px;">&nbsp; &nbsp; ${frName}</td>
+</tr>
+
+<tr style="height: 20px;"> <c:set var = "frCity" value = "${fn:toUpperCase(spCakeOrder.frCity)}" />
+<td style="width: 125px; height: 20px;  border-bottom: 1px dashed; border-left: 1px dashed; border-right: 1px dashed; font-size: 13px;">&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp;<strong>:</strong></td>
+<td style="width: 425px; height: 20px; font-size: 18px; border-bottom: 1px dashed; border-left: 1px dashed; border-right: 1px dashed;">&nbsp; &nbsp; <strong>${frCity}</strong></td>
+</tr>
+<tr style="height: 20px;">
+<td style="width: 125px; height: 20px; border: 1px dashed; font-size: 13px;">&nbsp; &nbsp;&nbsp;QTY&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; &nbsp; <strong>:</strong></td>
+<td style="width: 425px; height: 20px; font-size: 13px; font-weight: bold; border: 1px dashed;">&nbsp; &nbsp; 1</td>
+</tr>
+<tr style="height: 20px;"><c:set var = "spName" value = "${fn:toUpperCase(spCakeOrder.spName)}" />
+<td style="width: 125px; height: 20px; border-top: 1px dashed; border-left: 1px dashed; border-right: 1px dashed; font-size: 13px;">&nbsp; &nbsp;&nbsp;ITEM&nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;<strong>:</strong></td>
+<td style="width: 425px; height: 20px; font-size: 13px; font-weight: bold; border-top: 1px dashed; border-left: 1px dashed; border-right: 1px dashed;">&nbsp; &nbsp; ${spName} -${spCakeOrder.itemId}</td>
+</tr>
+<tr style="height: 20px;">
+<td style="width: 125px; height: 20px; border-bottom: 1px dashed; border-left: 1px dashed; border-right: 1px dashed; font-size: 13px;">&nbsp;</td>
+<td style="width: 425px; height: 20px; font-size: 13px; border-bottom: 1px dashed; border-left: 1px dashed; border-right: 1px dashed;">&nbsp;</td>
+
+</tr>
+<tr style="height: 20px;"><c:set var = "spSelectedWeight" value = "${fn:toUpperCase(spCakeOrder.spSelectedWeight)}" />
+<td style="width: 125px; height: 23px; border: 1px dashed; font-size: 13px;">&nbsp; &nbsp;&nbsp;WEIGHT&nbsp;<strong>:</strong></td>
+<td style="width: 425px; height: 23px; font-size: 13px; font-weight: bold; border: 1px dashed;">&nbsp; &nbsp; &nbsp;${spSelectedWeight} Kg.</td>
+
+</tr>
+<tr style="height: 23px;">  <c:set var = "spfName" value = "${fn:toUpperCase(spCakeOrder.spfName)}" />
+<td style="width: 125px; height: 20px;border-top: 1px dashed; border-left: 1px dashed; border-right: 1px dashed; font-size: 13px;">&nbsp; &nbsp;&nbsp;FLAV&nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;<strong>:</strong></td>
+<td style="width: 425px; height: 20px; font-size: 13px; font-weight: bold; border-top: 1px dashed; border-left: 1px dashed; border-right: 1px dashed;">&nbsp; &nbsp; ${spfName} </td> 
+
+</tr><!-- 
+<tr style="height: 20px;">
+<td style="width: 125px; height: 20px; border-bottom: 1px dashed; border-left: 1px dashed; border-right: 1px dashed; font-size: 13px;">&nbsp;</td>
+<td style="width: 425px; font-size: 13px; height: 20px; border-bottom: 1px dashed; border-left: 1px dashed; border-right: 1px dashed;">&nbsp;</td>
+
+</tr> -->
+<tr style="height: 20px;"><c:set var = "spEvents" value = "${fn:toUpperCase(spCakeOrder.spEvents)}" />
+<td style="width: 125px; height: 20px; border-top: 1px dashed; border-left: 1px dashed; border-right: 1px dashed; font-size: 13px;">&nbsp; &nbsp;&nbsp;MESSG&nbsp;&nbsp;&nbsp; <strong>:</strong></td>
+<td style="width: 425px; height: 20px; font-size: 13px; font-weight: bold; border-top: 1px dashed; border-left: 1px dashed; border-right: 1px dashed;">&nbsp; &nbsp; ${spEvents}</td>
+
+</tr>
+<tr style="height: 20px;"><c:set var = "spEventsName" value = "${fn:toUpperCase(spCakeOrder.spEventsName)}" />
+<td style="width: 125px; height: 20px; border-left: 1px dashed; border-right: 1px dashed; font-size: 13px;">&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>:</strong></td>
+<td style="width: 425px; height: 20px; font-size: 13px; font-weight: bold; border-left: 1px dashed; border-right: 1px dashed; ">&nbsp; &nbsp; ${spEventsName} </td>
+
+</tr>
+<tr style="height: 20px;"><c:set var = "spInstructions" value = "${fn:toUpperCase(spCakeOrder.spInstructions)}" />
+<td style="width: 125px; height: 30px;border-bottom: 1px dashed;  border-top: 1px dashed; border-left: 1px dashed; border-right: 1px dashed; font-size: 13px;">&nbsp;&nbsp;&nbsp;&nbsp;SPL.INST<strong>:</strong></td>
+<td style="width: 425px; height: 65px;padding-left:5px; border-bottom: 1px dashed;  border-top: 1px dashed; border-left: 1px dashed; border-right: 1px dashed; font-size: 13px;">&nbsp; &nbsp; ${spInstructions}</td>
+
+</tr><%-- 
+<tr style="height: 20px;">
+<td style="width: 125px; height: 20px; border-bottom: 1px dashed; border-left: 1px dashed; border-right: 1px dashed; font-size: 13px;">&nbsp; &nbsp;&nbsp;INST.&nbsp;&nbsp; &nbsp; &nbsp;&nbsp;&nbsp; <strong>:</strong></td>
+<td style="width: 425px; height: 20px; border-bottom: 1px dashed; border-left: 1px dashed; border-right: 1px dashed; font-size: 13px;">&nbsp; &nbsp; ${spInstructions}</td>
+ --%>
+ <tr style="height: 20px;">
+<td style="width: 125px; border-left: 1px dashed;height: 20px;font-size: 13px;">&nbsp;&nbsp;&nbsp;&nbsp;PHOTO &nbsp;&nbsp;<strong>:</strong></td>
+<td style="width: 425px; border-left: 1px dashed;height: 20px;font-size: 13px;border-right: 1px dashed;">&nbsp;&nbsp;&nbsp;&nbsp;<c:choose><c:when test="${spCakeOrder.orderPhoto ne ''}"><a  href="${imgUrl2}${spCakeOrder.orderPhoto}" height="60" width="60" style="border:medium;" alt="NA1" target="_blank;">PHOTO1</a></c:when><c:otherwise>NA1</c:otherwise></c:choose>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<c:choose><c:when test="${spCakeOrder.cusChoicePhoto ne ''}"><a  href="${imgUrl}${spCakeOrder.cusChoicePhoto}" height="60" width="60" style="border:medium;" alt="NA2" target="_blank;">PHOTO2</a></c:when><c:otherwise>NA1</c:otherwise></c:choose></td>
+
+</tr>
+</tbody>
+</table>	
+
+<%-- 
+	<c:if test="${count.index==2}"><div style="page-break-after: always;"></div>
+</c:if>	 --%><%-- 												
 <table width="100%" style="font-family:arial; font-size:12px; border:1px solid #000000; margin-bottom:40px;">
   <tr bgcolor=lightgrey >
     <td colspan="3" style="font-size:20px; border-bottom:1px solid #000000; padding:8px 7px;" align="center" >AURANGABAD MONGINIS</td>
@@ -77,7 +187,7 @@
 <td style="text-align:left; font-size:16px;font-weight:bold;border-left: 1px solid  #000000;border-bottom:1px solid #000000;">Photo 1 :<img src="${imgUrl2}${spCakeOrder.orderPhoto}" height="60" width="60" style="border:medium;" alt="${imgUrl}${spCakeOrder.orderPhoto}"></td>
 
 <td  style=" text-align:left;font-size:16px;font-weight:bold;border-left: 1px solid  #000000;border-bottom:1px solid #000000;">Photo 2 :<img src="${imgUrl}${spCakeOrder.cusChoicePhoto}" height="60" width="60" alt="${imgUrl2}${spCakeOrder.cusChoicePhoto}"></td>
-</tr></table>
+</tr></table> --%>
 
  </c:forEach>
  	<!-- scripts -->
