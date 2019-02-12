@@ -274,7 +274,7 @@
 						  	
 						  //	tr.append($('<td></td>').html(bill.rate));
 
-						 	tr.append($('<td></td>').html("<input type=text  onkeyup='return calcGrn("+bill.grnType+","+bill.rate+","+bill.itemId+","+bill.sgstPer+","+bill.cgstPer+","+bill.billDetailNo+")' ondrop='return false;' onpaste='return false;' style='text-align: center;' class='form-control' min=0 id="+bill.billDetailNo+" name=qty"+bill.billDetailNo+" Value="+0+" >"));
+						 	tr.append($('<td></td>').html("<input type=text  onkeyup='return calcGrn("+bill.grnType+","+bill.rate+","+bill.itemId+","+bill.sgstPer+","+bill.cgstPer+","+bill.billDetailNo+","+bill.discPer+")' ondrop='return false;' onpaste='return false;' style='text-align: center;' class='form-control' min=0 id="+bill.billDetailNo+" name=qty"+bill.billDetailNo+" Value="+0+" >"));
 						  	tr.append($('<td></td>').html(bill.igstPer));
 						  	tr.append($('<td id=taxable_amt'+bill.billDetailNo+'></td>').html(""));
 						  	tr.append($('<td id=tax_amt'+bill.billDetailNo+'></td>').html(""));
@@ -321,7 +321,7 @@
 
 				}
 				
-				function calcGrn(grnType,rate,itemId,cgstPer,sgstPer,dNo) {
+				function calcGrn(grnType,rate,itemId,cgstPer,sgstPer,dNo,discPer) {
 				//document.getElementById("taxable_amt"+dNo).html="100";
 				//var r=140;
 				//$("#taxable_amt"+dNo).html(r);
@@ -369,6 +369,14 @@
 							}
 						var totTaxPer=parseFloat(sgstPer)+parseFloat(cgstPer);
 						var taxableAmt=grnBaseRate*grnQty;
+						//alert("prev taxableAmt " +taxableAmt)
+
+						var discAmt=(taxableAmt*discPer)/100;
+						//alert("disc  " +discAmt)
+
+						taxableAmt=taxableAmt-discAmt;
+						//alert("new  taxableAmt " +taxableAmt)
+
 						var totalTax=taxableAmt*(cgstPer+sgstPer)/100;
 						var grandTotal=taxableAmt+totalTax;
 						//alert("taxable " +taxableAmt);

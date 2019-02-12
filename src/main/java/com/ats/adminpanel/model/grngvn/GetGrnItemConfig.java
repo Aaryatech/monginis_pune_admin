@@ -11,8 +11,8 @@ public class GetGrnItemConfig {
     private String itemName;
     private Integer grnType;
     private Integer billNo;
-    private Integer rate;
-    private Integer mrp;
+    private float rate;
+    private float mrp;
     private Integer billQty;
     
     Date billDate;
@@ -30,6 +30,18 @@ public class GetGrnItemConfig {
 
     private String billDateTime;
     
+    
+    private float discPer;
+
+    
+	public float getDiscPer() {
+		return discPer;
+	}
+
+	public void setDiscPer(float discPer) {
+		this.discPer = discPer;
+	}
+
 	public int getCatId() {
 		return catId;
 	}
@@ -104,23 +116,25 @@ public class GetGrnItemConfig {
         this.billNo = billNo;
     }
 
-    public Integer getRate() {
-        return rate;
-    }
+   
 
-    public void setRate(Integer rate) {
-        this.rate = rate;
-    }
+    public float getRate() {
+		return rate;
+	}
 
-    public Integer getMrp() {
-        return mrp;
-    }
+	public void setRate(float rate) {
+		this.rate = rate;
+	}
 
-    public void setMrp(Integer mrp) {
-        this.mrp = mrp;
-    }
+	public float getMrp() {
+		return mrp;
+	}
 
-    public Integer getBillQty() {
+	public void setMrp(float mrp) {
+		this.mrp = mrp;
+	}
+
+	public Integer getBillQty() {
         return billQty;
     }
 
@@ -188,7 +202,8 @@ public class GetGrnItemConfig {
 				+ ", itemName=" + itemName + ", grnType=" + grnType + ", billNo=" + billNo + ", rate=" + rate + ", mrp="
 				+ mrp + ", billQty=" + billQty + ", billDate=" + billDate + ", sgstPer=" + sgstPer + ", cgstPer="
 				+ cgstPer + ", igstPer=" + igstPer + ", catId=" + catId + ", menuId=" + menuId + ", invoiceNo="
-				+ invoiceNo + ", autoGrnQty=" + autoGrnQty + ", billDateTime=" + billDateTime + "]";
+				+ invoiceNo + ", autoGrnQty=" + autoGrnQty + ", billDateTime=" + billDateTime + ", discPer=" + discPer
+				+ "]";
 	}
 
 	

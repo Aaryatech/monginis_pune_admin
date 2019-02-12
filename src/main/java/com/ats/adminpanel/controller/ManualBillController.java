@@ -311,6 +311,11 @@ public class ManualBillController {
 			PostBillHeader header = new PostBillHeader();
 
 			header.setBillDate(new Date());
+			
+			header.setPartyAddress("-");
+			header.setPartyGstin(gstNo);
+			header.setPartyName(frName);
+			
 			header.setFrCode(frDetails.getFrCode());
 
 			header.setDelStatus(0);

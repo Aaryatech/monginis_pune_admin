@@ -312,9 +312,9 @@ month=month+1;
 				float grnRate = 0.0f;
 
 				if (selectedGrn.get(i).getGrnType() == 0) {
-					grnBaseRate = baseRate * 75 / 100;
+					grnBaseRate = baseRate * 80 / 100;
 
-					grnRate = (selectedGrn.get(i).getRate() * 75) / 100;
+					grnRate = (selectedGrn.get(i).getRate() * 80) / 100;
 					// postGrnGvn.setGrnGvnAmt(roundUp(grnAmt));
 				}
 
@@ -332,13 +332,20 @@ month=month+1;
 				}
 
 				float taxableAmt = grnBaseRate * grnQty;
+				
+				//5 FEB 2019
+				float discAmt = (taxableAmt * selectedGrn.get(i).getDiscPer()) / 100;// 4 FEB 2019
+
+				taxableAmt = taxableAmt - discAmt;
+				
 
 				float totalTax = (taxableAmt
 						* (selectedGrn.get(i).getSgstPer() + selectedGrn.get(i).getCgstPer())) / 100;
 
 				float grandTotal = taxableAmt + totalTax;
 
-				float finalAmt = grnRate * grnQty;
+				//float finalAmt =//5 FEB 2019
+				float finalAmt = ( grnRate * grnQty)-(( grnRate * grnQty) *   selectedGrn.get(i).getDiscPer()/100);
 
 				postGrnGvn.setGrnGvnAmt(roundUp(grandTotal));
 				float roundUpAmt = finalAmt - grandTotal;
@@ -355,7 +362,7 @@ month=month+1;
 					postGrnGvn.setFrId(Integer.parseInt(frId));
 					postGrnGvn.setItemId(selectedGrn.get(i).getItemId());
 					postGrnGvn.setItemRate(selectedGrn.get(i).getRate());
-					postGrnGvn.setItemMrp(selectedGrn.get(i).getMrp());
+					postGrnGvn.setItemMrp(selectedGrn.get(i).getDiscPer());//5 FEB 2019
 					postGrnGvn.setGrnGvnQty(grnQty);
 					postGrnGvn.setGrnType(selectedGrn.get(i).getGrnType());
 					postGrnGvn.setIsGrn(1);
