@@ -12,6 +12,7 @@
 	<c:url var="excelForCreaditNote" value="/excelForCreaditNote" />
 
 	<c:url var="excelForCreaditNoteReport" value="/exportToExcelReport" />
+	<c:url value="/excelForCrnExcel" var="excelForCrnExcel" />
 
 
 	<div class="container" id="main-container">
@@ -65,7 +66,7 @@
 									<label class="col-sm-3 col-lg-2 control-label">From
 										Date</label>
 									<div class="col-sm-5 col-lg-3 controls">
-										<input class="form-control date-picker" id="from_date"
+										<input class="form-control date-picker" id="from_date" autocomplete="off"
 											size="16" type="text" name="from_date" value="${fromDate}"
 											required />
 									</div>
@@ -75,7 +76,7 @@
 								<div class="form-group"> -->
 									<label class="col-sm-3 col-lg-2 control-label">To Date</label>
 									<div class="col-sm-5 col-lg-3 controls">
-										<input class="form-control date-picker" id="to_date" size="16"
+										<input class="form-control date-picker" id="to_date" size="16" autocomplete="off"
 											type="text" value="${toDate}" name="to_date" required />
 									</div>
 
@@ -120,7 +121,7 @@
 							<form action="getCrnCheckedHeaders" class="form-horizontal"
 								method="post" id="validation-form">
 
-								<div class="box">
+								<div class="box1">
 									<div class="box-title">
 										<h3>
 											<i class="fa fa-table"></i> Crn List
@@ -142,11 +143,12 @@
 												<thead style="background-color:#f3b5db; ">
 													<tr>
 														<th></th>
-														<th>Sr No <input type="checkbox"
-															onClick="selectBillNo(this)" /></th>
+														<th class="col-md-1"><input type="checkbox"
+															onClick="selectBillNo(this)" />Sr</th>
 														<th class="col-md-1">Date</th>
-														<th class="col-md-2">Crn Id</th>
-														<th class="col-md-2">Franchise Name</th>
+														<th class="col-md-2">CRN Id</th>
+														<th class="col-md-2">Inv. No</th>
+														<th class="col-md-2">Franchise</th>
 														<th class="col-md-2">Taxable Amt</th>
 														<th class="col-md-2">Tax Amt</th>
 														<th class="col-md-2">Amount</th>
@@ -160,7 +162,6 @@
 										</div>
 
 										<div class="form-group">
-											<label class="col-sm-3 col-lg-2 control-label"> </label>
 											<div class="col-sm-2 col-lg-2 controls">
 												<input type="button" value="PDF Report "
 													onclick="genPdfReport()" class="btn btn-primary">
@@ -171,19 +172,19 @@
 													value="Excel Report" onclick="createExelReport();">
 											</div>
 
-											<label class="col-sm-3 col-lg-2 control-label"></label>
-											<div class="col-sm-2 col-lg-3 controls">
-												<input type="button" value="Generate PDF For Franchise"
+											<label class="col-sm-3 col-lg-1 control-label"></label>
+											<div class="col-sm-2 col-lg-2 controls">
+												<input type="button" value="Generate PDF For Fr"
 													onclick="genPdf()" class="btn btn-primary">
 											</div>
 
 
-											<div class="col-sm-5 col-lg-1 controls">
+											<div class="col-sm-5 col-lg-3 controls">
 												<input type="button" id="expExcel" class="btn btn-primary"
-													value="EXPORT TO Excel For ERP" onclick="createExel();">
-
+													value="EXP TO Excel Itemwise(ERP)" onclick="createExel();">
 											</div>
-
+		<div class="col-sm-2 col-lg-2 controls"> <input type="button" id="expExcel" class="btn btn-primary" value="Excel Hsnwise Summary" onclick="createExelHsnwise();" >
+</div>
 										</div>
 
 
@@ -215,7 +216,7 @@
 			</div>
 			<!-- END Main Content -->
 			<footer>
-				<p>2017 © MONGINIS.</p>
+				<p>2018 © MONGINIS.</p>
 			</footer>
 
 
@@ -320,7 +321,7 @@
 			  	tr.append($('<td></td>').html(headers.crnDate));
 			  	
 			  	tr.append($('<td></td>').html(headers.crnId));
-
+				tr.append($('<td></td>').html(headers.exVarchar1));//inv no
 
 			  	tr.append($('<td></td>').html(headers.frName));
 
@@ -330,7 +331,7 @@
 
 			  	tr.append($('<td></td>').html(headers.crnGrandTotal));
 
-				tr.append($('<td ><a href="#" class="action_btn" onclick="getCrnDetail('+headers.crnId+')"><abbr title="Detail"><i class="fa fa-list"></i></abbr></a></td>'));
+				tr.append($('<td style="align:right;""><a href="#" class="action_btn" onclick="getCrnDetail('+headers.crnId+')"><abbr title="Detail"><i class="fa fa-list"></i></abbr></a></td>'));
 			  
 				$('#table1 tbody').append(tr);
 
@@ -359,7 +360,7 @@ function genPdf() {
 		//alert("Inside Gen Pdf ");
 		checkboxes = document.getElementsByName('select_to_agree');
 		
-		var selArray;
+		var selArray=0;
 		
 		for(var x=0;x<checkboxes.length;x++){
 			if(document.getElementById("select_to_agree"+x).checked==true){
@@ -538,6 +539,49 @@ for(var x=0;x<checkboxes.length;x++){
 
 	</script>
 
+<script type="text/javascript">
+function exportToExcel()
+{
+	//alert("Export Excel");
+	window.open("${pageContext.request.contextPath}/exportToExcel"); 
+}
+function createExelHsnwise() {
+	 
+   var select_to_print = document.forms[1];
+	var txt = "";
+	var i;
+	var flag=0;
+	var all=0;
+	 for (i = 0; i < select_to_print.length; i++) {
+		if (select_to_print[i].checked  && select_to_print[i].value!="on") {
+    		txt = txt + select_to_print[i].value + ",";
+    		flag=1;
+	}
+	} 
+	 if(flag==1)
+		 {
+	$
+			.getJSON(
+					'${excelForCrnExcel}',
+					{
+						checkboxes : txt ,
+					
+						ajax : 'true'
+					},
+					function(data) {
+						
+					 //alert("Excel Ready");
+						 exportToExcel();
+					 
+					});
+		 }
+	 else
+		 {
+		 alert("Please select minimum 1 CRN Note ");
+		 }
+
+}
+</script>
 </body>
 </html>
 

@@ -50,7 +50,7 @@ th {
 </head>
 <body onload="myFunction()">
 <h4 align="center">MONGINIS</h4>
-<p align="center">Patna,Bihar</p>
+<p align="center">Pune,Maharashtra</p>
 <div align="center"> <h5>
 <c:forEach items="${frList}" var="fr" varStatus="count">
 			<c:if test="${fr.frId==frId}">

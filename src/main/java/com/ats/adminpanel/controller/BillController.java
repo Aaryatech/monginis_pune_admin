@@ -66,6 +66,7 @@ import com.ats.adminpanel.model.GenerateBill;
 import com.ats.adminpanel.model.GenerateBillList;
 import com.ats.adminpanel.model.GetSellBillDetail;
 import com.ats.adminpanel.model.GetSellBillHeader;
+import com.ats.adminpanel.model.HsnwiseBillExcelSummary;
 import com.ats.adminpanel.model.Info;
 import com.ats.adminpanel.model.Route;
 import com.ats.adminpanel.model.SalesVoucherList;
@@ -1087,6 +1088,100 @@ public class BillController {
 			e.printStackTrace();
 		}
 		return salesVoucherList;
+
+	}
+	@RequestMapping(value = "/excelForFrBillExcel", method = RequestMethod.GET)
+	@ResponseBody
+	public List<HsnwiseBillExcelSummary> excelForFrBillExcel(HttpServletRequest request, HttpServletResponse response) {
+
+		 List<HsnwiseBillExcelSummary> salesExcelListRes =null;
+		 HsnwiseBillExcelSummary[] salesExcelList=null;
+		try {
+			RestTemplate restTemplate = new RestTemplate();
+			String checkboxes = request.getParameter("checkboxes");
+			int all = Integer.parseInt(request.getParameter("all"));
+			String fromDate = request.getParameter("fromDate");
+			String toDate = request.getParameter("toDate");
+			System.out.println("checkboxes " + checkboxes);
+			
+			if(all==0)
+				checkboxes = checkboxes.substring(0, checkboxes.length() - 1);
+			System.out.println("string " + checkboxes);
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			map.add("billNoList", checkboxes);
+			map.add("all", all);
+			map.add("fromDate", DateConvertor.convertToYMD(fromDate));
+			map.add("toDate",  DateConvertor.convertToYMD(toDate));
+			System.out.println("map " + map);
+			salesExcelList = restTemplate.postForObject(Constants.url + "/getHsnwiseBillDataForExcel",map, HsnwiseBillExcelSummary[].class);
+			salesExcelListRes= new  ArrayList<HsnwiseBillExcelSummary>(Arrays.asList(salesExcelList));
+			System.out.println("salesExcelList " + salesExcelList.toString());
+			
+			try
+			{
+				List<ExportToExcel> exportToExcelList=new ArrayList<ExportToExcel>();
+				
+				ExportToExcel expoExcel=new ExportToExcel();
+				List<String> rowData=new ArrayList<String>();
+				 
+				rowData.add("Sr no");
+				rowData.add("Invoice No.");
+				rowData.add("Invoice Date");
+				rowData.add("Customer Name");
+				rowData.add("HSN CODE");
+				rowData.add("Qty");
+				rowData.add("Assessable Amt");
+				rowData.add("CGST"); 
+				rowData.add("SGST");
+				rowData.add("IGST");
+				rowData.add("Tax Rate");
+				rowData.add("Grand Total");
+				rowData.add("Invoice Amount");
+				rowData.add("GST No.");
+				rowData.add("Country");
+				rowData.add("State"); 
+			
+				expoExcel.setRowData(rowData);
+				exportToExcelList.add(expoExcel);
+				for(int i=0;i<salesExcelListRes.size();i++)
+				{
+					expoExcel=new ExportToExcel();
+					rowData=new ArrayList<String>();
+					rowData.add(""+(i+1));
+					rowData.add(""+salesExcelListRes.get(i).getInvoiceNo());
+					rowData.add(""+salesExcelListRes.get(i).getBillDate());
+					rowData.add(""+salesExcelListRes.get(i).getPartyName()); 
+					rowData.add(""+salesExcelListRes.get(i).getItemHsncd());
+					rowData.add(""+salesExcelListRes.get(i).getQty());
+					rowData.add(""+salesExcelListRes.get(i).getTaxableAmt());
+					rowData.add(""+salesExcelListRes.get(i).getCgstRs());
+					rowData.add(""+salesExcelListRes.get(i).getSgstRs());
+					rowData.add(""+salesExcelListRes.get(i).getIgstRs()); 
+					rowData.add(""+salesExcelListRes.get(i).getTaxRate());
+					rowData.add(""+salesExcelListRes.get(i).getGrandTotal()); 
+					rowData.add(""+salesExcelListRes.get(i).getInvoiceTotal());  
+					rowData.add(""+salesExcelListRes.get(i).getPartyGstin());
+					rowData.add(""+salesExcelListRes.get(i).getCountry());
+					rowData.add(""+salesExcelListRes.get(i).getState());
+					
+					expoExcel.setRowData(rowData);
+					exportToExcelList.add(expoExcel);
+					 
+				}
+				
+				HttpSession session = request.getSession();
+				session.setAttribute("exportExcelList", exportToExcelList);
+				session.setAttribute("excelName", "billExcel");
+			}catch(Exception e)
+			{
+				e.printStackTrace();
+				System.out.println("Exception to genrate excel ");
+			}
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return salesExcelListRes;
 
 	}
 

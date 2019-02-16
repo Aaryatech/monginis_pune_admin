@@ -356,6 +356,7 @@ select {
 										<th style="text-align:center;">Item Name</th>
 										<th style="text-align:center;">Min Qty</th>
 										<th style="text-align:center;">Qty</th>
+										<th style="text-align:center;" id="discth">Disc %</th>
 										<th style="text-align:center;">MRP</th>
 										<th style="text-align:center;">Rate</th>
 										<th style="text-align:center;">Total</th>
@@ -452,7 +453,14 @@ $(function() {
              		  	tr.append($('<td></td>').html(item.itemName));
              		  	tr.append($('<td></td>').html(item.minQty+'<input type="hidden" value='+item.minQty+'	id=minqty'+item.itemId+'  />'));
              		  	tr.append($('<td style="text-align:right;" class="col-md-1"></td>').html('<input type="number" class="form-control" onchange="onChange('+item.orderRate+','+item.itemId+')"   width=20px;  name=qty'+item.itemId+' id=qty'+item.itemId+' value='+item.orderQty+' > '));
-             		  	
+             		  	if(ordertype==1){
+             		  	tr.append($('<td style="text-align:right;" class="col-md-1"></td>').html('<input type="number" class="form-control"  min="0"  width=20px;  name=discper'+item.itemId+' id=discper'+item.itemId+' value='+item.isPositive+' > '));
+             		  	}
+             		  	else
+             		  		{
+             		  		document.getElementById("discth").remove();
+
+             		  		}
              		  	tr.append($('<td style="text-align:right;"></td>').html(item.orderMrp.toFixed(2)));
              		  	
              		  	tr.append($('<td style="text-align:right;"></td>').html(item.orderRate.toFixed(2)));

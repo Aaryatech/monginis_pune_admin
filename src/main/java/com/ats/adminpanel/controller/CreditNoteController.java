@@ -36,14 +36,18 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ats.adminpanel.commons.Constants;
+import com.ats.adminpanel.commons.DateConvertor;
 import com.ats.adminpanel.model.AllFrIdNameList;
 import com.ats.adminpanel.model.CreditNoteList;
+import com.ats.adminpanel.model.CrnHsnwiseExcelReport;
 import com.ats.adminpanel.model.ExportToExcel;
+import com.ats.adminpanel.model.HsnwiseBillExcelSummary;
 import com.ats.adminpanel.model.Info;
 import com.ats.adminpanel.model.SalesVoucherList;
 import com.ats.adminpanel.model.creditnote.CreditNoteHeaderPrint;
 import com.ats.adminpanel.model.creditnote.CreditNoteHeaderPrintList;
 import com.ats.adminpanel.model.creditnote.CreditPrintBean;
+import com.ats.adminpanel.model.creditnote.CrnDetailsSummary;
 import com.ats.adminpanel.model.creditnote.CrnSrNoDateBean;
 import com.ats.adminpanel.model.creditnote.GetCreditNoteHeaders;
 import com.ats.adminpanel.model.creditnote.GetCreditNoteHeadersList;
@@ -88,6 +92,7 @@ public class CreditNoteController {
 	@RequestMapping(value = "/showInsertCreditNote", method = RequestMethod.GET)
 	public ModelAndView showCrediNotePage(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView("creditNote/generateCreditNote");
+        model.addObject("type", 1);
 
 		return model;
 
@@ -156,7 +161,7 @@ public class CreditNoteController {
 			System.out.println("grn gvn for credit note  : " + getGrnGvnForCreditNote.toString());
 
 			model.addObject("creditNoteList", getGrnGvnForCreditNote);
-
+            model.addObject("type", type);
 		} catch (Exception e) {
 
 			System.out.println("Error in Getting grngvn for credit details " + e.getMessage());
@@ -167,22 +172,108 @@ public class CreditNoteController {
 		return model;
 
 	}
+	@RequestMapping(value = "/excelForCrnExcel", method = RequestMethod.GET)
+	@ResponseBody
+	public List<CrnHsnwiseExcelReport> excelForCrnExcel(HttpServletRequest request, HttpServletResponse response) {
 
+		 List<CrnHsnwiseExcelReport> crnExcelListRes =null;
+		 CrnHsnwiseExcelReport[] crnExcelList=null;
+		try {
+			RestTemplate restTemplate = new RestTemplate();
+			String checkboxes = request.getParameter("checkboxes");
+			System.out.println("checkboxes " + checkboxes);
+			
+			checkboxes = checkboxes.substring(0, checkboxes.length() - 1);
+			System.out.println("string " + checkboxes);
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			map.add("crnIdList", checkboxes);
+			System.out.println("map " + map);
+			
+			crnExcelList = restTemplate.postForObject(Constants.url + "/getCrnHsnwiseExcelReport",map, CrnHsnwiseExcelReport[].class);
+			crnExcelListRes= new  ArrayList<CrnHsnwiseExcelReport>(Arrays.asList(crnExcelList));
+			System.out.println("crnExcelList " + crnExcelListRes.toString());
+			
+			try
+			{
+				List<ExportToExcel> exportToExcelList=new ArrayList<ExportToExcel>();
+				
+				ExportToExcel expoExcel=new ExportToExcel();
+				List<String> rowData=new ArrayList<String>();
+				 
+				rowData.add("Sr no");
+				rowData.add("Supplier Invoice No.");
+				rowData.add("Supplier Invoice Date");
+				rowData.add("Invoice No.");
+				rowData.add("Invoice Date");
+				rowData.add("Customer Name");
+				rowData.add("HSN CODE");
+				rowData.add("Qty");
+				rowData.add("Assessable Amt");
+				rowData.add("CGST"); 
+				rowData.add("SGST");
+				rowData.add("IGST");
+				rowData.add("Tax Rate");
+				rowData.add("Grand Total");
+				rowData.add("Document Amount");
+				rowData.add("GST No.");
+				rowData.add("Country");
+				rowData.add("State"); 
+			
+				expoExcel.setRowData(rowData);
+				exportToExcelList.add(expoExcel);
+				for(int i=0;i<crnExcelListRes.size();i++)
+				{
+					expoExcel=new ExportToExcel();
+					rowData=new ArrayList<String>();
+					rowData.add(""+(i+1));
+					rowData.add(""+crnExcelListRes.get(i).getSupplierInvoiceNo());
+					rowData.add(""+crnExcelListRes.get(i).getSupplierInvoiceDate());
+					rowData.add(""+crnExcelListRes.get(i).getInvoiceNo());
+					rowData.add(""+crnExcelListRes.get(i).getInvoiceDate());
+					rowData.add(""+crnExcelListRes.get(i).getFrName()); 
+					rowData.add(""+crnExcelListRes.get(i).getItemHsncd());
+					rowData.add(""+crnExcelListRes.get(i).getQty());
+					rowData.add(""+crnExcelListRes.get(i).getTaxableAmt());
+					rowData.add(""+crnExcelListRes.get(i).getCgstRs());
+					rowData.add(""+crnExcelListRes.get(i).getSgstRs());
+					rowData.add(""+crnExcelListRes.get(i).getIgstRs()); 
+					rowData.add(""+crnExcelListRes.get(i).getTaxRate());
+					rowData.add((crnExcelListRes.get(i).getTaxableAmt()+crnExcelListRes.get(i).getCgstRs()+crnExcelListRes.get(i).getSgstRs())+""); 
+					rowData.add(""+crnExcelListRes.get(i).getDocumentAmount());  
+					rowData.add(""+crnExcelListRes.get(i).getFrGstNo());
+					rowData.add(""+crnExcelListRes.get(i).getCountry());
+					rowData.add(""+crnExcelListRes.get(i).getState());
+					
+					expoExcel.setRowData(rowData);
+					exportToExcelList.add(expoExcel);
+					 
+				}
+				
+				HttpSession session = request.getSession();
+				session.setAttribute("exportExcelList", exportToExcelList);
+				session.setAttribute("excelName", "crnExcel");
+			}catch(Exception e)
+			{
+				e.printStackTrace();
+				System.out.println("Exception to genrate excel ");
+			}
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return crnExcelListRes;
+
+	}
 	@RequestMapping(value = "/insertCreditNote", method = RequestMethod.POST)
 	public ModelAndView insertCreditNote(HttpServletRequest request, HttpServletResponse response) {
 
-		// Constants.mainAct = 8;
-		// Constants.subAct = 85;
-
 		ModelAndView model = new ModelAndView("creditNote/generateCreditNote");
-		System.out.println("inside insert credit note ");
+		System.err.println("inside insert credit note ");
 
 		try {
-
 			HttpSession session = request.getSession();
 			UserResponse userResponse = (UserResponse) session.getAttribute("UserDetail");
 			int userId = userResponse.getUser().getId();
-
 			RestTemplate restTemplate = new RestTemplate();
 
 			String[] grnGvnIdList = request.getParameterValues("select_to_credit");
@@ -209,8 +300,6 @@ public class CreditNoteController {
 
 			List<PostCreditNoteHeader> creditHeaderList = new ArrayList<>();
 
-			// List<PostCreditNoteDetails> postCreditNoteDetails=new ArrayList<>();
-
 			for (int i = 0; i < selectedCreditNote.size(); i++) {
 
 				System.out.println("Sr no at index  " + i + " = " + selectedCreditNote.get(i).getGrngvnSrno());
@@ -225,8 +314,8 @@ public class CreditNoteController {
 
 					PostCreditNoteHeader creditHeader = creditHeaderList.get(j);
 
-					if (creditHeader.getFrId() == creditNote.getFrId()) {
-
+					if (creditHeader.getExInt1() == creditNote.getBillNo()) {//change from frid match to bill no(exint1 =billno)
+						System.err.println("bill no" + creditHeader.getExInt1()+"=inv no" + creditHeader.getExVarchar1());
 						isRepeated = true;
 
 						List<PostCreditNoteDetails> postCreditNoteDetailsListMatched = creditHeader
@@ -376,7 +465,8 @@ public class CreditNoteController {
 					
 					// postCreditHeader.setGrnGvnSrNoList(srNoMap.get(creditNote.getGrngvnSrno()));
 					postCreditHeader.setIsDeposited(0);
-
+					postCreditHeader.setExInt1(creditNote.getBillNo());//new for pune
+					postCreditHeader.setExVarchar1(creditNote.getInvoiceNo());//new for pune
 					// newly set
 
 					PostCreditNoteDetails creditNoteDetail = new PostCreditNoteDetails();
@@ -431,9 +521,9 @@ public class CreditNoteController {
 			PostCreditNoteHeaderList postCreditNoteHeaderList = new PostCreditNoteHeaderList();
 
 			postCreditNoteHeaderList.setPostCreditNoteHeader(creditHeaderList);
-
+			System.err.println("postCreditNoteHeaderList**"+postCreditNoteHeaderList.toString());
 			Info info = restTemplate.postForObject(Constants.url + "postCreditNote", postCreditNoteHeaderList,
-					Info.class);
+				Info.class);
 
 		} catch (Exception e) {
 
@@ -1237,10 +1327,20 @@ public class CreditNoteController {
 
 			for (int i = 0; i < creditHeaderList.size(); i++) {
 				printBean = new CreditPrintBean();
+				CreditNoteHeaderPrint cNoteHeaderPrint = new CreditNoteHeaderPrint();
 
 				 System.err.println( creditHeaderList.size()+"I = " + i);
-
-				CreditNoteHeaderPrint cNoteHeaderPrint = new CreditNoteHeaderPrint();
+				 try {
+				 map = new LinkedMultiValueMap<String, Object>();
+				 map.add("crnId", creditHeaderList.get(i).getCrnId());
+				 List<CrnDetailsSummary> crnSummaryList = restTemplate.postForObject(Constants.url + "getCrnDetailsSummary", map,
+							List.class);
+				 cNoteHeaderPrint.setCrnDetailsSummaryList(crnSummaryList);
+				 System.err.println(crnSummaryList.toString());
+				 }
+				 catch (Exception e) {
+					e.printStackTrace();
+				}
 
 				cNoteHeaderPrint.setFrAddress(creditHeaderList.get(i).getFrAddress());
 				cNoteHeaderPrint.setFrId(creditHeaderList.get(i).getFrId());
@@ -1337,6 +1437,8 @@ public class CreditNoteController {
 				
 				cNoteHeaderPrint.setSrNoDateList(srNoDateList);
 				cNoteHeaderPrint.setSrNoList(srNoList);
+				cNoteHeaderPrint.setExInt1(creditHeaderList.get(i).getExInt1());
+				cNoteHeaderPrint.setExVarchar1(creditHeaderList.get(i).getExVarchar1());
 				printBean.setCreditHeader(cNoteHeaderPrint);
 
 				printList.add(printBean);

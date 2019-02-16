@@ -37,12 +37,16 @@ public class CreditNoteHeaderPrint {
 	
 	private String toDate;
 	
+	private String frGstNo;
+
+	private int isSameState;
+
+	private int isGrn;
 	
-private String frGstNo;
-
-private int isSameState;
-
-private int isGrn;
+	private int exInt1;//new for billno for pune
+	
+	private String exVarchar1;//new for inv no for pune
+	
 	
 	List<GetCrnDetails> crnDetails;
 	
@@ -51,6 +55,33 @@ private int isGrn;
 	List<CrnSrNoDateBean> srNoDateList;
 	
 
+	List<CrnDetailsSummary> crnDetailsSummaryList;//new for summary hsn
+	
+	
+	public List<CrnDetailsSummary> getCrnDetailsSummaryList() {
+		return crnDetailsSummaryList;
+	}
+
+	public void setCrnDetailsSummaryList(List<CrnDetailsSummary> crnDetailsSummaryList) {
+		this.crnDetailsSummaryList = crnDetailsSummaryList;
+	}
+
+
+	public int getExInt1() {
+		return exInt1;
+	}
+
+	public void setExInt1(int exInt1) {
+		this.exInt1 = exInt1;
+	}
+
+	public String getExVarchar1() {
+		return exVarchar1;
+	}
+
+	public void setExVarchar1(String exVarchar1) {
+		this.exVarchar1 = exVarchar1;
+	}
 
 	public int getCrnId() {
 		return crnId;
@@ -261,7 +292,6 @@ private int isGrn;
 		this.srNoDateList = srNoDateList;
 	}
 
-
 	@Override
 	public String toString() {
 		return "CreditNoteHeaderPrint [crnId=" + crnId + ", crnNo=" + crnNo + ", crnDate=" + crnDate + ", frId=" + frId
@@ -269,9 +299,10 @@ private int isGrn;
 				+ crnGrandTotal + ", roundOff=" + roundOff + ", createdDateTime=" + createdDateTime + ", isTallySync="
 				+ isTallySync + ", isDeposited=" + isDeposited + ", frName=" + frName + ", frAddress=" + frAddress
 				+ ", fromDate=" + fromDate + ", toDate=" + toDate + ", frGstNo=" + frGstNo + ", isSameState="
-				+ isSameState + ", isGrn=" + isGrn + ", crnDetails=" + crnDetails + ", srNoList=" + srNoList
-				+ ", srNoDateList=" + srNoDateList + "]";
+				+ isSameState + ", isGrn=" + isGrn + ", exInt1=" + exInt1 + ", exVarchar1=" + exVarchar1
+				+ ", crnDetails=" + crnDetails + ", srNoList=" + srNoList + ", srNoDateList=" + srNoDateList
+				+ ", crnDetailsSummaryList=" + crnDetailsSummaryList + "]";
 	}
 
-	
+    
 }

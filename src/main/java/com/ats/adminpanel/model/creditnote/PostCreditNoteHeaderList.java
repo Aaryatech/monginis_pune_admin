@@ -13,6 +13,11 @@ public class PostCreditNoteHeaderList {
 	public void setPostCreditNoteHeader(List<PostCreditNoteHeader> postCreditNoteHeader) {
 		this.postCreditNoteHeader = postCreditNoteHeader;
 	}
+
+	@Override
+	public String toString() {
+		return "PostCreditNoteHeaderList [postCreditNoteHeader=" + postCreditNoteHeader + "]";
+	}
 	
 	
 	

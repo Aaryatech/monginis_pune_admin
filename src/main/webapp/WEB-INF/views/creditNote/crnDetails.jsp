@@ -50,7 +50,7 @@
 			<!-- BEGIN Main Content -->
 			<div class="row">
 				<div class="col-md-12">
-					<div class="box">
+					<%-- <div class="box">
 						<div class="box-title">
 							<h3>
 								<i class="fa fa-bars"></i> Credit Note
@@ -64,7 +64,7 @@
 									class="fa fa-chevron-up"></i></a> <a data-action="close" href="#"><i
 									class="fa fa-times"></i></a>
 							</div> -->
-						</div>
+						</div> --%>
 
 
 						<div class="box-content">
@@ -79,24 +79,38 @@
 											<i class="fa fa-table"></i> Credit Note Details List for Credit Note Id : ${creditNoteHeaders.crnId}
 										</h3>
 										<div class="box-tool">
-											<a data-action="collapse" href="#"><i
-												class="fa fa-chevron-up"></i></a>
-											<!--<a data-action="close" href="#"><i class="fa fa-times"></i></a>-->
-										</div>
+								<a href="${pageContext.request.contextPath}/showCreditNotes">Back to List</a> <a data-action="collapse" href="#"><i
+									class="fa fa-chevron-up"></i></a>
+							</div>
 									</div>
 
 									<div class="box-content">
 <div class="col-md-9" ></div> 
-					<label for="search" class="col-md-3" id="search">
-    <i class="fa fa-search" style="font-size:20px"></i>
-									<input type="text"  id="myInput" onkeyup="myFunction()" placeholder="Search items by name.." title="Type in a name">
-										</label> <br>
-										<h5> Credit Note No : ${creditNoteHeaders.crnId} </h5>
-										<h5> Franchisee Name : ${creditNoteHeaders.frName} </h5> 
-										<h5> Date : ${creditNoteHeaders.crnDate} </h5> 
-										<h5> Taxable Amount : ${creditNoteHeaders.crnTaxableAmt} </h5> 
-										<h5> Tax Amount : ${creditNoteHeaders.crnTotalTax} </h5> 
-										<h5> Total : ${creditNoteHeaders.crnGrandTotal} </h5> 
+				<div class="col-md-3" >	<label for="search" class="col-md-3" id="search">
+   
+									<input type="text"  id="myInput" onkeyup="myFunction()" placeholder=" Search By Item Name.." title=" Search" style="padding-left:10px;height:25px;border-radius: 25px;">
+										</label></div>
+									<table style="width: 100%; border: 1px dashed;font-size: 14px;">
+										<tbody>
+											<tr >
+											<td style="border: 1px dashed;font-weight: bold;">&nbsp;CREDIT NOTE NO: </td><td style="border: 1px dashed;">&nbsp; <b> ${creditNoteHeaders.crnId} </b></td>
+											<td style="border: 1px dashed;font-weight: bold;">&nbsp;DATE:</td><td style="border: 1px dashed;">&nbsp;<b> ${creditNoteHeaders.crnDate} </b></td>
+											</tr>
+											<tr style="border: 1px dashed;">
+											<td style="border: 1px dashed;font-weight: bold;">&nbsp;INVOICE NO:</td><td style="border: 1px dashed;">&nbsp;<b> ${creditNoteHeaders.exVarchar1} </b></td>
+											<td style="border: 1px dashed;font-weight: bold;">&nbsp;FRANCHISEE NAME:</td><td style="border: 1px dashed;">&nbsp;<b> ${creditNoteHeaders.frName} </b></td>
+											</tr>
+											<tr>
+											<td style="border: 1px dashed;font-weight: bold;">&nbsp;TAXABLE AMOUNT:</td><td style="border: 1px dashed;">&nbsp;<b> ${creditNoteHeaders.crnTaxableAmt} </b></td>
+											<td style="border: 1px dashed;font-weight: bold;">&nbsp;TAX AMOUNT:</td><td style="border: 1px dashed;">&nbsp;<b> ${creditNoteHeaders.crnTotalTax} </b></td>
+											</tr>
+											<tr><td colspan="2" style="border: 1px dashed;" >&nbsp;</td>
+												<td style="border: 1px dashed;font-weight: bold;" >&nbsp;TOTAL:</td><td style="border: 1px dashed;">&nbsp;<b> ${creditNoteHeaders.crnGrandTotal}</b></td>
+											</tr>
+											
+										</tbody>
+									</table>
+									<br>
 										<div class="clearfix"></div>
 										<div class="table-responsive" style="border: 0">
 											<table width="100%"
@@ -199,12 +213,12 @@
 
 							</form>
 						</div>
-					</div>
+				<!-- 	</div> -->
 				</div>
 			</div>
 			<!-- END Main Content -->
 			<footer>
-				<p>2017 © MONGINIS.</p>
+				<p>2018 © MONGINIS.</p>
 			</footer>
 
 

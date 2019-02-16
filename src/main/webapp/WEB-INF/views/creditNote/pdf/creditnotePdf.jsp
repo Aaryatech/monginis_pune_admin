@@ -32,13 +32,13 @@ contentType="text/html; charset=ISO8859_1"%>
   
   </tr>
     <tr >
-    <td   width="30%" colspan="3" align="left"  style="border-top:1px solid #313131;padding:4px;font-size:10px;font-weight:bold;">&nbsp;GSTIN Number&nbsp;&nbsp;&nbsp;: 27AAACM5120A127</td>
+    <td   width="30%" colspan="3" align="left"  style="border-top:1px solid #313131;padding:4px;font-size:10px;font-weight:bold;">&nbsp;GSTIN Number&nbsp;&nbsp;&nbsp;: 27A44446757Z9</td>
       <td   width="70%" colspan="6" align="left"  style="border-top:1px solid #313131;border-left:1px solid #313131;padding:4px;font-size:10px;font-weight:bold;"></td>
   
   </tr>
     <tr >
     <td   width="30%" colspan="3" align="left"  style="border-top:1px solid #313131;padding:4px;font-size:10px;font-weight:bold;">&nbsp;Credit Note No.&nbsp;&nbsp;&nbsp;: ${headerH.creditHeader.crnId}</td>
-      <td   width="70%" colspan="6" align="left"  style="border-top:1px solid #313131;border-left:1px solid #313131;padding:4px;font-size:10px;font-weight:bold;"></td>
+      <td   width="70%" colspan="6" align="left"  style="border-top:1px solid #313131;border-left:1px solid #313131;padding:4px;font-size:10px;font-weight:bold;">&nbsp;Invoice No.&nbsp;&nbsp;&nbsp;: ${headerH.creditHeader.exVarchar1}</td>
   
   </tr>
     <tr >
@@ -156,29 +156,31 @@ contentType="text/html; charset=ISO8859_1"%>
     
         <td style="border-bottom:1px solid #313131;border-left:1px solid #313131;  padding:3px 5px;color:#000; font-size:10px;"><c:out value="${crnDetail.itemHsncd}"></c:out></td>
     
-    <td align="left" style="border-bottom:1px solid #313131;border-left:1px solid #313131;  padding:3px 5px;color:#000; font-size:10px;">${crnDetail.grnGvnQty}</td>
+    <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131;  padding:3px 5px;color:#000; font-size:10px;">${crnDetail.grnGvnQty}</td>
         <td align="center" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 5px;color:#000; font-size:10px;">${crnDetail.itemUom}</td>
     
     <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 5px;color:#000;font-size:10px;"><fmt:formatNumber type="number"
-								maxFractionDigits="2" minFractionDigits="2" value="${crnDetail.baseRate}"/></td>
+							groupingUsed = "false" 	maxFractionDigits="2" minFractionDigits="2" value="${crnDetail.baseRate}"/></td>
     <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 4px;color:#000; font-size:10px;"><fmt:formatNumber type="number"
-								maxFractionDigits="2" minFractionDigits="2" value="${crnDetail.baseRate*crnDetail.grnGvnQty}"/></td>
+							groupingUsed = "false" 	maxFractionDigits="2" minFractionDigits="2" value="${crnDetail.baseRate*crnDetail.grnGvnQty}"/></td>
    
-    <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 4px;color:#000; font-size:10px;"><fmt:formatNumber type="number"
-								maxFractionDigits="0" minFractionDigits="0" value="${((crnDetail.baseRate*crnDetail.grnGvnQty)-(crnDetail.taxableAmt+crnDetail.cgstRs+crnDetail.sgstRs))/((crnDetail.baseRate*crnDetail.grnGvnQty)/100)}"/></td>
+    <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 4px;color:#000; font-size:10px;">
+    <c:choose>
+  <c:when test="${headerH.creditHeader.isGrn==1}"> <c:choose><c:when test="${crnDetail.grnType==0}">20</c:when><c:when test="${crnDetail.grnType==1}">10</c:when><c:when test="${crnDetail.grnType==2}">0</c:when><c:otherwise></c:otherwise></c:choose>
+   </c:when><c:otherwise>0</c:otherwise></c:choose></td>
 			  <c:set var = "totalQty" value = "${totalQty+crnDetail.grnGvnQty}"/>					
     <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 4px;color:#000; font-size:10px;"><fmt:formatNumber type="number"
-								maxFractionDigits="2" minFractionDigits="2" value="${crnDetail.taxableAmt}"/></td>
+							groupingUsed = "false" 	maxFractionDigits="2" minFractionDigits="2" value="${crnDetail.taxableAmt}"/></td>
     <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 4px;color:#000;font-size:10px;"><fmt:formatNumber type="number"
-								maxFractionDigits="2" minFractionDigits="2" value="${crnDetail.cgstPer}"/></td>
+							groupingUsed = "false" 	maxFractionDigits="2" minFractionDigits="2" value="${crnDetail.cgstPer}"/></td>
 								   <c:set var = "totalAmt" value = "${totalAmt+crnDetail.taxableAmt}"/>
     <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 5px;color:#000; font-size:10px;"><fmt:formatNumber type="number"
-								maxFractionDigits="2" minFractionDigits="2" value="${crnDetail.cgstRs}"/></td>
+							groupingUsed = "false" 	maxFractionDigits="2" minFractionDigits="2" value="${crnDetail.cgstRs}"/></td>
     <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 5px;color:#000; font-size:10px;"><fmt:formatNumber type="number"
-								maxFractionDigits="2" minFractionDigits="2" value="${crnDetail.sgstPer}"/></td>
+							groupingUsed = "false" 	maxFractionDigits="2" minFractionDigits="2" value="${crnDetail.sgstPer}"/></td>
 								  <c:set var = "totalCgst" value = "${totalCgst+crnDetail.cgstRs}"/>
     <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 5px;color:#000;font-size:10px;"><fmt:formatNumber type="number"
-								maxFractionDigits="2" minFractionDigits="2" value="${crnDetail.sgstRs}"/></td>
+							groupingUsed = "false" 	maxFractionDigits="2" minFractionDigits="2" value="${crnDetail.sgstRs}"/></td>
 								
 								 <c:set var = "totalSgst" value = "${totalSgst+crnDetail.sgstRs}"/>
    
@@ -211,20 +213,20 @@ contentType="text/html; charset=ISO8859_1"%>
     <td align="left" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:#000; font-size:12px;"><b>Total</b></td>
     <td align="center" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:white; font-size:10px;">-</td>
     <td align="right" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:#000; font-size:12px;"><b><fmt:formatNumber type="number"
-								maxFractionDigits="2" minFractionDigits="2" value="${totalQty}"/></b></td>
+							groupingUsed = "false" 	maxFractionDigits="2" minFractionDigits="2" value="${totalQty}"/></b></td>
     <td align="center" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:white; font-size:10px;">-</td>
     <td align="center" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:white; font-size:10px;">-</td>
     
     <td align="center" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:white; font-size:10px;">-</td>
     <td align="center" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:white; font-size:10px;">-</td>
     <td align="right" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:#000; font-size:12px;"><b><fmt:formatNumber type="number"
-								maxFractionDigits="2" minFractionDigits="2" value="${totalAmt}"/></b></td>
+							groupingUsed = "false" 	maxFractionDigits="2" minFractionDigits="2" value="${totalAmt}"/></b></td>
     <td align="center" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:white; font-size:10px;">-</td>
     <td align="right" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:#000; font-size:12px;"><b><fmt:formatNumber type="number"
-								maxFractionDigits="2" minFractionDigits="2" value="${totalCgst}"/></b></td>
+							groupingUsed = "false" 	maxFractionDigits="2" minFractionDigits="2" value="${totalCgst}"/></b></td>
     <td align="center" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:white; font-size:10px;">-</td>
     <td align="right" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:#000; font-size:12px;"><b><fmt:formatNumber type="number"
-								maxFractionDigits="2" minFractionDigits="2" value="${totalSgst}"/></b></td>
+							groupingUsed = "false" 	maxFractionDigits="2" minFractionDigits="2" value="${totalSgst}"/></b></td>
   </tr>
    <tr>
    
@@ -232,16 +234,16 @@ contentType="text/html; charset=ISO8859_1"%>
         <td align="right" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:white; font-size:10px;">-</td>
     <td style="border-bottom:1px solid #313131; font-size:0px;">-</td><td style="border-bottom:1px solid #313131; font-size:10px;">-</td><td style="border-bottom:1px solid #313131;font-size:0px;">-</td><td style="border-bottom:1px solid #313131;padding:4px;color:#000; font-size:0px;">-</td><td style="border-bottom:1px solid #313131;padding:4px;color:#000; font-size:0px;">-</td><td style="border-bottom:1px solid #313131;padding:4px;color:#000; font-size:0px;">-</td><td style="border-bottom:1px solid #313131;font-size:0px;">-</td><td style="border-bottom:1px solid #313131;padding:4px;color:#000; font-size:0px;">-</td><td style="border-bottom:1px solid #313131;font-size:0px;">-</td><td style="border-bottom:1px solid #313131;font-size:12px;"><b>Gross Value:</b></td>
     <td align="right" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:#000; font-size:12px;"><b><fmt:formatNumber type="number"
-								minFractionDigits="2" maxFractionDigits="2" value="${totalAmt+totalCgst+totalSgst}"/></b></td>
+						groupingUsed = "false"	minFractionDigits="2" maxFractionDigits="2" value="${totalAmt+totalCgst+totalSgst}"/></b></td>
   </tr>
   <tr>
    <fmt:formatNumber type="number"
-							minFractionDigits="0" 	maxFractionDigits="0" value="${totalAmt+totalCgst+totalSgst}" var="grossValue"/>
+					groupingUsed = "false"		minFractionDigits="0" 	maxFractionDigits="0" value="${totalAmt+totalCgst+totalSgst}" var="grossValue"/>
     <td align="right" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:white; font-size:10px;">-</td>
         <td align="right" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:white; font-size:10px;">-</td>
     <td style="border-bottom:1px solid #313131; font-size:0px;">-</td><td style="border-bottom:1px solid #313131; font-size:10px;">-</td><td style="border-bottom:1px solid #313131;font-size:0px;">-</td><td style="border-bottom:1px solid #313131;padding:4px;color:#000; font-size:0px;">-</td><td style="border-bottom:1px solid #313131;padding:4px;color:#000; font-size:0px;">-</td><td style="border-bottom:1px solid #313131;padding:4px;color:#000; font-size:0px;">-</td><td style="border-bottom:1px solid #313131;font-size:0px;">-</td><td style="border-bottom:1px solid #313131;padding:4px;color:#000; font-size:0px;">-</td><td style="border-bottom:1px solid #313131;font-size:0px;">-</td><td style="border-bottom:1px solid #313131;font-size:12px;"><b>Round Off:</b></td>
     <td align="right" style="border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:#000; font-size:12px;"><b><fmt:formatNumber type="number"
-							minFractionDigits="2" 	maxFractionDigits="2" value="${grossValue-(totalAmt+totalCgst+totalSgst)}"/></b></td>
+							minFractionDigits="2" groupingUsed = "false" 	maxFractionDigits="2" value="${grossValue-(totalAmt+totalCgst+totalSgst)}"/></b></td><%-- ${grossValue-(totalAmt+totalCgst+totalSgst)} --%>
   </tr>
    <tr>
    
@@ -275,7 +277,61 @@ contentType="text/html; charset=ISO8859_1"%>
     <td align="center" style="border-top:1px solid #313131;border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:#000; font-size:10px;">Rate%</td>
     <td align="center" style="border-top:1px solid #313131;border-left:1px solid #313131;border-bottom:1px solid #313131; padding:4px;color:#000; font-size:10px;">Amount</td>
   </tr>
-  
+     <c:set var = "hsnQty" value ="0"/>
+      <c:set var = "hsnTaxableAmt" value ="0"/>
+      <c:set var = "hsnTotalCgst" value ="0"/>
+      <c:set var = "hsnTotalSgst" value ="0"/>
+      <c:set var = "hsnTotal" value ="0"/>
+    <c:forEach items="${headerH.creditHeader.crnDetailsSummaryList}" var="crnDetailsSummaryList" varStatus="cnt">
+   
+   
+    <tr>
+     <td style="border-bottom:1px solid #313131;border-left:1px solid #313131;  padding:3px 5px;color:#000; font-size:10px;"><c:out value="${crnDetailsSummaryList.itemHsncd}"></c:out></td>
+    
+        <td style="border-bottom:1px solid #313131;border-left:1px solid #313131;  padding:3px 5px;color:#000; font-size:10px;"><c:out value="${crnDetailsSummaryList.itemHsncdesc}"></c:out></td>
+    
+    <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131;  padding:3px 5px;color:#000; font-size:10px;">${crnDetailsSummaryList.grnGvnQty}</td>
+ 			  <c:set var = "hsnQty" value = "${hsnQty+crnDetailsSummaryList.grnGvnQty}"/>					
+    <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 4px;color:#000; font-size:10px;"><fmt:formatNumber type="number"
+							groupingUsed = "false" 	maxFractionDigits="2" minFractionDigits="2" value="${crnDetailsSummaryList.taxableAmt}"/></td>
+    <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 4px;color:#000;font-size:10px;"><fmt:formatNumber type="number"
+							groupingUsed = "false" 	maxFractionDigits="2" minFractionDigits="2" value="${crnDetailsSummaryList.cgstPer}"/></td>
+								   <c:set var = "hsnTaxableAmt" value = "${hsnTaxableAmt+crnDetailsSummaryList.taxableAmt}"/>
+    <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 5px;color:#000; font-size:10px;"><fmt:formatNumber type="number"
+							groupingUsed = "false" 	maxFractionDigits="2" minFractionDigits="2" value="${crnDetailsSummaryList.cgstRs}"/></td>
+    <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 5px;color:#000; font-size:10px;"><fmt:formatNumber type="number"
+							groupingUsed = "false" 	maxFractionDigits="2" minFractionDigits="2" value="${crnDetailsSummaryList.sgstPer}"/></td>
+								  <c:set var = "hsnTotalCgst" value = "${hsnTotalCgst+crnDetailsSummaryList.cgstRs}"/>
+    <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 5px;color:#000;font-size:10px;"><fmt:formatNumber type="number"
+							groupingUsed = "false" 	maxFractionDigits="2" minFractionDigits="2" value="${crnDetailsSummaryList.sgstRs}"/></td>
+	  <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 5px;color:#000;font-size:10px;"><fmt:formatNumber type="number"
+							groupingUsed = "false" 	maxFractionDigits="2" minFractionDigits="2" value="${crnDetailsSummaryList.taxableAmt+crnDetailsSummaryList.cgstRs+crnDetailsSummaryList.sgstRs}"/></td>
+									 <c:set var = "hsnTotal" value = "${hsnTotal+crnDetailsSummaryList.taxableAmt+crnDetailsSummaryList.cgstRs+crnDetailsSummaryList.sgstRs}"/>
+								 <c:set var = "hsnTotalSgst" value = "${hsnTotalSgst+crnDetailsSummaryList.sgstRs}"/>
+   
+  </tr>
+
+  </c:forEach>
+     <tr>
+     <td style="border-bottom:1px solid #313131;border-left:1px solid #313131;  padding:3px 5px;color:#000; font-size:0px;">-</td>
+    
+        <td style="border-bottom:1px solid #313131;border-left:1px solid #313131;  padding:3px 5px;color:#000; font-size:0px;">-</td>
+    
+    <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131;  padding:3px 5px;color:#000; font-size:10px;"><b><fmt:formatNumber type="number"
+							groupingUsed = "false" 	maxFractionDigits="2" minFractionDigits="2" value="${hsnQty}"/></b></td>
+    <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 4px;color:#000; font-size:10px;"><b><fmt:formatNumber type="number"
+							groupingUsed = "false" 	maxFractionDigits="2" minFractionDigits="2" value="${hsnTaxableAmt}"/></b></td>
+    <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 4px;color:#000;font-size:0px;">-</td>
+    <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 5px;color:#000; font-size:10px;"><b><fmt:formatNumber type="number"
+							groupingUsed = "false" 	maxFractionDigits="2" minFractionDigits="2" value="${hsnTotalCgst}"/></b></td>
+    <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 5px;color:#000; font-size:0px;">-</td>
+    <td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 5px;color:#000;font-size:10px;"><b><fmt:formatNumber type="number"
+							groupingUsed = "false" 	maxFractionDigits="2" minFractionDigits="2" value="${hsnTotalSgst}"/></b></td>
+	<td align="right" style="border-bottom:1px solid #313131;border-left:1px solid #313131; padding:3px 5px;color:#000;font-size:10px;"><b><fmt:formatNumber type="number"
+							groupingUsed = "false" 	maxFractionDigits="2" minFractionDigits="2" value="${hsnTotal}"/></b></td>
+								
+   
+  </tr>
   </table>
   <table width="100%" border="0"  cellpadding="0" cellspacing="0" style="border-right:1px solid #313131;">
   

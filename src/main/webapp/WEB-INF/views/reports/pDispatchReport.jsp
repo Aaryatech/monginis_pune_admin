@@ -13,7 +13,8 @@
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 
 	<c:url var="getBillList" value="/getPDispatchReportByRoute"></c:url>
-   	<c:url var="getFranchisees" value="/getFranchiseByRoute"></c:url>
+   	<c:url var="getFranchisees" value="/getFranchises"></c:url>
+   	<c:url var="getSubCatByCatId" value="/getSubCatByCatId"></c:url>
 	<!-- BEGIN Sidebar -->
 	<div id="sidebar" class="navbar-collapse collapse" >
 
@@ -74,9 +75,9 @@
                     <label class="col-sm-3 col-lg-2 control-label">Select
 							Route</label>
 						<div class="col-sm-6 col-lg-4 controls">
-							<select data-placeholder="Select Route"
+							<select data-placeholder="Select Route" 
 								class="form-control chosen" name="selectRoute" id="selectRoute"
-								 onchange="getFranchise(this.value)">
+								> <!-- onchange="getFranchise(this.value)" -->
 								<option value="0">Select Route</option>
 								<c:forEach items="${routeList}" var="route" varStatus="count">
 									<option value="${route.routeId}"><c:out value="${route.routeName}"/> </option>
@@ -96,11 +97,11 @@
 
 						<label class="col-sm-3 col-lg-2 control-label">Select
 							Category</label>
-						<div class="col-sm-3 col-lg-4">
+						<div class="col-sm-3 col-lg-3">
 
 							<select data-placeholder="Choose Category"
-								class="form-control chosen" multiple="multiple" tabindex="6"
-								id="selectCat" name="selectCat">
+								class="form-control chosen"  tabindex="6" multiple="multiple" 
+								id="selectCat" name="selectCat" onchange="getSubCategoriesByCatId()"> <!-- multiple="multiple" -->
 
 								<option value="-1"><c:out value="All"/></option>
 
@@ -109,7 +110,17 @@
 								</c:forEach>
 							</select>
 						</div>
+					<label class="col-sm-3 col-lg-2 control-label">Sub-Category</label>
+						<div class="col-sm-3 col-lg-3">
 
+							<select data-placeholder="Choose Sub Category"
+								class="form-control chosen" multiple="multiple" tabindex="6"
+								id="selectSubCat" name="selectSubCat">
+
+								<option value="-1"><c:out value="All"/></option>
+
+							</select>
+						</div>
 						<button class="btn btn-info" onclick="searchReport()">Search
 							Report</button>
 <!-- 						<button class="btn search_btn" onclick="showChart()">Graph</button>
@@ -135,17 +146,20 @@
 						<div class="col-sm-3 col-lg-4">
 
 							<select data-placeholder="Choose Franchise"
-								class="form-control"  tabindex="6"
-								id="fraId" name="fraId" >
+							tabindex="6" class="form-control chosen" multiple="multiple"
+								id="fraId" name="fraId" onchange="onFrChange()">
 								<option value="">Select Franchise</option>
+								<option value="-1"><c:out value="All"/></option>
 								
-                                 --%>
+                                	<c:forEach items="${frList}" var="frList" varStatus="count">
+									<option value="${frList.frId}"><c:out value="${frList.frName}"/></option>
+								</c:forEach>
 							</select>
 						</div>
 
 
-						<button class="btn btn-primary" value="PDF" id="PDFButton"
-							onclick="genPdfBill()">Franchise PDF</button>
+					<!-- 	<button class="btn btn-primary" value="PDF" id="PDFButton"
+							onclick="genPdfBill()">Franchise PDF</button> -->
 							
 							&nbsp;
 						<button class="btn btn-primary" value="PDF" id="PDFButton"
@@ -218,7 +232,7 @@
 					</div>
 
 					<div id="chart_div" style="width: 100%; height: 700px; background-color: white;" ></div>
-					<div id="PieChart_div" style="width: 100%; height: 700px;"></div>
+					<div id="PieChart_div" style="width: 100%; height: 700px;background-color: white;"></div>
 
 				</form>
 			</div>
@@ -257,7 +271,10 @@
                                 $("<option></option>").attr(
                                     "value", 0).text("Select Franchisee")
                             );
-					
+					 $("#fraId").append(
+                             $("<option></option>").attr(
+                                 "value", -1).text("ALL")
+                         );
 						
 					for ( var i = 0; i < len; i++) {
                         $("#fraId").append(
@@ -267,6 +284,47 @@
 					}
 					   $("#fraId").trigger("chosen:updated");
 				}); 
+			}
+</script>
+<script type="text/javascript">
+
+			function onFrChange() {
+				var frId = $("#fraId").val();
+				var routeId = $("#selectRoute").val();
+				if(frId=='-1'){
+				$.getJSON('${getFranchisees}', {
+					
+					routeId : routeId,
+					ajax : 'true'
+				}, function(data) {
+				 	var html = '<option value="">Select Franchisee</option>';
+				/*  	var html1 = '<option value="-1">All</option>'; */
+				
+					var len = data.length;
+					
+					$('#fraId')
+				    .find('option')
+				    .remove()
+				    .end()
+				    
+				 $("#fraId").append(
+                                $("<option></option>").attr(
+                                    "value", 0).text("Select Franchisee")
+                            );
+					 $("#fraId").append(
+                             $("<option></option>").attr(
+                                 "value", -1).text("ALL")
+                         );
+						
+					for ( var i = 0; i < len; i++) {
+                        $("#fraId").append(
+                                $("<option selected></option>").attr(
+                                    "value", data[i].frId).text(data[i].frName)
+                            );
+					}
+					   $("#fraId").trigger("chosen:updated");
+				}); 
+				}
 			}
 </script>
 		<script type="text/javascript">
@@ -284,7 +342,7 @@
 				document.getElementById("routeName").style.fontWeight="900";
 				var isGraph = 0;
 
-				var selectedCat = $("#selectCat").val();
+				var selectedCat = $("#selectSubCat").val();
 
 				var billDate = $("#billDate").val();
 				$('#loader').show();
@@ -302,7 +360,7 @@
 
 								},
 								function(data) {
-									 document.getElementById("submit").disabled=false;
+									 document.getElementById("submit").disabled=true;
 									$('#table_grid th').remove();
 
 									$('#table_grid td').remove();
@@ -453,10 +511,7 @@
 	
 		<script type="text/javascript">
 			function showChart() {
-
 			
-				
-
 				$("#PieChart_div").empty();
 				$("#chart_div").empty();
 				//document.getElementById('chart').style.display = "block";
@@ -730,7 +785,7 @@
 			function genPdf() {
 				var billDate = $("#billDate").val();
 				var routeId = $("#selectRoute").val();
-				var selectedCat = $("#selectCat").val();
+				var selectedCat = $("#selectSubCat").val();
 				
 				window.open('pdfForDisReport?url=pdf/getPDispatchReportPdf/'
 						+ billDate + '/'+routeId+'/'+selectedCat);
@@ -752,20 +807,26 @@
 						+ billDate + '/'+routeId+'/'+selectedCat+'/'+frId);
 
 			}
-			</script>	<script type="text/javascript">
+			</script>	
+			<script type="text/javascript">
 			function genDispatchPdf()
 			{
 				var billDate = $("#billDate").val();
 				var routeId = $("#selectRoute").val();
-				var selectedCat = $("#selectCat").val();
+				var selectedCat = $("#selectSubCat").val();//new for pune on 14 feb 19
 				var frId = $("#fraId").val();
 				
-				window.open('pdf/getDispatchPReportPdfForDispatch/'
-						+ billDate + '/'+routeId+'/'+selectedCat+'/'+frId);
-
-				
+				  window.open('pdf/getDispatchPReportPdfForDispatch/'
+							+ billDate + '/'+routeId+'/'+selectedCat+'/'+frId);
 			}
-	
+			/* var fld = document.getElementById('fraId');
+			var values = [];
+			for (var i = 0; i < fld.options.length; i++) {
+			  if (fld.options[i].selected) {
+				
+				
+			  }
+			} */
 		</script>
 		<!--basic scripts-->
 		<script
@@ -822,5 +883,85 @@
 	<script src="${pageContext.request.contextPath}/resources/js/flaty.js"></script>
 	<script
 		src="${pageContext.request.contextPath}/resources/js/flaty-demo-codes.js"></script>
+<script type="text/javascript">
+function getSubCategoriesByCatId()
+{
+	var catId = $("#selectCat").val();
+
+				$.getJSON('${getSubCatByCatId}', {
+					catId : JSON.stringify(catId),
+					ajax : 'true'
+				}, function(data) {
+					var html = '<option value="">Sub Category</option>';
+				
+					var len = data.length;
+					
+					$('#selectSubCat')
+				    .find('option')
+				    .remove()
+				    .end()
+				    
+				 $("#selectSubCat").append(
+                                $("<option></option>").attr(
+                                    "value", "").text("Select Sub Category")
+                            );
+					 $("#selectSubCat").append(
+                             $("<option></option>").attr(
+                                 "value", -1).text("ALL")
+                         );
+					for ( var i = 0; i < len; i++) {
+                        $("#selectSubCat").append(
+                                $("<option></option>").attr(
+                                    "value", data[i].subCatId).text(data[i].subCatName)
+                            );
+					}
+					   $("#selectSubCat").trigger("chosen:updated");
+				});
+}
+</script>
+		
+<script type="text/javascript">
+$(document).ready(function() { // if all label selected set all items selected
+	
+$('#selectSubCat').change(
+		function () {
+			 var selected=$('#selectSubCat').val();
+			 var catId = $("#selectCat").val();
+			 
+        if(selected==-1){
+			$.getJSON('${getSubCatByCatId}', {
+				catId : JSON.stringify(catId),
+				ajax : 'true'
+			}, function(data) {
+				var html = '<option value="">Select Sub Category</option>';
+				
+				var len = data.length;
+				
+				$('#selectSubCat')
+			    .find('option')
+			    .remove()
+			    .end()
+			 $("#selectSubCat").append(
+                             $("<option></option>").attr(
+                                 "value", -1).text("ALL")
+                         );
+			
+				for ( var i = 0; i < len; i++) {
+    
+                   $("#selectSubCat").append(
+                           $("<option selected></option>").attr(
+                               "value", data[i].subCatId).text(data[i].subCatName)
+                       );
+				}
+		
+				   $("#selectSubCat").trigger("chosen:updated");
+			});
+  }
+});
+});
+
+
+
+</script>
 </body>
 </html>

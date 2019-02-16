@@ -18,9 +18,8 @@
     <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.12.0/semantic.min.css" />
  <style type="text/css">
  table {
-	background-color:white;
+
 page-break-inside: auto !important;
- 
 
 } 
 .floatedTable {
@@ -36,7 +35,7 @@ page-break-inside: auto !important;
 }
 </style>
   </head>
-  <body>
+  <body style="	background-color:white;">
     <!-- code goes here -->
 
     <!-- scripts -->
@@ -57,7 +56,7 @@ page-break-inside: auto !important;
 														varStatus="count"> 
 	<c:set var="cls" value=""></c:set><c:choose><c:when test="${count.index/2==0}"><c:set var="cls" value="floatedTable"></c:set></c:when><c:otherwise><c:set var="cls" value="floatedTable1"></c:set></c:otherwise></c:choose>
 
-<table style=" border-bottom: 1px dashed grey;"   class="${cls}" >
+<table style=" border-bottom: 1px dashed grey;" class="${cls}">
 <tbody><tr style="height: 21px;">
 <td style="width: 125px; height: 21px;">
 <div style="border-bottom-style: dashed; font-size: 13px;padding-bottom: 5px; padding-top: 5px; border-bottom-color: grey;">&nbsp; &nbsp;&nbsp;SLIP.No-&gt;</div>

@@ -440,6 +440,12 @@ public class ManualOrderController {
 					for(int i=0;i<orderList.size();i++)
 					{
 						int qty=Integer.parseInt(request.getParameter("qty"+orderList.get(i).getItemId()));
+						if(submitorder==null)
+						{System.err.println("submitorder");
+						float discPer=Float.parseFloat(request.getParameter("discper"+orderList.get(i).getItemId()));//new on 15 feb for dis on bill
+						orderList.get(i).setIsPositive(discPer);//new on 15 feb for dis on bill
+						System.err.println("discPer=="+discPer);
+						}
 						orderList.get(i).setEditQty(qty);
 						orderList.get(i).setOrderQty(qty);
 						if(qty>0) {

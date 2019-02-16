@@ -46,8 +46,21 @@
 					<label class="col-sm-4 col-lg-1 control-label">Type</label>
 					<div class="col-sm-5 col-lg-3 controls">
 						<select class="form-control" name="selectType" id="selectType">
+						<c:choose>
+						<c:when test="${type==1}">
+							<option value="1" selected>GRN Credit Note</option>
+							<option value="0">GVN Credit Note</option>
+						</c:when>
+						<c:when test="${type==0}">
+							<option value="1">GRN Credit Note</option>
+							<option value="0"selected>GVN Credit Note</option>
+						</c:when>
+						<c:otherwise>
 							<option value="1">GRN Credit Note</option>
 							<option value="0">GVN Credit Note</option>
+						</c:otherwise>
+						</c:choose>
+						
 						</select>
 					</div>
 					<section>
@@ -93,22 +106,22 @@
 									<table width="100%" class="table table-advance" id="table1">
 										<thead style="background-color:#f3b5db; ">
 											<tr>
-												<th width="50" align="left"><input type="checkbox"
-													onClick="selectcreditnote(this)" /> Select All<br /></th>
-												<th width="17" style="width: 18px">Sr No</th>
+												<th width="90" align="left"><input type="checkbox"
+													onClick="selectcreditnote(this)" />ALL</th>
+												<th width="70" style="width: 18px">SR</th>
 												<th width="150" align="left">Grn-Gvn Date</th>
 
 												<th width="150" align="left">Grn-Gvn SrNo</th>
 
 												<th width="150" align="left">Grn-Gvn Id</th>
 
-												<th width="150" align="left">Franchisee Name</th>
+												<th width="150" align="left">Franchisee</th>
 												<th width="100" align="left">Invoice No</th>
-												<th width="88" align="left">Type:Grn/Gvn</th>
+												<th width="88" align="left">Type</th>
 
-												<th width="102" align="left">Item Name</th>
-												<th width="88" align="left">Quantity</th>
-												<th width="88" align="left">Grn Gvn Amount</th>
+												<th width="102" align="left">Item</th>
+												<th width="88" align="left">Qty</th>
+												<th width="88" align="left">Amt</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -183,7 +196,7 @@
 			</form>
 			<!-- END Main Content -->
 			<footer>
-				<p>2017 © MONGINIS.</p>
+				<p>2018 © MONGINIS.</p>
 			</footer>
 
 			<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
@@ -268,30 +281,15 @@
 	</script>
 	<script>
 	function getGrnGvnDetail(){
-		
-		var selectedType = $("#selectType").val();
-		//alert("Hi "+selectedType);
+			var selectedType = $("#selectType").val();
 	        var form = document.getElementById("validation");
 	        form.action ="${pageContext.request.contextPath}/insertCreNoteProcess";
 	        form.submit();
 	        $("#selectType").value=selectedType;
-
-
 	}
-	
-function viewCreditNotes(){
-		
+    function viewCreditNotes(){
 	window.open('${pageContext.request.contextPath}/showCreditNotes');
-
-		//alert("Hi "+selectedType);
-	       // var form = document.getElementById("validation");
-	        //form.action ="${pageContext.request.contextPath}/showCreditNotes";
-	       // form.submit();
-	       
-
 	}
-	
 	</script>
-
 </body>
 </html>

@@ -576,11 +576,10 @@ page-break-inside: auto !important
 							value="${acttotal}" /></b></td>			
 			</tr>
 			<tr>
-				<c:set var="finalAmt" value="${totalAmt+totalCgst+totalSgst}"></c:set>
-				<%
-					double fAmt = 0;// (Double)pageContext.getAttribute("finalAmt");
-						fAmt = Math.round(fAmt);
-				%>
+			
+   <fmt:formatNumber type="number"
+							minFractionDigits="0" 	  groupingUsed = "false" maxFractionDigits="0" value="${totalAmt+totalCgst+totalSgst}" var="totAmt"/>
+		
 				<td align="right"
 					style="border-left: 1px solid #313131; border-bottom: 1px solid #313131; padding: 4px; color: #000; font-size: 0px;">-</td>
 				<td align="right"
@@ -595,7 +594,37 @@ page-break-inside: auto !important
 					style="border-bottom: 1px solid #313131; padding: 4px; color: #000; font-size: 0px;">-</td>
 				<td style="border-bottom: 1px solid #313131; font-size: 0px;">-</td>
 				<td style="border-bottom: 1px solid #313131; font-size: 0px;">-</td><td style="border-bottom: 1px solid #313131; font-size: 0px;">-</td>
-				<td style="border-bottom: 1px solid #313131; font-size: 12px;"><b>Total:</b></td>
+				<td style="border-bottom: 1px solid #313131; font-size: 12px;"><b>&nbsp;Round off:</b></td>
+				<td align="right"
+					style="border-left: 1px solid #313131; border-bottom: 1px solid #313131; padding: 4px; color: #000; font-size: 12px;"><b>
+							<fmt:formatNumber type="number"
+							minFractionDigits="2" 	maxFractionDigits="2"   groupingUsed = "false" value="${totAmt-(totalAmt+totalCgst+totalSgst)}"/>
+				
+				</b></td>
+			</tr>
+			<tr>
+				<c:set var="finalAmt" value="${totalAmt+totalCgst+totalSgst}"></c:set>
+				<%
+					double fAmt = 0;// (Double)pageContext.getAttribute("finalAmt");
+						fAmt = Math.round(fAmt);
+				%>
+								<c:set var="finalAmtActual" value="${fAmt}"></c:set>
+				
+				<td align="right"
+					style="border-left: 1px solid #313131; border-bottom: 1px solid #313131; padding: 4px; color: #000; font-size: 0px;">-</td>
+				<td align="right"
+					style="border-left: 1px solid #313131; border-bottom: 1px solid #313131; padding: 4px; color: #000; font-size: 0px;">-</td>
+				<td style="border-bottom: 1px solid #313131; font-size: 0px;">-</td>
+				<td style="border-bottom: 1px solid #313131; font-size: 0px;">-</td>
+				<td style="border-bottom: 1px solid #313131; font-size: 0px;">-</td>
+				<td
+					style="border-bottom: 1px solid #313131; padding: 4px; color: #000; font-size: 0px;">-</td>
+				
+				<td
+					style="border-bottom: 1px solid #313131; padding: 4px; color: #000; font-size: 0px;">-</td>
+				<td style="border-bottom: 1px solid #313131; font-size: 0px;">-</td>
+				<td style="border-bottom: 1px solid #313131; font-size: 0px;">-</td><td style="border-bottom: 1px solid #313131; font-size: 0px;">-</td>
+				<td style="border-bottom: 1px solid #313131; font-size: 12px;"><b>&nbsp;Total:</b></td>
 				<td align="right"
 					style="border-left: 1px solid #313131; border-bottom: 1px solid #313131; padding: 4px; color: #000; font-size: 12px;"><b>
 						<fmt:formatNumber type="number" value="${frDetails.grandTotal}" />

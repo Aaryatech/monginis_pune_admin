@@ -20,7 +20,7 @@
 <style type="text/css">
 
 #container {
-    column-count:3;
+    column-count:1;
    
 }
 
@@ -59,6 +59,7 @@ th {
 </style>
 </head>
 <body onload="directPrint()">
+<c:forEach items="${frListSelected}" var="frId" varStatus="ct">
 <h5 align="center">MONGINIS &nbsp;&nbsp;
 <!-- <p align="center">Patna,Bihar</p>
  -->
@@ -122,7 +123,7 @@ Production Start Date &nbsp; ${billDate} &nbsp;&nbsp; Dispatch Sheet &nbsp;&nbsp
 								<c:choose>
 								<c:when test="${report.itemId==item.id}">
 								<c:choose>
-								<c:when test="${report.frId==fr.frId}">
+								<c:when test="${report.frId==fr.frId}"><%-- change here --%>
 							
 								<c:set var="editQty" value="${report.editQty}"></c:set>
 								 <c:if test="${fr.frRateCat==1}">
@@ -245,13 +246,14 @@ Production Start Date &nbsp; ${billDate} &nbsp;&nbsp; Dispatch Sheet &nbsp;&nbsp
 			</tr>  --%>
 		</tbody>
 	</table>
-</div>
+</div><div class="page-break"></div>
 
+</c:forEach>
 	<!-- END Main Content -->
 
 </body>
 
-	<script>
+	<!-- <script>
 	 function directPrint()
 	{
 		 
@@ -259,6 +261,6 @@ Production Start Date &nbsp; ${billDate} &nbsp;&nbsp; Dispatch Sheet &nbsp;&nbsp
 		window.close();
 	} 
 	
-	</script>
+	</script> -->
 </body>
 </html>

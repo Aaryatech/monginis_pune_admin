@@ -30,7 +30,7 @@ td {
 
 <c:url var="excelForFrBill" value="/excelForFrBill" />
 	<c:url var="callGetBillListProcess" value="/getBillListProcessForPrint" />
-
+<c:url var="excelForFrBillExcel" value="/excelForFrBillExcel" />
 	<div class="container" id="main-container">
 
 		<!-- BEGIN Sidebar -->
@@ -273,7 +273,7 @@ td {
 															class="btn btn-primary" onclick="submitBill()"
 															value="BillDetail" />&nbsp;&nbsp;<input type="button"  id="btn_submit_pdf"
 															class="btn btn-primary"
-															value="PDF" /></div></td>
+															value="PDF" onclick="submitBillPdf()" /></div></td>
 
 																
 
@@ -292,9 +292,9 @@ td {
 
 										<input type="button" margin-right: 5px;" id="btn_submit"
 											class="btn btn-primary" onclick="submitBill()"
-											value="BillDetail" />
+											value="BillDetail" style="display: none;"/>
 											<input type="button" id="expExcel" class="btn btn-primary" value="EXPORT TO Excel" onclick="createExel();" >
-											 
+									&nbsp;&nbsp;&nbsp;&nbsp; <input type="button" id="expExcel" class="btn btn-primary" value="Excel Hsnwise Summary" onclick="createExelHsnwise();" >
 									</div>
 								</div>
 							</form>
@@ -690,8 +690,50 @@ form.submit();
 		
 		function exportToExcel()
 		{
-			alert("Export Excel");
+			//alert("Export Excel");
 			window.open("${pageContext.request.contextPath}/exportToExcel"); 
+		}
+		function createExelHsnwise() {
+			 
+			var fromDate = document.getElementById("dp1").value;
+			var toDate = document.getElementById("dp2").value;
+			  var select_to_print = document.forms[0];
+			 // alert(JSON.stringify(select_to_print));
+    	var txt = "";
+    	var i;
+    	var flag=0;
+    	var all=0;
+    	 for (i = 0; i < select_to_print.length; i++) {
+        if (select_to_print[i].checked  && select_to_print[i].value!="on") {
+            txt = txt + select_to_print[i].value + ",";
+            flag=1;
+        }
+    } 
+			
+			 if(flag==1)
+				 {
+			$
+					.getJSON(
+							'${excelForFrBillExcel}',
+							{
+								checkboxes : txt ,
+								all : all,
+								fromDate : fromDate,
+								toDate : toDate,
+								ajax : 'true'
+							},
+							function(data) {
+								
+							 //alert("Excel Ready");
+								 exportToExcel();
+							 
+							});
+				 }
+			 else
+				 {
+				 alert("Select Minimum 1 Bill ");
+				 }
+
 		}
 	</script>
 
@@ -708,7 +750,7 @@ form.submit();
 		}
 		
 	</script>
-	<script type="text/javascript">
+	<!-- <script type="text/javascript">
 	$(document).ready(function () {
 	    $(document).on('click', 'tbody tr', function () {
 	        var checked= $(this).find('input[type="checkbox"]');
@@ -720,7 +762,7 @@ form.submit();
 	        $(this).parent('tr').toggleClass('selected'); // or anything else for highlighting purpose
 	    });
 	});
-	</script>
+	</script> -->
 
 </body>
 </html>

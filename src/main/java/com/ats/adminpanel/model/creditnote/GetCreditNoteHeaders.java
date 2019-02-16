@@ -1,8 +1,5 @@
 package com.ats.adminpanel.model.creditnote;
 
-import java.util.Date;
-
-
 public class GetCreditNoteHeaders {
 	
 	private int crnId;
@@ -40,6 +37,27 @@ public class GetCreditNoteHeaders {
 	
 	private int isGrn;
 	
+	int exInt1;//new for pune billno of bill to show headers
+	
+	String exVarchar1;//new for pune  invno of bill to show headers
+	
+	
+	
+	public int getExInt1() {
+		return exInt1;
+	}
+
+	public void setExInt1(int exInt1) {
+		this.exInt1 = exInt1;
+	}
+
+	public String getExVarchar1() {
+		return exVarchar1;
+	}
+
+	public void setExVarchar1(String exVarchar1) {
+		this.exVarchar1 = exVarchar1;
+	}
 
 	public int getCrnId() {
 		return crnId;
@@ -177,8 +195,8 @@ public class GetCreditNoteHeaders {
 				+ ", crnTaxableAmt=" + crnTaxableAmt + ", crnTotalTax=" + crnTotalTax + ", crnGrandTotal="
 				+ crnGrandTotal + ", roundOff=" + roundOff + ", createdDateTime=" + createdDateTime + ", isTallySync="
 				+ isTallySync + ", isDeposited=" + isDeposited + ", frName=" + frName + ", frAddress=" + frAddress
-				+ ", frGstNo=" + frGstNo + ", isSameState=" + isSameState + ", isGrn=" + isGrn + "]";
+				+ ", frGstNo=" + frGstNo + ", isSameState=" + isSameState + ", isGrn=" + isGrn + ", exInt1=" + exInt1
+				+ ", exVarchar1=" + exVarchar1 + "]";
 	}
-
-
+     
 }

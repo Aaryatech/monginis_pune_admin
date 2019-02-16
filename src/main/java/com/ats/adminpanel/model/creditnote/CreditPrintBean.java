@@ -1,12 +1,10 @@
 package com.ats.adminpanel.model.creditnote;
 
-import java.util.List;
-
 public class CreditPrintBean {
 	
 	
 	CreditNoteHeaderPrint creditHeader;
-
+	
 	public CreditNoteHeaderPrint getCreditHeader() {
 		return creditHeader;
 	}
@@ -19,7 +17,7 @@ public class CreditPrintBean {
 	public String toString() {
 		return "CreditPrintBean [creditHeader=" + creditHeader + "]";
 	}
-	
+
 	
 	/*GetCreditNoteHeaders headers;
 	

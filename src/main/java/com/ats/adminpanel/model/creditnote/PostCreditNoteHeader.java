@@ -41,10 +41,25 @@ public class PostCreditNoteHeader {
 	
 	int isGrn;
 	
+	int exInt1;//new for pune billno of bill
 	
-	
-	
-	
+	String exVarchar1;//new for pune  invno of bill
+
+	public int getExInt1() {
+		return exInt1;
+	}
+
+	public void setExInt1(int exInt1) {
+		this.exInt1 = exInt1;
+	}
+
+	public String getExVarchar1() {
+		return exVarchar1;
+	}
+
+	public void setExVarchar1(String exVarchar1) {
+		this.exVarchar1 = exVarchar1;
+	}
 
 	List<PostCreditNoteDetails> postCreditNoteDetails;
 

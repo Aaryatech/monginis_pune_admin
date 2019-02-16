@@ -12,6 +12,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.security.auth.message.callback.PrivateKeyCallback.Request;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -66,6 +67,7 @@ import com.ats.adminpanel.model.franchisee.FranchiseSupList;
 import com.ats.adminpanel.model.franchisee.FranchiseeAndMenuList;
 import com.ats.adminpanel.model.franchisee.FranchiseeList;
 import com.ats.adminpanel.model.franchisee.Menu;
+import com.ats.adminpanel.model.franchisee.SubCategory;
 import com.ats.adminpanel.model.item.AllItemsListResponse;
 import com.ats.adminpanel.model.item.FrItemStockConfiResponse;
 import com.ats.adminpanel.model.item.FrItemStockConfigure;
@@ -1577,6 +1579,34 @@ public class FranchiseeController {
 		}
 
 		return allMenus.getMenuConfigurationPage();
+	}
+	@RequestMapping(value = "/getSubCatByCatId", method = RequestMethod.GET)
+	public @ResponseBody List<SubCategory> getSubCatByCatId(HttpServletRequest request, HttpServletResponse response) {
+
+		List<SubCategory> subCatList=new ArrayList<SubCategory>();
+		try {
+			RestTemplate restTemplate = new RestTemplate();
+			String selectedCat=request.getParameter("catId");
+			boolean isAllCatSelected = false;
+
+			if (selectedCat.contains("-1")) {
+				isAllCatSelected = true;
+			} else {
+			selectedCat = selectedCat.substring(1, selectedCat.length() - 1);
+			selectedCat = selectedCat.replaceAll("\"", "");
+			}
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			map.add("catId", selectedCat);
+			map.add("isAllCatSelected", isAllCatSelected);
+			
+			subCatList = restTemplate.postForObject(Constants.url + "getSubCatListByCatIdInForDisp",map, List.class);
+
+
+		} catch (Exception e) {
+			logger.info("Franchisee Controller Exception " + e.getMessage());
+		}
+
+		return subCatList;
 	}
 	// ----------------------------------------END---------------------------------------------------------
 	// ----------------------------------------DELETE FRANCHISEE
