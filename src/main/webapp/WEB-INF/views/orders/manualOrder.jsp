@@ -356,7 +356,7 @@ select {
 										<th style="text-align:center;">Item Name</th>
 										<th style="text-align:center;">Min Qty</th>
 										<th style="text-align:center;">Qty</th>
-										<th style="text-align:center;" id="discth">Disc %</th>
+										<th style="text-align:center;" id="discth">Disc</th>
 										<th style="text-align:center;">MRP</th>
 										<th style="text-align:center;">Rate</th>
 										<th style="text-align:center;">Total</th>
@@ -452,13 +452,20 @@ $(function() {
 
              		  	tr.append($('<td></td>').html(item.itemName));
              		  	tr.append($('<td></td>').html(item.minQty+'<input type="hidden" value='+item.minQty+'	id=minqty'+item.itemId+'  />'));
-             		  	tr.append($('<td style="text-align:right;" class="col-md-1"></td>').html('<input type="number" class="form-control" onchange="onChange('+item.orderRate+','+item.itemId+')"   width=20px;  name=qty'+item.itemId+' id=qty'+item.itemId+' value='+item.orderQty+' > '));
              		  	if(ordertype==1){
-             		  	tr.append($('<td style="text-align:right;" class="col-md-1"></td>').html('<input type="number" class="form-control"  min="0"  width=20px;  name=discper'+item.itemId+' id=discper'+item.itemId+' value='+item.isPositive+' > '));
+                 		tr.append($('<td style="text-align:right;" class="col-md-1"></td>').html('<input type="number" class="form-control" onchange="onChangeBill('+item.orderRate+','+item.itemId+')"   width=20px;  name=qty'+item.itemId+' id=qty'+item.itemId+' value='+item.orderQty+' > '));
+             		  	tr.append($('<td style="text-align:right;" class="col-md-1"></td>').html('<input type="number" class="form-control"  min="0"  width=20px; onchange="onChangeBill('+item.orderRate+','+item.itemId+')"  name=discper'+item.itemId+' id=discper'+item.itemId+' value='+item.isPositive+' > '));
              		  	}
              		  	else
              		  		{
-             		  		document.getElementById("discth").remove();
+                 		  	tr.append($('<td style="text-align:right;" class="col-md-1"></td>').html('<input type="number" class="form-control" onchange="onChange('+item.orderRate+','+item.itemId+')"   width=20px;  name=qty'+item.itemId+' id=qty'+item.itemId+' value='+item.orderQty+' > '));
+
+                 		     if(item.isPositive>0){
+             		  		    tr.append($('<td style="text-align:right;" class="col-md-1"></td>').html('Y'));
+                 		     }else
+                 		     {
+                 		        tr.append($('<td style="text-align:right;" class="col-md-1"></td>').html('N'));
+                 		     }
 
              		  		}
              		  	tr.append($('<td style="text-align:right;"></td>').html(item.orderMrp.toFixed(2)));
@@ -487,6 +494,32 @@ $(function() {
 			    var total = rate * qty;
 			
 			   $('#total'+id).html(total);
+			}else
+			{
+				 var total =0;
+				 
+				alert("Please Enter Qty Multiple of Minimum Qty");
+				$('#qty'+id).val(0);
+				
+				$('#total'+id).html(total);
+				$('#qty'+id).focus();
+			}
+		}
+	</script>
+	<script type="text/javascript">
+		function onChangeBill(rate,id) {
+
+			//calculate total value  
+			var qty = $('#qty'+id).val();
+			var discper = $('#discper'+id).val();
+			
+			var minqty = $('#minqty'+id).val();
+			
+			if(qty % minqty==0){
+			    var total = rate * qty;
+			    var disc=(total*discper)/100; 
+			    total=total-disc;
+			   $('#total'+id).html(total.toFixed(2));
 			}else
 			{
 				 var total =0;
