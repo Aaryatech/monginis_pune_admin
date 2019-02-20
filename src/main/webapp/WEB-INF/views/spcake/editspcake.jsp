@@ -201,33 +201,33 @@
 							
 
 								<div class="form-group">
-									<label class="col-sm-3 col-lg-2 control-label">Cut
-										Section</label>
+									<label class="col-sm-3 col-lg-2 control-label">Cake
+										Type</label>
 									<div class="col-sm-9 col-lg-10 controls">
 										<select name="cut_section" id="cut_section"
 											class="form-control" data-rule-required="true">
-											<option value="">Select Cut Section</option>
+											<option value="">Select Cake Type</option>
 
 											<c:choose>
 												<c:when test="${spCkSupp.cutSection==0}">
-													<option value="0" selected>Not Applicable</option>
-													<option value="1">Single Cut</option>
-													<option value="2">Double Cut</option>
+													<option value="0" selected>Alphabetical</option>
+													<option value="1">Numerical</option>
+													<option value="2">Regular</option>
 												</c:when>
 												<c:when test="${spCkSupp.cutSection==1}">
-													<option value="0">Not Applicable</option>
-													<option value="1" selected>Single Cut</option>
-													<option value="2">Double Cut</option>
+													<option value="0">Alphabetical</option>
+													<option value="1" selected>Numerical</option>
+													<option value="2">Regular</option>
 												</c:when>
 												<c:when test="${spCkSupp.cutSection==2}">
-													<option value="0">Not Applicable</option>
-													<option value="1">Single Cut</option>
-													<option value="2" selected>Double Cut</option>
+													<option value="0">Alphabetical</option>
+													<option value="1">Numerical</option>
+													<option value="2" selected>Regular</option>
 												</c:when>
 												<c:otherwise>
-													<option value="0">Not Applicable</option>
-													<option value="1">Single Cut</option>
-													<option value="2">Double Cut</option>
+													<option value="0">Alphabetical</option>
+													<option value="1">Numerical</option>
+													<option value="2">Regular</option>
 												</c:otherwise>
 											</c:choose>
 										</select>

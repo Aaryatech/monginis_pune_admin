@@ -12,6 +12,17 @@ public class FrSetting {
 	
 	private int grnGvnNo;
 
+	private int spNo;
+	
+	
+	public int getSpNo() {
+		return spNo;
+	}
+
+	public void setSpNo(int spNo) {
+		this.spNo = spNo;
+	}
+
 	public int getFrSettingId() {
 		return frSettingId;
 	}
@@ -55,8 +66,9 @@ public class FrSetting {
 	@Override
 	public String toString() {
 		return "FrSetting [frSettingId=" + frSettingId + ", frId=" + frId + ", frCode=" + frCode + ", sellBillNo="
-				+ sellBillNo + ", grnGvnNo=" + grnGvnNo + "]";
+				+ sellBillNo + ", grnGvnNo=" + grnGvnNo + ", spNo=" + spNo + "]";
 	}
+
 	
 
 }

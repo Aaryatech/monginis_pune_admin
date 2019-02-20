@@ -15,6 +15,7 @@ import java.util.TimeZone;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.ats.adminpanel.commons.Constants;
 import com.ats.adminpanel.model.AllFrIdNameList;
+import com.ats.adminpanel.model.AllspMessageResponse;
 import com.ats.adminpanel.model.ErrorMessage;
 import com.ats.adminpanel.model.FlavourList;
 import com.ats.adminpanel.model.GenerateBill;
@@ -43,8 +45,9 @@ import com.ats.adminpanel.model.billing.PostBillDetail;
 import com.ats.adminpanel.model.billing.PostBillHeader;
 import com.ats.adminpanel.model.flavours.Flavour;
 import com.ats.adminpanel.model.franchisee.FranchiseeList;
+import com.ats.adminpanel.model.grngvn.FrSetting;
 import com.ats.adminpanel.model.manspbill.SpecialCake;
-
+import com.ats.adminpanel.model.masters.SpMessage;
 @Controller
 @Scope("session")
 public class ManualBillController {
@@ -52,7 +55,7 @@ public class ManualBillController {
 
 	public AllFrIdNameList allFrIdNameList = new AllFrIdNameList();
 	SpecialCake specialCake = new SpecialCake();
-
+	List<SpMessage> spMessageList;
 	@RequestMapping(value = "/showManualBill", method = RequestMethod.GET)
 	public ModelAndView showManualBill(HttpServletRequest request, HttpServletResponse response) {
 
@@ -86,6 +89,16 @@ public class ManualBillController {
 
 			flavourList = restTemplate.getForObject(Constants.url + "/showFlavourList", FlavourList.class);
 
+			AllspMessageResponse allspMessageList = restTemplate.getForObject(Constants.url + "getAllSpMessage",
+					AllspMessageResponse.class);
+
+			spMessageList = allspMessageList.getSpMessage();
+			model.addObject("eventList", spMessageList);
+			
+			
+			//System.out.println("Special Cake List:" + specialCakeList.toString());
+			    model.addObject("spNo", "0");
+			    
 			model.addObject("unSelectedFrList", allFrIdNameList.getFrIdNamesList());
 			model.addObject("billBy", 0);
 
@@ -98,9 +111,36 @@ public class ManualBillController {
 
 		return model;
 	}
+	public static String getSpNo(HttpServletRequest request, HttpServletResponse response,int frId) {
+		String spNoNewStr= "";
+		try {
+		
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			RestTemplate restTemplate = new RestTemplate();
+			map.add("frId", frId);
+			FrSetting frSetting = restTemplate.postForObject(Constants.url + "getFrSettingValue", map, FrSetting.class);
 
+			int spNo = frSetting.getSpNo();
+
+			int length = String.valueOf(spNo).length();
+			length = 5 - length;
+			StringBuilder spNoNew = new StringBuilder(frSetting.getFrCode()+"-");
+
+			for (int i = 0; i < length; i++) {
+				String j = "0";
+				spNoNew.append(j);
+			}
+			spNoNew.append(String.valueOf(spNo));
+			spNoNewStr=""+spNoNew;
+			
+		} catch (Exception e) {
+
+		}
+
+		return spNoNewStr;
+
+	}
 	// getSpCakeForManBill
-
 	@RequestMapping(value = "/getSpCakeForManBill", method = RequestMethod.POST)
 	public ModelAndView getSpCakeForManBill(HttpServletRequest request, HttpServletResponse response) {
 
@@ -128,7 +168,11 @@ public class ManualBillController {
 				specialCake = searchSpCakeResponse.getSpecialCake();
 
 				model.addObject("specialCake", specialCake);
-
+			    int cutSec =searchSpCakeResponse.getSpCakeSup().getCutSection();
+                model.addObject("cutSec", cutSec);
+                Calendar c = Calendar.getInstance();
+                c.add(Calendar.DATE,Integer.parseInt(specialCake.getSpBookb4()));
+                model.addObject("convDate",new SimpleDateFormat("dd-MM-yyyy").format(c.getTime()));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -197,7 +241,20 @@ public class ManualBillController {
 
 			model.addObject("weightList", weightList);
 			model.addObject("billBy", billBy);
+			String spNo="";
+		      try {
+		    	  spNo=getSpNo(request,response,frId);
+		      }catch (Exception e) {
+		    	  spNo="";
+				e.printStackTrace();
+			}
+			//System.out.println("Special Cake List:" + specialCakeList.toString());
+			    model.addObject("spNo", spNo);
+			    AllspMessageResponse allspMessageList = restTemplate.getForObject(Constants.url + "getAllSpMessage",
+						AllspMessageResponse.class);
 
+				spMessageList = allspMessageList.getSpMessage();
+				model.addObject("eventList", spMessageList);
 		} catch (Exception e) {
 			System.err.println("Exce in getSpCakeForManBill" + e.getMessage());
 			e.printStackTrace();

@@ -283,7 +283,7 @@ select {
 										<label class="col-sm-3 col-lg-2 control-label">Order</label>
 									  <label class="col-sm-3 col-lg-2 control-label">
     <input type="radio" name="typename" class="type" value="0" checked="" id="t1" onchange="checkOrderByStatus()">
-    <label for="t1">By Rate</label>
+    <label for="t1">Billing</label>
   </label>
 <label class="col-sm-3 col-lg-2 control-label">
     <input type="radio" name="typename" class="type" value="1" id="t2" onchange="checkOrderByStatus()">
