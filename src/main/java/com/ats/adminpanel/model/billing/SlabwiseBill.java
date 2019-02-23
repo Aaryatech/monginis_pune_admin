@@ -1,9 +1,8 @@
 package com.ats.adminpanel.model.billing;
 
-import java.io.Serializable;
-
-
 public class SlabwiseBill{
+
+	private int billDetailNo;
 
 	private String itemHsncd;
 
@@ -20,9 +19,15 @@ public class SlabwiseBill{
 	private float totalTax;
 	
 	private float grandTotal;
+	
+	public int getBillDetailNo() {
+		return billDetailNo;
+	}
 
-	
-	
+	public void setBillDetailNo(int billDetailNo) {
+		this.billDetailNo = billDetailNo;
+	}
+
 	public float getBillQty() {
 		return billQty;
 	}
@@ -89,9 +94,10 @@ public class SlabwiseBill{
 
 	@Override
 	public String toString() {
-		return "SlabwiseBill [taxPer=" + taxPer + ", taxableAmt=" + taxableAmt + ", cgstAmt=" + cgstAmt + ", sgstAmt="
+		return "SlabwiseBill [billDetailNo=" + billDetailNo + ", itemHsncd=" + itemHsncd + ", taxPer=" + taxPer
+				+ ", billQty=" + billQty + ", taxableAmt=" + taxableAmt + ", cgstAmt=" + cgstAmt + ", sgstAmt="
 				+ sgstAmt + ", totalTax=" + totalTax + ", grandTotal=" + grandTotal + "]";
 	}
-	
+
 	
 }

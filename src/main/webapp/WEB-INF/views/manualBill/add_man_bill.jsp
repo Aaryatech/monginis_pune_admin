@@ -207,25 +207,7 @@ select {
 			<c:set var="allFranchiseeAndMenuList"	value="${allFranchiseeAndMenuList}" />
 			<div class="box-content">
 			<form action="${pageContext.request.contextPath}/getSpCakeForManBill" class="form-horizontal" id="validation-form" method="post">
-									
-<input type="hidden" name="menu_title" value="${menuTitle}"> 
-<input type="hidden" name="mode_add" id="mode_add" value="add_book">
-<input type="hidden" name="sp_id" id="sp_id" value="${specialCake.spId}">
-<input type="hidden" name="sp_min_weight" id="sp_min_weight" value="${specialCake.spMinwt}">
-<input type="hidden" name="sp_max_weight" id="sp_max_weight" value="${specialCake.spMaxwt}">
-<input type="hidden" name="sp_est_del_date" id="sp_est_del_date" value="${convDate}">
-
-<input type="hidden" name="sp_pro_time" id="sp_pro_time" value="${specialCake.spBookb4}">
-<input type="hidden" name="production_time" id="production_time" value="${specialCake.spBookb4} ">
-<input type="hidden" name="sp_code" id="sp_code" value="${specialCake.spCode}">
-<input type="hidden" name="sp_name" id="sp_name" value="${specialCake.spName}">
-<input type="hidden" name="fr_code" id="fr_code" value="4">
-<input type="hidden" name="spPhoUpload" id="spPhoUpload" value="${specialCake.spPhoupload}">
-<input type="hidden" name="isCustCh" id="isCustCh" value="${specialCake.isCustChoiceCk}">
-<input type="hidden" name="prevImage" id="prevImage" value="${specialCake.spImage}">
-<input type="hidden" name="isCustChoiceCk" id="isCustChoiceCk" value="${specialCake.isCustChoiceCk}">
-<input type="hidden" name="spPhoUpload" id="spPhoUpload" value="${specialCake.spPhoupload}">
-<input type="hidden" name="isSlotUsed" id="isSlotUsed" value="${specialCake.isSlotUsed}">
+	
 
 										<div class="form-group">
 											<div class="col-md-2">Franchisee</div>
@@ -289,7 +271,26 @@ select {
 				</form>	<hr>
 											
 		<form action="${pageContext.request.contextPath}/insertManualSpBill"  method="post" class="form-horizontal" name="from_ord" id="validation-form" enctype="multipart/form-data"onsubmit="return validate()">
-										
+<input type="hidden" name="fr_id" value="${frId}"> 
+<input type="hidden" name="billBy" value="${billBy}"> 					
+<input type="hidden" name="menu_title" value="${menuTitle}"> 
+<input type="hidden" name="mode_add" id="mode_add" value="add_book">
+<input type="hidden" name="sp_id" id="sp_id" value="${specialCake.spId}">
+<input type="hidden" name="sp_min_weight" id="sp_min_weight" value="${specialCake.spMinwt}">
+<input type="hidden" name="sp_max_weight" id="sp_max_weight" value="${specialCake.spMaxwt}">
+<input type="hidden" name="sp_est_del_date" id="sp_est_del_date" value="${convDate}">
+
+<input type="hidden" name="sp_pro_time" id="sp_pro_time" value="${specialCake.spBookb4}">
+<input type="hidden" name="production_time" id="production_time" value="${specialCake.spBookb4} ">
+<input type="hidden" name="sp_code" id="sp_code" value="${specialCake.spCode}">
+<input type="hidden" name="sp_name" id="sp_name" value="${specialCake.spName}">
+<input type="hidden" name="fr_code" id="fr_code" value="4">
+<input type="hidden" name="spPhoUpload" id="spPhoUpload" value="${specialCake.spPhoupload}">
+<input type="hidden" name="isCustCh" id="isCustCh" value="${specialCake.isCustChoiceCk}">
+<input type="hidden" name="prevImage" id="prevImage" value="${specialCake.spImage}">
+<input type="hidden" name="isCustChoiceCk" id="isCustChoiceCk" value="${specialCake.isCustChoiceCk}">
+<input type="hidden" name="spPhoUpload" id="spPhoUpload" value="${specialCake.spPhoupload}">
+<input type="hidden" name="isSlotUsed" id="isSlotUsed" value="${specialCake.isSlotUsed}">					
 						<div class="form-group">
 							<div class="col-md-2">Cake Name</div>
 							<div class="col-md-3" id="spDesc" style="color:#eb62ad;">
@@ -387,9 +388,10 @@ select {
 					   </c:otherwise>
 					</c:choose>
 					</div>
-	
-					<div class="col-md-1">Order No:</div>
-					<div class="col-md-3"><input class="form-control" placeholder="Order No" name="sp_place" id="sp_place" type="text" value="${spNo}" readonly></div>
+					<div class="col-md-1">Prod Date:</div>
+					<div class="col-md-3" ><input id="spProdDate"  data-date-format="dd-mm-yyyy" value="" autocomplete="off" class="form-control date-picker" placeholder="" name="spProdDate" type="text" required>
+					</div>
+					
 					<div class="col-md-1"style="border:1px dashed;font-weight: bold;">Add Rate </div>
 					<div class="col-md-1"  id="rate" style="border:1px dashed;font-weight: bold;">00</div>
 					 <input name="sp_add_rate" id="sp_add_rate"  type="hidden" value="0">
@@ -400,7 +402,8 @@ select {
 					<div class="col-md-3"><input class="form-control" placeholder="Customer Name" required name="sp_cust_name" type="text" id="sp_cust_name"required></div>
 		
 					<div class="col-md-1">DOB</div>
-					<div class="col-md-3" ><input id="datepicker4" data-date-format="dd-mm-yyyy" required autocomplete="off" class="form-control date-picker" placeholder="" name="datepicker4" type="text"required></div>
+					<div class="col-md-3" ><input id="datepicker4"  data-date-format="dd-mm-yyyy" required autocomplete="off" class="form-control date-picker" placeholder="" name="datepicker4" type="text"required>
+					</div>
     				
     				<!-----------------------4-------------------------------->
     				<div class="col-md-1"><b>E.Charges</b></div>
@@ -464,7 +467,10 @@ select {
 				    <!-----------------------7-End------------------------------->
 				    </div>
 				<div class="form-group">
-		        <div class="col-md-9" style="text-align: center;"></div>
+				<div class="col-md-2">Order No:</div>
+					<div class="col-md-3"><input class="form-control" placeholder="Order No" name="sp_place" id="sp_place" type="text" value="${spNo}" readonly></div>
+			
+		        <div class="col-md-4" style="text-align: center;"></div>
 					 <!---------------------8-------------------------------->
 						<div class="col-md-1"style="border:1px dashed;font-weight: bold;">GST RS.</div>
 						<c:set var="varGstRs" value="${(((sprRate*specialCake.spMinwt)*100)/((specialCake.spTax1+specialCake.spTax2)+100))*(specialCake.spTax1+specialCake.spTax2)/100}" />  

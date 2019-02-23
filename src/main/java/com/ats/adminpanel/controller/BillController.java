@@ -2469,8 +2469,8 @@ public class BillController {
 		String url = request.getParameter("url");
 		System.out.println("URL " + url);
 		// http://monginis.ap-south-1.elasticbeanstalk.com
-		   File f = new File("/home/ats-12/bill.pdf");
-		   //  File f = new File("/home/supertom/apache-tomcat-8.5.35/webapps/admin/bill.pdf");
+		//  File f = new File("/home/ats-12/bill.pdf");
+		    File f = new File("/home/supertom/apache-tomcat-8.5.35/webapps/admin/bill.pdf");
 		//File f = new File("/Users/MIRACLEINFOTAINMENT/ATS/uplaods/reports/ordermemo221.pdf");
 
 		System.out.println("I am here " + f.toString());
@@ -2488,8 +2488,8 @@ public class BillController {
 		ServletContext context = request.getSession().getServletContext();
 		String appPath = context.getRealPath("");
 		String filename = "ordermemo221.pdf";
-		 	String filePath = "/home/ats-12/bill.pdf";
-		 	// String filePath = "/home/supertom/apache-tomcat-8.5.35/webapps/admin/bill.pdf";
+		// 	String filePath = "/home/ats-12/bill.pdf";
+		 String filePath = "/home/supertom/apache-tomcat-8.5.35/webapps/admin/bill.pdf";
 		//String filePath = "/Users/MIRACLEINFOTAINMENT/ATS/uplaods/reports/ordermemo221.pdf";
 
 		// construct the complete absolute path of the file
