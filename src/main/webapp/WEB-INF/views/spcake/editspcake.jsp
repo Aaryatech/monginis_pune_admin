@@ -684,7 +684,14 @@
 												</select>
 											</div>
 										</div>
-
+<div class="form-group">
+											<label class="col-sm-3 col-lg-2 control-label">No.Of Chars</label>
+											<div class="col-sm-9 col-lg-10 controls">
+                                               <input type="text" name="no_of_char" id="no_of_char"
+											placeholder="No. of characters" class="form-control" value="${specialCake.noOfChars}"
+											data-rule-required="true" data-rule-number="true" />
+											</div>
+										</div>
                                       <div class="form-group">
 											<label class="col-sm-3 col-lg-2 control-label">Is Customer Choice Cake?</label>
 											<div class="col-sm-9 col-lg-10 controls">

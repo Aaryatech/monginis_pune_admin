@@ -247,7 +247,6 @@
 												Weight</label>
 											<div class="col-sm-9 col-lg-10 controls">
 												<input type="text" name="max_weight" id="max_weight"
-													max_weight""
 													placeholder="Max Weight" data-rule-required="true"
 													class="form-control" data-rule-number="true"
 													 />
@@ -406,7 +405,7 @@
 													
 											</div>
 										</div>
-	                          <div class="form-group">
+	                              <div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Cess(%)</label>
 									<div class="col-sm-9 col-lg-10 controls">
 										<input type="text" name="sp_cess" id="sp_cess"
@@ -452,6 +451,14 @@
 													>
                                                		
 												</select>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-3 col-lg-2 control-label">No.Of Chars</label>
+											<div class="col-sm-9 col-lg-10 controls">
+                                               <input type="text" name="no_of_char" id="no_of_char"
+											placeholder="No. of characters" class="form-control"
+											data-rule-required="true" data-rule-number="true" />
 											</div>
 										</div>
 
@@ -506,7 +513,7 @@
 												</label>
 											</div>
 										</div>
-<c:set var="eventList" value="${eventList}"></c:set>
+									<c:set var="eventList" value="${eventList}"></c:set>
 										<div class="form-group">
 											<label class="col-sm-3 col-lg-2 control-label">Allow
 												to upload Photo</label>
@@ -558,7 +565,7 @@
 			</div>
 			<!-- END Main Content -->
 			<footer>
-			<p>2018 © MONGINIS.</p>
+			<p>2019 © MONGINIS.</p>
 			</footer>
 
 			<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i

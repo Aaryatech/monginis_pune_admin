@@ -429,6 +429,8 @@ public class SpecialCakeController {
 		
 		int isSlotUsed = Integer.parseInt(request.getParameter("isSlotUsed"));
 		
+		int noOfChars=Integer.parseInt(request.getParameter("no_of_char"));
+		
 		//--------------------------------Sp Supplement Data--------------------
 		String spHsncd="";int uomId=0; float spCess=0.0f;String spUom="";int cutSection = 0;
 		try {
@@ -528,7 +530,7 @@ public class SpecialCakeController {
 		map.add("timeTwoappli", type2app);
 		map.add("isUsed", isused);
 		map.add("spPhoupload", allowphupload);
-		
+		map.add("noOfChars", noOfChars);
 	
 		map.add("spDesc",spDesc);
 		map.add("orderQty",orderQty);
@@ -843,7 +845,8 @@ public class SpecialCakeController {
 		int allowphupload = Integer.parseInt(request.getParameter("allowphupload"));
 		
 		int id = Integer.parseInt(request.getParameter("spId"));
-		
+		int noOfChars=Integer.parseInt(request.getParameter("no_of_char"));
+
 		//--------------------------------Sp Supplement Data--------------------
 				int suppId = 0;String spHsncd="";int uomId=0; float spCess=0.0f;String spUom="";int cutSection = 0;
 				try {
@@ -962,7 +965,7 @@ public class SpecialCakeController {
 		map.add("isUsed", isused);
 		map.add("spphoupload", allowphupload);
 		map.add("id", id);
-		
+		map.add("noOfChars", noOfChars);
 		map.add("spDesc",spDesc);
 		map.add("orderQty",orderQty);
 		map.add("orderDiscount",orderDisc);

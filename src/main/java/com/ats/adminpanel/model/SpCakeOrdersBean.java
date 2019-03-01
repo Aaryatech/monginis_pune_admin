@@ -20,6 +20,8 @@ public class SpCakeOrdersBean {
 	private float spSelectedWeight;
     private String spBookedForName;
 	private int isAllocated;
+	private int isBillGenerated;
+	
 	
 	
 /*
@@ -32,7 +34,15 @@ public class SpCakeOrdersBean {
     }
     */
 	
-    public String getSpBookedForName() {
+    public int getIsBillGenerated() {
+		return isBillGenerated;
+	}
+
+	public void setIsBillGenerated(int isBillGenerated) {
+		this.isBillGenerated = isBillGenerated;
+	}
+
+	public String getSpBookedForName() {
 		return spBookedForName;
 	}
 
@@ -144,10 +154,10 @@ public class SpCakeOrdersBean {
 	public String toString() {
 		return "SpCakeOrdersBean [spOrderNo=" + spOrderNo + ", spCode=" + spCode + ", spName=" + spName + ", spfName="
 				+ spfName + ", spEvents=" + spEvents + ", spDeliveryDate=" + spDeliveryDate + ", spPrice=" + spPrice
-				+ ", spTotalAddRate=" + spTotalAddRate + ", frName=" + frName + ", itemId=" + itemId + "]";
+				+ ", spTotalAddRate=" + spTotalAddRate + ", frName=" + frName + ", itemId=" + itemId
+				+ ", spSelectedWeight=" + spSelectedWeight + ", spBookedForName=" + spBookedForName + ", isAllocated="
+				+ isAllocated + ", isBillGenerated=" + isBillGenerated + "]";
 	}
 
-	
-	
 	
 }

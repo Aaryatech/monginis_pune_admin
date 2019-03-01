@@ -17,9 +17,9 @@
 
 
 	<c:url var="callspCakeOrderProcess" value="/spCakeOrderProcess" />
- <c:url var="saveSpOrder" value="/saveSpOrder" />
-      <c:url var="deleteSpOrder" value="/deleteSpOrder" />
-
+ 	<c:url var="saveSpOrder" value="/saveSpOrder" />
+    <c:url var="deleteSpOrder" value="/deleteSpOrder" />
+    <c:url var="updateBillStatusForSp" value="/updateBillStatusForSp" />
 	 
 
 
@@ -267,7 +267,7 @@
 														<th width="91" align="left">Total</th>
 													  <th width="47" align="left">View</th>  
 														<th width="47" align="left">PDF</th>
-														<th width="87" align="left">Action</th>
+														<th width="150" align="left">Action</th>
 														
 														
 													</tr>
@@ -352,7 +352,7 @@
 			</div>
 			<!-- END Main Content -->
 			<footer>
-			<p>2018 © MONGINIS.</p>
+			<p>2019 © MONGINIS.</p>
 			</footer>
 
 			<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
@@ -499,8 +499,14 @@
 								  	tr.append($('<td></td>').html('<a href="${pageContext.request.contextPath}/showHtmlViewSpcakeOrder/'+spCakeOrder.spOrderNo+'" target="blank"><i class="fa fa-file-text-o" style="font-size:15px;"></i></a>'));  
 								  	
 								    tr.append($('<td></td>').html('<a href="${pageContext.request.contextPath}/showSpcakeOrderPdf/'+spCakeOrder.spOrderNo+'/'+(key+1)+'" target="blank"><i class="fa fa-file-pdf-o" style="font-size:15px;"></i></a>'));  
-								  	tr.append($('<td></td>').html('<a href=# class=action_btn onclick=saveSpOrder('+spCakeOrder.spOrderNo+'); title=Save><i class="fa fa-save" style="font-size:17px;"></i></a>&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=deleteSpOrder('+spCakeOrder.spOrderNo+'); title=Delete><i class="glyphicon glyphicon-remove" style="font-size:17px;"></i></a>')); 
+								    if(spCakeOrder.isBillGenerated==0){
+								    tr.append($('<td></td>').html('<a href=# class=action_btn onclick=updateBillGenStatusToProd('+spCakeOrder.spOrderNo+'); title="Take To Production"><i class="fa fa-industry" style="font-size:17px;"></i></a>&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=saveSpOrder('+spCakeOrder.spOrderNo+'); title=Save><i class="fa fa-save" style="font-size:17px;"></i></a>&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=deleteSpOrder('+spCakeOrder.spOrderNo+'); title=Delete><i class="glyphicon glyphicon-remove" style="font-size:17px;"></i></a>')); 
+								    }
+								    else
+								    	{
+									tr.append($('<td></td>').html('<a href=# class=action_btn onclick=saveSpOrder('+spCakeOrder.spOrderNo+'); title=Save><i class="fa fa-save" style="font-size:17px;"></i></a>&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=deleteSpOrder('+spCakeOrder.spOrderNo+'); title=Delete><i class="glyphicon glyphicon-remove" style="font-size:17px;"></i></a>')); 
 
+								    	}
 									$('#table1 tbody').append(tr);
 									document.getElementById("addon"+spCakeOrder.spOrderNo).value=spCakeOrder.isAllocated;
 									})
@@ -571,8 +577,13 @@
 						  	tr.append($('<td></td>').html('<a href="${pageContext.request.contextPath}/showHtmlViewSpcakeOrder/'+spCakeOrder.spOrderNo+'" target="blank"><i class="fa fa-file-text-o" style="font-size:15px;"></i></a>'));  
 						  	
 						    tr.append($('<td></td>').html('<a href="${pageContext.request.contextPath}/showSpcakeOrderPdf/'+spCakeOrder.spOrderNo+'/'+(key+1)+'" target="blank"><i class="fa fa-file-pdf-o" style="font-size:15px;"></i></a>'));  
-						  	tr.append($('<td></td>').html('<a href=# class=action_btn onclick=saveSpOrder('+spCakeOrder.spOrderNo+'); title=Save><i class="fa fa-save" style="font-size:17px;"></i></a>&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=deleteSpOrder('+spCakeOrder.spOrderNo+'); title=Delete><i class="glyphicon glyphicon-remove" style="font-size:17px;"></i></a>')); 
-
+						    if(spCakeOrder.isBillGenerated==0){
+						    tr.append($('<td></td>').html('<a href=# class=action_btn onclick=updateBillGenStatusToProd('+spCakeOrder.spOrderNo+'); title="Take To Production"><i class="fa fa-industry" style="font-size:17px;"></i></a>&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=saveSpOrder('+spCakeOrder.spOrderNo+'); title=Save><i class="fa fa-save" style="font-size:17px;"></i></a>&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=deleteSpOrder('+spCakeOrder.spOrderNo+'); title=Delete><i class="glyphicon glyphicon-remove" style="font-size:17px;"></i></a>')); 
+						    }
+						    else
+						    	{
+							tr.append($('<td></td>').html('<a href=# class=action_btn onclick=saveSpOrder('+spCakeOrder.spOrderNo+'); title=Save><i class="fa fa-save" style="font-size:17px;"></i></a>&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=deleteSpOrder('+spCakeOrder.spOrderNo+'); title=Delete><i class="glyphicon glyphicon-remove" style="font-size:17px;"></i></a>')); 
+						    	}
 							$('#table1 tbody').append(tr);
 							document.getElementById("addon"+spCakeOrder.spOrderNo).value=spCakeOrder.isAllocated;
 							
@@ -630,8 +641,13 @@
 						  	
 						    tr.append($('<td></td>').html('<a href="${pageContext.request.contextPath}/showSpcakeOrderPdf/'+spCakeOrder.spOrderNo+'/'+(key+1)+'" target="blank"><i class="fa fa-file-pdf-o" style="font-size:15px;"></i></a>'));  
 						  
-						    tr.append($('<td></td>').html('<a href=# class=action_btn onclick=saveSpOrder('+spCakeOrder.spOrderNo+');title=Save><i class="fa fa-save" style="font-size:17px;"></i></a>&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=deleteSpOrder('+spCakeOrder.spOrderNo+'); title=Delete><i class="glyphicon glyphicon-remove" style="font-size:17px;"></i></a>')); 
+						    if(spCakeOrder.isBillGenerated==0){
+						    tr.append($('<td></td>').html('<a href=# class=action_btn onclick=updateBillGenStatusToProd('+spCakeOrder.spOrderNo+'); title="Take To Production"><i class="fa fa-industry" style="font-size:17px;"></i></a>&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=saveSpOrder('+spCakeOrder.spOrderNo+');title=Save><i class="fa fa-save" style="font-size:17px;"></i></a>&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=deleteSpOrder('+spCakeOrder.spOrderNo+'); title=Delete><i class="glyphicon glyphicon-remove" style="font-size:17px;"></i></a>')); 
+						    }else
+						    	{
+							    tr.append($('<td></td>').html('<a href=# class=action_btn onclick=saveSpOrder('+spCakeOrder.spOrderNo+');title=Save><i class="fa fa-save" style="font-size:17px;"></i></a>&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=deleteSpOrder('+spCakeOrder.spOrderNo+'); title=Delete><i class="glyphicon glyphicon-remove" style="font-size:17px;"></i></a>')); 
 
+						    	}
 							$('#table1 tbody').append(tr);
 							document.getElementById("addon"+spCakeOrder.spOrderNo).value=spCakeOrder.isAllocated;
 							
@@ -642,14 +658,13 @@
 		}
 		
 	</script>
-		<script>
+<script>
 	function exportToExcel()
 		{
-			 
 			window.open("${pageContext.request.contextPath}/exportToExcel");
-					document.getElementById("expExcel").disabled=true;
+			document.getElementById("expExcel").disabled=true;
 		}
-			</script>
+</script>
 <script type="text/javascript">
 
 function disableFr(){
@@ -673,6 +688,26 @@ function disableRoute(){
 
 }
 
+</script>
+
+<script type="text/javascript">
+function updateBillGenStatusToProd(spOrderNo)
+{
+	$.getJSON('${updateBillStatusForSp}',
+			{
+				spOrderNo:spOrderNo,
+				ajax : 'true',
+			},
+			function(data) {
+				
+				if(data.error==false)
+					{
+					alert("Special Cake Taken for Production");
+					}
+				
+			});
+	
+}
 </script>
 </body>
 </html>

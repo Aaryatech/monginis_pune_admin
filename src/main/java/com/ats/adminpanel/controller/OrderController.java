@@ -743,6 +743,26 @@ public class OrderController {
 
 	//ganesh 24-10-2017
 	
+	@RequestMapping(value = "/updateBillStatusForSp",method = RequestMethod.GET)
+	public  @ResponseBody  Info updateBillStatusForSp(HttpServletRequest request, HttpServletResponse response) {
+		Info info=null;
+		try {
+        int spOrderNo = Integer.parseInt(request.getParameter("spOrderNo"));
+		
+		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		map.add("spOrderNo", spOrderNo);
+		map.add("billStatus", 1);
+		RestTemplate restTemp = new RestTemplate();
+		 info= restTemp.postForObject(Constants.url + "updateBillStatusToProduction", map, Info.class);
+		
+		}
+		catch(Exception e)
+		{
+			System.out.println("Exception In update status of Order"+e.getMessage());
+		}
+		return info;
+	}
+	
 	@RequestMapping(value = "/callDeleteOrder",method = RequestMethod.GET)
 	public  @ResponseBody  List<GetOrder> deleteOrder(HttpServletRequest request, HttpServletResponse response) {
 	
