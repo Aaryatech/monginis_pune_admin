@@ -337,7 +337,7 @@ public class ReportControllerV2 {
 				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 				cell.setPaddingRight(8);
 				table.addCell(cell);
-
+ 
 				cell = new PdfPCell(new Phrase(String.valueOf(saleReportList.get(j).getGrnValue()), headFont));
 				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
