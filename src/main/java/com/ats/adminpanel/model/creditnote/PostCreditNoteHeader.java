@@ -8,10 +8,8 @@ public class PostCreditNoteHeader {
 	
 	
 	private int crnId;
-	
 	//newly added
 	private String crnNo;
-	
 
 	private Date crnDate;
 
