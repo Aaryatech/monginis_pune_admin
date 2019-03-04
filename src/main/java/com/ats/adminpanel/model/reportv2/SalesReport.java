@@ -1,4 +1,4 @@
-package com.ats.webapi.model.reportv2;
+package com.ats.adminpanel.model.reportv2;
 
 public class SalesReport {
 	
