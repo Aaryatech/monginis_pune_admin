@@ -451,15 +451,11 @@ select {
 					</div>
 		
 					<div class="form-group">
-					<div  id="ctype1">
-						<div class="col-md-2" id="cktype">Cake Type</div>
-						<div class="col-md-3"><input class="form-control"  name="ctype" type="text" id="ctype" required ></div>
-					</div> 
-					<input class="texboxitemcode"  name="temp" type="hidden" id="temp" value="${cutSec}" required >
-					<div class="col-md-1">Cust Addr</div>
-						<div class="col-md-3"><input name="gst_no" id="gst_no" class="form-control" type="text"></div>
-						   
-					
+					<div class="col-md-2">Cust Email</div>
+						<div class="col-md-3"><input name="cust_address" id="cust_address" class="form-control" type="text"></div>
+					<div class="col-md-2">Cust GST No.</div>
+						<div class="col-md-3"><input name="cust_gst_no" id="cust_gst_no" class="form-control" type="text"></div>  
+					<!--  <div class="col-md-4" style="text-align: center;"></div> -->
 					  <!-----------------------7-------------------------------->
 	    		   <div class="col-md-1"style="border:1px dashed;"><b>GST (%)</b></div>
 				   <div class="col-md-1" id="taxPer3" style="border:1px dashed;font-weight:bold;"> ${specialCake.spTax1+specialCake.spTax2} </div>
@@ -469,8 +465,13 @@ select {
 				<div class="form-group">
 				<div class="col-md-2">Order No:</div>
 					<div class="col-md-3"><input class="form-control" placeholder="Order No" name="sp_place" id="sp_place" type="text" value="${spNo}" readonly></div>
-			
-		        <div class="col-md-4" style="text-align: center;"></div>
+			<div  id="ctype1">
+						<div class="col-md-2" id="cktype">Cake Type</div>
+						<div class="col-md-2"><input class="form-control"  name="ctype" type="text" id="ctype" required ></div>
+					</div> 
+					<input class="texboxitemcode"  name="temp" type="hidden" id="temp" value="${cutSec}" required >
+					
+		       
 					 <!---------------------8-------------------------------->
 						<div class="col-md-1"style="border:1px dashed;font-weight: bold;">GST RS.</div>
 						<c:set var="varGstRs" value="${(((sprRate*specialCake.spMinwt)*100)/((specialCake.spTax1+specialCake.spTax2)+100))*(specialCake.spTax1+specialCake.spTax2)/100}" />  

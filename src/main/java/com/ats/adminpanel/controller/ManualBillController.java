@@ -742,6 +742,9 @@ public class ManualBillController {
 			spCakeOrder.setExtraCharges(exCharges);;
 			spCakeOrder.setDisc(disc);
 			spCakeOrder.setExVar1(ctype);
+			spCakeOrder.setCustEmail("");//hardcoded
+			spCakeOrder.setCustGstin("");//hardcoded
+			spCakeOrder.setSlipNo("");//hardcoded
 			// Float floatBackEndRate = backendSpRate*spWeight;
 			// float intAddonRatePerKG = Float.parseFloat(spAddRate);
 

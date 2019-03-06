@@ -54,6 +54,10 @@ private float extraCharges;
 
 private float disc;
 
+private String custGstin;//new
+
+private String custEmail;//new
+
 private int exInt1;
 
 private int exInt2;
@@ -62,9 +66,28 @@ private String exVar1;
 
 private String exVar2;
 
+private String slipNo;
 
 
 
+public String getSlipNo() {
+	return slipNo;
+}
+public void setSlipNo(String slipNo) {
+	this.slipNo = slipNo;
+}
+public String getCustGstin() {
+	return custGstin;
+}
+public void setCustGstin(String custGstin) {
+	this.custGstin = custGstin;
+}
+public String getCustEmail() {
+	return custEmail;
+}
+public void setCustEmail(String custEmail) {
+	this.custEmail = custEmail;
+}
 public float getExtraCharges() {
 	return extraCharges;
 }
@@ -380,8 +403,9 @@ public String toString() {
 			+ ", rmAmount=" + rmAmount + ", tax1=" + tax1 + ", tax2=" + tax2 + ", tax1Amt=" + tax1Amt + ", tax2Amt="
 			+ tax2Amt + ", orderPhoto=" + orderPhoto + ", orderDate=" + orderDate + ", orderPhoto2=" + orderPhoto2
 			+ ", isSlotUsed=" + isSlotUsed + ", isBillGenerated=" + isBillGenerated + ", isAllocated=" + isAllocated
-			+ ", extraCharges=" + extraCharges + ", disc=" + disc + ", exInt1=" + exInt1 + ", exInt2=" + exInt2
-			+ ", exVar1=" + exVar1 + ", exVar2=" + exVar2 + "]";
+			+ ", extraCharges=" + extraCharges + ", disc=" + disc + ", custGstin=" + custGstin + ", custEmail="
+			+ custEmail + ", exInt1=" + exInt1 + ", exInt2=" + exInt2 + ", exVar1=" + exVar1 + ", exVar2=" + exVar2
+			+ ", slipNo=" + slipNo + "]";
 }
 
 
