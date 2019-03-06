@@ -1,9 +1,21 @@
-package com.ats.webapi.model.reportv2;
+package com.ats.adminpanel.model.reportv2;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class CrNoteRegSp {
+	
+	private int crndId;
+	
+	
+	public int getCrndId() {
+		return crndId;
+	}
+
+	public void setCrndId(int crndId) {
+		this.crndId = crndId;
+	}
+
 	private String hsnCode;
 	
 	private int crnId;
@@ -163,11 +175,11 @@ public class CrNoteRegSp {
 
 	@Override
 	public String toString() {
-		return "CrNoteRegSp [hsnCode=" + hsnCode + ", crnId=" + crnId + ", crnDate=" + crnDate + ", invoiceNo="
-				+ invoiceNo + ", billDate=" + billDate + ", frName=" + frName + ", frCode=" + frCode + ", frGstNo="
-				+ frGstNo + ", crnQty=" + crnQty + ", crnTaxable=" + crnTaxable + ", cgstPer=" + cgstPer + ", sgstPer="
-				+ sgstPer + ", igstPer=" + igstPer + ", cgstAmt=" + cgstAmt + ", sgstAmt=" + sgstAmt + ", igstAmt="
-				+ igstAmt + ", crnAmt=" + crnAmt + "]";
+		return "CrNoteRegSp [crndId=" + crndId + ", hsnCode=" + hsnCode + ", crnId=" + crnId + ", crnDate=" + crnDate
+				+ ", invoiceNo=" + invoiceNo + ", billDate=" + billDate + ", frName=" + frName + ", frCode=" + frCode
+				+ ", frGstNo=" + frGstNo + ", crnQty=" + crnQty + ", crnTaxable=" + crnTaxable + ", cgstPer=" + cgstPer
+				+ ", sgstPer=" + sgstPer + ", igstPer=" + igstPer + ", cgstAmt=" + cgstAmt + ", sgstAmt=" + sgstAmt
+				+ ", igstAmt=" + igstAmt + ", crnAmt=" + crnAmt + "]";
 	}
 
 }
