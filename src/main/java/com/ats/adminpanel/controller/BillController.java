@@ -2483,7 +2483,7 @@ public class BillController {
 
 			System.out.println("Pdf conversion exception " + e.getMessage());
 		}
-
+ 
 		// get absolute path of the application
 		ServletContext context = request.getSession().getServletContext();
 		String appPath = context.getRealPath("");
