@@ -632,7 +632,7 @@ public class CreditNoteController {
 				List<String> rowData=new ArrayList<String>();
 				 
 				rowData.add("Sr no");
-				rowData.add("Crn Id");
+				rowData.add("Crn No");
 				rowData.add("Date");
 				rowData.add("Type");
 				rowData.add("Fr Id");
@@ -682,7 +682,7 @@ public class CreditNoteController {
 					 
 				 
 					 rowData.add(""+(i+1));
-					 rowData.add(""+creditNoteList.getCreditNoteList().get(i).getvNo());
+					 rowData.add(""+creditNoteList.getCreditNoteList().get(i).getCrnNo());
 					rowData.add(""+creditNoteList.getCreditNoteList().get(i).getDate());
 					rowData.add(""+creditNoteList.getCreditNoteList().get(i).getvType()); 
 					rowData.add(""+creditNoteList.getCreditNoteList().get(i).getFrId()); 
@@ -777,7 +777,7 @@ public class CreditNoteController {
 				List<String> rowData=new ArrayList<String>();
 				 
 				rowData.add("Sr no");
-				rowData.add("Crn Id");
+				rowData.add("Crn No");
 				rowData.add("Date");
 				rowData.add("Type");
 				rowData.add("Party Name"); 
@@ -801,7 +801,7 @@ public class CreditNoteController {
 					 
 				 
 					 rowData.add(""+(i+1));
-					 rowData.add(""+report.getCrnId());
+					 rowData.add(""+report.getCrnNo());
 					 rowData.add(""+report.getCrnDate());
 					 if(report.getIsGrn()==1) {
 						 rowData.add("GRN");
@@ -1095,7 +1095,7 @@ public class CreditNoteController {
 				  cell.setPadding(4);
 				table.addCell(cell);
 
-				cell = new PdfPCell(new Phrase(""+report.getCrnId(), headFont));
+				cell = new PdfPCell(new Phrase(""+report.getCrnNo(), headFont));
 				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 				cell.setHorizontalAlignment(Element.ALIGN_LEFT);
 				cell.setPaddingRight(2);
@@ -1434,7 +1434,7 @@ public class CreditNoteController {
 				cNoteHeaderPrint.setToDate(tDate);
 
 				cNoteHeaderPrint.setCrnDetails(crnPrintDetailList);
-				
+				cNoteHeaderPrint.setCrnNo(creditHeaderList.get(i).getCrnNo());
 				cNoteHeaderPrint.setSrNoDateList(srNoDateList);
 				cNoteHeaderPrint.setSrNoList(srNoList);
 				cNoteHeaderPrint.setExInt1(creditHeaderList.get(i).getExInt1());

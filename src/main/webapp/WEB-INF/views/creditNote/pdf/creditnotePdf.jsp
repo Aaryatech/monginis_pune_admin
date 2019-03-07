@@ -37,7 +37,7 @@ contentType="text/html; charset=ISO8859_1"%>
   
   </tr>
     <tr >
-    <td   width="30%" colspan="3" align="left"  style="border-top:1px solid #313131;padding:4px;font-size:10px;font-weight:bold;">&nbsp;Credit Note No.&nbsp;&nbsp;&nbsp;: ${headerH.creditHeader.crnId}</td>
+    <td   width="30%" colspan="3" align="left"  style="border-top:1px solid #313131;padding:4px;font-size:10px;font-weight:bold;">&nbsp;Credit Note No.&nbsp;&nbsp;&nbsp;: ${headerH.creditHeader.crnNo}</td>
       <td   width="70%" colspan="6" align="left"  style="border-top:1px solid #313131;border-left:1px solid #313131;padding:4px;font-size:10px;font-weight:bold;">&nbsp;Invoice No.&nbsp;&nbsp;&nbsp;: ${headerH.creditHeader.exVarchar1}</td>
   
   </tr>

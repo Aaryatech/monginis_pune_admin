@@ -125,7 +125,7 @@
 									<label class="col-sm-3 col-lg-2 control-label">Franchise</label>
 
 									<div class="col-sm-5 col-lg-3 controls">
-<select data-placeholder="Choose Franchisee"
+										<select data-placeholder="Choose Franchisee"
 											type="text" class="multiselect" multiple="multiple" role="multiselect" tabindex="6"
 											id="selectFr" name="selectFr" onchange="getDate()">
 									<!-- 	<select data-placeholder="Choose Franchisee"
@@ -355,7 +355,7 @@
 
 			  	tr.append($('<td></td>').html(headers.crnDate));
 			  	
-			  	tr.append($('<td></td>').html(headers.crnId));
+			  	tr.append($('<td></td>').html(headers.crnNo));
 				tr.append($('<td></td>').html(headers.exVarchar1));//inv no
 
 			  	tr.append($('<td></td>').html(headers.frName));
