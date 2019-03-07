@@ -2,12 +2,13 @@
 	pageEncoding="UTF-8"%><%@ taglib
 	uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-	
-	 <script src="${pageContext.request.contextPath}/resources/js/main.js"></script>
-	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-	
-	<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
-	<body>
+
+<script src="${pageContext.request.contextPath}/resources/js/main.js"></script>
+<script type="text/javascript"
+	src="https://www.gstatic.com/charts/loader.js"></script>
+
+<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
+<body>
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 	<c:url var="getBillList" value="/getSaleBillwiseByFr"></c:url>
 
@@ -28,7 +29,7 @@
 	<!-- BEGIN Content -->
 	<div id="main-content">
 		<!-- BEGIN Page Title -->
-	<!-- 	<div class="page-title">
+		<!-- 	<div class="page-title">
 			<div>
 				<h1>
 					<i class="fa fa-file-o"></i>Billwise Report by Fr
@@ -39,7 +40,7 @@
 		<!-- END Page Title -->
 
 		<!-- BEGIN Breadcrumb -->
-	<%-- 	<div id="breadcrumbs">
+		<%-- 	<div id="breadcrumbs">
 			<ul class="breadcrumb">
 				<li><i class="fa fa-home"></i> <a
 					href="${pageContext.request.contextPath}/home">Home</a> <span
@@ -97,7 +98,9 @@
 								onchange="disableFr()">
 								<option value="0">Select Route</option>
 								<c:forEach items="${routeList}" var="route" varStatus="count">
-									<option value="${route.routeId}"><c:out value="${route.routeName}"/> </option>
+									<option value="${route.routeId}"><c:out
+											value="${route.routeName}" />
+									</option>
 
 								</c:forEach>
 							</select>
@@ -112,11 +115,11 @@
 								class="form-control chosen" multiple="multiple" tabindex="6"
 								id="selectFr" name="selectFr" onchange="disableRoute()">
 
-								<option value="-1"><c:out value="All"/></option>
+								<option value="-1"><c:out value="All" /></option>
 
 								<c:forEach items="${unSelectedFrList}" var="fr"
 									varStatus="count">
-									<option value="${fr.frId}"><c:out value="${fr.frName}"/></option>
+									<option value="${fr.frId}"><c:out value="${fr.frName}" /></option>
 								</c:forEach>
 							</select>
 
@@ -129,12 +132,13 @@
 					<div class="col-md-12" style="text-align: center;">
 						<button class="btn btn-info" onclick="searchReport()">Search
 							Billwise Report</button>
-									    <button class="btn search_btn" onclick="showChart()" >Graph</button>
-							
-							
-												<button class="btn btn-primary" value="PDF" id="PDFButton" onclick="genPdf()">PDF</button>
-							
-							<%-- <a href="${pageContext.request.contextPath}/pdfForReport?url=showSaleBillwiseByFrPdf"
+						<button class="btn search_btn" onclick="showChart()">Graph</button>
+
+
+						<button class="btn btn-primary" value="PDF" id="PDFButton"
+							onclick="genPdf()">PDF</button>
+
+						<%-- <a href="${pageContext.request.contextPath}/pdfForReport?url=showSaleBillwiseByFrPdf"
 								target="_blank">PDF</a> --%>
 
 					</div>
@@ -153,55 +157,57 @@
 				</div>
 
 			</div>
-	
 
 
-		<div class="box" >
-			<div class="box-title">
-				<h3>
-					<i class="fa fa-list-alt"></i>Bill Report
-				</h3>
 
-			</div>
+			<div class="box">
+				<div class="box-title">
+					<h3>
+						<i class="fa fa-list-alt"></i>Bill Report
+					</h3>
 
-			<form id="submitBillForm"
-				action="${pageContext.request.contextPath}/submitNewBill"
-				method="post">
-				
-						<div class="col-md-12 table-responsive" style="background-color: white;">
-							<table class="table table-bordered table-striped fill-head "
-								style="width: 100%" id="table_grid" >
-								<thead style="background-color: #f3b5db;">
-									<tr>
-										<th>Sr.No.</th>
-										<th>Party Name</th>
-										<th>City</th>
-										<th>GSTIN</th>
-										<th>Basic Value</th>
-										<th>CGST</th>
-										<th>SGST</th>
-										<th>IGST</th>
-										<th>Round Off</th>
-										<th>Total</th>
-									</tr>
-								</thead>
-								<tbody>
+				</div>
 
-								</tbody>
-							</table>
-							<div class="form-group" style="display: none;" id="range">
-								 
-											 
-											 
-											<div class="col-sm-3  controls">
-											 <input type="button" id="expExcel" class="btn btn-primary" value="EXPORT TO Excel" onclick="exportToExcel();" disabled="disabled">
-											</div>
-											</div>
-								<div align="center" id="showchart" style="display: none">
+				<form id="submitBillForm"
+					action="${pageContext.request.contextPath}/submitNewBill"
+					method="post">
+
+					<div class="col-md-12 table-responsive"
+						style="background-color: white;">
+						<table class="table table-bordered table-striped fill-head "
+							style="width: 100%" id="table_grid">
+							<thead style="background-color: #f3b5db;">
+								<tr>
+									<th>Sr.No.</th>
+									<th>Party Name</th>
+									<th>City</th>
+									<th>GSTIN</th>
+									<th>Basic Value</th>
+									<th>CGST</th>
+									<th>SGST</th>
+									<th>IGST</th>
+									<th>Round Off</th>
+									<th>Total</th>
+								</tr>
+							</thead>
+							<tbody>
+
+							</tbody>
+						</table>
+						<div class="form-group" style="display: none;" id="range">
+
+
+
+							<div class="col-sm-3  controls">
+								<input type="button" id="expExcel" class="btn btn-primary"
+									value="EXPORT TO Excel" onclick="exportToExcel();"
+									disabled="disabled">
+							</div>
 						</div>
+						<div align="center" id="showchart" style="display: none"></div>
 					</div>
 
-<!-- 				</div>
+					<!-- 				</div>
 				
 				<div id="chart" style="display: none"><br><br><br>
 	<hr><div  >
@@ -213,376 +219,435 @@
 			
 				 
 				</div> -->
-				
-				
-				<div id="chart" style="background-color: white;"> <br><br> <br>
-	<hr>
-        
-    <!-- <table class="columns">
+
+
+					<div id="chart" style="background-color: white;">
+						<br>
+						<br> <br>
+						<hr>
+
+						<!-- <table class="columns">
       <tr>
         <td><div id="chart_div" style="width: 50%" ></div></td>
         <td><div id="PieChart_div" style="width: 50%"></div></td>
       </tr>
     </table> -->
-   
-    <div id="chart_div" style="width: 100%; height: 100%;"></div>
-    
-    
-     <div id="PieChart_div" style="width: 100%; height: 100%;"></div>
-			 
-				 
-				</div>
-			</form>
-		</div>	</div>
+
+						<div id="chart_div" style="width: 100%; height: 100%;"></div>
+
+
+						<div id="PieChart_div" style="width: 100%; height: 100%;"></div>
+
+
+					</div>
+				</form>
+			</div>
+		</div>
 	</div>
 	<!-- END Main Content -->
-	
+
 	<footer>
-	<p>2018 © Monginis.</p>
+		<p>2018 © Monginis.</p>
 	</footer>
-	
+
 
 	<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
 		class="fa fa-chevron-up"></i></a>
 
 	<script type="text/javascript">
 		function searchReport() {
-		//	var isValid = validate();
-	document.getElementById('chart').style.display ="display:none";
-		   document.getElementById("table_grid").style= "block";
-	
-		 var isValid=validate();
-		 if(isValid==true){
-				var selectedFr = $("#selectFr").val();
-				var routeId=$("#selectRoute").val();
-				
-				var from_date = $("#fromDate").val();
-				var to_date = $("#toDate").val();
+			//	var isValid = validate();
+			document.getElementById('chart').style.display = "display:none";
+			document.getElementById("table_grid").style = "block";
 
-				$('#loader').show();
+			var selectedCat = $("#item_grp1").val();
 
-				$
-						.getJSON(
-								'${getBillList}',
+			var selectedFr = $("#selectFr").val();
+			var routeId = $("#selectRoute").val();
 
-								{
-									fr_id_list : JSON.stringify(selectedFr),
-									fromDate : from_date,
-									toDate : to_date,
-									route_id:routeId,
-									ajax : 'true'
+			var from_date = $("#fromDate").val();
+			var to_date = $("#toDate").val();
 
-								},
-								function(data) {
+			$('#loader').show();
 
-									$('#table_grid td').remove();
-									$('#loader').hide();
+			$.getJSON('${getBillList}',
 
-									if (data == "") {
-										alert("No records found !!");
-										  document.getElementById("expExcel").disabled=true;
-									}
+			{
+				fr_id_list : JSON.stringify(selectedFr),
+				cat_id_list : JSON.stringify(selectedCat),
+
+				fromDate : from_date,
+				toDate : to_date,
+				route_id : routeId,
+				ajax : 'true'
+
+			}, function(data) {
+
+				$('#table_grid td').remove();
+				$('#loader').hide();
+
+				if (data == "") {
+					alert("No records found !!");
+					document.getElementById("expExcel").disabled = true;
+				}
+
+				var totalIgst = 0;
+				var totalSgst = 0;
+				var totalCgst = 0;
+				var totalBasicValue = 0;
+				var totalRoundOff = 0;
+				var totalFinal = 0;
+
+				$.each(data, function(key, report) {
+
+					totalIgst = totalIgst + report.igstSum;
+					totalSgst = totalSgst + report.sgstSum;
+					totalCgst = totalCgst + report.cgstSum;
+					totalBasicValue = totalBasicValue + report.taxableAmt;
+					totalRoundOff = totalRoundOff + report.roundOff;
+
+					document.getElementById("expExcel").disabled = false;
+					document.getElementById('range').style.display = 'block';
+
+					var index = key + 1;
+					//var tr = "<tr>";
+					var tr = $('<tr></tr>');
+					tr.append($('<td></td>').html(key + 1));
+					tr.append($('<td></td>').html(report.frName));
+					tr.append($('<td></td>').html(report.frCity));
+					tr.append($('<td></td>').html(report.frGstNo));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.taxableAmt.toFixed(2)));
+
+					if (report.isSameState == 1) {
+						tr.append($('<td style="text-align:right;"></td>')
+								.html(report.cgstSum.toFixed(2)));
+						tr.append($('<td style="text-align:right;"></td>')
+								.html(report.sgstSum.toFixed(2)));
+						tr.append($('<td style="text-align:right;"></td>')
+								.html(0));
+					} else {
+						tr.append($('<td style="text-align:right;"></td>')
+								.html(0));
+						tr.append($('<td style="text-align:right;"></td>')
+								.html(0));
+						tr.append($('<td style="text-align:right;"></td>')
+								.html(report.igstSum.toFixed(2)));
+					}
+					//tr.append($('<td></td>').html(report.igstSum));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.roundOff));
+					var total;
+
+					if (report.isSameState == 1) {
+						total = parseFloat(report.taxableAmt)
+								+ parseFloat(report.cgstSum + report.sgstSum);
+					} else {
+
+						total = report.taxableAmt + report.igstSum;
+					}
+
+					tr.append($('<td style="text-align:right;"></td>').html(
+							total.toFixed(2)));
+					totalFinal = totalFinal + total;
+
+					$('#table_grid tbody').append(tr);
+
+				})
+
+				var tr = $('<tr></tr>');
+
+				tr.append($('<td></td>').html(""));
+				tr.append($('<td></td>').html(""));
+				tr.append($('<td></td>').html(""));
+				tr.append($('<td style="font-weight:bold;"></td>')
+						.html("Total"));
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalBasicValue.toFixed(2)));
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalCgst.toFixed(2)));
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalSgst.toFixed(2)));
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalIgst.toFixed(2)));
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalRoundOff.toFixed(2)));
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalFinal.toFixed(2)));
+
+				$('#table_grid tbody').append(tr);
+
+			});
+
+		}
+	</script>
+
+
+	<script type="text/javascript">
+		function validate() {
+
+			var selectedFr = $("#selectFr").val();
+			var selectedRoute = $("#selectRoute").val();
+
+			var isValid = true;
+
+			if ((selectedFr == "" || selectedFr == null)
+					&& (selectedRoute == 0)) {
+
+				alert("Please Select Route  Or Franchisee");
+				isValid = false;
+
+			}
+			return isValid;
+
+		}
+	</script>
+
+
+	<script>
+		$('.datepicker').datepicker({
+			format : {
+				/*
+				 * Say our UI should display a week ahead,
+				 * but textbox should store the actual date.
+				 * This is useful if we need UI to select local dates,
+				 * but store in UTC
+				 */
+				format : 'mm/dd/yyyy',
+				startDate : '-3d'
+			}
+		});
+	</script>
+
+	<script type="text/javascript">
+		function disableFr() {
+
+			//alert("Inside Disable Fr ");
+			document.getElementById("selectFr").disabled = true;
+
+		}
+
+		function disableRoute() {
+
+			//alert("Inside Disable route ");
+			var x = document.getElementById("selectRoute")
+			//alert(x.options.length);
+			var i;
+			for (i = 0; i < x; i++) {
+				document.getElementById("selectRoute").options[i].disabled;
+				//document.getElementById("pets").options[2].disabled = true;
+			}
+			//document.getElementById("selectRoute").disabled = true;
+
+		}
+	</script>
+
+	<script type="text/javascript">
+		function showChart() {
+
+			$("#PieChart_div").empty();
+			$("#chart_div").empty();
+			document.getElementById('chart').style.display = "block";
+			document.getElementById("table_grid").style = "display:none";
+
+			var selectedFr = $("#selectFr").val();
+			var routeId = $("#selectRoute").val();
+
+			var from_date = $("#fromDate").val();
+			var to_date = $("#toDate").val();
+
+			//document.getElementById('btn_pdf').style.display = "block";
+			$
+					.getJSON(
+							'${getBillList}',
+
+							{
+								fr_id_list : JSON.stringify(selectedFr),
+								fromDate : from_date,
+								toDate : to_date,
+								route_id : routeId,
+								ajax : 'true'
+
+							},
+							function(data) {
+
+								//alert(data);
+								if (data == "") {
+									alert("No records found !!");
+
+								}
+								var i = 0;
+
+								google.charts.load('current', {
+									'packages' : [ 'corechart', 'bar' ]
+								});
+								google.charts.setOnLoadCallback(drawStuff);
+
+								function drawStuff() {
+
+									// alert("Inside DrawStuff");
+
+									var chartDiv = document
+											.getElementById('chart_div');
+									document.getElementById("chart_div").style.border = "thin dotted red";
+
+									var PiechartDiv = document
+											.getElementById('PieChart_div');
+									document.getElementById("PieChart_div").style.border = "thin dotted red";
+
+									var dataTable = new google.visualization.DataTable();
+									dataTable.addColumn('string',
+											'Franchisee Name'); // Implicit domain column.
+									dataTable.addColumn('number', 'Base Value'); // Implicit data column.
+									dataTable.addColumn('number', 'Total');
+
+									var piedataTable = new google.visualization.DataTable();
+									piedataTable.addColumn('string',
+											'Franchisee Name'); // Implicit domain column.
+									piedataTable.addColumn('number', 'Total');
 
 									$
 											.each(
 													data,
 													function(key, report) {
-														
-														  document.getElementById("expExcel").disabled=false;
-															document.getElementById('range').style.display = 'block';
-															
-														var index = key + 1;
-														//var tr = "<tr>";
-														var tr = $('<tr></tr>');
-													  	tr.append($('<td></td>').html(key+1));
-													  	tr.append($('<td></td>').html(report.frName));
-													  	tr.append($('<td></td>').html(report.frCity));
-													  	tr.append($('<td></td>').html(report.frGstNo));
-													  	tr.append($('<td style="text-align:right;"></td>').html((report.taxableAmt).toFixed(2)));
-													  	
-														if(report.isSameState==1){
-														  	tr.append($('<td style="text-align:right;"></td>').html((report.cgstSum).toFixed(2)));
-														  	tr.append($('<td style="text-align:right;"></td>').html((report.sgstSum).toFixed(2)));
-														  	tr.append($('<td style="text-align:right;"></td>').html(0));
-														}
-														else{
-															tr.append($('<td style="text-align:right;"></td>').html(0));
-														  	tr.append($('<td style="text-align:right;"></td>').html(0));
-														  	tr.append($('<td style="text-align:right;"></td>').html((report.igstSum).toFixed(2)));
-														}
-													  	//tr.append($('<td></td>').html(report.igstSum));
-														tr.append($('<td style="text-align:right;"></td>').html((report.roundOff).toFixed(2)));
+
+														// alert("In Data")
+														var baseValue = report.taxableAmt;
+
 														var total;
-														
-														if(report.isSameState==1){
-															 total=parseFloat(report.taxableAmt)+parseFloat(report.cgstSum+report.sgstSum);
+
+														if (report.isSameState == 1) {
+															total = parseFloat(report.taxableAmt)
+																	+ parseFloat(report.cgstSum
+																			+ report.sgstSum);
+														} else {
+
+															total = report.taxableAmt
+																	+ report.igstSum;
 														}
-														else{
-															
-															 total=report.taxableAmt+report.igstSum;
-														}
 
-													  	tr.append($('<td style="text-align:right;"></td>').html((total).toFixed(2)));
+														//var total=report.taxableAmt+report.sgstSum+report.cgstSum;
+														//alert("total ==="+total);
+														//alert("base Value "+baseValue);
 
-														$('#table_grid tbody')
-																.append(
-																		tr);
-														
+														var frName = report.frName;
+														//alert("frNAme "+frName);
+														//var date= item.billDate+'\nTax : ' + item.tax_per + '%';
 
-													})
+														dataTable
+																.addRows([
 
-								});
-		 }
+																		[
+																				frName,
+																				baseValue,
+																				total ],
 
-			
+																// ["Sai", 12,14],
+																//["Sai", 12,16],
+																// ["Sai", 12,18],
+																// ["Sai", 12,19],
+
+																]);
+
+														piedataTable.addRows([
+
+														[ frName, total ],
+
+														]);
+													}) // end of  $.each(data,function(key, report) {-- function
+
+									// Instantiate and draw the chart.
+
+									var materialOptions = {
+
+										width : 500,
+										chart : {
+											title : 'Date wise Tax Graph',
+											subtitle : 'Total tax & Taxable Amount per day',
+
+										},
+										series : {
+											0 : {
+												axis : 'distance'
+											}, // Bind series 0 to an axis named 'distance'.
+											1 : {
+												axis : 'brightness'
+											}
+										// Bind series 1 to an axis named 'brightness'.
+										},
+										axes : {
+											y : {
+												distance : {
+													label : 'Total Tax'
+												}, // Left y-axis.
+												brightness : {
+													side : 'right',
+													label : 'Taxable Amount'
+												}
+											// Right y-axis.
+											}
+										}
+									};
+
+									function drawMaterialChart() {
+										var materialChart = new google.charts.Bar(
+												chartDiv);
+
+										// alert("mater chart "+materialChart);
+										materialChart
+												.draw(
+														dataTable,
+														google.charts.Bar
+																.convertOptions(materialOptions));
+										// button.innerText = 'Change to Classic';
+										// button.onclick = drawClassicChart;
+									}
+
+									var chart = new google.visualization.ColumnChart(
+											document
+													.getElementById('chart_div'));
+
+									var Piechart = new google.visualization.PieChart(
+											document
+													.getElementById('PieChart_div'));
+									chart.draw(dataTable, {
+										title : 'Sales Summary Group By Fr'
+									});
+
+									Piechart.draw(piedataTable, {
+										title : 'Sales Summary Group By Fr',
+										is3D : true
+									});
+									// drawMaterialChart();
+								}
+								;
+
+							});
+
 		}
-	</script>
 
-		<script type="text/javascript">
-	function validate() {
-
-		var selectedFr = $("#selectFr").val();
-		var selectedRoute = $("#selectRoute").val();
-
-
-		var isValid = true;
-		
-		if ((selectedFr == "" || selectedFr == null ) && (selectedRoute==0)) { 
-
-				alert("Please Select Route  Or Franchisee");
-				isValid = false;
-		
-		}
-		return isValid;
-
-	}
-	</script>
-	
-
-	<script>
-$('.datepicker').datepicker({
-    format: {
-        /*
-         * Say our UI should display a week ahead,
-         * but textbox should store the actual date.
-         * This is useful if we need UI to select local dates,
-         * but store in UTC
-         */
-    	 format: 'mm/dd/yyyy',
-    	    startDate: '-3d'
-    }
-});
-
-</script>
-
-	<script type="text/javascript">
-
-function disableFr(){
-
-	//alert("Inside Disable Fr ");
-document.getElementById("selectFr").disabled = true;
-
-}
-
-function disableRoute(){
-
-	//alert("Inside Disable route ");
-	var x=document.getElementById("selectRoute")
-	//alert(x.options.length);
-	var i;
-	for(i=0;i<x;i++){
-		document.getElementById("selectRoute").options[i].disabled;
-		 //document.getElementById("pets").options[2].disabled = true;
-	}
-//document.getElementById("selectRoute").disabled = true;
-
-}
-
-</script>
-	
-<script type="text/javascript">
-function showChart(){
-	
-	
-		
-	$("#PieChart_div").empty();
-	$("#chart_div").empty();
-		document.getElementById('chart').style.display = "block";
-		   document.getElementById("table_grid").style="display:none";
-		 
-		   var selectedFr = $("#selectFr").val();
-			var routeId=$("#selectRoute").val();
-			
+		function genPdf() {
 			var from_date = $("#fromDate").val();
 			var to_date = $("#toDate").val();
-			
-			
-				  //document.getElementById('btn_pdf').style.display = "block";
-			$.getJSON(
-					'${getBillList}',
 
-					{
-						fr_id_list : JSON.stringify(selectedFr),
-						fromDate : from_date,
-						toDate : to_date,
-						route_id:routeId,
-						ajax : 'true'
+			var selectedFr = $("#selectFr").val();
+			var routeId = $("#selectRoute").val();
+			window
+					.open('${pageContext.request.contextPath}/pdfForReport?url=pdf/showSaleBillwiseByFrPdf/'
+							+ from_date
+							+ '/'
+							+ to_date
+							+ '/'
+							+ selectedFr
+							+ '/' + routeId + '/');
 
-					},
-					function(data) {
+		}
+		function exportToExcel() {
 
-								//alert(data);
-							 if (data == "") {
-									alert("No records found !!");
-
-								}
-							 var i=0;
-							 
-							 google.charts.load('current', {'packages':['corechart', 'bar']});
-							 google.charts.setOnLoadCallback(drawStuff);
-
-							 function drawStuff() {
-								 
-								// alert("Inside DrawStuff");
- 
-							   var chartDiv = document.getElementById('chart_div');
-							   document.getElementById("chart_div").style.border = "thin dotted red";
-							   
-							   
-							   var PiechartDiv = document.getElementById('PieChart_div');
-							   document.getElementById("PieChart_div").style.border = "thin dotted red";
-							   
-							   
-						       var dataTable = new google.visualization.DataTable();
-						       dataTable.addColumn('string', 'Franchisee Name'); // Implicit domain column.
-						       dataTable.addColumn('number', 'Base Value'); // Implicit data column.
-						       dataTable.addColumn('number', 'Total');
-						       
-						       var piedataTable = new google.visualization.DataTable();
-						       piedataTable.addColumn('string', 'Franchisee Name'); // Implicit domain column.
-						       piedataTable.addColumn('number', 'Total');
-						       
-						       
-						       $.each(data,function(key, report) {
-
-						    	   
-						    	  // alert("In Data")
-						    	   var baseValue=report.taxableAmt;
-									
-						    	  
-						    	   var total;
-									
-									if(report.isSameState==1){
-										 total=parseFloat(report.taxableAmt)+parseFloat(report.cgstSum+report.sgstSum);
-									}
-									else{
-										
-										 total=report.taxableAmt+report.igstSum;
-									}
-						    	  
-						    	  
-						    	  
-						    	  //var total=report.taxableAmt+report.sgstSum+report.cgstSum;
-									//alert("total ==="+total);
-									//alert("base Value "+baseValue);
-									
-									var frName=report.frName;
-									//alert("frNAme "+frName);
-									//var date= item.billDate+'\nTax : ' + item.tax_per + '%';
-									
-								   dataTable.addRows([
-									 
-									   
-									   [frName, baseValue,total],
-									   
-								            // ["Sai", 12,14],
-								             //["Sai", 12,16],
-								            // ["Sai", 12,18],
-								            // ["Sai", 12,19],
-								             
-								           ]);
-								   
-								   
-								   
-								   piedataTable.addRows([
-									 
-									   
-									   [frName, total],
-									   
-								          
-								           ]);
-								     }) // end of  $.each(data,function(key, report) {-- function
-
-            // Instantiate and draw the chart.
-          						    
- var materialOptions = {
-						    	
-          width: 500,
-          chart: {
-            title: 'Date wise Tax Graph',
-            subtitle: 'Total tax & Taxable Amount per day',
-           
-
-          },
-          series: {
-            0: { axis: 'distance' }, // Bind series 0 to an axis named 'distance'.
-            1: { axis: 'brightness' } // Bind series 1 to an axis named 'brightness'.
-          },
-          axes: {
-            y: {
-              distance: {label: 'Total Tax'}, // Left y-axis.
-              brightness: {side: 'right', label: 'Taxable Amount'} // Right y-axis.
-            }
-          }
-        };
-						       
-						       function drawMaterialChart() {
-						           var materialChart = new google.charts.Bar(chartDiv);
-						           
-						          // alert("mater chart "+materialChart);
-						           materialChart.draw(dataTable, google.charts.Bar.convertOptions(materialOptions));
-						          // button.innerText = 'Change to Classic';
-						          // button.onclick = drawClassicChart;
-						         }
-						       
-						        var chart = new google.visualization.ColumnChart(
-						                document.getElementById('chart_div'));
-						        
-						        var Piechart = new google.visualization.PieChart(
-						                document.getElementById('PieChart_div'));
-						       chart.draw(dataTable,
-						          { title: 'Sales Summary Group By Fr'});
-						       
-						       
-						       Piechart.draw(piedataTable,
-								          {title: 'Sales Summary Group By Fr',is3D:true});
-						      // drawMaterialChart();
-							 };
-							 
-										
-							  	});
-			
-}
-
-					
-					
-function genPdf()
-{
-	var from_date = $("#fromDate").val();
-	var to_date = $("#toDate").val();
-
-	var selectedFr = $("#selectFr").val();
-	var routeId=$("#selectRoute").val();
-	window.open('${pageContext.request.contextPath}/pdfForReport?url=pdf/showSaleBillwiseByFrPdf/'+from_date+'/'+to_date+'/'+selectedFr+'/'+routeId+'/');
-	
-	}
-function exportToExcel()
-{
-	 
-	window.open("${pageContext.request.contextPath}/exportToExcel");
-			document.getElementById("expExcel").disabled=true;
-}
-</script>
+			window.open("${pageContext.request.contextPath}/exportToExcel");
+			document.getElementById("expExcel").disabled = true;
+		}
+	</script>
 
 	<!--basic scripts-->
 	<script

@@ -39,7 +39,7 @@
 		<!-- END Page Title -->
 
 		<!-- BEGIN Breadcrumb -->
-	<%-- 	<div id="breadcrumbs">
+		<%-- 	<div id="breadcrumbs">
 			<ul class="breadcrumb">
 				<li><i class="fa fa-home"></i> <a
 					href="${pageContext.request.contextPath}/home">Home</a> <span
@@ -197,13 +197,15 @@
 							</table>
 						</div>
 						<div class="form-group" style="display: none;" id="range">
-								 
-											 
-											 
-											<div class="col-sm-3  controls">
-											 <input type="button" id="expExcel" class="btn btn-primary" value="EXPORT TO Excel" onclick="exportToExcel();" disabled="disabled">
-											</div>
-											</div>
+
+
+
+							<div class="col-sm-3  controls">
+								<input type="button" id="expExcel" class="btn btn-primary"
+									value="EXPORT TO Excel" onclick="exportToExcel();"
+									disabled="disabled">
+							</div>
+						</div>
 					</div>
 
 				</div>
@@ -222,86 +224,117 @@
 
 	<script type="text/javascript">
 		function searchReport() {
-		//	var isValid = validate();
-              //alert("HI ");
-				//var selectedFr = $("#selectFr").val();
-				//var routeId=$("#selectRoute").val();
-				
-				var from_date = $("#fromDate").val();
-				var to_date = $("#toDate").val();
+			//	var isValid = validate();
+			//alert("HI ");
+			//var selectedFr = $("#selectFr").val();
+			//var routeId=$("#selectRoute").val();
 
-				$('#loader').show();
+			var from_date = $("#fromDate").val();
+			var to_date = $("#toDate").val();
 
-				$
-						.getJSON(
-								'${getBillList}',
+			$('#loader').show();
 
-								{
-									//fr_id_list : JSON.stringify(selectedFr),
-									fromDate : from_date,
-									toDate : to_date,
-									//route_id:routeId,
-									ajax : 'true'
+			$.getJSON('${getBillList}',
 
-								},
-								function(data) {
+			{
+				//fr_id_list : JSON.stringify(selectedFr),
+				fromDate : from_date,
+				toDate : to_date,
+				//route_id:routeId,
+				ajax : 'true'
 
-									$('#table_grid td').remove();
-									$('#loader').hide();
+			}, function(data) {
 
-									if (data == "") {
-										alert("No records found !!");
-										  document.getElementById("expExcel").disabled=true;
+				$('#table_grid td').remove();
+				$('#loader').hide();
 
-									}
+				var totalBasicValue = 0;
+				var totalCgst = 0;
+				var totalSgst = 0;
+				var totalIgst = 0;
 
-									$
-											.each(
-													data,
-													function(key, report) {
-														  document.getElementById("expExcel").disabled=false;
-															document.getElementById('range').style.display = 'block';														var index = key + 1;
-														//var tr = "<tr>";
-														var tr = $('<tr></tr>');
-													  	tr.append($('<td></td>').html(key+1));
-													  	tr.append($('<td></td>').html(report.invoiceNo));
-													  	tr.append($('<td></td>').html(report.billDate));
-													  	tr.append($('<td></td>').html(report.frName));
-													  	tr.append($('<td></td>').html(report.frCity));
-													  	tr.append($('<td></td>').html(report.frGstNo));
-													  	tr.append($('<td></td>').html(report.itemHsncd));
+				if (data == "") {
+					alert("No records found !!");
+					document.getElementById("expExcel").disabled = true;
 
-														if(report.isSameState==1){
-															
-															var taxRate=report.itemTax1+report.itemTax2;
-															taxRate=taxRate.toFixed();
-														  	tr.append($('<td style="text-align:right;"></td>').html(taxRate));
-														  //	tr.append($('<td></td>').html(report.sgstSum));
-														  //	tr.append($('<td></td>').html(0));
-														}
-														else{
-															//tr.append($('<td></td>').html(0));
-														  //	tr.append($('<td></td>').html(0));
-														  	tr.append($('<td style="text-align:right;"></td>').html(report.itemTax3));
-														} 
-													  	//tr.append($('<td></td>').html(report.igstSum));
-														tr.append($('<td style="text-align:right;"></td>').html(report.taxableAmtSum.toFixed(2)));
-														tr.append($('<td style="text-align:right;"></td>').html(report.cgstRsSum.toFixed(2)));
-														tr.append($('<td style="text-align:right;"></td>').html(report.sgstRsSum.toFixed(2)));
-														tr.append($('<td style="text-align:right;"></td>').html(report.igstRsSum.toFixed(2)));
-														
-														$('#table_grid tbody')
-																.append(
-																		tr);
-														
+				}
 
-													})
+				$.each(data, function(key, report) {
+					document.getElementById("expExcel").disabled = false;
+					document.getElementById('range').style.display = 'block';
+					var index = key + 1;
+					//var tr = "<tr>";	
+					totalBasicValue = totalBasicValue + report.taxableAmtSum;
+					totalCgst = totalCgst + report.cgstRsSum;
+					totalSgst = totalSgst + report.sgstRsSum;
+					totalIgst = totalIgst + report.igstRsSum;
 
-								});
+					var tr = $('<tr></tr>');
+					tr.append($('<td></td>').html(key + 1));
+					tr.append($('<td></td>').html(report.invoiceNo));
+					tr.append($('<td></td>').html(report.billDate));
+					tr.append($('<td></td>').html(report.frName));
+					tr.append($('<td></td>').html(report.frCity));
+					tr.append($('<td></td>').html(report.frGstNo));
+					tr.append($('<td></td>').html(report.itemHsncd));
 
-			
+					if (report.isSameState == 1) {
+
+						var taxRate = report.itemTax1 + report.itemTax2;
+						taxRate = taxRate.toFixed();
+						tr.append($('<td style="text-align:right;"></td>')
+								.html(taxRate));
+						//	tr.append($('<td></td>').html(report.sgstSum));
+						//	tr.append($('<td></td>').html(0));
+					} else {
+						//tr.append($('<td></td>').html(0));
+						//	tr.append($('<td></td>').html(0));
+						tr.append($('<td style="text-align:right;"></td>')
+								.html(report.itemTax3));
+					}
+					//tr.append($('<td></td>').html(report.igstSum));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.taxableAmtSum.toFixed(2)));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.cgstRsSum.toFixed(2)));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.sgstRsSum.toFixed(2)));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.igstRsSum.toFixed(2)));
+
+					$('#table_grid tbody').append(tr);
+
+				})
+
+				var tr = $('<tr></tr>');
+
+				tr.append($('<td></td>').html(""));
+				tr.append($('<td></td>').html(""));
+				tr.append($('<td></td>').html(""));
+				tr.append($('<td></td>').html(""));
+				tr.append($('<td></td>').html(""));
+				tr.append($('<td></td>').html(""));
+				tr.append($('<td></td>').html(""));
+
+				tr.append($('<td style="font-weight:bold;"></td>')
+						.html("Total"));
+
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalBasicValue.toFixed(2)));
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalCgst.toFixed(2)));
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalSgst.toFixed(2)));
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalIgst.toFixed(2)));
+
+				$('#table_grid tbody').append(tr);
+
+			});
+
 		}
 	</script>
+
 
 	<script type="text/javascript">
 		function validate() {
@@ -310,17 +343,16 @@
 			var selectedMenu = $("#selectMenu").val();
 			var selectedRoute = $("#selectRoute").val();
 
-
 			var isValid = true;
 
-			if (selectedFr == "" || selectedFr == null  ) {
- 
-				if(selectedRoute=="" || selectedRoute ==null ) {
+			if (selectedFr == "" || selectedFr == null) {
+
+				if (selectedRoute == "" || selectedRoute == null) {
 					alert("Please Select atleast one ");
 					isValid = false;
 				}
 				//alert("Please select Franchise/Route");
- 
+
 			} else if (selectedMenu == "" || selectedMenu == null) {
 
 				isValid = false;
@@ -334,74 +366,69 @@
 
 	<script type="text/javascript">
 		function updateTotal(orderId, rate) {
-			
+
 			var newQty = $("#billQty" + orderId).val();
 
 			var total = parseFloat(newQty) * parseFloat(rate);
 
-
-			 $('#billTotal'+orderId).html(total);
+			$('#billTotal' + orderId).html(total);
 		}
 	</script>
 
 	<script>
-$('.datepicker').datepicker({
-    format: {
-        /*
-         * Say our UI should display a week ahead,
-         * but textbox should store the actual date.
-         * This is useful if we need UI to select local dates,
-         * but store in UTC
-         */
-    	 format: 'mm/dd/yyyy',
-    	    startDate: '-3d'
-    }
-});
-
-</script>
-
-	<script type="text/javascript">
-
-function disableFr(){
-
-	//alert("Inside Disable Fr ");
-document.getElementById("selectFr").disabled = true;
-
-}
-
-function disableRoute(){
-
-	//alert("Inside Disable route ");
-	var x=document.getElementById("selectRoute")
-	//alert(x.options.length);
-	var i;
-	for(i=0;i<x;i++){
-		document.getElementById("selectRoute").options[i].disabled;
-		 //document.getElementById("pets").options[2].disabled = true;
-	}
-//document.getElementById("selectRoute").disabled = true;
-
-}
-
-</script>
+		$('.datepicker').datepicker({
+			format : {
+				/*
+				 * Say our UI should display a week ahead,
+				 * but textbox should store the actual date.
+				 * This is useful if we need UI to select local dates,
+				 * but store in UTC
+				 */
+				format : 'mm/dd/yyyy',
+				startDate : '-3d'
+			}
+		});
+	</script>
 
 	<script type="text/javascript">
+		function disableFr() {
 
-function genPdf()
-{
-	var from_date = $("#fromDate").val();
-	var to_date = $("#toDate").val();
-	
-	window.open('${pageContext.request.contextPath}/pdfForReport?url=pdf/showSaleReportBillwiseAllFrPdf/'+from_date+'/'+to_date);
-	
-	}
-function exportToExcel()
-{
-	 
-	window.open("${pageContext.request.contextPath}/exportToExcel");
-			document.getElementById("expExcel").disabled=true;
-}
-</script>
+			//alert("Inside Disable Fr ");
+			document.getElementById("selectFr").disabled = true;
+
+		}
+
+		function disableRoute() {
+
+			//alert("Inside Disable route ");
+			var x = document.getElementById("selectRoute")
+			//alert(x.options.length);
+			var i;
+			for (i = 0; i < x; i++) {
+				document.getElementById("selectRoute").options[i].disabled;
+				//document.getElementById("pets").options[2].disabled = true;
+			}
+			//document.getElementById("selectRoute").disabled = true;
+
+		}
+	</script>
+
+	<script type="text/javascript">
+		function genPdf() {
+			var from_date = $("#fromDate").val();
+			var to_date = $("#toDate").val();
+
+			window
+					.open('${pageContext.request.contextPath}/pdfForReport?url=pdf/showSaleReportBillwiseAllFrPdf/'
+							+ from_date + '/' + to_date);
+
+		}
+		function exportToExcel() {
+
+			window.open("${pageContext.request.contextPath}/exportToExcel");
+			document.getElementById("expExcel").disabled = true;
+		}
+	</script>
 	<!--basic scripts-->
 	<script
 		src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
