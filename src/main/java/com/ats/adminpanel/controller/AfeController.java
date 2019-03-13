@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -18,44 +19,59 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ats.adminpanel.commons.AccessControll;
 import com.ats.adminpanel.commons.Constants;
+import com.ats.adminpanel.model.Info;
+import com.ats.adminpanel.model.accessright.ModuleJson;
 import com.ats.adminpanel.model.afe.AfeQuestion;
 import com.ats.adminpanel.model.afe.AfeQuestionList;
-  
+
 @Controller
 @Scope("session")
 public class AfeController {
 
 	List<AfeQuestion> queList = new ArrayList<AfeQuestion>();
 
-	//showAfeQue
+	// showAfeQue
 	@RequestMapping(value = "/showAfeQue", method = RequestMethod.GET)
 	public ModelAndView showAfeQue(HttpServletRequest request, HttpServletResponse response) {
 
 		ModelAndView model = null;
-		try {
+		HttpSession session = request.getSession();
 
-			RestTemplate restTemp = new RestTemplate();
-			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("showAddNewFranchisee", "showAddNewFranchisee", "1", "0", "0", "0",
+				newModuleList);
 
-			map.add("delStatus", 0);
+		if (view.getError() == true) {
 
-			AfeQuestionList queResponse = restTemp.postForObject(Constants.url + "getAfeQuestionList", map,
-					AfeQuestionList.class);
+			model = new ModelAndView("accessDenied");
 
-			queList = new ArrayList<AfeQuestion>();
-			queList = queResponse.getAfeQuestion();
-
-			System.out.println("Que List " + queList.toString());
-
+		} else {
 			model = new ModelAndView("afe/showafe");
-			model.addObject("qList", queList);
+			try {
 
-		} catch (Exception e) {
+				RestTemplate restTemp = new RestTemplate();
+				MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 
-			System.err.println("Exce in showAfeQue" + e.getMessage());
-			e.printStackTrace();
+				map.add("delStatus", 0);
 
+				AfeQuestionList queResponse = restTemp.postForObject(Constants.url + "getAfeQuestionList", map,
+						AfeQuestionList.class);
+
+				queList = new ArrayList<AfeQuestion>();
+				queList = queResponse.getAfeQuestion();
+
+				System.out.println("Que List " + queList.toString());
+
+				model.addObject("qList", queList);
+
+			} catch (Exception e) {
+
+				System.err.println("Exce in showAfeQue" + e.getMessage());
+				e.printStackTrace();
+
+			}
 		}
 
 		return model;
@@ -96,7 +112,7 @@ public class AfeController {
 			AfeQuestion queResponse = restTemp.postForObject(Constants.url + "postAfeQuestion", question,
 					AfeQuestion.class);
 			System.out.println("Que Response " + queResponse.toString());
-		
+
 		} catch (Exception e) {
 
 			System.err.println("Exce in showAfeQue" + e.getMessage());
@@ -138,7 +154,7 @@ public class AfeController {
 
 			System.err.println("Exce in deleting Afe Question " + e.getMessage());
 			e.printStackTrace();
-			
+
 		}
 		return "redirect:/showAfeQue";
 	}

@@ -24,6 +24,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.ParameterizedTypeReference;
@@ -42,6 +43,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ats.adminpanel.commons.AccessControll;
 import com.ats.adminpanel.commons.Constants;
 import com.ats.adminpanel.commons.DateConvertor;
 import com.ats.adminpanel.model.AllFrIdName;
@@ -51,6 +53,7 @@ import com.ats.adminpanel.model.Info;
 import com.ats.adminpanel.model.RegCakeAsSpDispatchReport;
 import com.ats.adminpanel.model.RegCakeAsSpDispatchReportList;
 import com.ats.adminpanel.model.Route;
+import com.ats.adminpanel.model.accessright.ModuleJson;
 import com.ats.adminpanel.model.billing.FrBillHeaderForPrint;
 import com.ats.adminpanel.model.franchisee.FrNameIdByRouteId;
 import com.ats.adminpanel.model.franchisee.FrNameIdByRouteIdResponse;
@@ -79,36 +82,48 @@ public class RegCakeAsSpOrderController {
 	@RequestMapping(value = "/showRegCakeSpOrderReport", method = RequestMethod.GET)
 	public ModelAndView showBillListForPrint(HttpServletRequest request, HttpServletResponse response) {
 
-		ModelAndView model = new ModelAndView("reports/regCakeAsSp");
+		ModelAndView model = null;
+		HttpSession session = request.getSession();
 
-		try {
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("showRegCakeSpOrderReport", "showRegCakeSpOrderReport", "1", "0", "0",
+				"0", newModuleList);
 
-			RestTemplate restTemplate = new RestTemplate();
+		if (view.getError() == true) {
 
-			ZoneId z = ZoneId.of("Asia/Calcutta");
+			model = new ModelAndView("accessDenied");
 
-			LocalDate date = LocalDate.now(z);
-			DateTimeFormatter formatters = DateTimeFormatter.ofPattern("d-MM-uuuu");
-			String todaysDate = date.format(formatters);
+		} else {
+			model = new ModelAndView("reports/regCakeAsSp");
 
-			allFrIdNameList = restTemplate.getForObject(Constants.url + "getAllFrIdName", AllFrIdNameList.class);
+			try {
 
-			AllRoutesListResponse allRouteListResponse = restTemplate.getForObject(Constants.url + "showRouteList",
-					AllRoutesListResponse.class);
+				RestTemplate restTemplate = new RestTemplate();
 
-			List<Route> routeList = new ArrayList<Route>();
+				ZoneId z = ZoneId.of("Asia/Calcutta");
 
-			routeList = allRouteListResponse.getRoute();
+				LocalDate date = LocalDate.now(z);
+				DateTimeFormatter formatters = DateTimeFormatter.ofPattern("d-MM-uuuu");
+				String todaysDate = date.format(formatters);
 
-			model.addObject("routeList", routeList);
-			model.addObject("todaysDate", todaysDate);
-			model.addObject("allFrIdNameList", allFrIdNameList.getFrIdNamesList());
+				allFrIdNameList = restTemplate.getForObject(Constants.url + "getAllFrIdName", AllFrIdNameList.class);
 
-		} catch (Exception e) {
-			System.out.println("Exce in showRegCakeSpOrderReport " + e.getMessage());
-			e.printStackTrace();
+				AllRoutesListResponse allRouteListResponse = restTemplate.getForObject(Constants.url + "showRouteList",
+						AllRoutesListResponse.class);
+
+				List<Route> routeList = new ArrayList<Route>();
+
+				routeList = allRouteListResponse.getRoute();
+
+				model.addObject("routeList", routeList);
+				model.addObject("todaysDate", todaysDate);
+				model.addObject("allFrIdNameList", allFrIdNameList.getFrIdNamesList());
+
+			} catch (Exception e) {
+				System.out.println("Exce in showRegCakeSpOrderReport " + e.getMessage());
+				e.printStackTrace();
+			}
 		}
-
 		return model;
 
 	}
@@ -204,7 +219,6 @@ public class RegCakeAsSpOrderController {
 
 		System.err.println("regCakeAsSp" + regCakeAsSp.toString());
 
-		
 		return regCakeAsSp;
 	}
 
@@ -214,248 +228,241 @@ public class RegCakeAsSpOrderController {
 	public void regCakeAsSp(HttpServletRequest request, HttpServletResponse response) throws FileNotFoundException {
 
 		try {
-		Document document = new Document(PageSize.A4);
+			Document document = new Document(PageSize.A4);
 
-		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-		Calendar cal = Calendar.getInstance();
+			DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+			Calendar cal = Calendar.getInstance();
 
-		System.out.println("time in regCakeAsSp  PDF ==" + dateFormat.format(cal.getTime()));
-		String timeStamp = dateFormat.format(cal.getTime());
-		String FILE_PATH = Constants.REPORT_SAVE;
-		File file = new File(FILE_PATH);
+			System.out.println("time in regCakeAsSp  PDF ==" + dateFormat.format(cal.getTime()));
+			String timeStamp = dateFormat.format(cal.getTime());
+			String FILE_PATH = Constants.REPORT_SAVE;
+			File file = new File(FILE_PATH);
 
-		PdfWriter writer = null;
+			PdfWriter writer = null;
 
-		FileOutputStream out = null;
-		try {
-			out = new FileOutputStream(FILE_PATH);
-		} catch (FileNotFoundException e2) {
-			e2.printStackTrace();
-		}
-		try {
-			writer = PdfWriter.getInstance(document, out);
-		} catch (DocumentException e) {
-
-			e.printStackTrace();
-		}
-		List<AllFrIdName> frLIst = allFrIdNameList.getFrIdNamesList();
-
-		tempFrList = new ArrayList<>();
-		try {
-			Map<Integer, String> frIdMap = new HashMap<Integer, String>();
-
-			for (int i = 0; i < regCakeAsSp.size(); i++) {
-
-				if (tempFrList.isEmpty()) {
-					
-					System.err.println("temp list empty");
-
-					AllFrIdName names = new AllFrIdName();
-
-					names.setFrId(regCakeAsSp.get(i).getFrId());
-					names.setFrName(regCakeAsSp.get(i).getFrName());
-
-					tempFrList.add(names);
-					frIdMap.put(regCakeAsSp.get(i).getFrId(), regCakeAsSp.get(i).getFrName());
-
-				} else if (!frIdMap.containsKey(regCakeAsSp.get(i).getFrId())) {
-					
-					System.err.println("temp list not empty");
-
-
-					AllFrIdName names = new AllFrIdName();
-
-					names.setFrId(regCakeAsSp.get(i).getFrId());
-					names.setFrName(regCakeAsSp.get(i).getFrName());
-					
-					frIdMap.put(regCakeAsSp.get(i).getFrId(), regCakeAsSp.get(i).getFrName());
-
-					tempFrList.add(names);
-
-				}
+			FileOutputStream out = null;
+			try {
+				out = new FileOutputStream(FILE_PATH);
+			} catch (FileNotFoundException e2) {
+				e2.printStackTrace();
 			}
-			
-			System.err.println("Temp Fr List " +tempFrList);
+			try {
+				writer = PdfWriter.getInstance(document, out);
+			} catch (DocumentException e) {
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.err.println("temp Fr List " + tempFrList.toString());
-		}
+				e.printStackTrace();
+			}
+			List<AllFrIdName> frLIst = allFrIdNameList.getFrIdNamesList();
 
-		PdfPTable table = new PdfPTable(4);
-		try {
-			System.out.println("Inside PDF Table try");
-			table.setWidthPercentage(100);
-			table.setWidths(new float[] { 0.4f, 2.0f, 0.6f, 1.0f });
-			Font headFont = new Font(FontFamily.TIMES_ROMAN, 18, Font.NORMAL, BaseColor.BLACK);
-			
-			Font frFont = new Font(FontFamily.TIMES_ROMAN, 18, Font.BOLD, BaseColor.MAGENTA);
+			tempFrList = new ArrayList<>();
+			try {
+				Map<Integer, String> frIdMap = new HashMap<Integer, String>();
 
-			
-			Font headFont1 = new Font(FontFamily.HELVETICA, 16, Font.BOLD, BaseColor.BLACK);
-			Font f = new Font(FontFamily.TIMES_ROMAN, 12.0f, Font.UNDERLINE, BaseColor.BLUE);
+				for (int i = 0; i < regCakeAsSp.size(); i++) {
 
-			PdfPCell hcell = new PdfPCell();
-			hcell.setBackgroundColor(BaseColor.LIGHT_GRAY);
-			hcell.setPadding(4);
-			hcell = new PdfPCell(new Phrase("Sr.No.", headFont1));
-			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-			table.addCell(hcell);
+					if (tempFrList.isEmpty()) {
 
-			hcell = new PdfPCell(new Phrase("Item Name", headFont1));
-			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-			table.addCell(hcell);
+						System.err.println("temp list empty");
 
-			hcell = new PdfPCell(new Phrase("Quantity", headFont1));
-			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-			table.addCell(hcell);
+						AllFrIdName names = new AllFrIdName();
 
-			hcell = new PdfPCell(new Phrase("Remark", headFont1));
-			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-			table.addCell(hcell);
+						names.setFrId(regCakeAsSp.get(i).getFrId());
+						names.setFrName(regCakeAsSp.get(i).getFrName());
 
-			for (int k = 0; k < tempFrList.size(); k++) {
+						tempFrList.add(names);
+						frIdMap.put(regCakeAsSp.get(i).getFrId(), regCakeAsSp.get(i).getFrName());
 
-				PdfPCell cell1;
-				
-				
-				cell1 = new PdfPCell(new Phrase("", headFont));
-				cell1.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				cell1.setHorizontalAlignment(Element.ALIGN_LEFT);
-				cell1.setPaddingRight(2);
-				cell1.setPadding(4);
-				table.addCell(cell1);
-				
-				
-				cell1 = new PdfPCell(new Phrase(tempFrList.get(k).getFrName(), frFont));
-				cell1.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				cell1.setHorizontalAlignment(Element.ALIGN_LEFT);
-				cell1.setPaddingRight(2);
-				cell1.setPadding(4);
-				table.addCell(cell1);
+					} else if (!frIdMap.containsKey(regCakeAsSp.get(i).getFrId())) {
 
-				
+						System.err.println("temp list not empty");
 
-				cell1 = new PdfPCell(new Phrase("", headFont));
-				cell1.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				cell1.setHorizontalAlignment(Element.ALIGN_LEFT);
-				cell1.setPaddingRight(2);
-				cell1.setPadding(4);
-				table.addCell(cell1);
+						AllFrIdName names = new AllFrIdName();
 
-				cell1 = new PdfPCell(new Phrase("", headFont));
-				cell1.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				cell1.setHorizontalAlignment(Element.ALIGN_LEFT);
-				cell1.setPaddingRight(2);
-				cell1.setPadding(4);
-				table.addCell(cell1);
-				
-				int index = 0;
-				for (int j = 0; j < regCakeAsSp.size(); j++) {
-					PdfPCell cell;
-					
-					if (tempFrList.get(k).getFrId() == regCakeAsSp.get(j).getFrId()) {
-						index++;
+						names.setFrId(regCakeAsSp.get(i).getFrId());
+						names.setFrName(regCakeAsSp.get(i).getFrName());
 
-						cell = new PdfPCell(new Phrase(String.valueOf(index), headFont));
-						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-						cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-						cell.setPadding(4);
-						table.addCell(cell);
+						frIdMap.put(regCakeAsSp.get(i).getFrId(), regCakeAsSp.get(i).getFrName());
 
-						cell = new PdfPCell(new Phrase(regCakeAsSp.get(j).getItemName(), headFont));
-						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-						cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-						cell.setPaddingRight(2);
-						cell.setPadding(4);
-						table.addCell(cell);
+						tempFrList.add(names);
 
-						cell = new PdfPCell(new Phrase(String.valueOf(regCakeAsSp.get(j).getQty()), headFont));
-						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-						cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-						cell.setPaddingRight(2);
-						cell.setPadding(4);
-						table.addCell(cell);
+					}
+				}
 
-						cell = new PdfPCell(new Phrase("", headFont));
-						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-						cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-						cell.setPaddingRight(2);
-						cell.setPadding(4);
-						table.addCell(cell);
-						
+				System.err.println("Temp Fr List " + tempFrList);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.err.println("temp Fr List " + tempFrList.toString());
+			}
+
+			PdfPTable table = new PdfPTable(4);
+			try {
+				System.out.println("Inside PDF Table try");
+				table.setWidthPercentage(100);
+				table.setWidths(new float[] { 0.4f, 2.0f, 0.6f, 1.0f });
+				Font headFont = new Font(FontFamily.TIMES_ROMAN, 18, Font.NORMAL, BaseColor.BLACK);
+
+				Font frFont = new Font(FontFamily.TIMES_ROMAN, 18, Font.BOLD, BaseColor.MAGENTA);
+
+				Font headFont1 = new Font(FontFamily.HELVETICA, 16, Font.BOLD, BaseColor.BLACK);
+				Font f = new Font(FontFamily.TIMES_ROMAN, 12.0f, Font.UNDERLINE, BaseColor.BLUE);
+
+				PdfPCell hcell = new PdfPCell();
+				hcell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+				hcell.setPadding(4);
+				hcell = new PdfPCell(new Phrase("Sr.No.", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+
+				hcell = new PdfPCell(new Phrase("Item Name", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+
+				hcell = new PdfPCell(new Phrase("Quantity", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+
+				hcell = new PdfPCell(new Phrase("Remark", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+
+				for (int k = 0; k < tempFrList.size(); k++) {
+
+					PdfPCell cell1;
+
+					cell1 = new PdfPCell(new Phrase("", headFont));
+					cell1.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell1.setHorizontalAlignment(Element.ALIGN_LEFT);
+					cell1.setPaddingRight(2);
+					cell1.setPadding(4);
+					table.addCell(cell1);
+
+					cell1 = new PdfPCell(new Phrase(tempFrList.get(k).getFrName(), frFont));
+					cell1.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell1.setHorizontalAlignment(Element.ALIGN_LEFT);
+					cell1.setPaddingRight(2);
+					cell1.setPadding(4);
+					table.addCell(cell1);
+
+					cell1 = new PdfPCell(new Phrase("", headFont));
+					cell1.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell1.setHorizontalAlignment(Element.ALIGN_LEFT);
+					cell1.setPaddingRight(2);
+					cell1.setPadding(4);
+					table.addCell(cell1);
+
+					cell1 = new PdfPCell(new Phrase("", headFont));
+					cell1.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell1.setHorizontalAlignment(Element.ALIGN_LEFT);
+					cell1.setPaddingRight(2);
+					cell1.setPadding(4);
+					table.addCell(cell1);
+
+					int index = 0;
+					for (int j = 0; j < regCakeAsSp.size(); j++) {
+						PdfPCell cell;
+
+						if (tempFrList.get(k).getFrId() == regCakeAsSp.get(j).getFrId()) {
+							index++;
+
+							cell = new PdfPCell(new Phrase(String.valueOf(index), headFont));
+							cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+							cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+							cell.setPadding(4);
+							table.addCell(cell);
+
+							cell = new PdfPCell(new Phrase(regCakeAsSp.get(j).getItemName(), headFont));
+							cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+							cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+							cell.setPaddingRight(2);
+							cell.setPadding(4);
+							table.addCell(cell);
+
+							cell = new PdfPCell(new Phrase(String.valueOf(regCakeAsSp.get(j).getQty()), headFont));
+							cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+							cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+							cell.setPaddingRight(2);
+							cell.setPadding(4);
+							table.addCell(cell);
+
+							cell = new PdfPCell(new Phrase("", headFont));
+							cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+							cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+							cell.setPaddingRight(2);
+							cell.setPadding(4);
+							table.addCell(cell);
+
+						}
+
+					}
+				}
+
+				document.open();
+				Paragraph company = new Paragraph(
+						"Galdhar Foods Pvt.Ltd\n" + "Factory Add: A-32 Shendra, MIDC, Auraangabad-4331667"
+								+ " Phone:0240-2466217, Email: aurangabad@monginis.net",
+						f);
+				company.setAlignment(Element.ALIGN_CENTER);
+				document.add(company);
+				document.add(new Paragraph(" "));
+
+				Paragraph heading = new Paragraph("Regular Cake As Special Order Dispatch Report");
+				heading.setAlignment(Element.ALIGN_CENTER);
+				document.add(heading);
+
+				DateFormat DF = new SimpleDateFormat("dd-MM-yyyy");
+				String reportDate = DF.format(new Date());
+
+				document.add(new Paragraph(" Date: " + reportDate));
+				document.add(new Paragraph("\n"));
+				document.add(table);
+				document.add(new Paragraph("\n"));
+				int totalPages = writer.getPageNumber();
+
+				System.out.println("Page no " + totalPages);
+
+				document.close();
+				if (file != null) {
+					System.err.println("File is not null");
+
+					String mimeType = URLConnection.guessContentTypeFromName(file.getName());
+
+					if (mimeType == null) {
+
+						mimeType = "application/pdf";
+
 					}
 
+					response.setContentType(mimeType);
+
+					response.addHeader("content-disposition", String.format("inline; filename=\"%s\"", file.getName()));
+
+					response.setContentLength((int) file.length());
+
+					InputStream inputStream = null;
+					try {
+						inputStream = new BufferedInputStream(new FileInputStream(file));
+					} catch (FileNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+
+					try {
+						FileCopyUtils.copy(inputStream, response.getOutputStream());
+					} catch (IOException e) {
+						System.out.println("Excep in Opening a Pdf File");
+						e.printStackTrace();
+					}
 				}
+
+			} catch (DocumentException ex) {
+
+				System.out.println("Pdf Generation Error: Reg cake as Sp Order Dispatch Report" + ex.getMessage());
+
+				ex.printStackTrace();
+
 			}
-
-			document.open();
-			Paragraph company = new Paragraph(
-					"Galdhar Foods Pvt.Ltd\n" + "Factory Add: A-32 Shendra, MIDC, Auraangabad-4331667"
-							+ " Phone:0240-2466217, Email: aurangabad@monginis.net",
-					f);
-			company.setAlignment(Element.ALIGN_CENTER);
-			document.add(company);
-			document.add(new Paragraph(" "));
-
-			Paragraph heading = new Paragraph("Regular Cake As Special Order Dispatch Report");
-			heading.setAlignment(Element.ALIGN_CENTER);
-			document.add(heading);
-			
-			DateFormat DF = new SimpleDateFormat("dd-MM-yyyy");
-			String reportDate = DF.format(new Date());
-
-			document.add(new Paragraph(" Date: " + reportDate));
-			document.add(new Paragraph("\n"));
-			document.add(table);
-			document.add(new Paragraph("\n"));
-			int totalPages = writer.getPageNumber();
-
-			System.out.println("Page no " + totalPages);
-
-			document.close();
-			if (file != null) {
-				System.err.println("File is not null");
-
-				String mimeType = URLConnection.guessContentTypeFromName(file.getName());
-
-				if (mimeType == null) {
-
-					mimeType = "application/pdf";
-
-				}
-
-				response.setContentType(mimeType);
-
-				response.addHeader("content-disposition", String.format("inline; filename=\"%s\"", file.getName()));
-
-				response.setContentLength((int) file.length());
-
-				InputStream inputStream = null;
-				try {
-					inputStream = new BufferedInputStream(new FileInputStream(file));
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-
-				try {
-					FileCopyUtils.copy(inputStream, response.getOutputStream());
-				} catch (IOException e) {
-					System.out.println("Excep in Opening a Pdf File");
-					e.printStackTrace();
-				}
-			}
-
-		} catch (DocumentException ex) {
-
-			System.out.println("Pdf Generation Error: Reg cake as Sp Order Dispatch Report" + ex.getMessage());
-
-			ex.printStackTrace();
-
-		}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

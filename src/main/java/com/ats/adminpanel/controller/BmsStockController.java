@@ -11,6 +11,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.ParameterizedTypeReference;
@@ -26,11 +27,13 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 import org.zefer.html.doc.s;
 
+import com.ats.adminpanel.commons.AccessControll;
 import com.ats.adminpanel.commons.Constants;
 import com.ats.adminpanel.commons.DateConvertor;
 import com.ats.adminpanel.model.BmsStockDetailed;
 import com.ats.adminpanel.model.BmsStockHeader;
 import com.ats.adminpanel.model.Info;
+import com.ats.adminpanel.model.accessright.ModuleJson;
 import com.ats.adminpanel.model.item.FrItemStockConfigure;
 import com.ats.adminpanel.model.item.FrItemStockConfigureList;
 import com.ats.adminpanel.model.stock.GetBmsCurrentStock;
@@ -68,11 +71,23 @@ public class BmsStockController {
 	@RequestMapping(value = "/showBmsStock", method = RequestMethod.GET)
 	public ModelAndView showBmsStock(HttpServletRequest request, HttpServletResponse response) {
 
-		ModelAndView mav = new ModelAndView("stock/bmsStock");
-		System.out.println("inside show BMS stock page ");
+		ModelAndView mav = null;
+		HttpSession session = request.getSession();
 
-		Constants.mainAct = 8;
-		Constants.subAct = 48;
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("showBmsStock", "showBmsStock", "1", "0", "0", "0", newModuleList);
+
+		if (view.getError() == true) {
+
+			mav = new ModelAndView("accessDenied");
+
+		} else {
+			mav = new ModelAndView("stock/bmsStock");
+			System.out.println("inside show BMS stock page ");
+
+			Constants.mainAct = 8;
+			Constants.subAct = 48;
+		}
 		return mav;
 
 	}
@@ -133,13 +148,13 @@ public class BmsStockController {
 					globalBmsHeaderId = bmsStockHeader.getBmsStockId();
 
 					int showDayEnd = 0;
-					
+
 					if (headerDate.before(cDate) || headerDate.equals(cDate)) {
 
 						showDayEnd = 1;
 
 					} else {
-						
+
 						showDayEnd = 0;
 					}
 
@@ -255,15 +270,15 @@ public class BmsStockController {
 					globalBmsHeaderId = bmsStockHeader.getBmsStockId();
 
 					int showDayEnd = 0;
-					
+
 					if (headerDate.before(cDate) || headerDate.equals(cDate)) {
 
 						showDayEnd = 1;
 
 					} else {
-						
+
 						showDayEnd = 0;
-						
+
 					}
 
 					// System.out.println("show day end " + showDayEnd);
@@ -511,7 +526,7 @@ public class BmsStockController {
 					bmsStockDetailedlist.add(bmsStockDetailed);
 
 				}
-				
+
 				bmsStockHeaderInsert.setBmsStockDetailed(bmsStockDetailedlist);
 
 				bmsStockHeader = new BmsStockHeader();
@@ -522,13 +537,13 @@ public class BmsStockController {
 				System.out.println("bsm RM Stock Header Insert Response" + bmsStockHeader.toString());
 
 			} else if (globalRmType == 2) {
-				
+
 				// day end for Sf Stock
 
 				UpdateBmsSfStockList sfUpdate = new UpdateBmsSfStockList();
 
 				List<UpdateBmsSfStock> sfStockList = new ArrayList<>();
-		
+
 				System.out.println("Day End For SF ");
 
 				for (int j = 0; j < bmsCurrentStockSf.size(); j++) {
@@ -565,16 +580,16 @@ public class BmsStockController {
 				bmsStockHeader.setExBoll1(0);
 				bmsStockHeader.setExVarchar("");
 				bmsStockHeader.setBmsStatus(1);
-				
+
 				bmsStockHeaderResponse = restTemplate.postForObject(Constants.url + "insertBmsStock", bmsStockHeader,
 						BmsStockHeader.class);// end of update bms stock Day end Process
-			
+
 				System.out.println("bMS SF Stock Header Update Response" + bmsStockHeaderResponse.toString());
-				
+
 				// Inserting next Day Entry for BMS Stock//
 
 				System.out.println("Inserting next day stock Entry for BMS Stock");
-				
+
 				SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 				Calendar c = Calendar.getInstance();
 				c.setTime(globalHeaderDate); // Now use today date.
@@ -611,14 +626,14 @@ public class BmsStockController {
 					bmsStockDetailedlist.add(bmsStockDetailed);
 
 				}
-				
+
 				bmsStockHeaderInsert.setBmsStockDetailed(bmsStockDetailedlist);
 
 				bmsStockHeader = new BmsStockHeader();
-				
+
 				bmsStockHeader = restTemplate.postForObject(Constants.url + "insertBmsStock", bmsStockHeaderInsert,
 						BmsStockHeader.class);// End of inserting BMS Stock for Next Day
-				
+
 				System.out.println("bMS SF Stock Header iNSERT Response" + bmsStockHeader.toString());
 
 			}

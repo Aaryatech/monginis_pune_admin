@@ -41,6 +41,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ats.adminpanel.commons.AccessControll;
 import com.ats.adminpanel.commons.Constants;
 import com.ats.adminpanel.commons.VpsImageUpload;
 import com.ats.adminpanel.model.ExportToExcel;
@@ -48,6 +49,7 @@ import com.ats.adminpanel.model.Info;
 import com.ats.adminpanel.model.StockItem;
 import com.ats.adminpanel.model.TrayType;
 import com.ats.adminpanel.model.RawMaterial.RawMaterialUom;
+import com.ats.adminpanel.model.accessright.ModuleJson;
 import com.ats.adminpanel.model.item.AllItemsListResponse;
 import com.ats.adminpanel.model.item.CategoryListResponse;
 import com.ats.adminpanel.model.item.FrItemStock;
@@ -93,34 +95,43 @@ public class ItemController {
 	boolean isError = false;
 	ArrayList<StockItem> tempStockItemList;
 
-
 	@RequestMapping(value = "/updateHsnAndPer", method = RequestMethod.GET)
 	public ModelAndView updateHsnAndPer(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView model = new ModelAndView("items/updateHsnPer");
 
-		/*
-		 * Constants.mainAct =1; Constants.subAct =4;
-		 */
-		try {
-			RestTemplate restTemplate = new RestTemplate();
-			allItemsListResponse = restTemplate.getForObject(Constants.url + "getAllItems", AllItemsListResponse.class);
+		ModelAndView model = null;
+		HttpSession session = request.getSession();
 
-			List<Item> itemsList = new ArrayList<Item>();
-			itemsList = allItemsListResponse.getItems();
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("updateHsnAndPer", "updateHsnAndPer", "1", "0", "0", "0", newModuleList);
 
-			categoryListResponse = restTemplate.getForObject(Constants.url + "showAllCategory",
-					CategoryListResponse.class);
-			mCategoryList = categoryListResponse.getmCategoryList();
-			List<MCategoryList> resCatList = new ArrayList<MCategoryList>();
-			for (MCategoryList mCat : mCategoryList) {
-				if (mCat.getCatId() != 5 && mCat.getCatId() != 6) {
-					resCatList.add(mCat);
+		if (view.getError() == true) {
+
+			model = new ModelAndView("accessDenied");
+
+		} else {
+			model = new ModelAndView("items/updateHsnPer");
+			try {
+				RestTemplate restTemplate = new RestTemplate();
+				allItemsListResponse = restTemplate.getForObject(Constants.url + "getAllItems",
+						AllItemsListResponse.class);
+
+				List<Item> itemsList = new ArrayList<Item>();
+				itemsList = allItemsListResponse.getItems();
+
+				categoryListResponse = restTemplate.getForObject(Constants.url + "showAllCategory",
+						CategoryListResponse.class);
+				mCategoryList = categoryListResponse.getmCategoryList();
+				List<MCategoryList> resCatList = new ArrayList<MCategoryList>();
+				for (MCategoryList mCat : mCategoryList) {
+					if (mCat.getCatId() != 5 && mCat.getCatId() != 6) {
+						resCatList.add(mCat);
+					}
 				}
+				model.addObject("itemsList", itemsList);
+				model.addObject("mCategoryList", resCatList);
+			} catch (Exception e) {
+				System.out.println("" + e.getMessage());
 			}
-			model.addObject("itemsList", itemsList);
-			model.addObject("mCategoryList", resCatList);
-		} catch (Exception e) {
-			System.out.println("" + e.getMessage());
 		}
 		return model;
 	}
@@ -165,30 +176,44 @@ public class ItemController {
 
 	@RequestMapping(value = "/addItem", method = RequestMethod.GET)
 	public ModelAndView addItem(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView model = new ModelAndView("items/addnewitem");
 
-		Constants.mainAct = 1;
-		Constants.subAct = 4;
-		try {
+		ModelAndView model = null;
+		HttpSession session = request.getSession();
 
-			System.out.println("Add Item Request");
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("addItem", "addItem", "1", "0", "0", "0", newModuleList);
 
-			RestTemplate restTemplate = new RestTemplate();
-			// CategoryListResponse
-			categoryListResponse = restTemplate.getForObject(Constants.url + "showAllCategory",
-					CategoryListResponse.class);
-			mCategoryList = new ArrayList<MCategoryList>();
-			mCategoryList = categoryListResponse.getmCategoryList();
-			System.out.println("Main Cat is  " + categoryListResponse.toString());
-			//Integer maxId = restTemplate.getForObject(Constants.url + "getUniqueItemCode", Integer.class);
+		if (view.getError() == true) {
 
-			//model.addObject("itemId", maxId);
-			model.addObject("mCategoryList", mCategoryList);
-			model.addObject("isError", isError);
-			isError = false;
+			model = new ModelAndView("accessDenied");
 
-		} catch (Exception e) {
-			System.out.println("error in item show sachin" + e.getMessage());
+		} else {
+
+			model = new ModelAndView("items/addnewitem");
+			Constants.mainAct = 1;
+			Constants.subAct = 4;
+			try {
+
+				System.out.println("Add Item Request");
+
+				RestTemplate restTemplate = new RestTemplate();
+				// CategoryListResponse
+				categoryListResponse = restTemplate.getForObject(Constants.url + "showAllCategory",
+						CategoryListResponse.class);
+				mCategoryList = new ArrayList<MCategoryList>();
+				mCategoryList = categoryListResponse.getmCategoryList();
+				System.out.println("Main Cat is  " + categoryListResponse.toString());
+				// Integer maxId = restTemplate.getForObject(Constants.url +
+				// "getUniqueItemCode", Integer.class);
+
+				// model.addObject("itemId", maxId);
+				model.addObject("mCategoryList", mCategoryList);
+				model.addObject("isError", isError);
+				isError = false;
+
+			} catch (Exception e) {
+				System.out.println("error in item show sachin" + e.getMessage());
+			}
 		}
 		return model;
 	}
@@ -303,22 +328,34 @@ public class ItemController {
 
 	@RequestMapping(value = "/showFrItemConfP")
 	public ModelAndView showFrItemConfP(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView model = new ModelAndView("items/itemConfP");
-		Constants.mainAct = 2;
-		Constants.subAct = 13;
+		ModelAndView model = null;
+		HttpSession session = request.getSession();
 
-		try {
-		
-			model.addObject("catId", catId);
-			model.addObject("itemList", tempItemList);
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("showAddNewFranchisee", "showAddNewFranchisee", "1", "0", "0", "0",
+				newModuleList);
 
-		} catch (Exception e) {
+		if (view.getError() == true) {
 
-			e.printStackTrace();
+			model = new ModelAndView("accessDenied");
+
+		} else {
+			model = new ModelAndView("items/itemConfP");
+			Constants.mainAct = 2;
+			Constants.subAct = 13;
+
+			try {
+
+				model.addObject("catId", catId);
+				model.addObject("itemList", tempItemList);
+
+			} catch (Exception e) {
+
+				e.printStackTrace();
+			}
 		}
 		return model;
 	}
-
 
 	@RequestMapping(value = "/getItemsbySubCatId", method = RequestMethod.POST)
 	public ModelAndView getItemsbySubCatId(HttpServletRequest request, HttpServletResponse response) {
@@ -659,43 +696,43 @@ public class ItemController {
 
 		String curTimeStamp = sdf.format(cal.getTime());
 
-		/*try {
-
-			upload.saveUploadedFiles(file, Constants.ITEM_IMAGE_TYPE,
-					curTimeStamp + "-" + file.get(0).getOriginalFilename());
-			// upload.saveUploadedFiles(file, Constants.ITEM_IMAGE_TYPE, itemName);
-			System.out.println("upload method called " + file.toString());
-
-		} catch (IOException e) {
-
-			System.out.println("Exce in File Upload In Item Insert " + e.getMessage());
-			e.printStackTrace();
-		}*/
+		/*
+		 * try {
+		 * 
+		 * upload.saveUploadedFiles(file, Constants.ITEM_IMAGE_TYPE, curTimeStamp + "-"
+		 * + file.get(0).getOriginalFilename()); // upload.saveUploadedFiles(file,
+		 * Constants.ITEM_IMAGE_TYPE, itemName);
+		 * System.out.println("upload method called " + file.toString());
+		 * 
+		 * } catch (IOException e) {
+		 * 
+		 * System.out.println("Exce in File Upload In Item Insert " + e.getMessage());
+		 * e.printStackTrace(); }
+		 */
 		RestTemplate rest = new RestTemplate();
-        try {
-			
-		    LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
-		    String tempFileName;
-		    FileOutputStream fo;
+		try {
 
-		            tempFileName = curTimeStamp + "-" + file.get(0).getOriginalFilename();
-		            fo = new FileOutputStream(tempFileName);
-		            fo.write(file.get(0).getBytes());
-		            fo.close();
-		            map.add("file", new FileSystemResource(tempFileName));
-		            map.add("imageName", tempFileName);
-					map.add("type", "item");
-		        HttpHeaders headers = new HttpHeaders();
-		        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+			LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+			String tempFileName;
+			FileOutputStream fo;
 
-		        HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
-		        Info infoRes = rest.postForObject(Constants.url + "/photoUpload", requestEntity, Info.class);
+			tempFileName = curTimeStamp + "-" + file.get(0).getOriginalFilename();
+			fo = new FileOutputStream(tempFileName);
+			fo.write(file.get(0).getBytes());
+			fo.close();
+			map.add("file", new FileSystemResource(tempFileName));
+			map.add("imageName", tempFileName);
+			map.add("type", "item");
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
-	
-	     }catch (Exception e) {
-	     	e.printStackTrace();
-	     }
-		
+			HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
+			Info infoRes = rest.postForObject(Constants.url + "/photoUpload", requestEntity, Info.class);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 
 		map.add("itemId", itemId);
@@ -710,7 +747,7 @@ public class ItemController {
 		map.add("itemMrp1", itemMrp1);
 		map.add("itemMrp2", itemMrp2);
 		map.add("itemMrp3", itemMrp3);
-		map.add("itemImage",curTimeStamp+"-"+file.get(0).getOriginalFilename());
+		map.add("itemImage", curTimeStamp + "-" + file.get(0).getOriginalFilename());
 		map.add("itemTax1", itemTax1);
 		map.add("itemTax2", itemTax2);
 		map.add("itemTax3", itemTax3);
@@ -745,140 +782,154 @@ public class ItemController {
 	@RequestMapping(value = "/itemList")
 	public ModelAndView showAddItem(HttpServletRequest request, HttpServletResponse response) {
 		System.out.println("List Item Request");
-		ModelAndView mav = new ModelAndView("items/itemlist");
+
 		Constants.mainAct = 1;
 		Constants.subAct = 5;
 
-		RestTemplate restTemplate = new RestTemplate();
-		// CategoryListResponse
-		categoryListResponse = restTemplate.getForObject(Constants.url + "showAllCategory", CategoryListResponse.class);
-		List<MCategoryList> mCategoryList = new ArrayList<MCategoryList>();
-		mCategoryList = categoryListResponse.getmCategoryList();
+		ModelAndView mav = null;
+		HttpSession session = request.getSession();
 
-		mav.addObject("mCategoryList", mCategoryList);
-		try {
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("itemList", "itemList", "1", "0", "0", "0", newModuleList);
 
-			// RestTemplate restTemplate = new RestTemplate();
-			allItemsListResponse = restTemplate.getForObject(Constants.url + "getAllItems", AllItemsListResponse.class);
+		if (view.getError() == true) {
 
-			List<Item> itemsList = new ArrayList<Item>();
-			itemsList = allItemsListResponse.getItems();
-			System.out.println("LIst of items" + itemsList.toString());
+			mav = new ModelAndView("accessDenied");
+
+		} else {
+
+			mav = new ModelAndView("items/itemlist");
+			RestTemplate restTemplate = new RestTemplate();
+			// CategoryListResponse
+			categoryListResponse = restTemplate.getForObject(Constants.url + "showAllCategory",
+					CategoryListResponse.class);
+			List<MCategoryList> mCategoryList = new ArrayList<MCategoryList>();
+			mCategoryList = categoryListResponse.getmCategoryList();
 
 			mav.addObject("mCategoryList", mCategoryList);
-			mav.addObject("itemsList", itemsList);
-			mav.addObject("url", Constants.ITEM_IMAGE_URL);
+			try {
 
-			// exportToExcel
+				// RestTemplate restTemplate = new RestTemplate();
+				allItemsListResponse = restTemplate.getForObject(Constants.url + "getAllItems",
+						AllItemsListResponse.class);
 
-			ItemList itemResponse = restTemplate.getForObject(Constants.url + "tally/getAllExcelItems", ItemList.class);
+				List<Item> itemsList = new ArrayList<Item>();
+				itemsList = allItemsListResponse.getItems();
+				System.out.println("LIst of items" + itemsList.toString());
 
-			List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
+				mav.addObject("mCategoryList", mCategoryList);
+				mav.addObject("itemsList", itemsList);
+				mav.addObject("url", Constants.ITEM_IMAGE_URL);
 
-			ExportToExcel expoExcel = new ExportToExcel();
-			List<String> rowData = new ArrayList<String>();
+				// exportToExcel
 
-			rowData.add("Sr. No.");
-			rowData.add("Id");
-			rowData.add("Item Code");
-			rowData.add("Item Name");
-			rowData.add("Category");
-			rowData.add("Group1");
-			rowData.add("Group2");
-			rowData.add("HsnCode");
-			rowData.add("UOM");
-			rowData.add("Rate1");
-			rowData.add("Rate2");
-			rowData.add("Rate3");
-			rowData.add("Mrp1");
-			rowData.add("Mrp2");
-			rowData.add("Mrp3");
-			rowData.add("Sgst %");
-			rowData.add("Cgst %");
-			rowData.add("Igst %");
-			rowData.add("Cess %");
+				ItemList itemResponse = restTemplate.getForObject(Constants.url + "tally/getAllExcelItems",
+						ItemList.class);
 
-			expoExcel.setRowData(rowData);
-			exportToExcelList.add(expoExcel);
-			List<TallyItem> excelItems = itemResponse.getItemList();
-			for (int i = 0; i < excelItems.size(); i++) {
-				expoExcel = new ExportToExcel();
-				rowData = new ArrayList<String>();
-				rowData.add("" + (i + 1));
-				rowData.add("" + excelItems.get(i).getId());
-				rowData.add(excelItems.get(i).getItemCode());
-				rowData.add(excelItems.get(i).getItemName());
-				rowData.add(excelItems.get(i).getItemGroup());
-				rowData.add(excelItems.get(i).getSubGroup());
-				rowData.add(excelItems.get(i).getSubSubGroup());
-				rowData.add(excelItems.get(i).getHsnCode());
+				List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
 
-				rowData.add(excelItems.get(i).getUom());
-				rowData.add("" + excelItems.get(i).getItemRate1());
-				rowData.add("" + excelItems.get(i).getItemRate2());
-				rowData.add("" + excelItems.get(i).getItemRate3());
-				rowData.add("" + excelItems.get(i).getItemRate1());
-				rowData.add("" + excelItems.get(i).getItemRate2());
-				rowData.add("" + excelItems.get(i).getItemRate3());
-				rowData.add("" + excelItems.get(i).getSgstPer());
-				rowData.add("" + excelItems.get(i).getCgstPer());
-				rowData.add("" + excelItems.get(i).getIgstPer());
-				rowData.add("" + excelItems.get(i).getCessPer());
+				ExportToExcel expoExcel = new ExportToExcel();
+				List<String> rowData = new ArrayList<String>();
+
+				rowData.add("Sr. No.");
+				rowData.add("Id");
+				rowData.add("Item Code");
+				rowData.add("Item Name");
+				rowData.add("Category");
+				rowData.add("Group1");
+				rowData.add("Group2");
+				rowData.add("HsnCode");
+				rowData.add("UOM");
+				rowData.add("Rate1");
+				rowData.add("Rate2");
+				rowData.add("Rate3");
+				rowData.add("Mrp1");
+				rowData.add("Mrp2");
+				rowData.add("Mrp3");
+				rowData.add("Sgst %");
+				rowData.add("Cgst %");
+				rowData.add("Igst %");
+				rowData.add("Cess %");
 
 				expoExcel.setRowData(rowData);
 				exportToExcelList.add(expoExcel);
+				List<TallyItem> excelItems = itemResponse.getItemList();
+				for (int i = 0; i < excelItems.size(); i++) {
+					expoExcel = new ExportToExcel();
+					rowData = new ArrayList<String>();
+					rowData.add("" + (i + 1));
+					rowData.add("" + excelItems.get(i).getId());
+					rowData.add(excelItems.get(i).getItemCode());
+					rowData.add(excelItems.get(i).getItemName());
+					rowData.add(excelItems.get(i).getItemGroup());
+					rowData.add(excelItems.get(i).getSubGroup());
+					rowData.add(excelItems.get(i).getSubSubGroup());
+					rowData.add(excelItems.get(i).getHsnCode());
 
+					rowData.add(excelItems.get(i).getUom());
+					rowData.add("" + excelItems.get(i).getItemRate1());
+					rowData.add("" + excelItems.get(i).getItemRate2());
+					rowData.add("" + excelItems.get(i).getItemRate3());
+					rowData.add("" + excelItems.get(i).getItemRate1());
+					rowData.add("" + excelItems.get(i).getItemRate2());
+					rowData.add("" + excelItems.get(i).getItemRate3());
+					rowData.add("" + excelItems.get(i).getSgstPer());
+					rowData.add("" + excelItems.get(i).getCgstPer());
+					rowData.add("" + excelItems.get(i).getIgstPer());
+					rowData.add("" + excelItems.get(i).getCessPer());
+
+					expoExcel.setRowData(rowData);
+					exportToExcelList.add(expoExcel);
+
+				}
+
+				session = request.getSession();
+				session.setAttribute("exportExcelList", exportToExcelList);
+				session.setAttribute("excelName", "itemsList");
+
+				List<ExportToExcel> exportExcelListDummy = new ArrayList<ExportToExcel>();
+
+				expoExcel = new ExportToExcel();
+				rowData = new ArrayList<String>();
+
+				rowData.add("Item Id");
+				rowData.add("Item Name");
+				rowData.add("ItemGroup");
+				rowData.add("SubGroup");
+				rowData.add("SubSubGroup");
+				rowData.add("Rate1");
+				rowData.add("Rate2");
+				rowData.add("Rate3");
+				rowData.add("Mrp1");
+				rowData.add("Mrp2");
+				rowData.add("Mrp3");
+				rowData.add("Sgst %");
+				rowData.add("Cgst %");
+				rowData.add("Igst %");
+				rowData.add("Sort Id");
+				rowData.add("Is Grn2 App?(1/0)");
+				rowData.add("Min Qty");
+				rowData.add("Item Shelf Life");
+
+				expoExcel.setRowData(rowData);
+				exportExcelListDummy.add(expoExcel);
+
+				session.setAttribute("exportExcelListDummy", exportExcelListDummy);
+				session.setAttribute("excelName", "ItemExcelImportFormat");
+
+			} catch (Exception e) {
+				System.out.println("exce in listing filtered group itme" + e.getMessage());
 			}
-
-			HttpSession session = request.getSession();
-			session.setAttribute("exportExcelList", exportToExcelList);
-			session.setAttribute("excelName", "itemsList");
-			
-		List<ExportToExcel>	exportExcelListDummy = new ArrayList<ExportToExcel>();
-
-			 expoExcel = new ExportToExcel();
-			 rowData = new ArrayList<String>();
-
-			rowData.add("Item Id");
-			rowData.add("Item Name");
-			rowData.add("ItemGroup");
-			rowData.add("SubGroup");
-			rowData.add("SubSubGroup");
-			rowData.add("Rate1");
-			rowData.add("Rate2");
-			rowData.add("Rate3");
-			rowData.add("Mrp1");
-			rowData.add("Mrp2");
-			rowData.add("Mrp3");
-			rowData.add("Sgst %");
-			rowData.add("Cgst %");
-			rowData.add("Igst %");
-			rowData.add("Sort Id");
-			rowData.add("Is Grn2 App?(1/0)");
-			rowData.add("Min Qty");
-			rowData.add("Item Shelf Life");
-
-			expoExcel.setRowData(rowData);
-			exportExcelListDummy.add(expoExcel);
-	
-
-			session.setAttribute("exportExcelListDummy", exportExcelListDummy);
-			session.setAttribute("excelName", "ItemExcelImportFormat");
-			
-		} catch (Exception e) {
-			System.out.println("exce in listing filtered group itme" + e.getMessage());
 		}
-
 		return mav;
 
 	}
+
 	@RequestMapping(value = "/uploadItemsByFile", method = RequestMethod.POST)
-	public String uploadItemsByFile(Model model,@RequestParam("file") MultipartFile excelfile,
+	public String uploadItemsByFile(Model model, @RequestParam("file") MultipartFile excelfile,
 			HttpServletRequest request, HttpServletResponse response) {
 
-
 		try {
-
 
 			System.out.println("Excel File name " + excelfile.getOriginalFilename());
 
@@ -888,63 +939,63 @@ public class ItemController {
 			XSSFSheet worksheet = workbook.getSheetAt(0);
 			// Reads the data in excel file until last row is encountered
 
-			List<Item>  itemListRes = new ArrayList<Item>();
+			List<Item> itemListRes = new ArrayList<Item>();
 
 			System.out.println("Last Row Number is " + worksheet.getLastRowNum());
 
-			for (int i=1; i <= worksheet.getLastRowNum();i++) {
+			for (int i = 1; i <= worksheet.getLastRowNum(); i++) {
 				// Creates an object for the UserInfo Model
-				
+
 				Item item = new Item();
 
 				// Creates an object representing a single row in excel
 				XSSFRow row = worksheet.getRow(i);
-				
-				//System.err.println("row = " +row.toString());
+
+				// System.err.println("row = " +row.toString());
 				// Sets the Read data to the model class
 				// user.setId((int) row.getCell(0).getNumericCellValue());
 				try {
-				item.setId(0);
-			
-				item.setItemId(getCellValueAsString(row.getCell(0)));
+					item.setId(0);
 
-				item.setItemName(getCellValueAsString(row.getCell(1)));
+					item.setItemId(getCellValueAsString(row.getCell(0)));
 
-				item.setItemGrp1(Integer.parseInt(getCellValueAsString(row.getCell(2))));
+					item.setItemName(getCellValueAsString(row.getCell(1)));
 
-				item.setItemGrp2(Integer.parseInt(getCellValueAsString(row.getCell(3))));
+					item.setItemGrp1(Integer.parseInt(getCellValueAsString(row.getCell(2))));
 
-				item.setItemGrp3(Integer.parseInt(getCellValueAsString(row.getCell(4))));
+					item.setItemGrp2(Integer.parseInt(getCellValueAsString(row.getCell(3))));
 
-				item.setItemRate1(Float.parseFloat(getCellValueAsString(row.getCell(5))));
+					item.setItemGrp3(Integer.parseInt(getCellValueAsString(row.getCell(4))));
 
-				item.setItemRate2(Float.parseFloat(getCellValueAsString(row.getCell(6))));
+					item.setItemRate1(Float.parseFloat(getCellValueAsString(row.getCell(5))));
 
-				item.setItemRate3(Float.parseFloat(getCellValueAsString(row.getCell(7))));
+					item.setItemRate2(Float.parseFloat(getCellValueAsString(row.getCell(6))));
 
-				item.setItemMrp1(Float.parseFloat(getCellValueAsString(row.getCell(8))));
-				
-				item.setItemMrp2(Float.parseFloat(getCellValueAsString(row.getCell(9))));
-				
-				item.setItemMrp3(Float.parseFloat(getCellValueAsString(row.getCell(10))));
+					item.setItemRate3(Float.parseFloat(getCellValueAsString(row.getCell(7))));
 
-				item.setItemTax1(Float.parseFloat(getCellValueAsString(row.getCell(11))));
-				
-				item.setItemTax2(Float.parseFloat(getCellValueAsString(row.getCell(12))));
-				
-				item.setItemTax3(Float.parseFloat(getCellValueAsString(row.getCell(13))));
-				
-				item.setItemSortId(Float.parseFloat(getCellValueAsString(row.getCell(14))));
-				
-				item.setGrnTwo(Integer.parseInt(getCellValueAsString(row.getCell(15))));
-				item.setMinQty(Integer.parseInt(getCellValueAsString(row.getCell(16))));
-				
-				item.setShelfLife(Integer.parseInt(getCellValueAsString(row.getCell(17))));
-				item.setDelStatus(0);
-				item.setItemImage("");
-				
-				itemListRes.add(item);
-				}catch (Exception e) {
+					item.setItemMrp1(Float.parseFloat(getCellValueAsString(row.getCell(8))));
+
+					item.setItemMrp2(Float.parseFloat(getCellValueAsString(row.getCell(9))));
+
+					item.setItemMrp3(Float.parseFloat(getCellValueAsString(row.getCell(10))));
+
+					item.setItemTax1(Float.parseFloat(getCellValueAsString(row.getCell(11))));
+
+					item.setItemTax2(Float.parseFloat(getCellValueAsString(row.getCell(12))));
+
+					item.setItemTax3(Float.parseFloat(getCellValueAsString(row.getCell(13))));
+
+					item.setItemSortId(Float.parseFloat(getCellValueAsString(row.getCell(14))));
+
+					item.setGrnTwo(Integer.parseInt(getCellValueAsString(row.getCell(15))));
+					item.setMinQty(Integer.parseInt(getCellValueAsString(row.getCell(16))));
+
+					item.setShelfLife(Integer.parseInt(getCellValueAsString(row.getCell(17))));
+					item.setDelStatus(0);
+					item.setItemImage("");
+
+					itemListRes.add(item);
+				} catch (Exception e) {
 					// TODO: handle exception
 				}
 			}
@@ -967,35 +1018,36 @@ public class ItemController {
 
 		return "redirect:/itemList";
 
-	}public static String getCellValueAsString(Cell cell) {
-        String strCellValue = null;
-        if (cell != null) {
-            switch (cell.getCellType()) {
-            case Cell.CELL_TYPE_STRING:
-                strCellValue = cell.toString();
-                break;
-            case Cell.CELL_TYPE_NUMERIC:
-                if (DateUtil.isCellDateFormatted(cell)) {
-                    SimpleDateFormat dateFormat = new SimpleDateFormat(
-                            "dd/MM/yyyy");
-                    strCellValue = dateFormat.format(cell.getDateCellValue());
-                } else {
-                    Double value = cell.getNumericCellValue();
-                    Long longValue = value.longValue();
-                    strCellValue = new String(longValue.toString());
-                }
-                break;
-            case Cell.CELL_TYPE_BOOLEAN:
-                strCellValue = new String(new Boolean(
-                        cell.getBooleanCellValue()).toString());
-                break;
-            case Cell.CELL_TYPE_BLANK:
-                strCellValue = "";
-                break;
-            }
-        }
-        return strCellValue;
-    }
+	}
+
+	public static String getCellValueAsString(Cell cell) {
+		String strCellValue = null;
+		if (cell != null) {
+			switch (cell.getCellType()) {
+			case Cell.CELL_TYPE_STRING:
+				strCellValue = cell.toString();
+				break;
+			case Cell.CELL_TYPE_NUMERIC:
+				if (DateUtil.isCellDateFormatted(cell)) {
+					SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+					strCellValue = dateFormat.format(cell.getDateCellValue());
+				} else {
+					Double value = cell.getNumericCellValue();
+					Long longValue = value.longValue();
+					strCellValue = new String(longValue.toString());
+				}
+				break;
+			case Cell.CELL_TYPE_BOOLEAN:
+				strCellValue = new String(new Boolean(cell.getBooleanCellValue()).toString());
+				break;
+			case Cell.CELL_TYPE_BLANK:
+				strCellValue = "";
+				break;
+			}
+		}
+		return strCellValue;
+	}
+
 	@RequestMapping(value = "/searchItem")
 	public ModelAndView showSearchItem(HttpServletRequest request, HttpServletResponse response) {
 		System.out.println("List Item Request");
@@ -1248,39 +1300,38 @@ public class ItemController {
 
 			String curTimeStamp = sdf.format(cal.getTime());
 			itemImage = curTimeStamp + "-" + file.get(0).getOriginalFilename();
-			/*try {
-				itemImage = curTimeStamp + "-" + file.get(0).getOriginalFilename();
-				upload.saveUploadedFiles(file, Constants.ITEM_IMAGE_TYPE,
-						curTimeStamp + "-" + file.get(0).getOriginalFilename());
-				System.out.println("upload method called " + file.toString());
+			/*
+			 * try { itemImage = curTimeStamp + "-" + file.get(0).getOriginalFilename();
+			 * upload.saveUploadedFiles(file, Constants.ITEM_IMAGE_TYPE, curTimeStamp + "-"
+			 * + file.get(0).getOriginalFilename());
+			 * System.out.println("upload method called " + file.toString());
+			 * 
+			 * } catch (IOException e) {
+			 * 
+			 * System.out.println("Exce in File Upload In Item Update " + e.getMessage());
+			 * e.printStackTrace(); }
+			 */
+			try {
+				LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+				String tempFileName;
+				FileOutputStream fo;
 
-			} catch (IOException e) {
+				tempFileName = curTimeStamp + "-" + file.get(0).getOriginalFilename();
+				fo = new FileOutputStream(tempFileName);
+				fo.write(file.get(0).getBytes());
+				fo.close();
+				map.add("file", new FileSystemResource(tempFileName));
+				map.add("imageName", tempFileName);
+				map.add("type", "item");
+				HttpHeaders headers = new HttpHeaders();
+				headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
-				System.out.println("Exce in File Upload In Item Update " + e.getMessage());
+				HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
+				Info infoRes = rest.postForObject(Constants.url + "/photoUpload", requestEntity, Info.class);
+
+			} catch (Exception e) {
 				e.printStackTrace();
-			}*/
-			 try {	
-				    LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
-				    String tempFileName;
-				    FileOutputStream fo;
-
-				       tempFileName = curTimeStamp + "-" + file.get(0).getOriginalFilename();
-				       fo = new FileOutputStream(tempFileName);
-				       fo.write(file.get(0).getBytes());
-				       fo.close();
-				       map.add("file", new FileSystemResource(tempFileName));
-				       map.add("imageName", tempFileName);
-					   map.add("type", "item");
-				        HttpHeaders headers = new HttpHeaders();
-				        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
-				        HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
-				        Info infoRes = rest.postForObject(Constants.url + "/photoUpload", requestEntity, Info.class);
-
-			
-			     }catch (Exception e) {
-			     	e.printStackTrace();
-			     }
+			}
 		}
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 		map.add("itemId", itemId);
@@ -1315,36 +1366,49 @@ public class ItemController {
 	public ModelAndView showAddItemSup(HttpServletRequest request, HttpServletResponse response) {
 		Constants.mainAct = 1;
 		Constants.subAct = 109;
-		ModelAndView model = new ModelAndView("items/itemSup");
-		try {
-			RestTemplate restTemplate = new RestTemplate();
 
-			categoryListResponse = restTemplate.getForObject(Constants.url + "showAllCategory",
-					CategoryListResponse.class);
-			mCategoryList = categoryListResponse.getmCategoryList();
-			List<MCategoryList> resCatList = new ArrayList<MCategoryList>();
-			for (MCategoryList mCat : mCategoryList) {
-				if (mCat.getCatId() != 5 && mCat.getCatId() != 6) {
-					resCatList.add(mCat);
+		ModelAndView model = null;
+		HttpSession session = request.getSession();
+
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("showAddItemSup", "showAddItemSup", "1", "0", "0", "0", newModuleList);
+
+		if (view.getError() == true) {
+
+			model = new ModelAndView("accessDenied");
+
+		} else {
+			model = new ModelAndView("items/itemSup");
+			try {
+				RestTemplate restTemplate = new RestTemplate();
+
+				categoryListResponse = restTemplate.getForObject(Constants.url + "showAllCategory",
+						CategoryListResponse.class);
+				mCategoryList = categoryListResponse.getmCategoryList();
+				List<MCategoryList> resCatList = new ArrayList<MCategoryList>();
+				for (MCategoryList mCat : mCategoryList) {
+					if (mCat.getCatId() != 5 && mCat.getCatId() != 6) {
+						resCatList.add(mCat);
+					}
 				}
-			}
-			List<RawMaterialUom> rawMaterialUomList = restTemplate.getForObject(Constants.url + "rawMaterial/getRmUom",
-					List.class);
-			model.addObject("rmUomList", rawMaterialUomList);
-			List<TrayType> trayTypeList = restTemplate.getForObject(Constants.url + "/getTrayTypes", List.class);
-			System.out.println("Tray Types:" + trayTypeList.toString());
-			model.addObject("trayTypes", trayTypeList);
+				List<RawMaterialUom> rawMaterialUomList = restTemplate
+						.getForObject(Constants.url + "rawMaterial/getRmUom", List.class);
+				model.addObject("rmUomList", rawMaterialUomList);
+				List<TrayType> trayTypeList = restTemplate.getForObject(Constants.url + "/getTrayTypes", List.class);
+				System.out.println("Tray Types:" + trayTypeList.toString());
+				model.addObject("trayTypes", trayTypeList);
 
-			model.addObject("mCategoryList", resCatList);
-			model.addObject("isEdit", 0);
-			model.addObject("suppCatId", suppCatId);
-			model.addObject("suppId", suppId);
-			model.addObject("suppItemName", suppItemName);
-			suppCatId = 0;
-			suppId = 0;
-			suppItemName = "";
-		} catch (Exception e) {
-			System.out.println("Excption In /showAddItemSup");
+				model.addObject("mCategoryList", resCatList);
+				model.addObject("isEdit", 0);
+				model.addObject("suppCatId", suppCatId);
+				model.addObject("suppId", suppId);
+				model.addObject("suppItemName", suppItemName);
+				suppCatId = 0;
+				suppId = 0;
+				suppItemName = "";
+			} catch (Exception e) {
+				System.out.println("Excption In /showAddItemSup");
+			}
 		}
 		return model;
 
@@ -1375,24 +1439,38 @@ public class ItemController {
 
 	@RequestMapping(value = "/showItemSupList", method = RequestMethod.GET)
 	public ModelAndView itemSupList(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView mav = new ModelAndView("items/itemSupList");
-		Constants.mainAct = 1;
-		Constants.subAct = 110;
 
-		RestTemplate restTemplate = new RestTemplate();
+		ModelAndView mav = null;
+		HttpSession session = request.getSession();
 
-		try {
-			ItemSupList itemSupList = restTemplate.getForObject(Constants.url + "/getItemSupList", ItemSupList.class);
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("showItemSupList", "showItemSupList", "1", "0", "0", "0", newModuleList);
 
-			List<TrayType> trayTypeList = restTemplate.getForObject(Constants.url + "/getTrayTypes", List.class);
-			System.out.println("Tray Types:" + trayTypeList.toString());
-			mav.addObject("trayTypes", trayTypeList);
-			mav.addObject("itemsList", itemSupList.getItemSupList());
+		if (view.getError() == true) {
 
-		} catch (Exception e) {
-			System.out.println("Exc In /itemSupList" + e.getMessage());
+			mav = new ModelAndView("accessDenied");
+
+		} else {
+
+			mav = new ModelAndView("items/itemSupList");
+			Constants.mainAct = 1;
+			Constants.subAct = 110;
+
+			RestTemplate restTemplate = new RestTemplate();
+
+			try {
+				ItemSupList itemSupList = restTemplate.getForObject(Constants.url + "/getItemSupList",
+						ItemSupList.class);
+
+				List<TrayType> trayTypeList = restTemplate.getForObject(Constants.url + "/getTrayTypes", List.class);
+				System.out.println("Tray Types:" + trayTypeList.toString());
+				mav.addObject("trayTypes", trayTypeList);
+				mav.addObject("itemsList", itemSupList.getItemSupList());
+
+			} catch (Exception e) {
+				System.out.println("Exc In /itemSupList" + e.getMessage());
+			}
 		}
-
 		return mav;
 
 	}
@@ -1513,28 +1591,27 @@ public class ItemController {
 		return mav;
 
 	}
-	
+
 	@RequestMapping(value = "/getItemCode", method = RequestMethod.GET)
 	public @ResponseBody Info getItemCode(HttpServletRequest request, HttpServletResponse response) {
-		String code="";
+		String code = "";
 		RestTemplate restTemplate = new RestTemplate();
-		Info info=new Info();
+		Info info = new Info();
 		try {
 			int catId = Integer.parseInt(request.getParameter("item_grp1"));
 			int subCatId = Integer.parseInt(request.getParameter("item_grp2"));
-			
+
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			map.add("catId", catId);
 			map.add("subCatId", subCatId);
 
-			 code = restTemplate.postForObject(Constants.url + "/getItemCode", map, String.class);
-			System.err.println(code+"code");
+			code = restTemplate.postForObject(Constants.url + "/getItemCode", map, String.class);
+			System.err.println(code + "code");
 			info.setMessage(code);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return info;
-		}
+	}
 
 }

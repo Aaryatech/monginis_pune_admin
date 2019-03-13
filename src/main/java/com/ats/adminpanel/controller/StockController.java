@@ -13,6 +13,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ats.adminpanel.commons.AccessControll;
 import com.ats.adminpanel.commons.Constants;
 import com.ats.adminpanel.model.AllFrIdName;
 import com.ats.adminpanel.model.AllFrIdNameList;
@@ -37,6 +39,7 @@ import com.ats.adminpanel.model.FrMenu;
 
 import com.ats.adminpanel.model.GetFrMenus;
 import com.ats.adminpanel.model.Info;
+import com.ats.adminpanel.model.accessright.ModuleJson;
 import com.ats.adminpanel.model.item.CategoryListResponse;
 import com.ats.adminpanel.model.item.Item;
 import com.ats.adminpanel.model.item.MCategoryList;
@@ -61,95 +64,103 @@ public class StockController {
 
 		logger.info("/showFrOpeningStock request mapping.");
 
-		ModelAndView model = new ModelAndView("stock/fropeningstock");
-		Constants.mainAct = 2;
-		Constants.subAct = 18;
+		ModelAndView model = null;
+		HttpSession session = request.getSession();
 
-		RestTemplate restTemplate = new RestTemplate();
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("showFrOpeningStock", "showFrOpeningStock", "1", "0", "0", "0",
+				newModuleList);
 
-		AllFrIdNameList allFrIdNameList = new AllFrIdNameList();
-		try {
+		if (view.getError() == true) {
 
-			allFrIdNameList = restTemplate.getForObject(Constants.url + "getAllFrIdName", AllFrIdNameList.class);
+			model = new ModelAndView("accessDenied");
 
-		} catch (Exception e) {
-			System.out.println("Exception in getAllFrIdName" + e.getMessage());
-			e.printStackTrace();
+		} else {
+			model = new ModelAndView("stock/fropeningstock");
+			Constants.mainAct = 2;
+			Constants.subAct = 18;
 
-		}
-		//---------------------------------4-jan-2019------------------------------------
-		CategoryListResponse itemsWithCategoryResponseList = restTemplate
-				.getForObject(Constants.url + "showAllCategory", CategoryListResponse.class);
+			RestTemplate restTemplate = new RestTemplate();
 
-		List<MCategoryList>	itemsWithCategoriesList = itemsWithCategoryResponseList.getmCategoryList();
+			AllFrIdNameList allFrIdNameList = new AllFrIdNameList();
+			try {
 
-		for (int i = 0; i < itemsWithCategoriesList.size(); i++) {
+				allFrIdNameList = restTemplate.getForObject(Constants.url + "getAllFrIdName", AllFrIdNameList.class);
 
-			// System.out.println("cat id== " + itemsWithCategoriesList.get(i).getCatId());
-			if (itemsWithCategoriesList.get(i).getCatId() == 5) {
+			} catch (Exception e) {
+				System.out.println("Exception in getAllFrIdName" + e.getMessage());
+				e.printStackTrace();
 
-				itemsWithCategoriesList.remove(i);
+			}
+			// ---------------------------------4-jan-2019------------------------------------
+			CategoryListResponse itemsWithCategoryResponseList = restTemplate
+					.getForObject(Constants.url + "showAllCategory", CategoryListResponse.class);
+
+			List<MCategoryList> itemsWithCategoriesList = itemsWithCategoryResponseList.getmCategoryList();
+
+			for (int i = 0; i < itemsWithCategoriesList.size(); i++) {
+
+				// System.out.println("cat id== " + itemsWithCategoriesList.get(i).getCatId());
+				if (itemsWithCategoriesList.get(i).getCatId() == 5) {
+
+					itemsWithCategoriesList.remove(i);
+
+				}
 
 			}
 
-		}
+			for (int i = 0; i < itemsWithCategoriesList.size(); i++) {
 
-		for (int i = 0; i < itemsWithCategoriesList.size(); i++) {
+				if (itemsWithCategoriesList.get(i).getCatId() == 6) {
 
-			if (itemsWithCategoriesList.get(i).getCatId() == 6) {
+					itemsWithCategoriesList.remove(i);
 
-				itemsWithCategoriesList.remove(i);
+				}
 
 			}
 
+			model.addObject("catList", itemsWithCategoriesList);
+			// ---------------------------------4-jan-2019------------------------------------
+			model.addObject("frList", allFrIdNameList.getFrIdNamesList());
 		}
-
-		model.addObject("catList", itemsWithCategoriesList);
-		//---------------------------------4-jan-2019------------------------------------
-		model.addObject("frList", allFrIdNameList.getFrIdNamesList());
-
 		return model;
 	}
 
 	// AJAX Call for menu
-	/*@RequestMapping(value = "/getMenuListByFr", method = RequestMethod.GET)
-	public @ResponseBody List<FrMenu> getMenuListByFr(HttpServletRequest request, HttpServletResponse response) {
-
-		logger.info("/getMenuListByFr AJAX Call mapping.");
-try {
-		frId = request.getParameter("fr_id");
-
-		RestTemplate restTemplate = new RestTemplate();
-
-		MultiValueMap<String, Object> menuMap = new LinkedMultiValueMap<String, Object>();
-		menuMap.add("frId", frId);
-
-		GetFrMenus getFrMenus = restTemplate.postForObject(Constants.url + "getFrConfigMenus", menuMap,
-				GetFrMenus.class);
-
-		filterFrMenus = new ArrayList<FrMenu>();
-
-		for (int i = 0; i < getFrMenus.getFrMenus().size(); i++) {
-
-			FrMenu frMenu = getFrMenus.getFrMenus().get(i);
-
-			if (frMenu.getMenuId() == 26 || frMenu.getMenuId() == 31 || frMenu.getMenuId() == 33
-					|| frMenu.getMenuId() == 34 || frMenu.getMenuId() == 49) {
-
-				filterFrMenus.add(frMenu);
-
-			}
-
-		}
-System.err.println("Menus " +filterFrMenus);
-}catch (Exception e) {
-	System.err.println("Exc in ");
-	System.err.println("dvld");
-	e.printStackTrace();
-}
-		return filterFrMenus;
-	}
-*/
+	/*
+	 * @RequestMapping(value = "/getMenuListByFr", method = RequestMethod.GET)
+	 * public @ResponseBody List<FrMenu> getMenuListByFr(HttpServletRequest request,
+	 * HttpServletResponse response) {
+	 * 
+	 * logger.info("/getMenuListByFr AJAX Call mapping."); try { frId =
+	 * request.getParameter("fr_id");
+	 * 
+	 * RestTemplate restTemplate = new RestTemplate();
+	 * 
+	 * MultiValueMap<String, Object> menuMap = new LinkedMultiValueMap<String,
+	 * Object>(); menuMap.add("frId", frId);
+	 * 
+	 * GetFrMenus getFrMenus = restTemplate.postForObject(Constants.url +
+	 * "getFrConfigMenus", menuMap, GetFrMenus.class);
+	 * 
+	 * filterFrMenus = new ArrayList<FrMenu>();
+	 * 
+	 * for (int i = 0; i < getFrMenus.getFrMenus().size(); i++) {
+	 * 
+	 * FrMenu frMenu = getFrMenus.getFrMenus().get(i);
+	 * 
+	 * if (frMenu.getMenuId() == 26 || frMenu.getMenuId() == 31 ||
+	 * frMenu.getMenuId() == 33 || frMenu.getMenuId() == 34 || frMenu.getMenuId() ==
+	 * 49) {
+	 * 
+	 * filterFrMenus.add(frMenu);
+	 * 
+	 * }
+	 * 
+	 * } System.err.println("Menus " +filterFrMenus); }catch (Exception e) {
+	 * System.err.println("Exc in "); System.err.println("dvld");
+	 * e.printStackTrace(); } return filterFrMenus; }
+	 */
 	// AJAX Call for Items
 	@RequestMapping(value = "/getItemListById", method = RequestMethod.GET)
 	public @ResponseBody List<PostFrItemStockDetail> getItems(HttpServletRequest request,
@@ -157,33 +168,34 @@ System.err.println("Menus " +filterFrMenus);
 
 		logger.info("/getItemListById AJAX Call mapping.");
 
-		/*menuId = request.getParameter("menu_id");//catId from jsp
-        */
-		int catId = Integer.parseInt(request.getParameter("menu_id"));	//catId from jsp
+		/*
+		 * menuId = request.getParameter("menu_id");//catId from jsp
+		 */
+		int catId = Integer.parseInt(request.getParameter("menu_id")); // catId from jsp
 		System.out.println("req param menuId " + catId);
-		int frId = Integer.parseInt(request.getParameter("frId"));	//catId from jsp'
+		int frId = Integer.parseInt(request.getParameter("frId")); // catId from jsp'
 		System.out.println("req param frId " + frId);
 		RestTemplate restTemplate = new RestTemplate();
 
-	/*	String itemShow = null;
-		int catId = 0;
-
-		for (int i = 0; i < filterFrMenus.size(); i++) {
-
-			if (filterFrMenus.get(i).getMenuId() == Integer.parseInt(menuId)) {
-
-				catId = filterFrMenus.get(i).getCatId();
-				itemShow = filterFrMenus.get(i).getItemShow();
-
-				System.out.println("Item Show List is: " + itemShow);
-
-				break;
-			}
-
-		}*/
+		/*
+		 * String itemShow = null; int catId = 0;
+		 * 
+		 * for (int i = 0; i < filterFrMenus.size(); i++) {
+		 * 
+		 * if (filterFrMenus.get(i).getMenuId() == Integer.parseInt(menuId)) {
+		 * 
+		 * catId = filterFrMenus.get(i).getCatId(); itemShow =
+		 * filterFrMenus.get(i).getItemShow();
+		 * 
+		 * System.out.println("Item Show List is: " + itemShow);
+		 * 
+		 * break; }
+		 * 
+		 * }
+		 */
 
 		MultiValueMap<String, Object> menuMap = new LinkedMultiValueMap<String, Object>();
-	/*	menuMap.add("itemIdList", itemShow);*/
+		/* menuMap.add("itemIdList", itemShow); */
 		menuMap.add("frId", frId);
 		menuMap.add("catId", catId);
 
@@ -214,14 +226,13 @@ System.err.println("Menus " +filterFrMenus);
 
 			detailList.get(i).setRegOpeningStock(Integer.parseInt(stockQty));
 
-			}
-
+		}
 
 		RestTemplate restTemplate = new RestTemplate();
 
-		List<PostFrItemStockDetail> info = restTemplate.postForObject(Constants.url + "postFrOpStockDetailList", detailList, List.class);
+		List<PostFrItemStockDetail> info = restTemplate.postForObject(Constants.url + "postFrOpStockDetailList",
+				detailList, List.class);
 
-		
 		return "redirect:/showFrOpeningStock";
 	}
 
