@@ -238,10 +238,10 @@ select {
 													<c:forEach items="${specialCakeList}" var="spCake">
 														<c:choose>
 															<c:when test="${specialCake.spCode==spCake.spCode}">
-																<option selected value="${spCake.spCode}">${spCake.spCode}</option>
+																<option selected value="${spCake.spCode}">${spCake.spCode}-${spCake.spName}</option>
 															</c:when>
 															<c:otherwise>
-																<option value="${spCake.spCode}">${spCake.spCode}</option>
+																<option value="${spCake.spCode}">${spCake.spCode}-${spCake.spName}</option>
 															</c:otherwise>
 														</c:choose>
 													</c:forEach>
@@ -452,9 +452,9 @@ select {
 		
 					<div class="form-group">
 					<div class="col-md-2">Cust Email</div>
-						<div class="col-md-3"><input name="cust_address" id="cust_address" class="form-control" type="text"></div>
-					<div class="col-md-2">Cust GST No.</div>
-						<div class="col-md-3"><input name="cust_gst_no" id="cust_gst_no" class="form-control" type="text"></div>  
+						<div class="col-md-3"><input name="cust_email" id="cust_email" class="form-control" type="text"></div>
+					<div class="col-md-1">Cust Mobile.</div>
+						<div class="col-md-3"><input name="cust_mobile" id="cust_mobile" class="form-control" type="text"></div>  
 					<!--  <div class="col-md-4" style="text-align: center;"></div> -->
 					  <!-----------------------7-------------------------------->
 	    		   <div class="col-md-1"style="border:1px dashed;"><b>GST (%)</b></div>
@@ -465,12 +465,22 @@ select {
 				<div class="form-group">
 				<div class="col-md-2">Order No:</div>
 					<div class="col-md-3"><input class="form-control" placeholder="Order No" name="sp_place" id="sp_place" type="text" value="${spNo}" readonly></div>
-			<div  id="ctype1">
-						<div class="col-md-2" id="cktype">Cake Type</div>
-						<div class="col-md-2"><input class="form-control"  name="ctype" type="text" id="ctype" required ></div>
-					</div> 
-					<input class="texboxitemcode"  name="temp" type="hidden" id="temp" value="${cutSec}" required >
-					
+			         	<div class="col-md-1">Select Menu</div>
+											<div class="col-md-3">
+											<select name="spMenuId" class="form-control chosen" data-placeholder="Menu" 
+												id="spMenuId" required>
+												<option value="">Select Menu</option>
+												<c:forEach items="${frMenuList}" var="frMenuList">
+													<c:choose>
+														<c:when test="${frMenuList.mainCatId==5}">
+															<option value="${frMenuList.menuId}">
+															<c:out value="${frMenuList.menuTitle}" /></option>
+														</c:when>
+													</c:choose>
+												</c:forEach>
+											</select>
+                                           </div>
+			       
 		       
 					 <!---------------------8-------------------------------->
 						<div class="col-md-1"style="border:1px dashed;font-weight: bold;">GST RS.</div>
@@ -605,6 +615,31 @@ select {
 										    <input type="hidden" id="dbPrice" name="dbPrice" value="${sprRate}"> 
 										    <input type="hidden" id="sp_id" name="sp_id"	value="${specialCake.spId}">
 										</div>
+									 <div class="form-group">
+										  <div  id="ctype1">
+											<div class="col-md-2" id="cktype">Cake Type</div>
+											<div class="col-md-2"><input class="form-control"  name="ctype" type="text" id="ctype"  ></div>
+										  </div> 
+										<input class="texboxitemcode"  name="temp" type="hidden" id="temp" value="${cutSec}" required >
+									</div>	
+											
+											
+											<%--<div class="col-md-2">Select Menu</div>
+											<div class="col-md-3">
+											<select name="spMenuId" class="form-control chosen" data-placeholder="Menu" 
+												id="spMenuId" required>
+												<option value="">Select Menu</option>
+												<c:forEach items="${frMenuList}" var="frMenuList">
+													<c:choose>
+														<c:when test="${frMenuList.mainCatId==5}">
+															<option value="${frMenuList.menuId}">
+															<c:out value="${frMenuList.menuTitle}" /></option>
+														</c:when>
+													</c:choose>
+												</c:forEach>
+											</select>
+                                           </div>
+										</div> --%>
 										<!--rightForm-->	
 <%-- <div class="right">
 	<div class="box-content">

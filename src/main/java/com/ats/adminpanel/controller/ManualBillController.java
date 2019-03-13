@@ -42,6 +42,8 @@ import com.ats.adminpanel.commons.Constants;
 import com.ats.adminpanel.commons.VpsImageUpload;
 import com.ats.adminpanel.model.AllFrIdNameList;
 import com.ats.adminpanel.model.AllspMessageResponse;
+import com.ats.adminpanel.model.ConfigureFrBean;
+import com.ats.adminpanel.model.ConfigureFrListResponse;
 import com.ats.adminpanel.model.ErrorMessage;
 import com.ats.adminpanel.model.FlavourList;
 import com.ats.adminpanel.model.GenerateBill;
@@ -57,7 +59,10 @@ import com.ats.adminpanel.model.billing.PostBillDetail;
 import com.ats.adminpanel.model.billing.PostBillHeader;
 import com.ats.adminpanel.model.flavours.Flavour;
 import com.ats.adminpanel.model.franchisee.FranchiseeList;
+import com.ats.adminpanel.model.franchisee.Menu;
 import com.ats.adminpanel.model.grngvn.FrSetting;
+import com.ats.adminpanel.model.item.FrItemStockConfigure;
+import com.ats.adminpanel.model.item.FrItemStockConfigureList;
 import com.ats.adminpanel.model.manspbill.SpecialCake;
 import com.ats.adminpanel.model.masters.SpMessage;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -90,7 +95,7 @@ public class ManualBillController {
 
 			}
 
-			SpCakeResponse spCakeResponse = restTemplate.getForObject(Constants.url + "showSpecialCakeList",
+			SpCakeResponse spCakeResponse = restTemplate.getForObject(Constants.url + "showSpecialCakeListOrderBySpCode",
 					SpCakeResponse.class);
 			System.out.println("SpCake Controller SpCakeList Response " + spCakeResponse.toString());
 			List<com.ats.adminpanel.model.SpecialCake> specialCakeList = new ArrayList<com.ats.adminpanel.model.SpecialCake>();
@@ -196,7 +201,7 @@ public class ManualBillController {
 			}
 			model.addObject("unSelectedFrList", allFrIdNameList.getFrIdNamesList());
 
-			SpCakeResponse spCakeResponse = restTemplate.getForObject(Constants.url + "showSpecialCakeList",
+			SpCakeResponse spCakeResponse = restTemplate.getForObject(Constants.url + "showSpecialCakeListOrderBySpCode",
 					SpCakeResponse.class);
 			// System.out.println("SpCake Controller SpCakeList Response 0000000" +
 			// spCakeResponse.toString());
@@ -266,6 +271,11 @@ public class ManualBillController {
 		    	  spNo="";
 				e.printStackTrace();
 			}
+		      
+		      List<Menu>  allMenuList = restTemplate.getForObject(Constants.url + "getAllMenuList",
+					List.class);
+			model.addObject("frMenuList", allMenuList);
+			System.err.println("frMenuList" + allMenuList.toString());
 			//System.out.println("Special Cake List:" + specialCakeList.toString());
 			    model.addObject("spNo", spNo);
 			    AllspMessageResponse allspMessageList = restTemplate.getForObject(Constants.url + "getAllSpMessage",
@@ -382,7 +392,10 @@ public class ManualBillController {
 					FranchiseeList.class, frId);
 
 			//-------------------------------------------------------------------------------------------
+			
 			int spId = Integer.parseInt(request.getParameter("sp_id"));
+			
+			int spMenuId = Integer.parseInt(request.getParameter("spMenuId"));
 			logger.info("1spId" + spId);
 			String spCode = request.getParameter("sp_code");
 			logger.info("2spCode" + spCode);
@@ -517,6 +530,12 @@ public class ManualBillController {
 			logger.info("isSpPhoUpload" + isSpPhoUpload);
 
 			String addonRatePerKG = request.getParameter("addonRatePerKG");
+			logger.info("addonRatePerKG" + addonRatePerKG);
+			
+			String custEmail = request.getParameter("cust_email");
+			logger.info("custEmail" + custEmail);
+			
+			String spCustMobNo = request.getParameter("cust_mobile");
 			logger.info("addonRatePerKG" + addonRatePerKG);
 
 			float backendSpRate = Float.parseFloat(request.getParameter("spBackendRate"));
@@ -690,9 +709,9 @@ public class ManualBillController {
 			spCakeOrder.setItemId(spCode);
 			spCakeOrder.setOrderDate(dateFormat.format(orderDate));
 			//float rmAmt=spSubTotal-spAdvance;
-			spCakeOrder.setRmAmount(spSubTotal);//rmAmt
+			spCakeOrder.setRmAmount(spSubTotal);
 			spCakeOrder.setSpTotalAddRate(Float.valueOf(spAddRate));
-			spCakeOrder.setSpAdvance(0);//hardcoded
+			spCakeOrder.setSpAdvance(0);
 
 			spCakeOrder.setSpBookedForName("-");
 			spCakeOrder.setSpBookForDob(sqlBookForDob);
@@ -735,16 +754,24 @@ public class ManualBillController {
 			spCakeOrder.setTax2Amt(tax2Amt);
 			spCakeOrder.setTax2(tax2);
 
-			spCakeOrder.setMenuId(40);//hardcoded
+			spCakeOrder.setMenuId(spMenuId);
 			spCakeOrder.setIsSlotUsed(isSlotUsed);
 			spCakeOrder.setIsAllocated(0);
 			
 			spCakeOrder.setExtraCharges(exCharges);;
 			spCakeOrder.setDisc(disc);
 			spCakeOrder.setExVar1(ctype);
-			spCakeOrder.setCustEmail("");//hardcoded
-			spCakeOrder.setCustGstin("");//hardcoded
-			spCakeOrder.setSlipNo("");//hardcoded
+			spCakeOrder.setCustEmail(custEmail);
+			spCakeOrder.setCustGstin(gstNo);
+			spCakeOrder.setSpCustMobNo(spCustMobNo);
+			//-----------------for slip no-------------
+			 MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			 map.add("settingKeyList", "sp_slip_no");
+			 FrItemStockConfigureList settingListForSlipNo = restTemplate.postForObject(Constants.url + "getDeptSettingValue", map, FrItemStockConfigureList.class);
+			 List<FrItemStockConfigure>  settingListResForSlipNo=settingListForSlipNo.getFrItemStockConfigure();
+			 //---------------------------------------
+			spCakeOrder.setSlipNo(""+settingListResForSlipNo.get(0).getSettingValue());//slipNo
+			
 			// Float floatBackEndRate = backendSpRate*spWeight;
 			// float intAddonRatePerKG = Float.parseFloat(spAddRate);
 
@@ -776,7 +803,7 @@ public class ManualBillController {
 				SpCakeOrder	spCake = spCakeOrderRes.getSpCakeOrder();
 				if (spCakeOrderRes.getErrorMessage().isError() != true) {
 					System.out.println("ORDER PLACED " + spCakeOrderRes.toString());
-					MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+					map = new LinkedMultiValueMap<String, Object>();
 					map = new LinkedMultiValueMap<String, Object>();
 
 					map.add("frId", frDetails.getFrId());
@@ -801,7 +828,12 @@ public class ManualBillController {
 
 					Info updateFrSettingGrnGvnNo = restTemplate.postForObject(Constants.url + "updateFrSettingSpNo", map, Info.class);
 
+					map = new LinkedMultiValueMap<String, Object>();
+					map.add("settingValue",settingListResForSlipNo.get(0).getSettingValue()+1);//+1 to slip no in setting table
+					map.add("settingKey", "sp_slip_no");
 
+					Info updateSetting = restTemplate.postForObject(Constants.url  + "updateSeetingForPB", map, Info.class);
+				
 				}
 			
 			}
@@ -998,7 +1030,7 @@ public class ManualBillController {
 
 			postBillDataCommon.setPostBillHeadersList(postBillHeaderList);
 
-			Info info = restTemplate.postForObject(Constants.url + "insertBillData", postBillDataCommon, Info.class);
+			List<PostBillHeader> info = restTemplate.postForObject(Constants.url + "insertBillData", postBillDataCommon, List.class);
 
 			System.out.println("Info Data insertBillData response " + info.toString());
 			}
