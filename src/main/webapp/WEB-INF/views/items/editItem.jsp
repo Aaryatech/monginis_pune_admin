@@ -305,74 +305,118 @@
 									<div class="col-sm-9 col-lg-10 controls">
 										<select class="form-control input-sm" tabindex="1"
 											name="is_used">
-
-											
-								
-								
-								<c:set var= "strIsUsedType" value="${strIsUsed}"></c:set>
-													 <% 
-													 	String strIsUsedOption=(String) pageContext.getAttribute("strIsUsedType");
-													 if(strIsUsedOption.equalsIgnoreCase("1")){
-														 												 
-													 
-													 %>
-													 <option selected value="1">Active Daily</option>
-													 
-													 	<option value="2">Special Days</option>
-													
-													
-													<option value="3">Sp Day Cake</option>
-														<option value="4">Inactive</option>
-
-												
-													
-													<%}else if(strIsUsedOption.equalsIgnoreCase("2")){
-														
-														
-														%>
-
-													<option value="1">Active Daily</option>
-														<option selected value="2">Special Days</option>
-
-													
-													<option value="3">Sp Day Cake</option>
-														<option value="4">Inactive</option>
-													
-														
-														
-														
-													<%}else if(strIsUsedOption.equalsIgnoreCase("3")){
-														
-														
-														%>
-
-													<option value="1">Active Daily</option>
-														
-
-														<option value="2">Special Days</option>
-														<option selected value="3">Sp Day Cake</option>
-													
-														<option value="4">Inactive</option>
-													
-														
-														
-														
-														<%
-													}else{
-													
-													
-														%>
-															
-															<option value="1">Active Daily</option>
-														<option selected value="2">Special Days</option>
-
-														<option value="3">Sp Day Cake</option>
-														<option selected value="4">Inactive</option>
-													
-													
-													
-													<%} %>
-								
+                               <c:choose>
+                               <c:when test="${strIsUsed==1}">
+                                <option value="1" selected>Active</option>
+								<option value="4">Inactive</option>
+								<option value="11">Monday Active</option>
+								<option value="12">Tuesday Active</option>
+								<option value="13">Wednesday Active</option>
+								<option value="14">Thursday Active</option>
+								<option value="15">Friday Active</option>
+								<option value="16">Saturday Active</option>
+								<option value="17">Sunday Active</option>
+                               </c:when>
+                                <c:when test="${strIsUsed==4}">
+                                <option value="1" >Active</option>
+								<option value="4" selected>Inactive</option>
+								<option value="11">Monday Active</option>
+								<option value="12">Tuesday Active</option>
+								<option value="13">Wednesday Active</option>
+								<option value="14">Thursday Active</option>
+								<option value="15">Friday Active</option>
+								<option value="16">Saturday Active</option>
+								<option value="17">Sunday Active</option>
+                               </c:when>
+                                <c:when test="${strIsUsed==11}">
+                                <option value="1" >Active</option>
+								<option value="4" >Inactive</option>
+								<option value="11" selected>Sunday Active</option>
+								<option value="12" >Monday Active</option>
+								<option value="13" >Tuesday Active</option>
+								<option value="14" >Wednesday Active</option>
+								<option value="15" >Thursday Active</option>
+								<option value="16" >Friday Active</option>
+								<option value="17" >Saturday Active</option>
+                               </c:when>
+                                <c:when test="${strIsUsed==12}">
+                                <option value="1" >Active</option>
+								<option value="4" >Inactive</option>
+								<option value="11">Sunday Active</option>
+								<option value="12" selected>Monday Active</option>
+								<option value="13" >Tuesday Active</option>
+								<option value="14" >Wednesday Active</option>
+								<option value="15" >Thursday Active</option>
+								<option value="16" >Friday Active</option>
+								<option value="17" >Saturday Active</option>
+                               </c:when>
+                                <c:when test="${strIsUsed==13}">
+                                <option value="1" >Active</option>
+								<option value="4" >Inactive</option>
+								<option value="11">Sunday Active</option>
+								<option value="12">Monday Active</option>
+								<option value="13" selected>Tuesday Active</option>
+								<option value="14" >Wednesday Active</option>
+								<option value="15" >Thursday Active</option>
+								<option value="16" >Friday Active</option>
+								<option value="17" >Saturday Active</option>
+                               </c:when>
+                                <c:when test="${strIsUsed==14}">
+                                <option value="1" >Active</option>
+								<option value="4" >Inactive</option>
+								<option value="11">Sunday Active</option>
+								<option value="12">Monday Active</option>
+								<option value="13">Tuesday Active</option>
+								<option value="14" selected>Wednesday Active</option>
+								<option value="15" >Thursday Active</option>
+								<option value="16" >Friday Active</option>
+								<option value="17" >Saturday Active</option>
+                               </c:when>
+                                <c:when test="${strIsUsed==15}">
+                                <option value="1" >Active</option>
+								<option value="4" >Inactive</option>
+								<option value="11">Sunday Active</option>
+								<option value="12">Monday Active</option>
+								<option value="13">Tuesday Active</option>
+								<option value="14">Wednesday Active</option>
+								<option value="15" selected>Thursday Active</option>
+								<option value="16" >Friday Active</option>
+								<option value="17" >Saturday Active</option>
+                               </c:when>
+                                <c:when test="${strIsUsed==16}">
+                                <option value="1" >Active</option>
+								<option value="4" >Inactive</option>
+								<option value="11">Sunday Active</option>
+								<option value="12">Monday Active</option>
+								<option value="13">Tuesday Active</option>
+								<option value="14">Wednesday Active</option>
+								<option value="15">Thursday Active</option>
+								<option value="16" selected>Friday Active</option>
+								<option value="17" >Saturday Active</option>
+                               </c:when>
+                                  <c:when test="${strIsUsed==17}">
+                                <option value="1" >Active</option>
+								<option value="4" >Inactive</option>
+								<option value="11">Sunday Active</option>
+								<option value="12">Monday Active</option>
+								<option value="13">Tuesday Active</option>
+								<option value="14">Wednesday Active</option>
+								<option value="15">Thursday Active</option>
+								<option value="16">Friday Active</option>
+								<option value="17" selected>Saturday Active</option>
+                               </c:when>
+                               <c:otherwise>
+                                <option value="1" >Active</option>
+								<option value="4" >Inactive</option>
+								<option value="11">Sunday Active</option>
+								<option value="12">Monday Active</option>
+								<option value="13">Tuesday Active</option>
+								<option value="14">Wednesday Active</option>
+								<option value="15">Thursday Active</option>
+								<option value="16">Friday Active</option>
+								<option value="17">Saturday Active</option>
+                               </c:otherwise>
+							   </c:choose>			
 								
 								</select>
 									</div>

@@ -56,7 +56,7 @@
 		<div class="box">
 			<div class="box-title">
 				<h3>
-					<i class="fa fa-bars"></i>View Sales Royalty by FR
+					<i class="fa fa-bars"></i>Franchasee-wise Royalty Report
 				</h3>
 
 			</div>

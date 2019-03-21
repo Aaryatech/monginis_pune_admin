@@ -33,7 +33,7 @@
 		<div class="page-title">
 			<div>
 				<h1>
-					<i class="fa fa-file-o"></i>Billwise Report
+					<i class="fa fa-file-o"></i>Bill-wise Report
 				</h1>
 				<h4></h4>
 			</div>

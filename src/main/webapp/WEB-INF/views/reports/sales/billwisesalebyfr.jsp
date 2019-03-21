@@ -54,7 +54,7 @@
 		<div class="box">
 			<div class="box-title">
 				<h3>
-					<i class="fa fa-bars"></i>View Billwise Sale Report By Franchise
+					<i class="fa fa-bars"></i>Franchise-wise Report
 				</h3>
 
 			</div>
@@ -129,7 +129,24 @@
 
 				<br>
 				<div class="row">
-					<div class="col-md-12" style="text-align: center;">
+
+					<div class="col-md-2">Select Category</div>
+					<div class="col-md-4" style="text-align: left;">
+						<select data-placeholder="Select Group"
+							class="form-control chosen" name="item_grp1" tabindex="-1"
+							id="item_grp1" data-rule-required="true"
+							onchange="setCatOptions(this.value)" multiple="multiple">
+							<option value="-1">Select All</option>
+
+							<c:forEach items="${mCategoryList}" var="mCategoryList">
+								<option value="${mCategoryList.catId}"><c:out
+										value="${mCategoryList.catName}"></c:out></option>
+							</c:forEach>
+
+
+						</select>
+					</div>
+					<div class="col-md-6" style="text-align: center;">
 						<button class="btn btn-info" onclick="searchReport()">Search
 							Billwise Report</button>
 						<button class="btn search_btn" onclick="showChart()">Graph</button>
@@ -160,7 +177,7 @@
 
 
 
-			<div class="box">
+			<div class="box"  style="background-color: white;">
 				<div class="box-title">
 					<h3>
 						<i class="fa fa-list-alt"></i>Bill Report

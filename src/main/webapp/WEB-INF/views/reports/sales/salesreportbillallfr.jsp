@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%><%@ taglib
 	uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/tableSearch.css">
 
 
 <jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
@@ -53,7 +54,7 @@
 		<div class="box">
 			<div class="box-title">
 				<h3>
-					<i class="fa fa-bars"></i>View Billwise Sale By All FR R7
+					<i class="fa fa-bars"></i>Bill-wise & HSN Code-wise Report
 				</h3>
 
 			</div>
@@ -154,8 +155,13 @@
 					<span class="l-6"></span>
 				</div>
 
-			</div>
-		</div>
+			
+			<div class="col-md-9" style="padding-top: 5px;"></div>
+				  <label for="search" class="col-md-3" id="search">
+               <i class="fa fa-search" style="font-size:20px"></i>
+				<input type="text" style="border-radius: 25px;" id="myInput" onkeyup="myFunction()" placeholder="Search By Party Name & Date" title="Type in a name">
+			</label>
+		</div></div>
 
 
 		<div class="box">
@@ -484,5 +490,30 @@
 	<script src="${pageContext.request.contextPath}/resources/js/flaty.js"></script>
 	<script
 		src="${pageContext.request.contextPath}/resources/js/flaty-demo-codes.js"></script>
+		<script>
+function myFunction() {
+  var input, filter, table, tr, td,td1, i;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("table_grid");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[3];
+    td1 = tr[i].getElementsByTagName("td")[2];
+    if (td || td1) {
+      if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      }else if (td1.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      }  else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }//end of for
+  
+ 
+  
+}
+</script>
 </body>
 </html>

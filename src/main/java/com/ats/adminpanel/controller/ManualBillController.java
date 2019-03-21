@@ -83,7 +83,7 @@ public class ManualBillController {
 	public ModelAndView showManualBill(HttpServletRequest request, HttpServletResponse response) {
 
 		ModelAndView model = null;
-
+		specialCake = new SpecialCake();
 		HttpSession session = request.getSession();
 
 		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
@@ -187,6 +187,7 @@ public class ManualBillController {
 
 		ModelAndView model = null;
 		try {
+			 specialCake = new SpecialCake();
 			model = new ModelAndView("manualBill/add_man_bill");
 			RestTemplate restTemplate = new RestTemplate();
 
@@ -302,6 +303,8 @@ public class ManualBillController {
 			model.addObject("eventList", spMessageList);
 			model.addObject("frId", frId);
 			model.addObject("billBy", billBy);
+			String currentDate =new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+			model.addObject("currentDate", currentDate);
 		} catch (Exception e) {
 			System.err.println("Exce in getSpCakeForManBill" + e.getMessage());
 			e.printStackTrace();
@@ -557,6 +560,7 @@ public class ManualBillController {
 
 			String custEmail = request.getParameter("cust_email");
 			logger.info("custEmail" + custEmail);
+			String custGstNo = request.getParameter("cust_gst_no");
 
 			String spCustMobNo = request.getParameter("cust_mobile");
 			logger.info("addonRatePerKG" + addonRatePerKG);
@@ -564,6 +568,7 @@ public class ManualBillController {
 			float backendSpRate = Float.parseFloat(request.getParameter("spBackendRate"));
 			logger.info("backendSpRate" + backendSpRate);
 
+			
 			/*
 			 * Calendar cal1 = Calendar.getInstance(); SimpleDateFormat sdf = new
 			 * SimpleDateFormat("HH:mm:ss"); System.out.println(sdf.format(cal1.getTime()));
@@ -739,7 +744,7 @@ public class ManualBillController {
 			spCakeOrder.setOrderPhoto(orderPhoto1);
 			spCakeOrder.setOrderPhoto2(custChCk);
 
-			spCakeOrder.setSpCustMobNo("");
+			spCakeOrder.setSpCustMobNo(spCustMobNo);
 			spCakeOrder.setSpCustName(spCustName);
 			spCakeOrder.setSpDeliveryDate(sqlSpDeliveryDt);
 			spCakeOrder.setSpEstDeliDate(sqlSpEdt);
@@ -780,7 +785,7 @@ public class ManualBillController {
 			spCakeOrder.setDisc(disc);
 			spCakeOrder.setExVar1(ctype);
 			spCakeOrder.setCustEmail(custEmail);
-			spCakeOrder.setCustGstin(gstNo);
+			spCakeOrder.setCustGstin(custGstNo);
 			spCakeOrder.setSpCustMobNo(spCustMobNo);
 			// -----------------for slip no-------------
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();

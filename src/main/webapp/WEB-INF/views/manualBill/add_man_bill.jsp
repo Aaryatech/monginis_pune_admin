@@ -270,7 +270,7 @@ select {
 						</div>
 				</form>	<hr>
 											
-		<form action="${pageContext.request.contextPath}/insertManualSpBill"  method="post" class="form-horizontal" name="from_ord" id="validation-form" enctype="multipart/form-data"onsubmit="return validate()">
+		<form action="${pageContext.request.contextPath}/insertManualSpBill"  method="post" class="form-horizontal" name="from_ord" id="validation-form1" enctype="multipart/form-data"onsubmit="return validate()">
 <input type="hidden" name="fr_id" value="${frId}"> 
 <input type="hidden" name="billBy" value="${billBy}"> 					
 <input type="hidden" name="menu_title" value="${menuTitle}"> 
@@ -379,8 +379,8 @@ select {
 					<div class="col-md-3">
 					<c:choose>
 					   <c:when test="${menuId==46}">
-							<input id="date" class="form-control date-picker"  value=""  name="datepicker" type="text" readonly>
-							<input id="datepicker" class="form-control"  value=""  name="datepicker" type="hidden" />
+							<input id="date" class="form-control date-picker"  value="${currentDate}"  name="datepicker" type="text" readonly>
+							<input id="datepicker" class="form-control"  value="${currentDate}"  name="datepicker" type="hidden" />
 
 					   </c:when>
 					   <c:otherwise>
@@ -402,7 +402,7 @@ select {
 					<div class="col-md-3"><input class="form-control" placeholder="Customer Name" required name="sp_cust_name" type="text" id="sp_cust_name"required></div>
 		
 					<div class="col-md-1">DOB</div>
-					<div class="col-md-3" ><input id="datepicker4"  data-date-format="dd-mm-yyyy" required autocomplete="off" class="form-control date-picker" placeholder="" name="datepicker4" type="text"required>
+					<div class="col-md-3" ><input id="datepicker4"  data-date-format="dd-mm-yyyy" required autocomplete="off" class="form-control date-picker" placeholder="" name="datepicker4" type="text"  required>
 					</div>
     				
     				<!-----------------------4-------------------------------->
@@ -508,7 +508,7 @@ select {
 											</div>
 											<div
 												class="fileupload-preview fileupload-exists img-thumbnail"
-												style="max-width: 40px; max-height:40px; line-height: 20px;"></div>
+												style="max-width: 85px; max-height:40px; line-height: 20px;"></div>
 											<div>
 												<span class="btn btn-default btn-file"><span
 													class="fileupload-new">Select image</span> <span
@@ -533,7 +533,7 @@ select {
 											</div>
 											<div
 												class="fileupload-preview fileupload-exists img-thumbnail"
-												style="max-width: 40px; max-height:40px; line-height: 20px;"></div>
+												style="max-width: 85px; max-height:40px; line-height: 20px;"></div>
 											<div>
 												<span class="btn btn-default btn-file"><span
 													class="fileupload-new">Select image</span> <span
@@ -562,7 +562,7 @@ select {
 											</div>
 											<div
 												class="fileupload-preview fileupload-exists img-thumbnail"
-												style="max-width: 40px; max-height:40px; line-height: 20px;"></div>
+												style="max-width: 85px; max-height:40px; line-height: 20px;"></div>
 											<div>
 												<span class="btn btn-default btn-file"><span
 													class="fileupload-new">Select image</span> <span
@@ -579,7 +579,7 @@ select {
 	<c:otherwise><div class="col-md-6"></div></c:otherwise>
 </c:choose> 
 					<div class="col-md-2" style="text-align: center;">
-					<input class="btn btn-primary" onclick="callSubmit()" value="SUBMIT"  type="submit" id="click" >
+					<input class="btn btn-primary"  value="SUBMIT" onclick="callSubmit()" type="button" id="click" >
 						<!-- <input name="" class="btn btn-danger" class="btnReset" value="RESET" type="reset"> -->
 					</div>
 		        <div class="col-md-4" style="text-align: center;"></div>
@@ -620,7 +620,9 @@ select {
 											<div class="col-md-2" id="cktype">Cake Type</div>
 											<div class="col-md-2"><input class="form-control"  name="ctype" type="text" id="ctype"  ></div>
 										  </div> 
-										<input class="texboxitemcode"  name="temp" type="hidden" id="temp" value="${cutSec}" required >
+										<input class="texboxitemcode"  name="temp" type="hidden" id="temp" value="${cutSec}"  >
+										<div class="col-md-1">Cust GST</div>
+						<div class="col-md-2"><input name="cust_gst_no" id="cust_gst_no" class="form-control" type="text"></div>
 									</div>	
 											
 											
@@ -754,17 +756,14 @@ select {
 	<!-- END Container -->
 	<script
 		src="${pageContext.request.contextPath}/resources/assets/bootstrap/js/bootstrap.min.js"></script>
-		<script type="text/javascript">
-		
-	/* 	function callSubmit() {
-			//alert("HI");
-			var form=document.getElementById("validation-form");
-			//alert("form "+form);
-			form.action=("insertManualSpBill");
+<script type="text/javascript">
+		function callSubmit() {
+			var isValid=validate();
+			if(isValid){
+			var form=document.getElementById("validation-form1");
 			form.submit();
-			
+			}
 		}
-		 */
 		</script>
 		<script type="text/javascript">
 $(document).ready(function() { 
@@ -923,7 +922,8 @@ $(document).ready(function() {
 			var sp_ex_charges= parseFloat($("#sp_ex_charges").val());
 			var sp_disc=parseFloat($("#sp_disc").val());
 			//document.getElementById("adv").value=0;
-
+		
+			
 			var totalCakeRate = wt*dbRate;
 		//	var totalFlavourAddonRate;//= wt*flavourAdonRate;
 			
@@ -940,7 +940,9 @@ $(document).ready(function() {
 		    var add=parseFloat(totalCakeRate+totalFlavourAddonRate);
 		    var grandTotal=parseFloat(add);
 			var spSubtotal=add+sp_ex_charges;
+			var disc_amt=(spSubtotal*sp_disc)/100;
 			
+			spSubtotal=spSubtotal-disc_amt;
 			var mrpBaseRate=parseFloat((spSubtotal*100)/(tax3+100));
 			
 			var gstInRs=0;
@@ -996,7 +998,7 @@ $(document).ready(function() {
 			
 			$('#rate').html(totalFlavourAddonRate);$('#sp_add_rate').html(totalFlavourAddonRate);
 			document.getElementById("sp_add_rate").setAttribute('value',totalFlavourAddonRate);
-			$('#subtotal').html(spSubtotal);	
+			$('#subtotal').html(spSubtotal);	alert(spSubtotal);
 			document.getElementById("sp_sub_total").setAttribute('value',spSubtotal);
 			
 			$('#INR').html('INR-'+spSubtotal);
@@ -1302,61 +1304,101 @@ function validateForm() {
 function validate() {
 	
 	 var phoneNo = /^\d{10}$/;  
-
 	
-    var eventName,spId,spCustName,spPlace,spCustMob,spType,spFlavour,spCode,spWt;
-    eventName = document.getElementById("event_name").value;
-    spPlace = document.getElementById("sp_place").value;
-    spCustName=document.getElementById("sp_cust_name").value;
-    spCustMob=document.getElementById("sp_cust_mobile_no").value; 
-    spType=document.getElementById("sptype").value; 
-    spFlavour=document.getElementById("spFlavour").value;
-    spCode=document.getElementById("sp_code").value;
-    spWt=document.getElementById("spwt").value;
-    var isValid=true;
+     var eventName,spId,spCustName,spPlace,spCustMob,spType,spFlavour,spCode,spWt,deliveryDate,spProdDate,custDob,frName,gstNo,custEmail,spMenuId,custGstNo;
+     eventName = document.getElementById("event_name").value;
+     spCustName=document.getElementById("sp_cust_name").value;
+     spCustMob=document.getElementById("cust_mobile").value; 
+     spType=document.getElementById("sptype").value; 
+     spCode=document.getElementById("sp_cake_id").value;
+     spFlavour=document.getElementById("spFlavour").value;
+     deliveryDate=document.getElementById("datepicker").value;
+     spProdDate=document.getElementById("spProdDate").value;
+     custDob=document.getElementById("datepicker4").value;
+     frName=document.getElementById("fr_name").value;
+     gstNo=document.getElementById("gst_no").value;
+     custEmail=document.getElementById("cust_email").value;
+     spMenuId=document.getElementById("spMenuId").value;
+     custGstNo=document.getElementById("cust_gst_no").value;
+     
+     spWt=document.getElementById("spwt").value;
+    var isValid=true; 
     
     if (spCode == "") {
         alert("Special Cake Code must be filled out");
       
         isValid= false;
-    }else 
+    }else  
     if (spType == "") {
-        alert("Please Select Special Cake Type");
-      
-        isValid= false;
-    }else  if (spWt == "") {
-        alert("Please Select Special Cake Weight");
+        alert("Please Select Flavour Type");
       
         isValid= false;
     }else if (spFlavour == "") {
         alert("Please Select Flavour");
   
         isValid=false;
+    }else  if (spWt == "") {
+        alert("Please Select Special Cake Weight");
+      
+        isValid= false;
     }else  if (eventName == "") {
         alert("Please Enter Message");
         document.getElementById('event_name').focus();
         
         isValid=false;
-    }else if (spPlace == "") {
-        alert("Please Enter Place of delivery");
-        document.getElementById('sp_place').focus();
-
-        isValid= false;
-    }else if (spCustName == "") {
+    }else  if (deliveryDate == "") {
+        alert("Please Select Date of Delivery");
+        document.getElementById('datepicker').focus();
+        
+        isValid=false;
+    }else  if (spProdDate == "") {
+        alert("Please Select Date of Production");
+        document.getElementById('spProdDate').focus();
+        
+        isValid=false;
+    }  else if (spCustName == "") {
         alert("Please Enter Customer Name");
         document.getElementById('sp_cust_name').focus();
 
         isValid= false;
-    }else  if(spCustMob.match(phoneNo))  
+    }
+    else if (custDob== "") {
+        alert("Please Select Customer DOB");
+        document.getElementById('datepicker4').focus();
+
+        isValid= false;
+    }
+    else if (frName== "") {
+    	alert("Please Select Franchise Name");
+        document.getElementById('fr_name').focus();
+        isValid= false;
+    }
+    else if (gstNo== "") {
+    	alert("Please Enter GST No.");
+        document.getElementById('gst_no').focus();
+        isValid= false;
+    }
+    else if (custEmail== "") {
+    	alert("Please Enter Email Of Customer");
+        document.getElementById('cust_email').focus();
+        isValid= false;
+    }
+    else  if(!spCustMob.match(phoneNo))  
 	  {  
-	      return true;  
-	  }  
-	  else  
-	  {  
-	     alert("Not a valid Mobile Number");  
-	     document.getElementById('sp_cust_mobile_no').value="";
-	     document.getElementById('sp_cust_mobile_no').focus();
+    	 alert("Not a valid Mobile Number");  
+	     document.getElementById('cust_mobile').value="";
+	     document.getElementById('cust_mobile').focus();
 	     return false;  
+	  }  
+	  else   if (spMenuId== "") {
+	 
+		  alert("Please Select Menu");
+	        document.getElementById('cust_email').focus();
+	        isValid= false;
+	  }  else   if (custGstNo== "") {
+		  alert("Please Enter Customer GST No.");
+	        document.getElementById('custGstNo').focus();
+	        isValid= false;
 	  }  
 
     

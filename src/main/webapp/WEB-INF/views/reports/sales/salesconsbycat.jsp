@@ -205,6 +205,8 @@
 											<th>GVN Value</th>
 											<th>Net Qty</th>
 											<th>Net Value</th>
+											<th>Royalty %</th>
+											<th>Royalty Amt</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -256,7 +258,7 @@
 
 				var from_date = $("#fromDate").val();
 				var to_date = $("#toDate").val();
-
+              // alert(selectedCat);
 				$('#loader').show();
 
 				$
@@ -277,7 +279,7 @@
 
 									$('#table_grid td').remove();
 									$('#loader').hide();
-
+									var royPer = ${royPer};
 									if (data == "") {
 										alert("No records found !!");
 										  document.getElementById("expExcel").disabled=true;
@@ -344,7 +346,16 @@
 																		'<td></td>')
 																		.html(
 																				""));
-
+														tr
+														.append($(
+																'<td></td>')
+																.html(
+																		""));
+														tr
+														.append($(
+																'<td></td>')
+																.html(
+																		""));
 														$('#table_grid tbody')
 																.append(tr);
 
@@ -424,7 +435,23 @@
 																								'<td  style="text-align:right;"></td>')
 																								.html(
 																										netValue));
+																				tr
+																				.append($(
+																						'<td></td>')
+																						.html(
+																								royPer));
 
+																		rAmt = netValue
+																				* royPer
+																				/ 100;
+																		rAmt = rAmt
+																				.toFixed(2);
+
+																		tr
+																				.append($(
+																						'<td></td>')
+																						.html(
+																								rAmt));
 																				$(
 																						'#table_grid tbody')
 																						.append(

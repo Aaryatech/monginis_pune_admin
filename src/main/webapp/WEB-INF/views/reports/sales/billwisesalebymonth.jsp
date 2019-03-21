@@ -54,7 +54,7 @@
 		<div class="box">
 			<div class="box-title">
 				<h3>
-					<i class="fa fa-bars"></i>View Billwise Sale Report Grp By Month
+					<i class="fa fa-bars"></i>Month-wise Report
 				</h3>
 
 			</div>

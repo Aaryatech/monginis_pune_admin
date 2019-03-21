@@ -237,7 +237,7 @@
  -->
 			<form id="submitBillForm"
 				action="${pageContext.request.contextPath}/submitNewBill"
-				method="post">
+				method="post" onsubmit="submitBill.disabled = true; return confirm('Do you want to Generate Bill ?');">
 				<div class=" box-content">
 					<div class="row">
 						<div class="col-md-12 table-responsive">
@@ -278,7 +278,7 @@
 							<%-- <a href="${pageContext.request.contextPath}/pdf?url=showBillPdf"
 								target="_blank">PDF</a> --%>
 							<button class="btn btn-info pull-right"
-								style="margin-right: 5px;" onclick="submitBill()">Submit
+								style="margin-right: 5px;"  id="submitBill" name="submitBill" disabled="disabled">Submit
 								Bill</button>
 						</div>
 					</div>
@@ -379,9 +379,11 @@
 
 									$('#table_grid td').remove();
 									$('#loader').hide();
+									document.getElementById("submitBill").disabled = false;
 
 									if (data == "") {
 										alert("No records found !!");
+										document.getElementById("submitBill").disabled = true;
 
 									}
 

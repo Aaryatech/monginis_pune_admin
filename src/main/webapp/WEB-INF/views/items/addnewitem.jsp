@@ -358,10 +358,18 @@
 									<div class="col-sm-9 col-lg-10 controls">
 										<select class="form-control input-sm" tabindex="1"
 											name="is_used">
-											<option value="1">Active Daily</option>
-											<option value="2">Special Days</option>
-											<option value="3">Sp Day Cake</option>
+											<option value="1">Active</option>
+										<!--<option value="2">Special Days</option>
+											<option value="3">Sp Day Cake</option> -->
 											<option value="4">Inactive</option>
+											<option value="11">Sunday Active</option>
+											<option value="12">Monday Active</option>
+											<option value="13">Tuesday Active</option>
+											<option value="14">Wednesday Active</option>
+											<option value="15">Thursday Active</option>
+											<option value="16">Friday Active</option>
+											<option value="17">Saturday Active</option>
+											
 										</select>
 									</div>
 								</div>
