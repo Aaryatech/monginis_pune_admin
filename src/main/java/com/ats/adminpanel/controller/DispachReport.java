@@ -19,7 +19,6 @@ import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.ParameterizedTypeReference;
@@ -40,14 +39,13 @@ import org.zefer.pd4ml.PD4Constants;
 import org.zefer.pd4ml.PD4ML;
 import org.zefer.pd4ml.PD4PageMark;
 
-import com.ats.adminpanel.commons.AccessControll;
 import com.ats.adminpanel.commons.Constants;
 import com.ats.adminpanel.commons.DateConvertor;
 import com.ats.adminpanel.model.AllFrIdNameList;
 import com.ats.adminpanel.model.AllMenus;
 import com.ats.adminpanel.model.AllRoutesListResponse;
 import com.ats.adminpanel.model.ErrorMessage;
-import com.ats.adminpanel.model.Info;
+import com.ats.adminpanel.model.FranchiseForDispatch;
 import com.ats.adminpanel.model.ItemListForDispatchReport;
 import com.ats.adminpanel.model.ItemListStatioinWise;
 import com.ats.adminpanel.model.PDispatchReport;
@@ -57,315 +55,581 @@ import com.ats.adminpanel.model.RouteMaster;
 import com.ats.adminpanel.model.SectionMaster;
 import com.ats.adminpanel.model.StaionListWithFranchiseeList;
 import com.ats.adminpanel.model.TypeWiseItemTotal;
-import com.ats.adminpanel.model.accessright.ModuleJson;
 import com.ats.adminpanel.model.franchisee.FrNameIdByRouteId;
 import com.ats.adminpanel.model.franchisee.FrNameIdByRouteIdResponse;
+import com.ats.adminpanel.model.franchisee.FranchiseeAndMenuList;
+import com.ats.adminpanel.model.franchisee.FranchiseeList;
 import com.ats.adminpanel.model.franchisee.Menu;
 import com.ats.adminpanel.model.franchisee.SubCategory;
+import com.ats.adminpanel.model.item.AllItemsListResponse;
 import com.ats.adminpanel.model.item.CategoryListResponse;
 import com.ats.adminpanel.model.item.Item;
-import com.ats.adminpanel.model.item.MCategoryList;
+import com.ats.adminpanel.model.item.MCategoryList; 
 
 @Controller
 @Scope("session")
 public class DispachReport {
-
+	
+	
 	String todaysDate;
 	AllFrIdNameList allFrIdNameList = new AllFrIdNameList();
 	List<Integer> stationList = new ArrayList<>();
 	List<RouteMaster> list = new ArrayList<>();
 	List<Item> itemList = new ArrayList<Item>();
 	List<StaionListWithFranchiseeList> staionListWithFranchiseeList = new ArrayList<StaionListWithFranchiseeList>();
-	List<AllMenus> menuList = new ArrayList<AllMenus>();
+	List<AllMenus> menuList = new ArrayList<AllMenus>(); 
+	
+	
+	@RequestMapping(value = "/getAllFranchasiOfMultipleRoute", method = RequestMethod.GET)
+	@ResponseBody
+	public List<FranchiseForDispatch> getAllFranchasiOfMultipleRoute(HttpServletRequest request, HttpServletResponse response) {
 
-	@RequestMapping(value = "/showPDispatchItemReportNew", method = RequestMethod.GET)
-	public ModelAndView showPDispatchItemReportNew(HttpServletRequest request, HttpServletResponse response) {
+		//List<FrNameIdByRouteId> frNameIdByRouteIdList = new ArrayList<>();
+		List<FranchiseForDispatch> frNameIdByRouteIdList=null;
 
-		ModelAndView model = null;
-		HttpSession session = request.getSession();
+		try {
+			 
+				
+			
+			String RouteIds = request.getParameter("routeIds");
 
-		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
-		Info view = AccessControll.checkAccess("showPDispatchItemReportNew", "showPDispatchItemReportNew", "1", "0",
-				"0", "0", newModuleList);
+			
+			RouteIds = RouteIds.substring(1, RouteIds.length() - 1);
+			RouteIds = RouteIds.replaceAll("\"", "");
+			System.out.println("RouteIds==" + RouteIds.toString());
+			
+			List<String>RoutList= new ArrayList<>();
+			RoutList = Arrays.asList(RouteIds);
+			System.out.println("RouteIds==" + RoutList.toString());
+			
+			StringBuilder sbForRouteFrId = new StringBuilder();
+			for (int i = 0; i < RoutList.size(); i++) {
 
-		if (view.getError() == true) {
+				sbForRouteFrId = sbForRouteFrId.append(RoutList.get(i).toString() + ",");
 
-			model = new ModelAndView("accessDenied");
-
-		} else {
-			model = new ModelAndView("reports/puneDispatchReport");
-
-			try {
-				ZoneId z = ZoneId.of("Asia/Calcutta");
-
-				LocalDate date = LocalDate.now(z);
-				DateTimeFormatter formatters = DateTimeFormatter.ofPattern("d-MM-uuuu");
-				todaysDate = date.format(formatters);
-
-				RestTemplate restTemplate = new RestTemplate();
-
-				Integer[] array = restTemplate.getForObject(Constants.url + "/itemListGroupByStationNo",
-						Integer[].class);
-				stationList = new ArrayList<Integer>(Arrays.asList(array));
-				model.addObject("stationList", stationList);
-
-				/*
-				 * Menu[] allMenus = restTemplate.getForObject(Constants.url +
-				 * "/getAllMenuList", Menu[].class); menuList = new
-				 * ArrayList<Menu>(Arrays.asList(allMenus));
-				 */
-
-				model.addObject("menuList", menuList);
-				model.addObject("stationList", stationList);
-				model.addObject("todaysDate", todaysDate);
-
-				SectionMaster[] sectionMasterArray = restTemplate.getForObject(Constants.url + "/getSectionListOnly",
-						SectionMaster[].class);
-				List<SectionMaster> sectionList = new ArrayList<SectionMaster>(Arrays.asList(sectionMasterArray));
-				model.addObject("sectionList", sectionList);
-
-			} catch (Exception e) {
-
-				System.out.println("Exc in show sales report bill wise  " + e.getMessage());
-				e.printStackTrace();
 			}
+
+			String strFrIdRouteWise = sbForRouteFrId.toString();
+			RouteIds = strFrIdRouteWise.substring(0, strFrIdRouteWise.length() - 1);
+			System.out.println("fr Id Route WISE = " + RouteIds);
+			
+			
+			
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+			map.add("routeId", RouteIds);
+			RestTemplate restTemplate = new RestTemplate();
+
+			
+			 
+			 
+			//FranchiseForDispatch[] frNameId  
+			FranchiseForDispatch[] frNameId = restTemplate.postForObject(Constants.url + "getFranchiseForDispatchRouteID",
+					map, FranchiseForDispatch[].class);
+			
+			frNameIdByRouteIdList =new ArrayList<>(Arrays.asList(frNameId));
+
+				System.out.println("route wise franchisee " + frNameIdByRouteIdList);
+			 
+			 
+			 
+			 
+
+		} catch (Exception e) {
+
+		 
+			e.printStackTrace();
 		}
+
+		return frNameIdByRouteIdList;
+
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	@RequestMapping(value = "/ItemwiseDispatchReport", method = RequestMethod.GET)
+	public ModelAndView showItemwiseDispatchReport(HttpServletRequest request, HttpServletResponse response) {
+
+		ModelAndView model = new ModelAndView("reports/itemwiseDispatchReport");
+ 
+
+		try {
+			ZoneId z = ZoneId.of("Asia/Calcutta");
+
+			LocalDate date = LocalDate.now(z);
+			DateTimeFormatter formatters = DateTimeFormatter.ofPattern("d-MM-uuuu");
+			todaysDate = date.format(formatters);
+
+			RestTemplate restTemplate = new RestTemplate();
+
+		AllItemsListResponse allItemsListResponse = restTemplate.getForObject(Constants.url + "getAllItems", AllItemsListResponse.class);
+		List<Item> itemsList=null;
+		itemsList=allItemsListResponse.getItems();
+		
+		System.out.println("Item List"+ itemsList);
+			
+			model.addObject("itemsList", itemsList);  
+			
+			
+			List<FranchiseeList> franchiseeList=null;
+			
+				FranchiseeAndMenuList	franchiseeAndMenuList = restTemplate.getForObject(Constants.url + "getFranchiseeAndMenu",
+						FranchiseeAndMenuList.class);
+				franchiseeList=franchiseeAndMenuList.getAllFranchisee();
+				
+				model.addObject("franchiseeList", franchiseeList);
+				
+			
+			/*Menu[] allMenus = restTemplate.getForObject(Constants.url + "/getAllMenuList",
+					Menu[].class);
+			   menuList = new ArrayList (Arrays.asList(allMenus)); */
+			 
+			model.addObject("menuList", menuList);   
+			model.addObject("todaysDate", todaysDate); 
+			
+			
+			SectionMaster[] sectionMasterArray = restTemplate.getForObject(Constants.url + "/getSectionListOnly",
+					SectionMaster[].class);
+			 List<SectionMaster> sectionList = new ArrayList<SectionMaster>(Arrays.asList(sectionMasterArray)); 
+			model.addObject("sectionList", sectionList);
+
+		} catch (Exception e) {
+
+			System.out.println("Exc in show sales report bill wise  " + e.getMessage());
+			e.printStackTrace();
+		}
+
 		return model;
 
 	}
+	
+	@RequestMapping(value = "/getPDispatchReportItemwiseResult", method = RequestMethod.GET)
+	public ModelAndView getDispatchReportitemwise(HttpServletRequest request,
+			HttpServletResponse response) {
 
+		ModelAndView model = new ModelAndView("reports/ItemwiseDispatchReportResult");
+		List<PDispatchReport> dispatchReportList = new ArrayList<PDispatchReport>();
+		List<Item> ItemList = new ArrayList<Item>();
+		PDispatchReportList dispatchReports = new PDispatchReportList();
+		try {
+			
+			
+			
+			
+			
+			System.out.println("Inside get Dispatch Report");
+			String billDate = request.getParameter("billDate");
+			String[] selectedFranchase = request.getParameterValues("frid");
+			String[] selectedMenu = request.getParameterValues("menuId");
+			String[] selectedItem = request.getParameterValues("itemId");
+			System.out.println("billDate"+billDate);
+			System.out.println("selectedFranchase"+selectedFranchase);
+			System.out.println("selectedMenu"+selectedMenu);
+			System.out.println("selectedItem"+selectedItem);
+			
+			
+
+			boolean isAllFranchaseSelected = false;
+			boolean isAllMenuSelected = false;
+			boolean isAllItemSelected = false;
+			
+			
+
+			String strselectedFranchase=new String();
+			for(int i=0; i < selectedFranchase.length ; i++) {
+				strselectedFranchase=strselectedFranchase+","+selectedFranchase[i];
+			}
+			strselectedFranchase=strselectedFranchase.substring(1, strselectedFranchase.length());
+			strselectedFranchase = strselectedFranchase.replaceAll("\"", "");
+			
+			String strselectedMenu=new String();
+			for(int i=0; i < selectedMenu.length ; i++) {
+				strselectedMenu=strselectedMenu+","+selectedMenu[i];
+			}
+			strselectedMenu=strselectedMenu.substring(1, strselectedMenu.length());
+			strselectedMenu = strselectedMenu.replaceAll("\"", "");
+			
+			String strselectedItem=new String();
+			for(int i=0; i < selectedItem.length ; i++) {
+				strselectedItem=strselectedItem+","+selectedItem[i];
+			}
+			strselectedItem=strselectedItem.substring(1, strselectedItem.length());
+			strselectedItem = strselectedItem.replaceAll("\"", "");
+			
+			
+				
+				
+				System.out.println("strselectedFranchase" + strselectedFranchase.toString());
+				System.out.println("strselectedMenu" + strselectedMenu.toString());
+				System.out.println("strselectedItem" + strselectedItem.toString());
+			
+			
+
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+
+			RestTemplate restTemplate = new RestTemplate();
+
+
+			allFrIdNameList = new AllFrIdNameList();
+			try {
+
+				allFrIdNameList = restTemplate.getForObject(Constants.url + "getAllFrIdName", AllFrIdNameList.class);
+
+			} catch (Exception e) {
+				System.out.println("Exception in getAllFrIdName" + e.getMessage());
+				e.printStackTrace();
+
+			}
+			
+			List<FrNameIdByRouteId> FrNameList = new ArrayList<>();
+			
+			for (int i = 0; i < allFrIdNameList.getFrIdNamesList().size(); i++) 
+			{
+				FrNameIdByRouteId objFranchace=new FrNameIdByRouteId();
+				objFranchace.setFrId(allFrIdNameList.getFrIdNamesList().get(i).getFrId());
+				objFranchace.setFrName(allFrIdNameList.getFrIdNamesList().get(i).getFrName());
+				objFranchace.setFrRouteId(0);
+				FrNameList.add(objFranchace);
+				
+				
+			}
+			
+				
+				map = new LinkedMultiValueMap<String, Object>();
+				map.add("menu", strselectedMenu);
+				map.add("productionDate", billDate);
+				map.add("frId", strselectedFranchase);
+				map.add("ItemId", strselectedItem);
+
+				ParameterizedTypeReference<List<PDispatchReport>> typeRef = new ParameterizedTypeReference<List<PDispatchReport>>() {
+				};
+
+				ResponseEntity<List<PDispatchReport>> responseEntity = restTemplate.exchange(
+						Constants.url + "getPDispatchItemReportMenuwise", HttpMethod.POST, new HttpEntity<>(map), typeRef);
+				System.out.println("Items:" + responseEntity.toString());
+
+				dispatchReportList = responseEntity.getBody();
+				
+				System.out.println("dispatchReportList = " + dispatchReportList.toString());
+				
+				
+				
+
+				map = new LinkedMultiValueMap<String, Object>();
+				map.add("itemList", strselectedItem);
+				
+				ParameterizedTypeReference<List<Item>> typeRef1 = new ParameterizedTypeReference<List<Item>>() {
+				};
+
+				ResponseEntity<List<Item>> responseEntity1 = restTemplate.exchange(
+						Constants.url + "getItemsByItemId", HttpMethod.POST, new HttpEntity<>(map), typeRef1);
+				
+				System.out.println("Items = " + responseEntity1.getBody());
+				
+				ItemList = responseEntity1.getBody();
+				System.out.println("Items = " + ItemList);
+
+				model.addObject("dispatchReportList", dispatchReportList);
+				model.addObject("FrNameList", FrNameList);
+				model.addObject("Items", ItemList);
+				
+			
+
+		} catch (Exception e) {
+			System.out.println("get Dispatch Report Exception: " + e.getMessage());
+			e.printStackTrace();
+
+		}
+
+		return model;
+
+	}
+	
+	
+	
+	
+	@RequestMapping(value = "/showPDispatchItemReportNew", method = RequestMethod.GET)
+	public ModelAndView showPDispatchItemReportNew(HttpServletRequest request, HttpServletResponse response) {
+
+		ModelAndView model = new ModelAndView("reports/puneDispatchReport");
+ 
+
+		try {
+			ZoneId z = ZoneId.of("Asia/Calcutta");
+
+			LocalDate date = LocalDate.now(z);
+			DateTimeFormatter formatters = DateTimeFormatter.ofPattern("d-MM-uuuu");
+			todaysDate = date.format(formatters);
+
+			RestTemplate restTemplate = new RestTemplate();
+
+			Integer[] array = restTemplate.getForObject(Constants.url + "/itemListGroupByStationNo",
+					Integer[].class);
+			 stationList = new ArrayList<Integer>(Arrays.asList(array)); 
+			model.addObject("stationList", stationList);  
+			
+			/*Menu[] allMenus = restTemplate.getForObject(Constants.url + "/getAllMenuList",
+					Menu[].class);
+			  menuList = new ArrayList<Menu>(Arrays.asList(allMenus)); */
+			 
+			 model.addObject("menuList", menuList); 
+			model.addObject("stationList", stationList);  
+			model.addObject("todaysDate", todaysDate); 
+			
+			SectionMaster[] sectionMasterArray = restTemplate.getForObject(Constants.url + "/getSectionListOnly",
+					SectionMaster[].class);
+			 List<SectionMaster> sectionList = new ArrayList<SectionMaster>(Arrays.asList(sectionMasterArray)); 
+			model.addObject("sectionList", sectionList);
+
+		} catch (Exception e) {
+
+			System.out.println("Exc in show sales report bill wise  " + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return model;
+
+	}
+	
 	@RequestMapping(value = "/getMenuListBySectionId", method = RequestMethod.GET)
 	@ResponseBody
 	public List<AllMenus> getMenuListBySectionId(HttpServletRequest request, HttpServletResponse response) {
 
-		list = new ArrayList<>();
+		 list = new ArrayList<>();
+ 
 
 		try {
-
+			 
 			int sectionId = Integer.parseInt(request.getParameter("sectionId"));
 
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
 			map.add("sectionId", sectionId);
 			RestTemplate restTemplate = new RestTemplate();
 
-			SectionMaster routeMaster = restTemplate.postForObject(Constants.url + "/getSectionById", map,
+			SectionMaster routeMaster = restTemplate.postForObject(Constants.url + "/getSectionById",map,
 					SectionMaster.class);
-
-			menuList = routeMaster.getMenuList();
+			 
+			 menuList =  routeMaster.getMenuList();
 
 		} catch (Exception e) {
 
+		 
 			e.printStackTrace();
 		}
 
 		return menuList;
 
 	}
-
+	
 	@RequestMapping(value = "/routListByAbcType", method = RequestMethod.GET)
 	@ResponseBody
 	public List<RouteMaster> routListByAbcType(HttpServletRequest request, HttpServletResponse response) {
 
-		list = new ArrayList<>();
+		 list = new ArrayList<>();
+ 
 
 		try {
-
+			 
 			int abcType = Integer.parseInt(request.getParameter("abcType"));
 
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
 			map.add("abcType", abcType);
 			RestTemplate restTemplate = new RestTemplate();
 
-			RouteMaster[] routeMaster = restTemplate.postForObject(Constants.url + "/showRouteListNewByabcType", map,
+			RouteMaster[] routeMaster = restTemplate.postForObject(Constants.url + "/showRouteListNewByabcType",map,
 					RouteMaster[].class);
-			list = new ArrayList<RouteMaster>(Arrays.asList(routeMaster));
+			 list = new ArrayList<RouteMaster>(Arrays.asList(routeMaster));
+			 
 
 		} catch (Exception e) {
 
+		 
 			e.printStackTrace();
 		}
 
 		return list;
 
 	}
-
+	
 	@RequestMapping(value = "/searchPDispatchItemReportNew", method = RequestMethod.GET)
 	public ModelAndView searchPDispatchItemReportNew(HttpServletRequest request, HttpServletResponse response) {
 
 		ModelAndView model = new ModelAndView("reports/searchPDispatchItemReportNew");
+ 
 
 		try {
-
+			
 			String date = request.getParameter("billDate");
 			int stationId = Integer.parseInt(request.getParameter("stanId"));
 			int abcType = Integer.parseInt(request.getParameter("abcType"));
 			int routId = Integer.parseInt(request.getParameter("selectRoute"));
-			String[] menuId = request.getParameterValues("menuId");
-
+			String[] menuId =  request.getParameterValues("menuId") ;
+			
+			
+			
 			String stationIds = new String();
 			String abcTypes = new String();
 			String menuIds = new String();
-
-			for (int i = 0; i < menuId.length; i++) {
-				menuIds = menuIds + "," + menuId[i];
+			
+			for(int i=0; i < menuId.length ; i++) {
+				menuIds=menuIds+","+menuId[i];
 			}
-			menuIds = menuIds.substring(1, menuIds.length());
-
-			if (stationId == -1) {
-
-				for (int i = 0; i < stationList.size(); i++) {
-
-					stationIds = stationIds + "," + stationList.get(i);
+			menuIds=menuIds.substring(1, menuIds.length());
+			
+			if(stationId==-1) {
+				
+				for(int i=0; i < stationList.size() ; i++) {
+					
+					stationIds = stationIds+","+stationList.get(i);
 				}
-				stationIds = stationIds.substring(1, stationIds.length());
-
-			} else {
-				stationIds = String.valueOf(stationId);
+				stationIds=stationIds.substring(1, stationIds.length());
+				
+			}else {
+				stationIds=String.valueOf(stationId);
 			}
-
-			if (abcType == 0) {
-
-				abcTypes = "1,2,3";
-
-			} else {
-				abcTypes = String.valueOf(abcType);
+			
+			if(abcType==0) {
+				 
+				abcTypes="1,2,3";
+				
+			}else {
+				abcTypes=String.valueOf(abcType);
 			}
-
-			if (menuIds.contains("0")) {
-
+			
+			if(menuIds.contains("0")) {
+				 
 				menuIds = new String();
-
-				for (int i = 0; i < menuList.size(); i++) {
-					menuIds = menuIds + "," + menuList.get(i).getMenuId();
+				
+				for(int i=0; i < menuList.size() ; i++) {
+					menuIds=menuIds+","+menuList.get(i).getMenuId();
 				}
-				menuIds = menuIds.substring(1, menuIds.length());
-			}
-
+				menuIds=menuIds.substring(1, menuIds.length());
+			} 
+			
+			
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
 			map.add("date", DateConvertor.convertToYMD(date));
 			map.add("abcType", abcTypes);
 			map.add("stationNos", stationIds);
 			map.add("routId", routId);
 			map.add("menuIds", menuIds);
-
-			System.out.println("map " + map);
+			
+			System.out.println("map " + map); 
 
 			RestTemplate restTemplate = new RestTemplate();
 
-			StaionListWithFranchiseeList[] array = restTemplate.postForObject(Constants.url + "/getAbcDepatchReport",
-					map, StaionListWithFranchiseeList[].class);
-
-			staionListWithFranchiseeList = new ArrayList<StaionListWithFranchiseeList>(Arrays.asList(array));
-
+			StaionListWithFranchiseeList[] array = restTemplate.postForObject(Constants.url + "/getAbcDepatchReport",map,
+					StaionListWithFranchiseeList[].class);
+			
+			 staionListWithFranchiseeList = new ArrayList<StaionListWithFranchiseeList>(Arrays.asList(array));
+			 
 			System.err.println(staionListWithFranchiseeList);
-
+			
 			List<ItemListStatioinWise> itemListStatioinWiseList = new ArrayList<>();
+			
+			Item[] item = restTemplate.getForObject(Constants.url + "/getItemListForDispatchReport", 
+					Item[].class);
 
-			Item[] item = restTemplate.getForObject(Constants.url + "/getItemListForDispatchReport", Item[].class);
-
-			itemList = new ArrayList<Item>(Arrays.asList(item));
-
-			for (int i = 0; i < staionListWithFranchiseeList.size(); i++) {
-
+			 itemList = new ArrayList<Item>(Arrays.asList(item));
+			 
+			for(int i=0; i < staionListWithFranchiseeList.size() ; i++) {
+				
 				ItemListStatioinWise itemListStatioinWise = new ItemListStatioinWise();
 				itemListStatioinWise.setStationNo(staionListWithFranchiseeList.get(i).getStationNo());
-				List<TypeWiseItemTotal> typeWiseItemTotalList = new ArrayList<>();
-
-				for (int j = 0; j < itemList.size(); j++) {
-
-					if (itemList.get(j).getItemMrp2() == staionListWithFranchiseeList.get(i).getStationNo()) {
-
+				List<TypeWiseItemTotal> typeWiseItemTotalList= new ArrayList<>();
+				
+				for(int j=0 ; j<itemList.size() ; j++) {
+					
+					if(itemList.get(j).getItemMrp2()==staionListWithFranchiseeList.get(i).getStationNo()) {
+						
 						TypeWiseItemTotal itemListForDispatchReport = new TypeWiseItemTotal();
 						itemListForDispatchReport.setItemId(itemList.get(j).getId());
 						itemListForDispatchReport.setItemName(itemList.get(j).getItemName());
 						typeWiseItemTotalList.add(itemListForDispatchReport);
 					}
-
+					
 				}
 				itemListStatioinWise.setTypeWiseItemTotalList(typeWiseItemTotalList);
 				itemListStatioinWiseList.add(itemListStatioinWise);
 			}
-
+			
 			System.err.println();
-			for (int i = 0; i < staionListWithFranchiseeList.size(); i++) {
-
-				for (int j = 0; j < itemListStatioinWiseList.size(); j++) {
-
-					if (itemListStatioinWiseList.get(j).getStationNo() == staionListWithFranchiseeList.get(i)
-							.getStationNo()) {
-
-						for (int k = 0; k < staionListWithFranchiseeList.get(i).getList().size(); k++) {
-
-							if (staionListWithFranchiseeList.get(i).getList().get(k).getAbcType() == 1) {
-
-								for (int m = 0; m < staionListWithFranchiseeList.get(i).getList().get(k).getItemList()
-										.size(); m++) {
-									for (int l = 0; l < itemListStatioinWiseList.get(j).getTypeWiseItemTotalList()
-											.size(); l++) {
-										if (staionListWithFranchiseeList.get(i).getList().get(k).getItemList().get(m)
-												.getItemId() == itemListStatioinWiseList.get(j)
-														.getTypeWiseItemTotalList().get(l).getItemId()) {
-											itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l)
-													.setaTotal(itemListStatioinWiseList.get(j)
-															.getTypeWiseItemTotalList().get(l).getaTotal()
-															+ staionListWithFranchiseeList.get(i).getList().get(k)
-																	.getItemList().get(m).getOrderQty());
-											break;
+			for(int i=0; i < staionListWithFranchiseeList.size() ; i++) {
+				 
+				for(int j=0 ; j<itemListStatioinWiseList.size() ; j++) {
+					
+					if(itemListStatioinWiseList.get(j).getStationNo()==staionListWithFranchiseeList.get(i).getStationNo()) {
+						
+						for(int k=0 ;k<staionListWithFranchiseeList.get(i).getList().size() ; k++)
+						{
+							 
+								if(staionListWithFranchiseeList.get(i).getList().get(k).getAbcType()==1) {
+									
+									for(int m=0 ;m<staionListWithFranchiseeList.get(i).getList().get(k).getItemList().size() ; m++)
+									{
+										for(int l=0 ;l<itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().size() ; l++)
+										{
+											if(staionListWithFranchiseeList.get(i).getList().get(k).getItemList().get(m).getItemId()
+													==itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l).getItemId()) {
+												itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l).setaTotal(
+														itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l).getaTotal()+
+														staionListWithFranchiseeList.get(i).getList().get(k).getItemList().get(m).getOrderQty()); 
+												break;
+											}
+										} 
+									}
+									
+								}else if(staionListWithFranchiseeList.get(i).getList().get(k).getAbcType()==2) {
+									
+									for(int m=0 ;m<staionListWithFranchiseeList.get(i).getList().get(k).getItemList().size() ; m++)
+									{
+										for(int l=0 ;l<itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().size() ; l++)
+										{
+											if(staionListWithFranchiseeList.get(i).getList().get(k).getItemList().get(m).getItemId()
+													==itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l).getItemId()) {
+												itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l).setbTotal(
+														itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l).getbTotal()+
+														staionListWithFranchiseeList.get(i).getList().get(k).getItemList().get(m).getOrderQty()); 
+												break;
+											}
+										}
+										
+									}
+									
+								}else if(staionListWithFranchiseeList.get(i).getList().get(k).getAbcType()==3) {
+									
+									for(int m=0 ;m<staionListWithFranchiseeList.get(i).getList().get(k).getItemList().size() ; m++)
+									{
+										for(int l=0 ;l<itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().size() ; l++)
+										{
+											if(staionListWithFranchiseeList.get(i).getList().get(k).getItemList().get(m).getItemId()
+													==itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l).getItemId()) {
+												itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l).setcTotal(
+														itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l).getcTotal()+
+														staionListWithFranchiseeList.get(i).getList().get(k).getItemList().get(m).getOrderQty());
+												break;
+											}
 										}
 									}
+									
 								}
-
-							} else if (staionListWithFranchiseeList.get(i).getList().get(k).getAbcType() == 2) {
-
-								for (int m = 0; m < staionListWithFranchiseeList.get(i).getList().get(k).getItemList()
-										.size(); m++) {
-									for (int l = 0; l < itemListStatioinWiseList.get(j).getTypeWiseItemTotalList()
-											.size(); l++) {
-										if (staionListWithFranchiseeList.get(i).getList().get(k).getItemList().get(m)
-												.getItemId() == itemListStatioinWiseList.get(j)
-														.getTypeWiseItemTotalList().get(l).getItemId()) {
-											itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l)
-													.setbTotal(itemListStatioinWiseList.get(j)
-															.getTypeWiseItemTotalList().get(l).getbTotal()
-															+ staionListWithFranchiseeList.get(i).getList().get(k)
-																	.getItemList().get(m).getOrderQty());
-											break;
-										}
-									}
-
-								}
-
-							} else if (staionListWithFranchiseeList.get(i).getList().get(k).getAbcType() == 3) {
-
-								for (int m = 0; m < staionListWithFranchiseeList.get(i).getList().get(k).getItemList()
-										.size(); m++) {
-									for (int l = 0; l < itemListStatioinWiseList.get(j).getTypeWiseItemTotalList()
-											.size(); l++) {
-										if (staionListWithFranchiseeList.get(i).getList().get(k).getItemList().get(m)
-												.getItemId() == itemListStatioinWiseList.get(j)
-														.getTypeWiseItemTotalList().get(l).getItemId()) {
-											itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l)
-													.setcTotal(itemListStatioinWiseList.get(j)
-															.getTypeWiseItemTotalList().get(l).getcTotal()
-															+ staionListWithFranchiseeList.get(i).getList().get(k)
-																	.getItemList().get(m).getOrderQty());
-											break;
-										}
-									}
-								}
-
-							}
-
+						 
 						}
-
+						 
 					}
-
+					
 				}
-
+				 
+				
 			}
-
+			
 			System.err.println("itemListStatioinWiseList" + itemListStatioinWiseList);
-
+			 
 			allFrIdNameList = restTemplate.getForObject(Constants.url + "/getAllFrIdName", AllFrIdNameList.class);
 			model.addObject("staionListWithFranchiseeList", staionListWithFranchiseeList);
 			model.addObject("itemList", itemList);
@@ -376,177 +640,168 @@ public class DispachReport {
 			model.addObject("abcType", abcType);
 			model.addObject("routId", routId);
 			model.addObject("menuIds", menuIds);
-
+			
 		} catch (Exception e) {
-
+ 
 			e.printStackTrace();
 		}
 
 		return model;
 
 	}
-
-	@RequestMapping(value = "/pdf/getPDispatchReportNewPdf/{date}/{stationId}/{abcType}/{routId}/{menuIds}", method = RequestMethod.GET)
-	public ModelAndView getPDispatchReportNewPdf(@PathVariable String date, @PathVariable int stationId,
-			@PathVariable int abcType, @PathVariable int routId, @PathVariable String menuIds,
-			HttpServletRequest request, HttpServletResponse response) {
-
+	
+	 @RequestMapping(value = "/pdf/getPDispatchReportNewPdf/{date}/{stationId}/{abcType}/{routId}/{menuIds}", method = RequestMethod.GET)
+	public ModelAndView getPDispatchReportNewPdf(@PathVariable String date,@PathVariable int stationId,@PathVariable int abcType,
+			@PathVariable int routId,@PathVariable String menuIds,HttpServletRequest request, HttpServletResponse response) {
+		
 		ModelAndView model = new ModelAndView("reports/sales/dispatchPReportNewPdf");
-
+		 
 		try {
-
+			 
 			RestTemplate restTemplate = new RestTemplate();
 			String stationIds = new String();
 			String abcTypes = new String();
-
-			if (stationId == -1) {
-
+			
+			if(stationId==-1) {
+				
 				Integer[] array = restTemplate.getForObject(Constants.url + "/itemListGroupByStationNo",
 						Integer[].class);
-				List<Integer> stationList = new ArrayList<Integer>(Arrays.asList(array));
+				List<Integer> stationList = new ArrayList<Integer>(Arrays.asList(array)); 
 				model.addObject("stationList", stationList);
-
-				for (int i = 0; i < stationList.size(); i++) {
-
-					stationIds = stationIds + "," + stationList.get(i);
+				
+				for(int i=0; i < stationList.size() ; i++) {
+					
+					stationIds = stationIds+","+stationList.get(i);
 				}
-				stationIds = stationIds.substring(1, stationIds.length());
-
-			} else {
-				stationIds = String.valueOf(stationId);
+				stationIds=stationIds.substring(1, stationIds.length());
+				
+			}else {
+				stationIds=String.valueOf(stationId);
 			}
-
-			if (abcType == 0) {
-
-				abcTypes = "1,2,3";
-
-			} else {
-				abcTypes = String.valueOf(abcType);
+			
+			if(abcType==0) {
+				 
+				abcTypes="1,2,3";
+				
+			}else {
+				abcTypes=String.valueOf(abcType);
 			}
-
+			
+			
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
 			map.add("date", DateConvertor.convertToYMD(date));
 			map.add("abcType", abcTypes);
 			map.add("stationNos", stationIds);
 			map.add("routId", routId);
 			map.add("menuIds", menuIds);
-			System.out.println("map " + map);
-
-			StaionListWithFranchiseeList[] array = restTemplate.postForObject(Constants.url + "/getAbcDepatchReport",
-					map, StaionListWithFranchiseeList[].class);
-
-			List<StaionListWithFranchiseeList> staionListWithFranchiseeList = new ArrayList<StaionListWithFranchiseeList>(
-					Arrays.asList(array));
-
+			System.out.println("map " + map); 
+ 
+			StaionListWithFranchiseeList[] array = restTemplate.postForObject(Constants.url + "/getAbcDepatchReport",map,
+					StaionListWithFranchiseeList[].class);
+			
+			List<StaionListWithFranchiseeList> staionListWithFranchiseeList = new ArrayList<StaionListWithFranchiseeList>(Arrays.asList(array));
+			 
 			System.err.println(staionListWithFranchiseeList);
-
-			Item[] item = restTemplate.getForObject(Constants.url + "/getItemListForDispatchReport", Item[].class);
+			
+			Item[] item = restTemplate.getForObject(Constants.url + "/getItemListForDispatchReport", 
+					Item[].class);
 
 			List<Item> itemList = new ArrayList<Item>(Arrays.asList(item));
-
-			AllFrIdNameList allFrIdNameList = restTemplate.getForObject(Constants.url + "/getAllFrIdName",
-					AllFrIdNameList.class);
-
-			List<ItemListStatioinWise> itemListStatioinWiseList = new ArrayList<>();
-
-			for (int i = 0; i < staionListWithFranchiseeList.size(); i++) {
-
-				ItemListStatioinWise itemListStatioinWise = new ItemListStatioinWise();
-				itemListStatioinWise.setStationNo(staionListWithFranchiseeList.get(i).getStationNo());
-				List<TypeWiseItemTotal> typeWiseItemTotalList = new ArrayList<>();
-
-				for (int j = 0; j < itemList.size(); j++) {
-
-					if (itemList.get(j).getItemMrp2() == staionListWithFranchiseeList.get(i).getStationNo()) {
-
-						TypeWiseItemTotal itemListForDispatchReport = new TypeWiseItemTotal();
-						itemListForDispatchReport.setItemId(itemList.get(j).getId());
-						itemListForDispatchReport.setItemName(itemList.get(j).getItemName());
-						typeWiseItemTotalList.add(itemListForDispatchReport);
-					}
-
-				}
-				itemListStatioinWise.setTypeWiseItemTotalList(typeWiseItemTotalList);
-				itemListStatioinWiseList.add(itemListStatioinWise);
-			}
-
-			for (int i = 0; i < staionListWithFranchiseeList.size(); i++) {
-
-				for (int j = 0; j < itemListStatioinWiseList.size(); j++) {
-
-					if (itemListStatioinWiseList.get(j).getStationNo() == staionListWithFranchiseeList.get(i)
-							.getStationNo()) {
-
-						for (int k = 0; k < staionListWithFranchiseeList.get(i).getList().size(); k++) {
-
-							if (staionListWithFranchiseeList.get(i).getList().get(k).getAbcType() == 1) {
-
-								for (int m = 0; m < staionListWithFranchiseeList.get(i).getList().get(k).getItemList()
-										.size(); m++) {
-									for (int l = 0; l < itemListStatioinWiseList.get(j).getTypeWiseItemTotalList()
-											.size(); l++) {
-										if (staionListWithFranchiseeList.get(i).getList().get(k).getItemList().get(m)
-												.getItemId() == itemListStatioinWiseList.get(j)
-														.getTypeWiseItemTotalList().get(l).getItemId()) {
-											itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l)
-													.setaTotal(itemListStatioinWiseList.get(j)
-															.getTypeWiseItemTotalList().get(l).getaTotal()
-															+ staionListWithFranchiseeList.get(i).getList().get(k)
-																	.getItemList().get(m).getOrderQty());
-											break;
-										}
-									}
-								}
-
-							} else if (staionListWithFranchiseeList.get(i).getList().get(k).getAbcType() == 2) {
-
-								for (int m = 0; m < staionListWithFranchiseeList.get(i).getList().get(k).getItemList()
-										.size(); m++) {
-									for (int l = 0; l < itemListStatioinWiseList.get(j).getTypeWiseItemTotalList()
-											.size(); l++) {
-										if (staionListWithFranchiseeList.get(i).getList().get(k).getItemList().get(m)
-												.getItemId() == itemListStatioinWiseList.get(j)
-														.getTypeWiseItemTotalList().get(l).getItemId()) {
-											itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l)
-													.setbTotal(itemListStatioinWiseList.get(j)
-															.getTypeWiseItemTotalList().get(l).getbTotal()
-															+ staionListWithFranchiseeList.get(i).getList().get(k)
-																	.getItemList().get(m).getOrderQty());
-											break;
-										}
-									}
-
-								}
-
-							} else if (staionListWithFranchiseeList.get(i).getList().get(k).getAbcType() == 3) {
-
-								for (int m = 0; m < staionListWithFranchiseeList.get(i).getList().get(k).getItemList()
-										.size(); m++) {
-									for (int l = 0; l < itemListStatioinWiseList.get(j).getTypeWiseItemTotalList()
-											.size(); l++) {
-										if (staionListWithFranchiseeList.get(i).getList().get(k).getItemList().get(m)
-												.getItemId() == itemListStatioinWiseList.get(j)
-														.getTypeWiseItemTotalList().get(l).getItemId()) {
-											itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l)
-													.setcTotal(itemListStatioinWiseList.get(j)
-															.getTypeWiseItemTotalList().get(l).getcTotal()
-															+ staionListWithFranchiseeList.get(i).getList().get(k)
-																	.getItemList().get(m).getOrderQty());
-											break;
-										}
-									}
-								}
-
-							}
-
+			
+			 AllFrIdNameList allFrIdNameList = restTemplate.getForObject(Constants.url + "/getAllFrIdName", AllFrIdNameList.class);
+			 
+			 List<ItemListStatioinWise> itemListStatioinWiseList = new ArrayList<>();
+			 
+			 for(int i=0; i < staionListWithFranchiseeList.size() ; i++) {
+					
+					ItemListStatioinWise itemListStatioinWise = new ItemListStatioinWise();
+					itemListStatioinWise.setStationNo(staionListWithFranchiseeList.get(i).getStationNo());
+					List<TypeWiseItemTotal> typeWiseItemTotalList= new ArrayList<>();
+					
+					for(int j=0 ; j<itemList.size() ; j++) {
+						
+						if(itemList.get(j).getItemMrp2()==staionListWithFranchiseeList.get(i).getStationNo()) {
+							
+							TypeWiseItemTotal itemListForDispatchReport = new TypeWiseItemTotal();
+							itemListForDispatchReport.setItemId(itemList.get(j).getId());
+							itemListForDispatchReport.setItemName(itemList.get(j).getItemName());
+							typeWiseItemTotalList.add(itemListForDispatchReport);
 						}
-
+						
 					}
-
+					itemListStatioinWise.setTypeWiseItemTotalList(typeWiseItemTotalList);
+					itemListStatioinWiseList.add(itemListStatioinWise);
 				}
-
-			}
-
+			 
+			 for(int i=0; i < staionListWithFranchiseeList.size() ; i++) {
+				 
+					for(int j=0 ; j<itemListStatioinWiseList.size() ; j++) {
+						
+						if(itemListStatioinWiseList.get(j).getStationNo()==staionListWithFranchiseeList.get(i).getStationNo()) {
+							
+							for(int k=0 ;k<staionListWithFranchiseeList.get(i).getList().size() ; k++)
+							{
+								 
+									if(staionListWithFranchiseeList.get(i).getList().get(k).getAbcType()==1) {
+										
+										for(int m=0 ;m<staionListWithFranchiseeList.get(i).getList().get(k).getItemList().size() ; m++)
+										{
+											for(int l=0 ;l<itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().size() ; l++)
+											{
+												if(staionListWithFranchiseeList.get(i).getList().get(k).getItemList().get(m).getItemId()
+														==itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l).getItemId()) {
+													itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l).setaTotal(
+															itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l).getaTotal()+
+															staionListWithFranchiseeList.get(i).getList().get(k).getItemList().get(m).getOrderQty()); 
+													break;
+												}
+											} 
+										}
+										
+									}else if(staionListWithFranchiseeList.get(i).getList().get(k).getAbcType()==2) {
+										
+										for(int m=0 ;m<staionListWithFranchiseeList.get(i).getList().get(k).getItemList().size() ; m++)
+										{
+											for(int l=0 ;l<itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().size() ; l++)
+											{
+												if(staionListWithFranchiseeList.get(i).getList().get(k).getItemList().get(m).getItemId()
+														==itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l).getItemId()) {
+													itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l).setbTotal(
+															itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l).getbTotal()+
+															staionListWithFranchiseeList.get(i).getList().get(k).getItemList().get(m).getOrderQty()); 
+													break;
+												}
+											}
+											
+										}
+										
+									}else if(staionListWithFranchiseeList.get(i).getList().get(k).getAbcType()==3) {
+										
+										for(int m=0 ;m<staionListWithFranchiseeList.get(i).getList().get(k).getItemList().size() ; m++)
+										{
+											for(int l=0 ;l<itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().size() ; l++)
+											{
+												if(staionListWithFranchiseeList.get(i).getList().get(k).getItemList().get(m).getItemId()
+														==itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l).getItemId()) {
+													itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l).setcTotal(
+															itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l).getcTotal()+
+															staionListWithFranchiseeList.get(i).getList().get(k).getItemList().get(m).getOrderQty());
+													break;
+												}
+											}
+										}
+										
+									}
+							 
+							}
+							 
+						}
+						
+					}
+					 
+					
+				}
+			 
 			model.addObject("itemListStatioinWiseList", itemListStatioinWiseList);
 			model.addObject("staionListWithFranchiseeList", staionListWithFranchiseeList);
 			model.addObject("itemList", itemList);
@@ -561,132 +816,144 @@ public class DispachReport {
 		return model;
 
 	}
+	 
+	 @RequestMapping(value = "/addSection", method = RequestMethod.GET)
+		public ModelAndView addSection(HttpServletRequest request, HttpServletResponse response) {
 
-	@RequestMapping(value = "/addSection", method = RequestMethod.GET)
-	public ModelAndView addSection(HttpServletRequest request, HttpServletResponse response) {
+			ModelAndView model = new ModelAndView("masters/addSection");
+	 
 
-		ModelAndView model = new ModelAndView("masters/addSection");
+			try {
+				 
+				RestTemplate restTemplate = new RestTemplate();
 
-		try {
+				SectionMaster[] array = restTemplate.getForObject(Constants.url + "/getSectionList",
+						SectionMaster[].class);
+				 List<SectionMaster> sectionList = new ArrayList<SectionMaster>(Arrays.asList(array)); 
+				model.addObject("sectionList", sectionList);  
+				
+				Menu[] allMenus = restTemplate.getForObject(Constants.url + "/getAllMenuList",
+						Menu[].class);
+				List<Menu>  menuList = new ArrayList<Menu>(Arrays.asList(allMenus)); 
+				 
+				 model.addObject("menuList", menuList);  
 
-			RestTemplate restTemplate = new RestTemplate();
+			} catch (Exception e) {
 
-			SectionMaster[] array = restTemplate.getForObject(Constants.url + "/getSectionList", SectionMaster[].class);
-			List<SectionMaster> sectionList = new ArrayList<SectionMaster>(Arrays.asList(array));
-			model.addObject("sectionList", sectionList);
+				System.out.println("Exc in show sales report bill wise  " + e.getMessage());
+				e.printStackTrace();
+			} 
+			return model;
 
-			Menu[] allMenus = restTemplate.getForObject(Constants.url + "/getAllMenuList", Menu[].class);
-			List<Menu> menuList = new ArrayList<Menu>(Arrays.asList(allMenus));
-
-			model.addObject("menuList", menuList);
-
-		} catch (Exception e) {
-
-			System.out.println("Exc in show sales report bill wise  " + e.getMessage());
-			e.printStackTrace();
 		}
-		return model;
+	 
+	 @RequestMapping(value = "/insertSection", method = RequestMethod.POST)
+		public String deleteSection(HttpServletRequest request, HttpServletResponse response) {
 
-	}
+			 
+		 RestTemplate restTemplate = new RestTemplate();
 
-	@RequestMapping(value = "/insertSection", method = RequestMethod.POST)
-	public String deleteSection(HttpServletRequest request, HttpServletResponse response) {
+			try {
+				 
+				String sectionId = request.getParameter("sectionId");
+				String sectionName = request.getParameter("sectionName");
+				String[] menuId = request.getParameterValues("menuIds");
+				
+				String menuIds = new String();
+				
+				for(int i = 0 ; i < menuId.length ; i++) {
+					
+					menuIds=menuIds+","+menuId[i];
+					
+				}
+				menuIds.substring(1, menuIds.length());
+				
+				SectionMaster save = new SectionMaster();
+				
+				if(sectionId.equalsIgnoreCase("") || sectionId.equalsIgnoreCase(null)) {
+					 
+				}else {
+					save.setSectionId(Integer.parseInt(sectionId));
+				}
+				
+				save.setSectionName(sectionName);
+				save.setMenuIds(menuIds);
+				
+				SectionMaster res = restTemplate.postForObject(Constants.url + "/saveSection",save,
+						SectionMaster.class);
 
-		RestTemplate restTemplate = new RestTemplate();
+			} catch (Exception e) {
 
-		try {
+				 
+				e.printStackTrace();
+			} 
+			return "redirect:/addSection";
 
-			String sectionId = request.getParameter("sectionId");
-			String sectionName = request.getParameter("sectionName");
-			String[] menuId = request.getParameterValues("menuIds");
-
-			String menuIds = new String();
-
-			for (int i = 0; i < menuId.length; i++) {
-
-				menuIds = menuIds + "," + menuId[i];
-
-			}
-			menuIds.substring(1, menuIds.length());
-
-			SectionMaster save = new SectionMaster();
-
-			if (sectionId.equalsIgnoreCase("") || sectionId.equalsIgnoreCase(null)) {
-
-			} else {
-				save.setSectionId(Integer.parseInt(sectionId));
-			}
-
-			save.setSectionName(sectionName);
-			save.setMenuIds(menuIds);
-
-			SectionMaster res = restTemplate.postForObject(Constants.url + "/saveSection", save, SectionMaster.class);
-
-		} catch (Exception e) {
-
-			e.printStackTrace();
 		}
-		return "redirect:/addSection";
+	 
+	 @RequestMapping(value = "/deleteSection/{sectionId}", method = RequestMethod.GET)
+		public String deleteSection(@PathVariable int sectionId, HttpServletRequest request, HttpServletResponse response) {
 
-	}
+			ModelAndView model = new ModelAndView("masters/addSection");
+	 
 
-	@RequestMapping(value = "/deleteSection/{sectionId}", method = RequestMethod.GET)
-	public String deleteSection(@PathVariable int sectionId, HttpServletRequest request, HttpServletResponse response) {
+			try {
+				 
+				RestTemplate restTemplate = new RestTemplate();
+				
+				MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+				map.add("sectionId", sectionId);
 
-		ModelAndView model = new ModelAndView("masters/addSection");
+				ErrorMessage res = restTemplate.postForObject(Constants.url + "/deleteSection",map,
+						ErrorMessage.class);
+				 
 
-		try {
+			} catch (Exception e) {
 
-			RestTemplate restTemplate = new RestTemplate();
+				 
+				e.printStackTrace();
+			} 
+			return "redirect:/addSection";
 
-			MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
-			map.add("sectionId", sectionId);
-
-			ErrorMessage res = restTemplate.postForObject(Constants.url + "/deleteSection", map, ErrorMessage.class);
-
-		} catch (Exception e) {
-
-			e.printStackTrace();
 		}
-		return "redirect:/addSection";
+	 
+	 @RequestMapping(value = "/editSection/{sectionId}", method = RequestMethod.GET)
+		public ModelAndView editSection(@PathVariable int sectionId, HttpServletRequest request, HttpServletResponse response) {
 
-	}
+			ModelAndView model = new ModelAndView("masters/addSection");
+	 
 
-	@RequestMapping(value = "/editSection/{sectionId}", method = RequestMethod.GET)
-	public ModelAndView editSection(@PathVariable int sectionId, HttpServletRequest request,
-			HttpServletResponse response) {
+			try {
+				 
+				RestTemplate restTemplate = new RestTemplate();
 
-		ModelAndView model = new ModelAndView("masters/addSection");
+				SectionMaster[] array = restTemplate.getForObject(Constants.url + "/getSectionList",
+						SectionMaster[].class);
+				 List<SectionMaster> sectionList = new ArrayList<SectionMaster>(Arrays.asList(array)); 
+				model.addObject("sectionList", sectionList);  
+				
+				Menu[] allMenus = restTemplate.getForObject(Constants.url + "/getAllMenuList",
+						Menu[].class);
+				List<Menu>  menuList = new ArrayList<Menu>(Arrays.asList(allMenus)); 
+				 
+				 model.addObject("menuList", menuList);  
+				 
+				 MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+					map.add("sectionId", sectionId); 
+					SectionMaster editSection = restTemplate.postForObject(Constants.url + "/getSectionById",map,
+							SectionMaster.class);
+					model.addObject("editSection", editSection); 
+					model.addObject("isEdit", 1);
 
-		try {
+			} catch (Exception e) {
 
-			RestTemplate restTemplate = new RestTemplate();
+				System.out.println("Exc in show sales report bill wise  " + e.getMessage());
+				e.printStackTrace();
+			} 
+			return model;
 
-			SectionMaster[] array = restTemplate.getForObject(Constants.url + "/getSectionList", SectionMaster[].class);
-			List<SectionMaster> sectionList = new ArrayList<SectionMaster>(Arrays.asList(array));
-			model.addObject("sectionList", sectionList);
-
-			Menu[] allMenus = restTemplate.getForObject(Constants.url + "/getAllMenuList", Menu[].class);
-			List<Menu> menuList = new ArrayList<Menu>(Arrays.asList(allMenus));
-
-			model.addObject("menuList", menuList);
-
-			MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
-			map.add("sectionId", sectionId);
-			SectionMaster editSection = restTemplate.postForObject(Constants.url + "/getSectionById", map,
-					SectionMaster.class);
-			model.addObject("editSection", editSection);
-			model.addObject("isEdit", 1);
-
-		} catch (Exception e) {
-
-			System.out.println("Exc in show sales report bill wise  " + e.getMessage());
-			e.printStackTrace();
 		}
-		return model;
-
-	}
-
+	
 	private Dimension format = PD4Constants.A4;
 	private boolean landscapeValue = false;
 	private int topValue = 8;
@@ -705,11 +972,10 @@ public class DispachReport {
 		System.out.println("Inside PDf For Report URL ");
 		String url = request.getParameter("url");
 		System.out.println("URL " + url);
-
-		// File f = new
-		// File("/home/supertom/apache-tomcat-8.5.35/webapps/admin/report.pdf");
-		// File f = new File("/opt/apache-tomcat-8.5.6/webapps/uploads/report.pdf");
-		File f = new File("/home/lenovo/Documents/pdf/Report.pdf");
+		
+		//File f = new File("/home/supertom/apache-tomcat-8.5.35/webapps/admin/report.pdf");
+		//File f = new File("/opt/apache-tomcat-8.5.6/webapps/uploads/report.pdf");
+		File f =new File("/home/lenovo/Documents/pdf/Report.pdf");
 
 		try {
 			runConverter1(Constants.ReportURL + url, f, request, response);
@@ -723,10 +989,9 @@ public class DispachReport {
 		// get absolute path of the application
 		ServletContext context = request.getSession().getServletContext();
 		String appPath = context.getRealPath("");
-		// String filePath =
-		// "/home/supertom/apache-tomcat-8.5.35/webapps/admin/report.pdf";
+		//String filePath = "/home/supertom/apache-tomcat-8.5.35/webapps/admin/report.pdf";
 
-		String filePath = "/home/lenovo/Documents/pdf/Report.pdf";
+		String filePath ="/home/lenovo/Documents/pdf/Report.pdf";
 
 		// construct the complete absolute path of the file
 		String fullPath = appPath + filePath;
@@ -785,15 +1050,15 @@ public class DispachReport {
 			pd4ml.enableSmartTableBreaks(true);
 			try {
 
-				try {
-					pd4ml.setPageSize(landscapeValue ? pd4ml.changePageOrientation(format) : format);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				  try {                                                              
+                      pd4ml.setPageSize( landscapeValue ? pd4ml.changePageOrientation( format ): format );
+                   } catch (Exception e) {
+                      e.printStackTrace();
+                   }
 
 				Dimension landscapeA4 = pd4ml.changePageOrientation(PD4Constants.A4);
 				pd4ml.setPageSize(landscapeA4);
-
+                     
 				PD4PageMark footer = new PD4PageMark();
 
 				footer.setPageNumberTemplate("Page $[page] of $[total]");
@@ -817,6 +1082,8 @@ public class DispachReport {
 
 			pd4ml.render(urlstring, fos);
 		}
-	}
+	} 
 
+	 
+     
 }

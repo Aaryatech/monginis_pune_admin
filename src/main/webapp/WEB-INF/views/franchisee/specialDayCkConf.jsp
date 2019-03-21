@@ -14,7 +14,8 @@
 <title>Configure Franchisee</title>
 <meta name="description" content="">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+ <c:url var="getItemListByMenuId" value="/getItemsByMenuId"></c:url>
+ <c:url var="getCatidByMenuId" value="/getCatidByMenuId"></c:url>
 
 
 <!--base css styles-->
@@ -239,12 +240,35 @@ select {
 												
 											</div>
 										</div>
+										
+										   <div class="form-group">
+											<label class="col-sm-3 col-lg-2 control-label">Menu List</label>
+											<div class="col-sm-9 col-lg-10 controls">
+												<select data-placeholder="Select Menu" name="MenuId"
+													class="form-control chosen"  id="menuId" onchange="getItemsByMenuId()"
+													>
+                                                   <option value=""> </option>
+													<optgroup label="All Menu">
+														
+														<c:forEach
+															items="${allFranchiseeAndMenuList.getAllMenu()}"
+															var="menuList">
+															<option value="${menuList.menuId}">${menuList.menuTitle}</option>
+
+														</c:forEach>
+													</optgroup>
+												</select>
+												
+											</div>
+										</div>
+										
+										
 																		
 											<div class="form-group">
 											<label class="col-sm-3 col-lg-2 control-label">Items</label>
 											<div class="col-sm-9 col-lg-10 controls">
 												<select data-placeholder="Select Items" name="items[]"
-													class="form-control chosen" tabindex="-1" id="items" multiple="multiple"
+													class="form-control chosen" tabindex="-1" id="item" multiple="multiple"
 													data-rule-required="true">
                                                       <option value=""> </option>
 													<optgroup label="All Items">
@@ -276,17 +300,16 @@ select {
 								</div>
 										
 	                              <div class="form-group">
-									  <label class="col-sm-3 col-lg-2 control-label">Delivery From
-										Date</label>
-									    <div class="col-sm-3 col-lg-3 controls">
+									  <label class="col-sm-3 col-lg-2 control-label">Delivery Date</label>
+									    <div class="col-md-10 col-lg-3 controls">
 										  <input class="form-control date-picker" id="from_delivery_date" size="16"
-											type="text" name="from_delivery_date"  data-rule-required="true"  placeholder="From Date" />
+											type="text" name="from_delivery_date"  data-rule-required="true"  placeholder="Delivery Date" onblur="selectDate()" />
 									   </div>
 							
-									<label class="col-sm-3 col-lg-2 control-label">Delivery To Date</label>
+									<!-- <label type = "hidden" class="col-sm-3 col-lg-2 control-label">Delivery To Date</label> -->
 									<div class="col-sm-3 col-lg-3 controls">
-										<input class="form-control date-picker" id="to_delivery_date" size="16"
-											type="text" name="to_delivery_date"  data-rule-required="true" placeholder="To Date" />
+										<input class="form-control date-picker" id="to_delivery_date" size="16" type="hidden" 
+											type="text" name="to_delivery_date"   placeholder="To Date"  />
 									</div>
 								</div>
 										
@@ -403,8 +426,8 @@ select {
 											</div>
 										</div>
 
-                              <input type="hidden" name="menu_id" id="menu_id" value="${menuId}">
-                             <input type="hidden" name="cat_id" id="cat_id" value="${catId}">
+                              <input type="hidden"  name="menu_id" id="menu_id" value="${menuId}">
+                             <input type="hidden"  name="cat_id" id="cat_id" value="${catId}">
 									</form>
 
 
@@ -432,6 +455,107 @@ select {
 	<!-- END Container -->
 
 	<!--basic scripts-->
+	
+	<script type="text/javascript">
+
+
+
+function getItemsByMenuId() {
+	
+	var menuId = $("#menuId").val();
+	
+	 alert(menuId);
+		 if(menuId=="" || menuId==null){
+			 
+			  
+				$('#item')
+			    .find('option')
+			    .remove()
+			    .end()
+			    $("#item").trigger("chosen:updated");
+		 }else{
+				$.getJSON('${getItemListByMenuId}', {
+					
+					menuId : menuId,
+					ajax : 'true'
+				}, function(data) {
+				 	var html = '<option value="">Select Item</option>';
+				
+					var len = data.length;
+					
+					$('#item')
+				    .find('option')
+				    .remove()
+				    .end()
+				    
+				
+					
+					for ( var i = 0; i < len; i++) {
+			            $("#item").append(
+			                    $("<option selected></option>").attr(
+			                        "value", data[i].id).text(data[i].itemName)
+			                );
+					}
+					   $("#item").trigger("chosen:updated");
+				}); 
+		 }
+		 getCatIdByMenuId();
+}
+	
+	</script>
+	
+	<script type="text/javascript">
+
+
+	function selectDate() {
+		alert(to_delivery_date);
+		var to_delivery_date = $("#from_delivery_date").val();
+		document.getElementById("to_delivery_date").setAttribute("value",to_delivery_date);
+		}
+		
+function getCatIdByMenuId() {
+	
+	
+	var menuId = $("#menuId").val();
+	
+	 alert(menuId);
+		 if(menuId=="" || menuId==null){
+			 
+			  
+				$('#cat_id')
+			    .find('option')
+			    .remove()
+			    .end()
+			    $("#cat_id").trigger("chosen:updated");
+		 }else{
+				$.getJSON('${getCatidByMenuId}', {
+					
+					menuId : menuId,
+					ajax : 'true'
+				}, function(data) {
+				 
+					var len = data.length;
+					
+				    
+				
+					
+					for ( var i = 0; i < len; i++) {
+						document.getElementById("cat_id").setAttribute("value",data[i].catId);
+						
+					}
+					
+					
+					document.getElementById("menu_id").setAttribute("value",menuId);
+					
+					
+					
+				}); 
+		 }
+	 
+}
+	
+	</script>
+	
 	<script
 		src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 	<script>
