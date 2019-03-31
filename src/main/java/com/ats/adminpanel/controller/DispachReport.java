@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -261,7 +263,9 @@ public class DispachReport {
 			strselectedItem=strselectedItem.substring(1, strselectedItem.length());
 			strselectedItem = strselectedItem.replaceAll("\"", "");
 			
-			
+
+			List<Integer> frids = Stream.of(strselectedFranchase.split(",")).map(Integer::parseInt)
+					.collect(Collectors.toList());
 				
 				
 				System.out.println("strselectedFranchase" + strselectedFranchase.toString());
@@ -290,13 +294,16 @@ public class DispachReport {
 			
 			for (int i = 0; i < allFrIdNameList.getFrIdNamesList().size(); i++) 
 			{
-				FrNameIdByRouteId objFranchace=new FrNameIdByRouteId();
-				objFranchace.setFrId(allFrIdNameList.getFrIdNamesList().get(i).getFrId());
-				objFranchace.setFrName(allFrIdNameList.getFrIdNamesList().get(i).getFrName());
-				objFranchace.setFrRouteId(0);
-				FrNameList.add(objFranchace);
+				for(int j=0;j<frids.size();j++) {
+					if(frids.get(j)==allFrIdNameList.getFrIdNamesList().get(i).getFrId()) {
+						FrNameIdByRouteId objFranchace=new FrNameIdByRouteId();
+						objFranchace.setFrId(allFrIdNameList.getFrIdNamesList().get(i).getFrId());
+						objFranchace.setFrName(allFrIdNameList.getFrIdNamesList().get(i).getFrName());
+						objFranchace.setFrRouteId(0);
+						FrNameList.add(objFranchace);
+					}
 				
-				
+				}
 			}
 			
 				

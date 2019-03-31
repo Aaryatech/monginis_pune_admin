@@ -474,8 +474,8 @@ function myFunction() {
   table = document.getElementById("table1");
   tr = table.getElementsByTagName("tr");
   for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[2];
-    td1 = tr[i].getElementsByTagName("td")[3];
+    td = tr[i].getElementsByTagName("td")[3];
+    td1 = tr[i].getElementsByTagName("td")[4];
 
     if (td) {
       if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {

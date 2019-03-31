@@ -104,7 +104,7 @@
 													varStatus="count">
 													<c:choose>
          
-                                                      <c:when test = "${unSelectedCat.catId==5 || unSelectedCat.catId==3}">
+                                                      <c:when test = "${unSelectedCat.catId==5}">
                                                       </c:when>
                                                       <c:otherwise>
 												<option value="${unSelectedCat.catId}"><c:out value="${unSelectedCat.catName}"/></option>
@@ -156,7 +156,7 @@
 								</div>	</div>
 
 </div>
-								<div align="center" id="loader" style="display: none">
+								<div align="center" id="loader" style="display: none;background-color: white;">
 
 									<span>
 										<h4>
@@ -302,7 +302,7 @@
 			</div>
 			<!-- END Main Content -->
 			<footer>
-			<p>2018 © MONGINIS.</p>
+			<p>2019 © MONGINIS.</p>
 			</footer>
 
 
@@ -431,7 +431,7 @@ $(document).ready(function() {
 		
 		if (isValid) {
 			
-			document.getElementById("callsearch").disabled=true;
+			//document.getElementById("callsearch").disabled=true;
 			var productionDate = document.getElementById("datepicker").value;
 			var selectedMenu=$("#selectMenu").val();
 			$('#loader').show();
@@ -460,7 +460,7 @@ $(document).ready(function() {
 									
 								
 								$.each(data,function(key, order) {
-									$('#loader').hide();
+									//$('#loader').hide();
 									if(order.qty>0){
 										document.getElementById("callSubmit").disabled=false;
 									}
@@ -512,7 +512,9 @@ $(document).ready(function() {
 								 
 								 
 							$('#table1 tbody').append(tr);
-							
+							if (key == data.length- 1) {
+								$('#loader').hide();
+					          }
 														})
 							}
 														
@@ -531,7 +533,7 @@ $(document).ready(function() {
 				//$('#table_grid td').remove();
 				
 				
-				$('#loader').hide();
+				//$('#loader').hide();
 				 if (data == "") {
 				//	alert("No records found !!");
 					document.getElementById("callSubmit").disabled=true;
@@ -584,6 +586,9 @@ $(document).ready(function() {
 									tr.append($('<td></td>').html(order.qty));
 									
 									$('#table1 tbody').append(tr);
+									if (key == data.length- 1) {
+										$('#loader').hide();
+							          }
 								})
 				}
 									

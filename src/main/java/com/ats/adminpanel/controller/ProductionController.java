@@ -1023,12 +1023,12 @@ public class ProductionController {
 			postProductionHeader.setItemGrp1(Integer.parseInt(selectedCat));
 			postProductionHeader.setProductionDate(convertedDate);
 			postProductionHeader.setDelStatus(0);
-			postProductionHeader.setIsBom(0);
+			postProductionHeader.setIsBom(1);
 
 			postProductionHeader.setIsMixing(0);
 			postProductionHeader.setIsPlanned(0);
 			postProductionHeader.setProductionBatch("");
-			postProductionHeader.setProductionStatus(2);
+			postProductionHeader.setProductionStatus(3);
 
 			List<PostProductionDetail> postProductionDetailList = new ArrayList<>();
 			PostProductionDetail postProductionDetail;

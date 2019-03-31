@@ -827,8 +827,8 @@ public class GvnController {
 		HttpSession session = request.getSession();
 
 		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
-		com.ats.adminpanel.model.Info view = AccessControll.checkAccess("getGvnHeaderForStore/{type}",
-				"getGvnHeaderForStore/{type}", "1", "0", "0", "0", newModuleList);
+		com.ats.adminpanel.model.Info view = AccessControll.checkAccess("getGvnHeaderForStore/"+type,
+				"getGvnHeaderForStore/"+type, "1", "0", "0", "0", newModuleList);
 
 		if (view.getError() == true) {
 

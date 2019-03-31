@@ -21,8 +21,8 @@ public class SpCakeOrdersBean {
     private String spBookedForName;
 	private int isAllocated;
 	private int isBillGenerated;
-	
-	
+	private int slipNo;
+	  private String spImage;
 	
 /*
     public int getFrId() {
@@ -34,7 +34,23 @@ public class SpCakeOrdersBean {
     }
     */
 	
-    public int getIsBillGenerated() {
+    public int getSlipNo() {
+		return slipNo;
+	}
+
+	public String getSpImage() {
+		return spImage;
+	}
+
+	public void setSpImage(String spImage) {
+		this.spImage = spImage;
+	}
+
+	public void setSlipNo(int slipNo) {
+		this.slipNo = slipNo;
+	}
+
+	public int getIsBillGenerated() {
 		return isBillGenerated;
 	}
 
@@ -156,7 +172,8 @@ public class SpCakeOrdersBean {
 				+ spfName + ", spEvents=" + spEvents + ", spDeliveryDate=" + spDeliveryDate + ", spPrice=" + spPrice
 				+ ", spTotalAddRate=" + spTotalAddRate + ", frName=" + frName + ", itemId=" + itemId
 				+ ", spSelectedWeight=" + spSelectedWeight + ", spBookedForName=" + spBookedForName + ", isAllocated="
-				+ isAllocated + ", isBillGenerated=" + isBillGenerated + "]";
+				+ isAllocated + ", isBillGenerated=" + isBillGenerated + ", slipNo=" + slipNo + ", spImage=" + spImage
+				+ "]";
 	}
 
 	

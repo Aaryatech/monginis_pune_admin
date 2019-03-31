@@ -307,6 +307,10 @@ public class OrderController {
 
 				model.addObject("todayDate", new SimpleDateFormat("dd-MM-yyyy").format(new Date()));
 				model.addObject("franchiseeList", franchiseeList);
+				
+				List<Menu> allMenuList = restTemplate.getForObject(Constants.url + "getAllMenuList", List.class);
+				model.addObject("frMenuList", allMenuList);
+				model.addObject("url", Constants.SPCAKE_IMAGE_URL);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -375,6 +379,7 @@ public class OrderController {
 		String frIdString = request.getParameter("fr_id_list");
 		String prodDate = request.getParameter("prod_date");
 		int routeId = Integer.parseInt(request.getParameter("route_id"));
+		int spMenuId = Integer.parseInt(request.getParameter("spMenuId"));
 		List<String> franchIds = new ArrayList();
 
 		if (frIdString != null) {
@@ -414,7 +419,7 @@ public class OrderController {
 
 			map.add("frId", frIdString);
 			map.add("prodDate", prodDate);
-
+            map.add("spMenuId", spMenuId);
 			SpCakeOrdersBeanResponse orderListResponse = restTemplate1
 					.postForObject(Constants.url + "getSpCakeOrderLists", map, SpCakeOrdersBeanResponse.class); // s
 																												// added
@@ -428,7 +433,7 @@ public class OrderController {
 			System.out.println("all fr selected");
 
 			map.add("prodDate", prodDate);
-
+			map.add("spMenuId", spMenuId);
 			orderListResponse = restTemplate1.postForObject(Constants.url + "getAllFrSpCakeOrderList", map,
 					SpCakeOrdersBeanResponse.class);
 
@@ -447,7 +452,7 @@ public class OrderController {
 
 			map.add("frId", frIdString);
 			map.add("prodDate", prodDate);
-
+			map.add("spMenuId", spMenuId);
 			SpCakeOrdersBeanResponse orderListResponse = restTemplate1
 					.postForObject(Constants.url + "getSpCakeOrderLists", map, SpCakeOrdersBeanResponse.class); // s
 																												// added
@@ -468,14 +473,14 @@ public class OrderController {
 
 		ExportToExcel expoExcel = new ExportToExcel();
 		List<String> rowData = new ArrayList<String>();
+		rowData.add("Sr. No");
 		rowData.add("Order No");
+		rowData.add("Slip No");
 		rowData.add("Franchisee Name");
-
-		rowData.add("Item Id");
 		rowData.add("Sp Code");
 		rowData.add("Sp Name");
+		rowData.add("Weight");
 		rowData.add("Sp Flavour");
-
 		rowData.add("Event");
 		rowData.add("Price");
 		rowData.add("Sp Total Add Rate");
@@ -485,14 +490,17 @@ public class OrderController {
 		for (int i = 0; i < spCakeOrderList.size(); i++) {
 			expoExcel = new ExportToExcel();
 			rowData = new ArrayList<String>();
+			rowData.add((i+1)+"");
 			rowData.add("" + spCakeOrderList.get(i).getSpOrderNo());
+			rowData.add("" + spCakeOrderList.get(i).getSlipNo());
+
 			rowData.add(spCakeOrderList.get(i).getFrName());
+     		rowData.add(spCakeOrderList.get(i).getSpCode());
 
-			rowData.add(spCakeOrderList.get(i).getItemId());
-			rowData.add(spCakeOrderList.get(i).getSpCode());
-
-			rowData.add(spCakeOrderList.get(i).getSpfName());
 			rowData.add(spCakeOrderList.get(i).getSpName());
+			rowData.add(""+spCakeOrderList.get(i).getSpSelectedWeight());
+			rowData.add(spCakeOrderList.get(i).getSpfName());
+
 			rowData.add(spCakeOrderList.get(i).getSpEvents());
 			rowData.add("" + spCakeOrderList.get(i).getSpPrice());
 			rowData.add("" + spCakeOrderList.get(i).getSpTotalAddRate());
@@ -722,10 +730,19 @@ public class OrderController {
 	public @ResponseBody Info updateBillStatusForSp(HttpServletRequest request, HttpServletResponse response) {
 		Info info = null;
 		try {
-			int spOrderNo = Integer.parseInt(request.getParameter("spOrderNo"));
+			//int spOrderNo = Integer.parseInt(request.getParameter("spOrderNo"));
+			String[] spOrderNo = request.getParameterValues("spOrderNo");
+			StringBuilder sb = new StringBuilder();
 
+			for (int i = 0; i < spOrderNo.length; i++) {
+				sb = sb.append(spOrderNo[i] + ",");
+
+			}
+			String orderNo = sb.toString();
+			orderNo = orderNo.substring(0, orderNo.length() - 1);
+			
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-			map.add("spOrderNo", spOrderNo);
+			map.add("spOrderNo", orderNo);
 			map.add("billStatus", 1);
 			RestTemplate restTemp = new RestTemplate();
 			info = restTemp.postForObject(Constants.url + "updateBillStatusToProduction", map, Info.class);

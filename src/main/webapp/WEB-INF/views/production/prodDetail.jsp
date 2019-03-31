@@ -180,7 +180,7 @@
 											<label class="col-sm-3 col-lg-1 control-label">Status
 											</label>
 											<div class="col-sm-5 col-lg-2 controls">
-												<input disabled type="text" name="status" id="status"
+												<input disabled type="text" name="status" 
 													value="${sts}" class="form-control" />
 											</div>
 
@@ -517,7 +517,7 @@
 
 												<div
 													class="col-sm-1 col-sm-offset-1 col-lg-9 col-lg-offset-1">
-													<c:choose>
+													<%-- <c:choose>
 														<c:when test="${planHeader.isBom==0}">
 															<a
 																href="${pageContext.request.contextPath}/showBom/${planHeader.productionHeaderId}/1/${planHeader.productionDate}/${planHeader.isPlanned}/${planHeader.catId}">
@@ -536,8 +536,8 @@
 														<c:otherwise>
 														</c:otherwise>
 													</c:choose>
-													&nbsp;&nbsp;
-													<c:choose>
+													&nbsp;&nbsp; --%>
+												<%-- 	<c:choose>
 
 														<c:when
 															test="${planHeader.isMixing==0 && planHeader.productionStatus==1 or planHeader.productionStatus==2 or planHeader.productionStatus==3}">
@@ -568,7 +568,7 @@
 														<c:otherwise>
 
 														</c:otherwise>
-													</c:choose>
+													</c:choose> --%>
 													<input type="hidden" name="productionStatus"
 														id="productionStatus"
 														value="${planHeader.productionStatus}" /> &nbsp;&nbsp;
@@ -616,7 +616,7 @@
 															</button>
 														</c:when>
 													</c:choose>
-													<c:choose>
+												<%-- 	<c:choose>
 
 														<c:when test="${planHeader.isBom==1}">
 															<button type="button" class="btn btn-primary"
@@ -625,15 +625,15 @@
 															</button>
 														</c:when>
 
-													</c:choose>
-													<c:choose>
+													</c:choose> --%>
+													<%-- <c:choose>
 														<c:when test="${planHeader.isMixing==1}">
 															<a
 																href="${pageContext.request.contextPath}/manualMixing/${planHeader.productionHeaderId}/${planHeader.productionDate}/${planHeader.timeSlot}"><input
 																type="button" class="btn btn-primary"
 																id="man_bom_button" value="Spot Mixing"> </a>
 														</c:when>
-													</c:choose>
+													</c:choose> --%>
 													 <input type="button" id="expExcel" class="btn btn-primary" value="EXPORT TO Excel" onclick="exportToExcel();" >
 												</div>
 
@@ -670,7 +670,7 @@
 
 			<!-- END Main Content -->
 			<footer>
-				<p>2018 © MONGINIS.</p>
+				<p>2019 © MONGINIS.</p>
 			</footer>
 
 			<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i

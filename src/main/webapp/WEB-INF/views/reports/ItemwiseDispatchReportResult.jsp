@@ -53,9 +53,9 @@
 			<div class="row">
 
 					<div class="form-group" align="center">
- 
+ <!-- 
 					 <button class="btn btn-primary" value="PDF" id="PDFButton"
-							onclick="genPdf()">PDF</button>
+							onclick="genPdf()">PDF</button> -->
 						 <input id="dispatchReportList" name="dispatchReportList" value="${dispatchReportList}" type="hidden">
 						 <input id="FrNameList" name="FrNameList" value="${FrNameList}" type="hidden">
 						  <input id="Items" name="Items" value="${Items}" type="hidden">
@@ -111,20 +111,24 @@
 																				<td><c:out value="${sr+1}" /><c:set var="sr" value="${sr+1}"></c:set></td> 
 																				<td align="left"><c:out value="${FrNameList.frName}" />
 																				</td>
-																				  <c:forEach items="${Items}" var="Items" >
+																				  <c:forEach items="${Items}" var="items" >
+																				 <c:set var="orQty" value="0"></c:set>
+																				 
 																				  <td style="text-align: right;">
 																				  	<c:forEach items="${dispatchReportList}" var="dispatchReportList" >
+																				  
 																				  	 <c:choose>
-																				  	<c:when test="${dispatchReportList.frId==FrNameList.frId }"> 
+																				  	<c:when test="${dispatchReportList.frId==FrNameList.frId}"> 
 																				  	 <c:choose>
-																				  	<c:when test="${dispatchReportList.itemId==Items.id }">
-																				  	<c:out value="${dispatchReportList.orderQty}" />
+																				  	<c:when test="${dispatchReportList.itemId==items.id}">
+																				  	<c:set var="orQty" value="${dispatchReportList.orderQty}"></c:set>
 																				   </c:when>
 																						</c:choose> 
 																					</c:when>
 																						</c:choose> 
 																						
 																				  	</c:forEach>
+																				  ${orQty}
 																				  	</td>						   
 																				  </c:forEach>
 																				</tr>
@@ -141,7 +145,7 @@
 		
 
 		<footer>
-			<p>2018 © Monginis.</p>
+			<p>2019 © Monginis.</p>
 		</footer>
 
 		<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i

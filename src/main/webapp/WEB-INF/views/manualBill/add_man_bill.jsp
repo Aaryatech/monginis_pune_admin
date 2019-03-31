@@ -153,6 +153,7 @@ select {
 
 	<c:url var="getFlavourBySpfId" value="/getFlavourBySpfId" />
 	<c:url var="findAddOnRate" value="/getAddOnRate" />
+	<c:url var="findFranchiseeData" value="/findFranchiseeData" />
 	
 
 	<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
@@ -214,7 +215,7 @@ select {
 											<div class="col-md-3">
 												<select data-placeholder="Select Franchisee" name="fr_id"
 													class="form-control chosen" tabindex="-1" id="fr_id"
-													data-rule-required="true">
+													data-rule-required="true" onchange="findFranchiseeData(this.value)">
 													<option value=""> </option>
 													<!-- <optgroup label="All Franchisee"> -->
 													<option value="">Select Franchise</option>
@@ -908,13 +909,10 @@ $(document).ready(function() {
 
 <script type="text/javascript">
 		function onChange(dbRate) {
-			//alert("db Rate "+dbRate);
+			
 			var wt = $('#spwt').find(":selected").text();
-			
 			var flavourAdonRate =$("#dbAdonRate").val();
-			//alert(flavourAdonRate);
-			
-			
+					
 			var tax3 = parseFloat($("#tax3").val());
 			var tax1 = parseFloat($("#tax1").val());
 			var tax2 = parseFloat($("#tax2").val());
@@ -922,11 +920,9 @@ $(document).ready(function() {
 			var sp_ex_charges= parseFloat($("#sp_ex_charges").val());
 			var sp_disc=parseFloat($("#sp_disc").val());
 			//document.getElementById("adv").value=0;
-		
-			
+					
 			var totalCakeRate = wt*dbRate;
-		//	var totalFlavourAddonRate;//= wt*flavourAdonRate;
-			
+				
 			var billBy=${billBy};
 			//alert("Bill by " +billBy);
 			var totalFlavourAddonRate = wt*flavourAdonRate;
@@ -990,7 +986,6 @@ $(document).ready(function() {
 			$('#mgstamt').html('AMT-'+mGstAmt.toFixed(2)); 
 			document.getElementById("m_gst_amt").setAttribute('value',mGstAmt.toFixed(2));
 			
-		//alert("x" +x);
 			$('#price').html(wt*dbRate);
 			$('sp_calc_price').html(wt*dbRate);
 			//$('#rate').html(wt*flavourAdonRate);	
@@ -998,12 +993,12 @@ $(document).ready(function() {
 			
 			$('#rate').html(totalFlavourAddonRate);$('#sp_add_rate').html(totalFlavourAddonRate);
 			document.getElementById("sp_add_rate").setAttribute('value',totalFlavourAddonRate);
-			$('#subtotal').html(spSubtotal);	alert(spSubtotal);
+			$('#subtotal').html(spSubtotal);	
 			document.getElementById("sp_sub_total").setAttribute('value',spSubtotal);
 			
 			$('#INR').html('INR-'+spSubtotal);
 			document.getElementById("sp_grand").setAttribute('value',spSubtotal);
-			$('#tot').html('TOTAL-'+grandTotal);
+			$('#tot').html('TOTAL-'+spSubtotal);
 			document.getElementById("total_amt").setAttribute('value',spSubtotal);
 			//$('#rmAmt').html(spSubtotal);
 		//	document.getElementById("rm_amount").setAttribute('value',spSubtotal);
@@ -1406,5 +1401,29 @@ function validate() {
  
 }
 </script> 
+
+<script type="text/javascript">
+function findFranchiseeData(frId)
+{
+	$.getJSON(
+					'${findFranchiseeData}',
+					{
+						fr_id:frId,
+						ajax : 'true'
+					},
+					function(data) {
+						if(data.length!=0)
+							{
+                              document.getElementById("fr_name").value=data.frName;
+                              document.getElementById("gst_no").value=data.frGstNo;
+                            //  document.getElementById("address").value=data.frAddress;
+							}
+						
+					});
+	
+}
+
+
+</script>
 </body>
 </html>

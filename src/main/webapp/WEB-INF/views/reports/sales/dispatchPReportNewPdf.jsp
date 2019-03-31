@@ -93,7 +93,21 @@ th {
 																		<td align="left"  ><c:out value="${list.frName}" />
 																		</td>
 																		  <c:forEach items="${list.itemList}" var="itemList" >
-																		  <td style="text-align: right;">${itemList.orderQty}</td> 
+																		  <td style="text-align: right;">
+																		  
+																		   <c:choose>
+																			  <c:when test="${itemList.orderQty>0}">
+																			 
+																			<fmt:formatNumber type="number"	minFractionDigits="0" maxFractionDigits="0"	value="${itemList.orderQty}"/>
+																			 
+																			  </c:when>
+																			  <c:otherwise>
+																			 
+																			  
+																			  </c:otherwise>
+																			  
+																			  </c:choose>
+																		  </td> 
 																		  </c:forEach>
 																		</tr>
 																	
@@ -131,7 +145,20 @@ th {
 																		<td align="left"><c:out value="${list.frName}" />
 																		</td>
 																		  <c:forEach items="${list.itemList}" var="itemList" >
-																		  <td style="text-align: right;">${itemList.orderQty}</td> 
+																		  <td style="text-align: right;">
+																		   <c:choose>
+																			  <c:when test="${itemList.orderQty>0}">
+																			 
+																			<fmt:formatNumber type="number"	minFractionDigits="0" maxFractionDigits="0"	value="${itemList.orderQty}"/>
+																			 
+																			  </c:when>
+																			  <c:otherwise>
+																			 
+																			  
+																			  </c:otherwise>
+																			  
+																			  </c:choose>
+																		  </td> 
 																		  </c:forEach>
 																		</tr>
 																	
@@ -168,7 +195,20 @@ th {
 																		<td align="left"><c:out value="${list.frName}" />
 																		</td>
 																		  <c:forEach items="${list.itemList}" var="itemList" >
-																		  <td style="text-align: right;">${itemList.orderQty}</td> 
+																		  <td style="text-align: right;">
+																		   <c:choose>
+																			  <c:when test="${itemList.orderQty>0}">
+																			 
+																			<fmt:formatNumber type="number"	minFractionDigits="0" maxFractionDigits="0"	value="${itemList.orderQty}"/>
+																			 
+																			  </c:when>
+																			  <c:otherwise>
+																			 
+																			  
+																			  </c:otherwise>
+																			  
+																			  </c:choose>
+																		  </td> 
 																		  </c:forEach>
 																		</tr>
 																	

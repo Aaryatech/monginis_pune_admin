@@ -3,8 +3,12 @@
 	pageEncoding="UTF-8"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
   <jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
  <jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
+ <head>
+ 	 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/tableSearch.css">
+ 
  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
  <style>
  table{
@@ -13,6 +17,7 @@
   border:1px solid #ddd;
 }
  </style>
+ </head>
 <body>
 
 
@@ -108,7 +113,7 @@
 
 			<input type="hidden" id="isDelete" value="${isDelete}"> 
 			<input type="hidden" id="isEdit" value="${isEdit}">
-
+			<input type="hidden" id="url" value="${url}">
 			<!-- BEGIN Main Content -->
 			<div class="row">
 				<div class="col-md-12">
@@ -196,6 +201,21 @@
 										<input class="form-control date-picker" value="${todayDate }" id="dp2" size="16"
 											type="text" name="prod_date" data-rule-required="true" />
 									</div>
+										<div class="col-md-1">Menu</div>
+											<div class="col-md-3">
+											<select name="spMenuId" class="form-control chosen" data-placeholder="Menu" 
+												id="spMenuId" required>
+												<option value="">Select Menu</option>
+												<c:forEach items="${frMenuList}" var="frMenuList">
+													<c:choose>
+														<c:when test="${frMenuList.mainCatId==5}">
+															<option value="${frMenuList.menuId}">
+															<c:out value="${frMenuList.menuTitle}" /></option>
+														</c:when>
+													</c:choose>
+												</c:forEach>
+											</select>
+                                           </div>
 								<!-- </div>
 
 
@@ -208,6 +228,11 @@
 
 										
 									<!-- </div> -->
+<div class="col-md-9" ></div> 
+					<label for="search" class="col-md-3" id="search">
+    <i class="fa fa-search" style="font-size:20px"></i>
+									<input type="text"  style="border-radius:25px;" id="myInput" onkeyup="myFunction()" style="border-radius: 25px;" placeholder="Search by SlipNo or Name" >
+										</label>  
 								</div>
 								
 									<div align="center" id="loader" style="display:none">
@@ -252,7 +277,8 @@
 											<table width="100%" class="table table-advance" id="table1" border="1">
 												<thead style="background-color: #f3b5db; ">
 													<tr>
-														<th width="130" align="left">Sr</th>
+														<th class="col-sm-1"><input type="checkbox" onClick="selectOrderIdNo(this)" id="all"/> All</th>
+														<th width="130" align="left">SlipNo</th>
 														<th width="208" align="left">Franchisee</th>
 														<th width="183" align="left">DeliveryOn</th>
 														<th width="159" align="left"><span
@@ -278,7 +304,7 @@
 														varStatus="count">
 														<c:set var="dis" value="block"/>
 														<tr>
-														
+														<td>-</td>
 															<td><c:out value="${count.index+1}" /></td>
 															<td align="left"><c:out
 																	value="${spCakeOrder.frName}"></c:out></td>
@@ -344,6 +370,10 @@
 											<%-- <a onclick="exportToExcel()" id="expExcel" href="${pageContext.request.contextPath}/download" disabled="true" class="btn btn-primary">EXPORT TO Excel</a> --%>
 											<input type="button" id="expExcel" class="btn btn-primary" value="EXPORT TO Excel" onclick="exportToExcel();" disabled="disabled">
 											</div>
+													<div class="col-md-1">
+				<input type="button" class="btn btn-primary"  value="Add To Production"  disabled="disabled" id="addtoprod" onclick="updateBillGenStatusToProd()">
+						
+</div>	
 											</div>
 							</form>
 						</div>
@@ -456,9 +486,10 @@
 			if(isValid==true){
 
 			var frIds=$("#fr_id").val();
+			var spMenuId=$("#spMenuId").val();
 			var array=[];
 			var routeIds=$("#selectRoute").val();
-
+			var URL=$("#url").val();
 			var prodDate = document.getElementById("dp2").value;
 			$('#loader').show();
 					
@@ -467,6 +498,7 @@
 								fr_id_list : JSON.stringify(frIds),
 								prod_date : prodDate,
 								route_id:routeIds,
+								spMenuId:spMenuId,
 								ajax : 'true',
 							},
 							function(data) {
@@ -475,18 +507,30 @@
 								if(data==""){
 									alert("No Orders Found");
 									document.getElementById("expExcel").disabled=true;
+									document.getElementById("addtoprod").disabled=true;
+
 								}
 								$.each(data,function(key, spCakeOrder) {
 									document.getElementById("expExcel").disabled=false;
+									document.getElementById("addtoprod").disabled=false;
+
 									document.getElementById('range').style.display = 'block';
 									var len=data.length
 					
 									var tr = $('<tr></tr>');
+									 if(spCakeOrder.isBillGenerated==0){
+									tr.append($('<td class="col-sm-1"></td>').html((key+1)+"<input type='checkbox' name='selorder' class='selorder' id="+spCakeOrder.spOrderNo+"   value="+spCakeOrder.spOrderNo+">   "));
+									 }
+									 else
+										 {
+										 tr.append($('<td></td>').html(key+1));
+										 }
+										 var spImage=(spCakeOrder.spImage).replace(/ /g, '%20');
 
-								  	tr.append($('<td></td>').html(key+1));
+									tr.append($('<td></td>').html(spCakeOrder.slipNo));
 								  	tr.append($('<td></td>').html(spCakeOrder.frName));
 								 	tr.append($('<td></td>').html(spCakeOrder.spDeliveryDate));
-								 	tr.append($('<td></td>').html(spCakeOrder.spName));
+								 	tr.append($('<td></td>').html("<a href="+URL+""+spImage+" target=_blank >"+spCakeOrder.spName+"</a>"));
 								  	tr.append($('<td></td>').html(spCakeOrder.itemId));
 								 	tr.append($('<td></td>').html(spCakeOrder.spSelectedWeight));
 								  	tr.append($('<td></td>').html(spCakeOrder.spfName));
@@ -499,14 +543,9 @@
 								  	tr.append($('<td></td>').html('<a href="${pageContext.request.contextPath}/showHtmlViewSpcakeOrder/'+spCakeOrder.spOrderNo+'" target="blank"><i class="fa fa-file-text-o" style="font-size:15px;"></i></a>'));  
 								  	
 								    tr.append($('<td></td>').html('<a href="${pageContext.request.contextPath}/showSpcakeOrderPdf/'+spCakeOrder.spOrderNo+'/'+(key+1)+'" target="blank"><i class="fa fa-file-pdf-o" style="font-size:15px;"></i></a>'));  
-								    if(spCakeOrder.isBillGenerated==0){
-								    tr.append($('<td></td>').html('<a href=# class=action_btn onclick=updateBillGenStatusToProd('+spCakeOrder.spOrderNo+'); title="Take To Production"><i class="fa fa-industry" style="font-size:17px;"></i></a>&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=saveSpOrder('+spCakeOrder.spOrderNo+'); title=Save><i class="fa fa-save" style="font-size:17px;"></i></a>&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=deleteSpOrder('+spCakeOrder.spOrderNo+'); title=Delete><i class="glyphicon glyphicon-remove" style="font-size:17px;"></i></a>')); 
-								    }
-								    else
-								    	{
+								  
 									tr.append($('<td></td>').html('<a href=# class=action_btn onclick=saveSpOrder('+spCakeOrder.spOrderNo+'); title=Save><i class="fa fa-save" style="font-size:17px;"></i></a>&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=deleteSpOrder('+spCakeOrder.spOrderNo+'); title=Delete><i class="glyphicon glyphicon-remove" style="font-size:17px;"></i></a>')); 
 
-								    	}
 									$('#table1 tbody').append(tr);
 									document.getElementById("addon"+spCakeOrder.spOrderNo).value=spCakeOrder.isAllocated;
 									})
@@ -541,6 +580,7 @@
     <script type="text/javascript">
 		function deleteSpOrder(spOrderNo) {
 			$('#loader').show();
+			var URL=$("#url").val();
 			 if (confirm("Do you want to Delete this order?") == true) {
 			$.getJSON('${deleteSpOrder}',
 					{
@@ -553,18 +593,29 @@
 						if(data==""){
 							alert("No Orders Found");
 							document.getElementById("expExcel").disabled=true;
+							document.getElementById("addtoprod").disabled=true;
+
 						}
 						$.each(data,function(key, spCakeOrder) {
 							document.getElementById("expExcel").disabled=false;
+							document.getElementById("addtoprod").disabled=false;
+
 							document.getElementById('range').style.display = 'block';
 							var len=data.length
 			
 							var tr = $('<tr></tr>');
-
-						  	tr.append($('<td></td>').html(key+1));
+							 if(spCakeOrder.isBillGenerated==0){
+									tr.append($('<td class="col-sm-1"></td>').html((key+1)+"<input type='checkbox' name='selorder' class='selorder' id="+spCakeOrder.spOrderNo+"   value="+spCakeOrder.spOrderNo+">"));
+									 }
+									 else
+										 {
+										 tr.append($('<td></td>').html(key+1));
+										 }
+							 var spImage=(spCakeOrder.spImage).replace(/ /g, '%20');
+							tr.append($('<td></td>').html(spCakeOrder.slipNo));
 						  	tr.append($('<td></td>').html(spCakeOrder.frName));
 						 	tr.append($('<td></td>').html(spCakeOrder.spDeliveryDate));
-						 	tr.append($('<td></td>').html(spCakeOrder.spName));
+						 	tr.append($('<td></td>').html("<a href="+URL+""+spImage+" target=_blank >"+spCakeOrder.spName+"</a>"));
 						  	tr.append($('<td></td>').html(spCakeOrder.itemId));
 						 	tr.append($('<td></td>').html(spCakeOrder.spSelectedWeight));
 						  	tr.append($('<td></td>').html(spCakeOrder.spfName));
@@ -577,13 +628,8 @@
 						  	tr.append($('<td></td>').html('<a href="${pageContext.request.contextPath}/showHtmlViewSpcakeOrder/'+spCakeOrder.spOrderNo+'" target="blank"><i class="fa fa-file-text-o" style="font-size:15px;"></i></a>'));  
 						  	
 						    tr.append($('<td></td>').html('<a href="${pageContext.request.contextPath}/showSpcakeOrderPdf/'+spCakeOrder.spOrderNo+'/'+(key+1)+'" target="blank"><i class="fa fa-file-pdf-o" style="font-size:15px;"></i></a>'));  
-						    if(spCakeOrder.isBillGenerated==0){
-						    tr.append($('<td></td>').html('<a href=# class=action_btn onclick=updateBillGenStatusToProd('+spCakeOrder.spOrderNo+'); title="Take To Production"><i class="fa fa-industry" style="font-size:17px;"></i></a>&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=saveSpOrder('+spCakeOrder.spOrderNo+'); title=Save><i class="fa fa-save" style="font-size:17px;"></i></a>&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=deleteSpOrder('+spCakeOrder.spOrderNo+'); title=Delete><i class="glyphicon glyphicon-remove" style="font-size:17px;"></i></a>')); 
-						    }
-						    else
-						    	{
+						
 							tr.append($('<td></td>').html('<a href=# class=action_btn onclick=saveSpOrder('+spCakeOrder.spOrderNo+'); title=Save><i class="fa fa-save" style="font-size:17px;"></i></a>&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=deleteSpOrder('+spCakeOrder.spOrderNo+'); title=Delete><i class="glyphicon glyphicon-remove" style="font-size:17px;"></i></a>')); 
-						    	}
 							$('#table1 tbody').append(tr);
 							document.getElementById("addon"+spCakeOrder.spOrderNo).value=spCakeOrder.isAllocated;
 							
@@ -598,6 +644,7 @@
 	 <script type="text/javascript">
 		function saveSpOrder(spOrderNo) {
 			$('#loader').show();
+			var URL=$("#url").val();
 			 if (confirm("Do you want to Save this order?") == true) {
 				 
 				 var box=$("#box"+spOrderNo).val();
@@ -616,18 +663,29 @@
 						if(data==""){
 							alert("No Orders Found");
 							document.getElementById("expExcel").disabled=true;
+							document.getElementById("addtoprod").disabled=true;
+
 						}
 						$.each(data,function(key, spCakeOrder) {
 							document.getElementById("expExcel").disabled=false;
+							document.getElementById("addtoprod").disabled=false;
+
 							document.getElementById('range').style.display = 'block';
 							var len=data.length
 			
 							var tr = $('<tr></tr>');
-
-						  	tr.append($('<td></td>').html(key+1));
+							 if(spCakeOrder.isBillGenerated==0){
+									tr.append($('<td class="col-sm-1"></td>').html((key+1)+"<input type='checkbox' name='selorder' class='selorder' id="+spCakeOrder.spOrderNo+"   value="+spCakeOrder.spOrderNo+">"));
+									 }
+									 else
+										 {
+										 tr.append($('<td></td>').html(key+1));
+										 }
+							 var spImage=(spCakeOrder.spImage).replace(/ /g, '%20');
+							tr.append($('<td></td>').html(spCakeOrder.slipNo));
 						  	tr.append($('<td></td>').html(spCakeOrder.frName));
 						 	tr.append($('<td></td>').html(spCakeOrder.spDeliveryDate));
-						 	tr.append($('<td></td>').html(spCakeOrder.spName));
+						 	tr.append($('<td></td>').html("<a href="+URL+""+spImage+" target=_blank >"+spCakeOrder.spName+"</a>"));
 						  	tr.append($('<td></td>').html(spCakeOrder.itemId));
 						 	tr.append($('<td></td>').html(spCakeOrder.spSelectedWeight));
 						  	tr.append($('<td></td>').html(spCakeOrder.spfName));
@@ -641,13 +699,9 @@
 						  	
 						    tr.append($('<td></td>').html('<a href="${pageContext.request.contextPath}/showSpcakeOrderPdf/'+spCakeOrder.spOrderNo+'/'+(key+1)+'" target="blank"><i class="fa fa-file-pdf-o" style="font-size:15px;"></i></a>'));  
 						  
-						    if(spCakeOrder.isBillGenerated==0){
-						    tr.append($('<td></td>').html('<a href=# class=action_btn onclick=updateBillGenStatusToProd('+spCakeOrder.spOrderNo+'); title="Take To Production"><i class="fa fa-industry" style="font-size:17px;"></i></a>&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=saveSpOrder('+spCakeOrder.spOrderNo+');title=Save><i class="fa fa-save" style="font-size:17px;"></i></a>&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=deleteSpOrder('+spCakeOrder.spOrderNo+'); title=Delete><i class="glyphicon glyphicon-remove" style="font-size:17px;"></i></a>')); 
-						    }else
-						    	{
+						   
 							    tr.append($('<td></td>').html('<a href=# class=action_btn onclick=saveSpOrder('+spCakeOrder.spOrderNo+');title=Save><i class="fa fa-save" style="font-size:17px;"></i></a>&nbsp;&nbsp;&nbsp;<a href=# class=action_btn onclick=deleteSpOrder('+spCakeOrder.spOrderNo+'); title=Delete><i class="glyphicon glyphicon-remove" style="font-size:17px;"></i></a>')); 
 
-						    	}
 							$('#table1 tbody').append(tr);
 							document.getElementById("addon"+spCakeOrder.spOrderNo).value=spCakeOrder.isAllocated;
 							
@@ -669,7 +723,6 @@
 
 function disableFr(){
 
-	//alert("Inside Disable Fr ");
 document.getElementById("fr_id").disabled = true;
 
 }
@@ -691,11 +744,16 @@ function disableRoute(){
 </script>
 
 <script type="text/javascript">
-function updateBillGenStatusToProd(spOrderNo)
+function updateBillGenStatusToProd()
 {
+	
+	var checkedVals = $('.selorder:checkbox:checked').map(function() {
+	    return this.value;
+	}).get();
+	 if(checkedVals!="" && checkedVals!=null){
 	$.getJSON('${updateBillStatusForSp}',
 			{
-				spOrderNo:spOrderNo,
+				spOrderNo:checkedVals.join(","),
 				ajax : 'true',
 			},
 			function(data) {
@@ -703,11 +761,40 @@ function updateBillGenStatusToProd(spOrderNo)
 				if(data.error==false)
 					{
 					alert("Special Cake Taken for Production");
+					callSearch();
 					}
 				
 			});
-	
+	 }
+	 else
+		 {
+		 alert("Select atleast 1 Sp Order !!")
+		 }
 }
 </script>
+<script>
+function myFunction() {
+  var input, filter, table, tr, td,td1, i;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("table1");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[1];
+    td1 = tr[i].getElementsByTagName("td")[4];
+
+    if (td) {
+      if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      }else if (td1.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      }  else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+}
+</script>
+
 </body>
 </html>

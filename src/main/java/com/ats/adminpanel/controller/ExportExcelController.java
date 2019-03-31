@@ -124,7 +124,6 @@ public class ExportExcelController {
 	            
 	           
 	            cell.setCellValue(exportToExcelList.get(rowIndex).getRowData().get(j));
-	           
 	             
 	      
 	        }

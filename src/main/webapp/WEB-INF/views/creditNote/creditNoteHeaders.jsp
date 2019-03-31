@@ -251,7 +251,7 @@
 			</div>
 			<!-- END Main Content -->
 			<footer>
-				<p>2018 © MONGINIS.</p>
+				<p>2019 © MONGINIS.</p>
 			</footer>
 
 
@@ -360,11 +360,11 @@
 
 			  	tr.append($('<td></td>').html(headers.frName));
 
-			  	tr.append($('<td></td>').html(headers.crnTaxableAmt));
+			  	tr.append($('<td></td>').html((headers.crnTaxableAmt).toFixed()));
 			  	
-				tr.append($('<td></td>').html(headers.crnTotalTax));
+				tr.append($('<td></td>').html((headers.crnTotalTax).toFixed(2)));
 
-			  	tr.append($('<td></td>').html(headers.crnGrandTotal));
+			  	tr.append($('<td></td>').html((headers.crnGrandTotal).toFixed(2)));
 
 				tr.append($('<td style="align:right;""><a href="#" class="action_btn" onclick="getCrnDetail('+headers.crnId+')"><abbr title="Detail"><i class="fa fa-list"></i></abbr></a></td>'));
 			  

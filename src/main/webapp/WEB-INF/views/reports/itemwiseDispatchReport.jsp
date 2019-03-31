@@ -80,10 +80,10 @@
 					<label class="col-sm-3 col-lg-1 control-label">	Route Type</label>
 							<div class="col-sm-3 col-lg-2 controls">
 					<select data-placeholder="Choose Category"
-								class="form-control chosen"   onchange="routListByAbcType()"
+								class="form-control chosen"   onchange="routListByAbcType(0)"
 								id="abcType" name="abcType">
 
-								<option value="0">All</option>
+								<option value="">Select Route Type</option>
 								<option value="1">A</option>
 								<option value="2">B</option>
 								<option value="3">C</option>
@@ -96,7 +96,7 @@
 							Route</label>
 							<div class="col-sm-5 col-lg-5  controls">
 							<select data-placeholder="Select Route"
-								class="form-control chosen" name="selectRoute" id="selectRoute" multiple="multiple" onchange="FranchasiListByRouteID()">
+								class="form-control chosen" name="selectRoute" id="selectRoute" multiple="multiple"  onchange="FranchasiListByRouteID()">
 								 
 							</select>
 					</div>
@@ -113,7 +113,7 @@
 						
 						<select data-placeholder="Franchise Name"
 								class="form-control chosen"   
-								id="frid" name="frid" multiple="multiple" required>
+								id="frid" name="frid" multiple="multiple" required onchange="onFrChange(this.value)">
 
 								 <%-- <option value="-1" selected>All</option>
 								 
@@ -156,7 +156,7 @@
 
 							<select data-placeholder="Select Menu "
 								class="form-control chosen" 
-								id="menuId" name="menuId" multiple="multiple" required>
+								id="menuId" name="menuId" multiple="multiple" required onchange="onMenuChange(this.value)">
 
 								<%--  <option value="0" selected>All</option>
 								<c:forEach items="${menuList}" var="menuList" >
@@ -184,7 +184,6 @@
 								class="form-control chosen" 
 								id="itemId" name="itemId" multiple="multiple" required>
 
-								<option value="0" selected>All</option>
 								 
 								  <c:forEach items="${itemsList}" var="itemsList" >
 									<option value="${itemsList.id}"><c:out value="${itemsList.itemName}"/></option>
@@ -253,8 +252,8 @@ function getMenuListBySectionId() {
 				    .end()
 				    
 				$("#menuId").append(
-                 $("<option selected></option>").attr(
-                     "value", 0).text("All") );
+                 $("<option ></option>").attr(
+                     "value", -1).text("All") );
 					
 					for ( var i = 0; i < len; i++) {
 			            $("#menuId").append(
@@ -299,11 +298,11 @@ function getMenuListBySectionId() {
 			} */
 			
 			
-			function routListByAbcType() {
+			function routListByAbcType(type) {
 				
 				var abcType = $("#abcType").val();
 				
-				if(abcType!=0){
+				if(type==-1){
 					
 					 
 							$.getJSON('${routListByAbcType}', {
@@ -320,29 +319,32 @@ function getMenuListBySectionId() {
 							    .remove()
 							    .end()
 							    
-							$("#selectRoute").append(
+						 /* 	$("#selectRoute").append(
 			                 $("<option></option>").attr(
-			                     "value", 0).text("All") );
-								
+			                     "value", -1).text("All") ); 
+								 */
 								for ( var i = 0; i < len; i++) {
 						            $("#selectRoute").append(
-						                    $("<option></option>").attr(
+						                    $("<option selected></option>").attr(
 						                        "value", data[i].routeId).text(data[i].routeName)
 						                );
 								}
 								   $("#selectRoute").trigger("chosen:updated");
 							}); 
+							
+							
+							
 				}
 				else{
 					
-					
-					$.getJSON('${getAllRoute}', {
+
+					$.getJSON('${routListByAbcType}', {
 						
 						abcType : abcType,
 						ajax : 'true'
 					}, function(data) {
 					 	var html = '<option value="">Select Rout</option>';
-					 	alert(data);
+					
 						var len = data.length;
 						
 						$('#selectRoute')
@@ -350,9 +352,35 @@ function getMenuListBySectionId() {
 					    .remove()
 					    .end()
 					    
-					$("#selectRoute").append(
+				/*  	$("#selectRoute").append(
 	                 $("<option></option>").attr(
-	                     "value", 0).text("All") );
+	                     "value", -1).text("All") ); 
+						 */
+						for ( var i = 0; i < len; i++) {
+				            $("#selectRoute").append(
+				                    $("<option ></option>").attr(
+				                        "value", data[i].routeId).text(data[i].routeName)
+				                );
+						}
+						   $("#selectRoute").trigger("chosen:updated");
+					}); 
+				/* 	$.getJSON('${getAllRoute}', {
+						
+						abcType : abcType,
+						ajax : 'true'
+					}, function(data) {
+					 	var html = '<option value="">Select Rout</option>';
+					 	
+						var len = data.length;
+						
+						$('#selectRoute')
+					    .find('option')
+					    .remove()
+					    .end()
+					    
+					 $("#selectRoute").append(
+	                 $("<option></option>").attr(
+	                     "value", -1).text("All") ); 
 						
 						for ( var i = 0; i < len; i++) {
 				            $("#selectRoute").append(
@@ -362,7 +390,7 @@ function getMenuListBySectionId() {
 						}
 						   $("#selectRoute").trigger("chosen:updated");
 					});
-					
+ */					
 				}
 			}
 
@@ -384,7 +412,7 @@ function getMenuListBySectionId() {
 							    
 							 $("#fraId").append(
 			                                $("<option></option>").attr(
-			                                    "value", 0).text("Select Franchisee")
+			                                    "value", -1).text("Select Franchisee")
 			                            );
 								
 								for ( var i = 0; i < len; i++) {
@@ -402,17 +430,22 @@ function getMenuListBySectionId() {
 						
 						function FranchasiListByRouteID() {
 							
+							
 							var routeIds = $("#selectRoute").val();
-							
-							
-							alert("No records found !!"+routeIds);
-								 
+						
+							if(routeIds=="" ||routeIds==null){
+							$('#frid')
+						    .find('option')
+						    .remove()
+						    .end();
+							  $("#frid").trigger("chosen:updated");
+							}else{
 										$.getJSON('${getAllFranchasiOfMultipleRoute}', {
 											
 											routeIds : JSON.stringify(routeIds),
 											ajax : 'true'
 										}, function(data) {
-										 	var html = '<option value="">Select Franchasi</option>';
+										 	var html = '<option value="">Select Franchasie</option>';
 										
 											var len = data.length;
 											
@@ -423,7 +456,7 @@ function getMenuListBySectionId() {
 										    
 										$("#frid").append(
 						                 $("<option></option>").attr(
-						                     "value", 0).text("All") );
+						                     "value",-1).text("All") );
 											
 											for ( var i = 0; i < len; i++) {
 									            $("#frid").append(
@@ -433,6 +466,7 @@ function getMenuListBySectionId() {
 											}
 											   $("#frid").trigger("chosen:updated");
 										}); 
+							}
 							
 						}
 
@@ -454,7 +488,7 @@ function getMenuListBySectionId() {
 										    
 										 $("#fraId").append(
 						                                $("<option></option>").attr(
-						                                    "value", 0).text("Select Franchisee")
+						                                    "value", -1).text("Select Franchisee")
 						                            );
 											
 											for ( var i = 0; i < len; i++) {
@@ -695,7 +729,7 @@ $(document).ready(function() { // if all label selected set all items selected
 $('#frid').change(
 		function () {
 			 var selected=$('#frid').val();
-			alert('hello');
+			//alert('hello');
 			 
         if(selected==-1){
 			$.getJSON('${franchiseeList}', {
@@ -732,8 +766,83 @@ $('#frid').change(
 
 
 </script>
-
-		
+<script>
+function onFrChange(frId)
+{
+	   if(frId==-1){
+		   
+		   var routeIds = $("#selectRoute").val();
+				 
+						$.getJSON('${getAllFranchasiOfMultipleRoute}', {
+							
+							routeIds : JSON.stringify(routeIds),
+							ajax : 'true'
+						}, function(data) {
+						 	var html = '<option value="">Select Franchaisee</option>';
+						
+							var len = data.length;
+							
+							$('#frid')
+						    .find('option')
+						    .remove()
+						    .end()
+						    
+						$("#frid").append(
+		                 $("<option></option>").attr(
+		                     "value",-1).text("All") );
+							
+							for ( var i = 0; i < len; i++) {
+					            $("#frid").append(
+					                    $("<option selected></option>").attr(
+					                        "value", data[i].frId).text(data[i].frName)
+					                );
+							}
+							   $("#frid").trigger("chosen:updated");
+						}); 
+		   
+		   
+		   
+	   }
+	
+	
+}
+</script>
+		<script>
+function onMenuChange(menuId)
+{
+	   if(menuId==-1){
+		   var sectionId = $("#sectionId").val();
+		   $.getJSON('${getMenuListBySectionId}', {
+				
+				sectionId : sectionId,
+				ajax : 'true'
+			}, function(data) {
+			 	var html = '<option value="">Select Section</option>';
+			
+				var len = data.length;
+				
+				$('#menuId')
+			    .find('option')
+			    .remove()
+			    .end()
+			    
+			$("#menuId").append(
+            $("<option ></option>").attr(
+                "value", -1).text("All") );
+				
+				for ( var i = 0; i < len; i++) {
+		            $("#menuId").append(
+		                    $("<option selected></option>").attr(
+		                        "value", data[i].menuId).text(data[i].menuTitle)
+		                );
+				}
+				   $("#menuId").trigger("chosen:updated");
+			}); 
+	   }
+	
+	
+}
+</script>
 		<!--basic scripts-->
 		<script
 		src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>

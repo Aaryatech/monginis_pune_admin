@@ -211,8 +211,7 @@ public class ManualOrderController {
 
 				int frGrnTwo = franchiseeList.getGrnTwo();
 				System.err.println("frGrnTwo" + frGrnTwo + "item.getGrnTwo()" + item.getGrnTwo());
-				if (item.getGrnTwo() == 1) {
-
+				/*if (item.getGrnTwo() == 1) {*/
 					if (frGrnTwo == 1) {
 
 						order.setGrnType(1);
@@ -221,7 +220,7 @@ public class ManualOrderController {
 
 						order.setGrnType(0);
 					}
-				} // end of if
+				/*} // end of if
 
 				else {
 					if (item.getGrnTwo() == 2) {
@@ -230,7 +229,7 @@ public class ManualOrderController {
 					} else {
 						order.setGrnType(0);
 					}
-				} // end of else
+				}*/ // end of else
 				if (menuId == 29 || menuId == 30 || menuId == 42 || menuId == 43 || menuId == 44 || menuId == 47) {
 
 					order.setGrnType(3);

@@ -148,7 +148,7 @@
 					</div>
 				</div>
 
-				<div align="center" id="loader" style="display: none">
+				<div align="center" id="loader" style="display: none;background-color: white;">
 
 					<span>
 						<h4>
@@ -229,7 +229,7 @@
 	</div>
 	<!-- END Main Content -->
 			<footer>
-			<p>2018 © MONGINIS.</p>
+			<p>2019 © MONGINIS.</p>
 			</footer>
 
 	<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i

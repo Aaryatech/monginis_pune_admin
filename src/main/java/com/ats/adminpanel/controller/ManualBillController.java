@@ -962,7 +962,7 @@ public class ManualBillController {
 				sumGrandTotal = roundUp(sumGrandTotal);
 
 				billDetail.setOrderId(0);
-				billDetail.setMenuId(40);//
+				billDetail.setMenuId(spMenuId);//
 				billDetail.setCatId(5);
 				billDetail.setItemId(spId);
 				billDetail.setOrderQty(1);
@@ -1036,7 +1036,6 @@ public class ManualBillController {
 
 				ZoneId zoneId = ZoneId.of("Asia/Calcutta");
 				ZonedDateTime zdt = ZonedDateTime.now(zoneId);
-				// System.out.println("time ==" + zdt.format(null));
 
 				SimpleDateFormat sdf = new SimpleDateFormat("kk:mm:ss ");
 				TimeZone istTimeZone = TimeZone.getTimeZone("Asia/Kolkata");
@@ -1166,4 +1165,6 @@ public class ManualBillController {
 		return invoiceNo;
 
 	}
+	
+	
 }

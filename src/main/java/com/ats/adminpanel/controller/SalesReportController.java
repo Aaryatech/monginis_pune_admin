@@ -63,6 +63,7 @@ import com.ats.adminpanel.model.Route;
 import com.ats.adminpanel.model.Tax1Report;
 import com.ats.adminpanel.model.Tax2Report;
 import com.ats.adminpanel.model.accessright.ModuleJson;
+import com.ats.adminpanel.model.franchisee.AllMenuResponse;
 import com.ats.adminpanel.model.franchisee.FrNameIdByRouteId;
 import com.ats.adminpanel.model.franchisee.FrNameIdByRouteIdResponse;
 import com.ats.adminpanel.model.franchisee.FranchiseeAndMenuList;
@@ -3242,7 +3243,7 @@ public class SalesReportController {
 		return model;
 
 	}
-
+	ArrayList<Menu>	selectedMenuList =null;
 	// ---------------------------------------------------------------------------------------------------------
 	@RequestMapping(value = "/showPDispatchItemReport", method = RequestMethod.GET)
 	public ModelAndView showPDispatchItemReport(HttpServletRequest request, HttpServletResponse response) {
@@ -3301,12 +3302,34 @@ public class SalesReportController {
 				List<MCategoryList> categoryList;
 				categoryList = categoryListResponse.getmCategoryList();
 
-				System.out.println(" Fr " + allFrIdNameList.getFrIdNamesList());
+				System.out.println(" Fra " + allFrIdNameList.getFrIdNamesList());
+				List<Menu> menuList=null;
+				try {
+					AllMenuResponse allMenuResponse = restTemplate.getForObject(Constants.url + "getAllMenu",
+							AllMenuResponse.class);
 
+					menuList = allMenuResponse.getMenuConfigurationPage();
+
+				} catch (Exception e) {
+					System.out.println("Exception in getAllFrIdName" + e.getMessage());
+					e.printStackTrace();
+
+				}
+					selectedMenuList = new ArrayList<Menu>();
+
+				for (int i = 0; i < menuList.size(); i++) {
+				
+					if (menuList.get(i).getMainCatId()!=5)
+					{
+						selectedMenuList.add(menuList.get(i));
+					}
+					
+				}
+                model.addObject("menuList", selectedMenuList);
 				model.addObject("catList", categoryList);
 
 				model.addObject("todaysDate", todaysDate);
-				model.addObject("frList", allFrIdNameList.getFrIdNamesList());
+				model.addObject("frListRes", allFrIdNameList.getFrIdNamesList());
 
 				model.addObject("routeList", routeList);
 
@@ -3319,7 +3342,11 @@ public class SalesReportController {
 		return model;
 
 	}
+	@RequestMapping(value = "/getAllMenusForDisp", method = RequestMethod.GET)
+	public @ResponseBody List<Menu> getAllMenusForDisp() {
 
+		return selectedMenuList;
+	}
 	// ---------------------------------------------------------------------------------------------------------
 	@RequestMapping(value = "/getDispatchReportByRoute", method = RequestMethod.GET)
 	public @ResponseBody DispatchReportList getDispatchReportByRoute(HttpServletRequest request,
@@ -4364,8 +4391,8 @@ public class SalesReportController {
 
 	}
 
-	@RequestMapping(value = "pdf/getDispatchPReportPdfForDispatch/{billDate}/{routeId}/{selectedCat}/{frId}", method = RequestMethod.GET)
-	public ModelAndView getDispatchPReportPdfForDispatch(@PathVariable String billDate, @PathVariable String routeId,
+	@RequestMapping(value = "pdf/getDispatchPReportPdfForDispatch/{billDate}/{menuId}/{routeId}/{selectedCat}/{frId}", method = RequestMethod.GET)
+	public ModelAndView getDispatchPReportPdfForDispatch(@PathVariable String billDate, @PathVariable String menuId, @PathVariable String routeId,
 			@PathVariable String selectedCat, @PathVariable String frId, HttpServletRequest request,
 			HttpServletResponse response) {
 		ModelAndView model = new ModelAndView("reports/sales/dispatchMini");/* dispatchReportPPdfBill */
@@ -4492,6 +4519,7 @@ public class SalesReportController {
 				map.add("categories", selectedCat);
 				map.add("productionDate", billDate);
 				map.add("frId", selectedFr);
+				map.add("menuId", menuId);
 
 				ParameterizedTypeReference<List<PDispatchReport>> typeRef = new ParameterizedTypeReference<List<PDispatchReport>>() {
 				};
@@ -4527,6 +4555,7 @@ public class SalesReportController {
 				map.add("categories", selectedCat);
 				map.add("productionDate", billDate);
 				map.add("frId", selectedFr);
+				map.add("menuId", menuId);
 
 				ParameterizedTypeReference<List<PDispatchReport>> typeRef = new ParameterizedTypeReference<List<PDispatchReport>>() {
 				};
@@ -4564,7 +4593,26 @@ public class SalesReportController {
 			model.addObject("FACTORYNAME", Constants.FACTORYNAME);
 			model.addObject("FACTORYADDRESS", Constants.FACTORYADDRESS);
 			List<Integer> frList = Stream.of(selectedFr.split(",")).map(Integer::parseInt).collect(Collectors.toList());
-			model.addObject("frListSelected", frList);
+			List<Integer> frListOrdersPresent=new ArrayList<>();
+			for(int l=0;l<frList.size();l++)
+			{
+				int flag=0;
+				for(int m=0;m<dispatchReportList.size();m++)
+				{
+					if(dispatchReportList.get(m).getFrId()==frList.get(l))
+					{
+						flag=1;
+						break;
+					}
+				}
+				if(flag==1)
+				{
+					frListOrdersPresent.add(frList.get(l));
+				}
+			}
+			
+			
+			model.addObject("frListSelected", frListOrdersPresent);
 
 		} catch (Exception e) {
 			System.out.println("get Dispatch Report Exception: " + e.getMessage());

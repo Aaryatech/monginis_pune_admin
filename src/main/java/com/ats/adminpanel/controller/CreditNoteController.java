@@ -247,15 +247,15 @@ public class CreditNoteController {
 					rowData.add("" + crnExcelListRes.get(i).getInvoiceDate());
 					rowData.add("" + crnExcelListRes.get(i).getFrName());
 					rowData.add("" + crnExcelListRes.get(i).getItemHsncd());
-					rowData.add("" + crnExcelListRes.get(i).getQty());
-					rowData.add("" + crnExcelListRes.get(i).getTaxableAmt());
-					rowData.add("" + crnExcelListRes.get(i).getCgstRs());
-					rowData.add("" + crnExcelListRes.get(i).getSgstRs());
-					rowData.add("" + crnExcelListRes.get(i).getIgstRs());
-					rowData.add("" + crnExcelListRes.get(i).getTaxRate());
-					rowData.add((crnExcelListRes.get(i).getTaxableAmt() + crnExcelListRes.get(i).getCgstRs()
+					rowData.add("" + roundUp(crnExcelListRes.get(i).getQty()));
+					rowData.add("" + roundUp(crnExcelListRes.get(i).getTaxableAmt()));
+					rowData.add("" + roundUp(crnExcelListRes.get(i).getCgstRs()));
+					rowData.add("" + roundUp(crnExcelListRes.get(i).getSgstRs()));
+					rowData.add("" + roundUp(crnExcelListRes.get(i).getIgstRs()));
+					rowData.add("" + roundUp(crnExcelListRes.get(i).getTaxRate()));
+					rowData.add(roundUp(crnExcelListRes.get(i).getTaxableAmt() + crnExcelListRes.get(i).getCgstRs()
 							+ crnExcelListRes.get(i).getSgstRs()) + "");
-					rowData.add("" + crnExcelListRes.get(i).getDocumentAmount());
+					rowData.add("" + roundUp(crnExcelListRes.get(i).getDocumentAmount()));
 					rowData.add("" + crnExcelListRes.get(i).getFrGstNo());
 					rowData.add("" + crnExcelListRes.get(i).getCountry());
 					rowData.add("" + crnExcelListRes.get(i).getState());

@@ -56,7 +56,7 @@ page-break-inside: auto !important;
 														varStatus="count"> 
 	<c:set var="cls" value=""></c:set><c:choose><c:when test="${count.index/2==0}"><c:set var="cls" value="floatedTable"></c:set></c:when><c:otherwise><c:set var="cls" value="floatedTable1"></c:set></c:otherwise></c:choose>
 
-<table style=" border-bottom: 1px dashed grey;" class="${cls}">
+<table style=" border-bottom: 1px dashed grey;margin-top: 25px;margin-right: 15px;margin-bottom:35px;margin-left: 45px;" class="${cls}">
 <tbody><tr style="height: 21px;">
 <td style="width: 125px; height: 21px;">
 <div style="border-bottom-style: dashed; font-size: 13px;padding-bottom: 5px; padding-top: 5px; border-bottom-color: grey;">&nbsp; &nbsp;&nbsp;SLIP.No-&gt;</div>
@@ -72,7 +72,7 @@ page-break-inside: auto !important;
 
 <tr style="height: 20px;">
 <td style="width: 125px; height: 20px;  border-left: 1px dashed; border-right: 1px dashed;  font-size: 13px;">&nbsp; &nbsp;&nbsp;DEL DT&nbsp; &nbsp;&nbsp;<strong>:</strong></td>
-<td style="width: 425px; height: 20px; font-size: 13px; font-weight: bold; border: 1px dashed;">&nbsp; &nbsp; ${spCakeOrder.spDeliveryDate}</td>
+<td style="width: 425px; height: 20px; font-size: 13px; font-weight: bold; border: 1px dashed;">&nbsp; &nbsp; ${spCakeOrder.spDeliveryDate}   --   ${spCakeOrder.spDeliveryPlace}</td>
 </tr>
 <tr style="height: 20px;">
 <td style="width: 125px; height: 20px; border: 1px dashed; font-size: 13px;">&nbsp; &nbsp;&nbsp;ORD DT &nbsp;<strong>:</strong></td>

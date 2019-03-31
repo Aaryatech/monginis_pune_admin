@@ -108,12 +108,17 @@ public class DumpOrderController {
 			selectedMenuList = new ArrayList<Menu>();
 
 			for (int i = 0; i < menuList.size(); i++) {
-				if (menuList.get(i).getMenuId() == 26 || menuList.get(i).getMenuId() == 31
+			/*	if (menuList.get(i).getMenuId() == 26 || menuList.get(i).getMenuId() == 31
 						|| menuList.get(i).getMenuId() == 33 || menuList.get(i).getMenuId() == 34
 						|| menuList.get(i).getMenuId() == 66 || menuList.get(i).getMenuId() == 67
 						|| menuList.get(i).getMenuId() == 68) {
 					selectedMenuList.add(menuList.get(i));
+				}*/
+				if (menuList.get(i).getMainCatId()!=5)
+				{
+					selectedMenuList.add(menuList.get(i));
 				}
+				
 			}
 
 			System.out.println(" Fr " + allFrIdNameList.getFrIdNamesList());
@@ -326,7 +331,7 @@ public class DumpOrderController {
 					order.setOrderDate(date);
 					order.setDeliveryDate(deliveryDate);
 					// order.setMenuId(0);
-					order.setGrnType(3);
+					//order.setGrnType(3);
 					order.setIsEdit(0);
 					order.setMenuId(menuId);
 					order.setOrderType(selectedMainCatId);
@@ -344,7 +349,7 @@ public class DumpOrderController {
 									order.setOrderRate(items.get(j).getItemRate3());
 									order.setOrderMrp(items.get(j).getItemMrp3());
 								}
-
+								order.setGrnType(franchaseeList.get(k).getGrnTwo());//new
 							}
 						}
 					}

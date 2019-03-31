@@ -15,6 +15,7 @@
 	<c:url var="getBillList" value="/getPDispatchReportByRoute"></c:url>
    	<c:url var="getFranchisees" value="/getFranchises"></c:url>
    	<c:url var="getSubCatByCatId" value="/getSubCatByCatId"></c:url>
+   	<c:url var="getAllMenusForDisp" value="/getAllMenusForDisp"></c:url>
 	<!-- BEGIN Sidebar -->
 	<div id="sidebar" class="navbar-collapse collapse" >
 
@@ -32,14 +33,14 @@
 	<!-- BEGIN Content -->
 	<div id="main-content">
 		<!-- BEGIN Page Title -->
-		<div class="page-title">
+	<!-- 	<div class="page-title">
 			<div>
 				<h1>
 					<i class="fa fa-file-o"></i>Dispatch Item Report
 				</h1>
 				<h4></h4>
 			</div>
-		</div>
+		</div> -->
 		<!-- END Page Title -->
 
 		<!-- BEGIN Breadcrumb -->
@@ -57,7 +58,7 @@
 		<div class="box">
 			<div class="box-title">
 				<h3>
-					<i class="fa fa-bars"></i>Dispatch Report
+					<i class="fa fa-bars"></i>Dispatch Item Report
 				</h3>
 
 			</div>
@@ -95,9 +96,28 @@
 
 					<div class="form-group">
 
+						<label class="col-sm-3 col-lg-2 control-label">Select Menu </label>
+						<div class="col-sm-3 col-lg-10">
+
+							<select data-placeholder="Select Menu "
+								class="form-control chosen" 
+								id="menuId" name="menuId" multiple="multiple" required onchange="onMenuChange(this.value)">
+
+								  <option value="-1" >All</option>
+								<c:forEach items="${menuList}" var="menuList" >
+									<option value="${menuList.menuId}"><c:out value="${menuList.menuTitle}"/> </option>
+
+								</c:forEach> 
+							</select>
+						</div>
+					</div>
+					</div><br>
+						<div class="row">
+
+					<div class="form-group">
 						<label class="col-sm-3 col-lg-2 control-label">Select
 							Category</label>
-						<div class="col-sm-3 col-lg-3">
+						<div class="col-sm-3 col-lg-10">
 
 							<select data-placeholder="Choose Category"
 								class="form-control chosen"  tabindex="6" multiple="multiple" 
@@ -110,8 +130,22 @@
 								</c:forEach>
 							</select>
 						</div>
+					
+					
+						<%-- <a
+							href="${pageContext.request.contextPath}/pdfForReport?url=showSaleRoyaltyByCatPdf"
+							target="_blank">PDF</a>
+ --%>
+					</div>
+
+
+
+				</div><br>
+					<div class="row">
+
+					<div class="form-group">
 					<label class="col-sm-3 col-lg-2 control-label">Sub-Category</label>
-						<div class="col-sm-3 col-lg-3">
+						<div class="col-sm-3 col-lg-10">
 
 							<select data-placeholder="Choose Sub Category"
 								class="form-control chosen" multiple="multiple" tabindex="6"
@@ -121,39 +155,32 @@
 
 							</select>
 						</div>
-						<button class="btn btn-info" onclick="searchReport()">Search
+					
+					</div>
+				<!-- 		<button class="btn btn-info" onclick="searchReport()">Search
 							Report</button>
-<!-- 						<button class="btn search_btn" onclick="showChart()">Graph</button>
- -->
 
 						<button class="btn btn-primary" value="PDF" id="PDFButton"
 							onclick="genPdf()">PDF</button>
-						<%-- <a
-							href="${pageContext.request.contextPath}/pdfForReport?url=showSaleRoyaltyByCatPdf"
-							target="_blank">PDF</a>
- --%>
-					</div>
-
-
-
-				</div>
+					</div><br> --></div><br>
 				<div class="row">
 
 					<div class="form-group">
 
-						<label class="col-sm-3 col-lg-2 control-label">Select
+						<label class="col-sm-2 col-lg-2 control-label">
 							Franchisee</label>
-						<div class="col-sm-3 col-lg-4">
+						<div class="col-sm-3 col-lg-8">
 
 							<select data-placeholder="Choose Franchise"
 							tabindex="6" class="form-control chosen" multiple="multiple"
 								id="fraId" name="fraId" onchange="onFrChange()">
-								<option value="">Select Franchise</option>
+								<option value="">Select Franchisee</option>
 								<option value="-1"><c:out value="All"/></option>
 								
-                                	<c:forEach items="${frList}" var="frList" varStatus="count">
-									<option value="${frList.frId}"><c:out value="${frList.frName}"/></option>
+                                	<c:forEach items="${frListRes}" var="frListRes" varStatus="cnt">
+									<option value="${frListRes.frId}">${frListRes.frName}</option>
 								</c:forEach>
+								
 							</select>
 						</div>
 
@@ -217,8 +244,8 @@
 							</div>
 							</div>
 								<div style="text-align:center;">
-											 <input type="submit" id="submit" class="btn btn-primary" value="SUBMIT" disabled>
-											</div>
+<!-- 											 <input type="submit" id="submit" class="btn btn-primary" value="SUBMIT" disabled>
+ -->											</div>
 							<div class="form-group" style="display: none;" id="range">
 								 
 											 
@@ -813,11 +840,12 @@
 			{
 				var billDate = $("#billDate").val();
 				var routeId = $("#selectRoute").val();
+				var menuId = $("#menuId").val();
 				var selectedCat = $("#selectSubCat").val();//new for pune on 14 feb 19
 				var frId = $("#fraId").val();
 				
 				  window.open('pdf/getDispatchPReportPdfForDispatch/'
-							+ billDate + '/'+routeId+'/'+selectedCat+'/'+frId);
+							+ billDate + '/'+menuId+'/'+routeId+'/'+selectedCat+'/'+frId);
 			}
 			/* var fld = document.getElementById('fraId');
 			var values = [];
@@ -962,6 +990,41 @@ $('#selectSubCat').change(
 
 
 
+</script>
+<script type="text/javascript">
+function onMenuChange(menuId)
+{
+	if(menuId==-1)
+		{
+		$.getJSON('${getAllMenusForDisp}', {
+			ajax : 'true'
+		}, function(data) {
+			var html = '<option value="">Select Menus</option>';
+			
+			var len = data.length;
+			
+			$('#menuId')
+		    .find('option')
+		    .remove()
+		    .end()
+		 $("#menuId").append(
+                         $("<option></option>").attr(
+                             "value", -1).text("ALL")
+                     );
+		
+			for ( var i = 0; i < len; i++) {
+
+               $("#menuId").append(
+                       $("<option selected></option>").attr(
+                           "value", data[i].menuId).text(data[i].menuTitle)
+                   );
+			}
+	
+			   $("#menuId").trigger("chosen:updated");
+		});
+		}
+	
+}
 </script>
 </body>
 </html>
