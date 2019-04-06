@@ -283,13 +283,24 @@ public class DumpOrderController {
 		Orders order = new Orders();
 
 		String todaysDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		java.util.Date utilDate = new java.util.Date();
-		System.out.println(dateFormat.format(utilDate)); // 2016/11/16 12:08:43
+		//DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		
+		//-------------------Get Prod And Del Date From Jsp----------------
+		String dateStr = request.getParameter("date");
+		String delDateStr = request.getParameter("deldate");
+		SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy");
+		java.util.Date udate = sdf1.parse(dateStr);
+		java.util.Date udeldate = sdf1.parse(delDateStr);
+		java.sql.Date sqlCurrDate = new java.sql.Date(udate.getTime());
+		java.sql.Date deliveryDate = new java.sql.Date(udeldate.getTime());
+		System.err.println("deliveryDate" + deliveryDate + "sqlCurrDate" + sqlCurrDate);
+		//-----------------------------------------------------------------
+		//java.util.Date utilDate = new java.util.Date();
+		//System.out.println(dateFormat.format(utilDate)); // 2016/11/16 12:08:43
 
-		java.sql.Date date = new java.sql.Date(utilDate.getTime());
-		java.sql.Date deliveryDate = new java.sql.Date(tomarrow().getTime());
-
+		//java.sql.Date date = new java.sql.Date(utilDate.getTime());
+		//java.sql.Date deliveryDate = new java.sql.Date(tomarrow().getTime());
+        //------------------------------------------------------------------
 		// get all Franchisee details
 		RestTemplate restTemplate = new RestTemplate();
 
@@ -305,6 +316,8 @@ public class DumpOrderController {
 		for (int j = 0; j < items.size(); j++) {
 			System.out.println("Items   " + items.get(j).getItemName());
 
+			
+			float discPer =Float.parseFloat(request.getParameter("disc_per" + items.get(j).getId()));
 			// System.out.println(items.get(j).getId());
 			for (int i = 0; i < selectedFrIdList.size(); i++) {
 				System.out.println("FR   " + selectedFrIdList.get(i));
@@ -323,18 +336,19 @@ public class DumpOrderController {
 
 					order.setOrderDatetime(todaysDate);
 					order.setFrId(selectedFrIdList.get(i));
-					order.setRefId(items.get(j).getId());
+					order.setRefId(0);
 					order.setItemId(String.valueOf(items.get(j).getId()));
 					order.setOrderQty(qty);
 					order.setEditQty(qty);
-					order.setProductionDate(date);
-					order.setOrderDate(date);
+					order.setProductionDate(sqlCurrDate);
+					order.setOrderDate(sqlCurrDate);
 					order.setDeliveryDate(deliveryDate);
-					// order.setMenuId(0);
 					//order.setGrnType(3);
+					order.setOrderSubType(items.get(j).getItemGrp2());
 					order.setIsEdit(0);
 					order.setMenuId(menuId);
 					order.setOrderType(selectedMainCatId);
+					order.setIsPositive(discPer);
 
 					for (int l = 0; l < selectedFrIdList.size(); l++) {
 						for (int k = 0; k < franchaseeList.size(); k++) {
@@ -342,9 +356,6 @@ public class DumpOrderController {
 								if (franchaseeList.get(k).getFrRateCat() == 1) {
 									order.setOrderRate(items.get(j).getItemRate1());
 									order.setOrderMrp(items.get(j).getItemMrp1());
-								} else if (franchaseeList.get(k).getFrRateCat() == 2) {
-									order.setOrderRate(items.get(j).getItemRate2());
-									order.setOrderMrp(items.get(j).getItemMrp2());
 								} else if (franchaseeList.get(k).getFrRateCat() == 3) {
 									order.setOrderRate(items.get(j).getItemRate3());
 									order.setOrderMrp(items.get(j).getItemMrp3());

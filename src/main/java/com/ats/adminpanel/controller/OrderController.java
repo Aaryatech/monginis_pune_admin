@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -270,7 +272,156 @@ public class OrderController {
 		}
 		return orderList;
 	}
+	@RequestMapping(value = "/searchOrdersProcessByItem", method = RequestMethod.GET) // getOrderListForAllFr new web service
+	public @ResponseBody List<GetOrder> searchOrdersProcessByItem(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView model = new ModelAndView("orders/orders");
 
+		System.out.println("/inside search order process  ");
+		// model.addObject("franchiseeList", franchiseeList);
+		try {
+			model.addObject("menuList", menuList);
+			String itemId = request.getParameter("itemId");
+			String menuId = request.getParameter("item_id_list");
+			String frIdString = request.getParameter("fr_id_list");
+			String date = request.getParameter("date");
+			int routeId = 0;// Integer.parseInt(request.getParameter("route_id"));
+
+			menuId = menuId.substring(1, menuId.length() - 1);
+			menuId = menuId.replaceAll("\"", "");
+			System.out.println("menu Ids New =" + menuId);
+
+			frIdString = frIdString.substring(1, frIdString.length() - 1);
+			frIdString = frIdString.replaceAll("\"", "");
+			System.out.println("frIds  New =" + frIdString);
+
+			itemId = itemId.substring(1, itemId.length() - 1);
+			itemId = itemId.replaceAll("\"", "");
+			System.out.println("Item Ids =" + itemId);
+			
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			orderList = new ArrayList<GetOrder>();
+
+			List<String> franchIds = new ArrayList();
+			franchIds = Arrays.asList(frIdString);
+
+			System.out.println("fr Id ArrayList " + franchIds.toString());
+
+			if (routeId != 0) {
+
+				MultiValueMap<String, Object> mvm = new LinkedMultiValueMap<String, Object>();
+
+				RestTemplate restTemplate = new RestTemplate();
+
+				mvm.add("routeId", routeId);
+
+				FrNameIdByRouteIdResponse frNameId = restTemplate.postForObject(Constants.url + "getFrNameIdByRouteId",
+						mvm, FrNameIdByRouteIdResponse.class);
+
+				List<FrNameIdByRouteId> frNameIdByRouteIdList = frNameId.getFrNameIdByRouteIds();
+
+				System.out.println("route wise franchisee " + frNameIdByRouteIdList.toString());
+
+				StringBuilder sbForRouteFrId = new StringBuilder();
+				for (int i = 0; i < frNameIdByRouteIdList.size(); i++) {
+
+					sbForRouteFrId = sbForRouteFrId.append(frNameIdByRouteIdList.get(i).getFrId().toString() + ",");
+
+				}
+
+				String strFrIdRouteWise = sbForRouteFrId.toString();
+				frIdString = strFrIdRouteWise.substring(0, strFrIdRouteWise.length() - 1);
+				System.out.println("fr Id Route WISE = " + frIdString);
+
+			} else if (franchIds.contains("0")) {
+
+				System.out.println("all fr selected");
+				System.out.println("Date" + date);
+				map.add("date", date);
+				map.add("menuId", menuId);
+				map.add("itemId", itemId);
+				RestTemplate restTemplate1 = new RestTemplate();
+
+				GetOrderListResponse orderListResponse = restTemplate1
+						.postForObject(Constants.url + "getOrderListForAllFrAndItem", map, GetOrderListResponse.class);
+
+				orderList = orderListResponse.getGetOder();
+
+				System.out.println("order list is " + orderList.toString());
+				System.out.println("order list count is" + orderList.size());
+
+				model.addObject("orderList", orderList);
+
+				model.addObject("franchIds", franchIds);
+				model.addObject("allOtherFrList", tempFrList);
+				model.addObject("selectedFrList", selectedFrList);
+				model.addObject("franchiseeList", franchiseeList);
+
+				System.out.println("Fr selected all " + franchIds.toString());
+
+			} // end of if
+
+			if (!franchIds.contains("0") || routeId != 0) {
+
+				System.out.println("few Fr selected: FrId  ArrayList " + franchIds.toString());
+
+				System.out.println("few fra selected");
+
+				map.add("frId", frIdString);
+				map.add("menuId", menuId);
+				map.add("date", date);
+				map.add("itemId", itemId);
+				RestTemplate restTemplate1 = new RestTemplate();
+
+				GetOrderListResponse orderListResponse = restTemplate1.postForObject(Constants.url + "getOrderListByItem",
+						map, GetOrderListResponse.class);
+
+				orderList = orderListResponse.getGetOder();
+
+				System.out.println("order list is " + orderList.toString());
+				System.out.println("order list count is" + orderList.size());
+				model.addObject("orderList", orderList);
+				model.addObject("franchiseeList", franchiseeList);
+
+			} // end of else
+
+			List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
+
+			ExportToExcel expoExcel = new ExportToExcel();
+			List<String> rowData = new ArrayList<String>();
+
+			rowData.add("Franchisee Name");
+			rowData.add("Type");
+			rowData.add("Item Id");
+			rowData.add("Item Name");
+			rowData.add("Quantity");
+
+			expoExcel.setRowData(rowData);
+			exportToExcelList.add(expoExcel);
+			for (int i = 0; i < orderList.size(); i++) {
+				expoExcel = new ExportToExcel();
+				rowData = new ArrayList<String>();
+
+				rowData.add(orderList.get(i).getFrName());
+
+				rowData.add(orderList.get(i).getCatName());
+				rowData.add("" + orderList.get(i).getId());
+				rowData.add(orderList.get(i).getItemName());
+				rowData.add("" + orderList.get(i).getOrderQty());
+
+				expoExcel.setRowData(rowData);
+				exportToExcelList.add(expoExcel);
+				System.out.println("List" + orderList.get(i).toString());
+			}
+
+			HttpSession session = request.getSession();
+			session.setAttribute("exportExcelList", exportToExcelList);
+			session.setAttribute("excelName", "Orders");
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return orderList;
+	}
 	// special cake orders
 
 	@RequestMapping(value = "/spCakeOrders")
@@ -780,6 +931,53 @@ public class OrderController {
 		return orderList;
 	}
 
+	
+	
+	@RequestMapping(value = "/callDeleteOrderMultiple", method = RequestMethod.GET)
+	public @ResponseBody List<GetOrder> callDeleteOrderMultiple(HttpServletRequest request, HttpServletResponse response) {
+		List<GetOrder> orderListResponse=orderList;
+		try {
+			System.out.println("/inside delete order process  ");
+			String orderId = request.getParameter("orderId");
+
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			map.add("orderId", orderId);
+			RestTemplate restTemp = new RestTemplate();
+			Integer isDeleted = restTemp.postForObject(Constants.url + "DeleteOrder", map, Integer.class);
+
+			try {
+			List<Integer> orderIds = Stream.of(orderId.split(",")).map(Integer::parseInt)
+					.collect(Collectors.toList());
+			System.err.println("orderIds"+orderIds);
+			if (isDeleted != 0) {
+				if (!orderList.isEmpty()) {
+					for (int i = 0; i < orderList.size(); i++) {
+						for(int j=0;j<orderIds.size();j++) {
+							
+						if (orderList.get(i).getOrderId() == orderIds.get(j)) {
+							
+							System.err.println("orderIds"+orderListResponse.get(j));
+							orderListResponse.remove(i);
+						}
+						
+						}
+					}
+				}
+			}
+			
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			System.out.println("Exception In delete Order" + e.getMessage());
+		}
+		System.err.println("orderListResponse"+orderListResponse.toString());
+		return orderListResponse;
+	}
+	
+	
+	
+	
 	@RequestMapping(value = "/deleteSpOrder", method = RequestMethod.GET)
 	public @ResponseBody List<SpCakeOrdersBean> deleteSpOrder(HttpServletRequest request,
 			HttpServletResponse response) {
@@ -812,6 +1010,7 @@ public class OrderController {
 
 		String ids = request.getParameter("ids");
 		String delDate = request.getParameter("delDate");
+		String prodDate = request.getParameter("prodDate");
 
 		/*
 		 * StringBuilder sb1 = new StringBuilder(); for (int i = 0; i < ids.length; i++)
@@ -823,6 +1022,7 @@ public class OrderController {
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 		map.add("orderIds", ids);
 		map.add("delDate", delDate);
+		map.add("prodDate", prodDate);
 		System.err.println(map.toString());
 		RestTemplate restTemp = new RestTemplate();
 

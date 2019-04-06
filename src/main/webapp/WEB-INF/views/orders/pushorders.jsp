@@ -73,7 +73,7 @@
 		</div> -->
 		<!-- END Page Title -->
 	<form id="submitPushOrderForm"
-				action="${pageContext.request.contextPath}/submitPushOrder"
+				action="${pageContext.request.contextPath}/submitPushOrder" onsubmit="submitOrder.disabled = true; return confirm('Do you want Submit ?');"
 				method="post">
 
 		<!-- BEGIN Main Content -->
@@ -130,16 +130,16 @@
 
 							</select>
 						</div>
+						
+							<label class=" col-md-1 control-label franchisee_label">Discount % </label>
+						<div class="col-md-1">
+							<input type="text" name="discPer" id="discPer" value="0" class="form-control" width="30px"/>
+						</div>
 					<!-- </div>
 					
 					<div class="form-group col-md-8">
 					<label class=" col-md-3 control-label franchisee_label"></label> -->
-						<label class=" col-md-1 control-label franchisee_label">Date</label>
-						<div class="col-sm-3 col-lg-2 controls">
-										<input class="form-control" id="date" size="19"
-											type="date" name="date" value="${date}"  />
-									</div>
-				
+						
 
 
 
@@ -224,7 +224,17 @@
 
 
 					<div class="row">
-						<div class="col-md-offset-6 col-md-5">
+					<label class=" col-md-1 control-label franchisee_label">Production Date</label>
+						<div class="col-sm-3 col-lg-2 controls">
+										<input class="form-control date-picker" id="date" size="19" placeholder="dd-MM-yyyy"
+											type="text" name="date" value="${date}"  required/>
+									</div>
+				<label class=" col-md-1 control-label franchisee_label">Delivery Date</label>
+						<div class="col-sm-3 col-lg-2 controls">
+										<input class="form-control date-picker" id="deldate" size="19" placeholder="dd-MM-yyyy"
+											type="text" name="deldate" value="" required />
+									</div>
+						<div class="col-md-offset-6 col-md-1">
 
 							<button class="btn btn-info pull-right"
 								style="margin-right: 5px;" onclick="submitOrder()" id="submitOrder" disabled>Submit</button>
@@ -237,7 +247,7 @@
 	<!-- END Main Content -->
 
 	<footer>
-	<p>2018 © Monginis.</p>
+	<p>2019 © Monginis.</p>
 	</footer>
 
 	<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
@@ -256,6 +266,7 @@
 			if (isValid) {
 				document.getElementById("searchFr").disabled=true;
 				var selectedMenu = $("#selectMenu").val();
+				var discPer = $("#discPer").val();
 				var selectedFr = $("#selectFr").val();
 				franchasee();
 				var frId = [];
@@ -300,7 +311,7 @@
 
 													  	tr.append($('<td></td>').html(itemname.itemName));
  
-
+													  	tr.append($('<td></td>').html("<input type='text' name=disc_per"+itemname.itemId+" style='width:45px' class='form-control' id=disc_per"+itemname.itemId+" value="+discPer+" > "));
 														
  
 														
@@ -313,7 +324,7 @@
 													    	  if(itemname.getOrderDataForPushOrder!=null)
 												    	 		 {
 													    		  
-													    		  alert("Push Order Data not null");
+													    		  //alert("Push Order Data not null");
 													    		
 												    	  $.each(itemname.getOrderDataForPushOrder, function(key, frData){
 												    			if (frData.frId == id && itemname.itemId==frData.itemId){
@@ -392,6 +403,7 @@
         tr = document.getElementById('table_grid').tHead.children[0];
         tr.insertCell(0).outerHTML = "<th aligh='right'>Sr.</th>"
         tr.insertCell(1).outerHTML = "<th aligh='right'>ItemName</th>"
+        tr.insertCell(2).outerHTML = "<th>Disc%</th>"
         $.each($("#selectFr option:selected"), function(){            
         	frName.push($(this).text());
         	i++;
@@ -399,7 +411,7 @@
         i=i-1;
         $.each(frName, function(){  
        
-            tr.insertCell(2).outerHTML = "<th>"+frName[i] +"</th>"
+            tr.insertCell(3).outerHTML = "<th>"+frName[i] +"</th>"
             i--;
        });
         	

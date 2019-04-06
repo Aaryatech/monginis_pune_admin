@@ -93,7 +93,7 @@ page-break-inside: auto !important;
 </tr>
 <tr style="height: 20px;"><c:set var = "spName" value = "${fn:toUpperCase(spCakeOrder.spName)}" />
 <td style="width: 125px; height: 20px; border-top: 1px dashed; border-left: 1px dashed; border-right: 1px dashed; font-size: 13px;">&nbsp; &nbsp;&nbsp;ITEM&nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;<strong>:</strong></td>
-<td style="width: 425px; height: 20px; font-size: 13px; font-weight: bold; border-top: 1px dashed; border-left: 1px dashed; border-right: 1px dashed;">&nbsp; &nbsp; ${spName} -${spCakeOrder.itemId}</td>
+<td style="width: 425px; height: 20px; font-size: 13px; font-weight: bold; border-top: 1px dashed; border-left: 1px dashed; border-right: 1px dashed;">&nbsp; &nbsp; ${spName} -${spCakeOrder.itemId}--${spCakeOrder.exVar1}</td>
 </tr>
 <tr style="height: 20px;">
 <td style="width: 125px; height: 20px; border-bottom: 1px dashed; border-left: 1px dashed; border-right: 1px dashed; font-size: 13px;">&nbsp;</td>

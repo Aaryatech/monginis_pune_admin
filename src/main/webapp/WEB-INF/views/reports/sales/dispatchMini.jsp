@@ -72,7 +72,7 @@ th {
 Production Start Date &nbsp; ${billDate} &nbsp;&nbsp; Dispatch Sheet &nbsp;&nbsp; Route ${routeName} &nbsp;&nbsp;Dispatch Date: ${convertedDate}</h5></div>
 
 <div id="container"  >
-<table  align="center" border="1" cellspacing="0" cellpadding="1" 
+<table  align="center" border="1" cellspacing="0" cellpadding="6" 
 		id="table_grid" class="table table-bordered">
 		<thead>
 			<tr class="bgpink">
@@ -164,7 +164,7 @@ Production Start Date &nbsp; ${billDate} &nbsp;&nbsp; Dispatch Sheet &nbsp;&nbsp
 								<td width="30px" style="text-align:center;"><c:out value="${srNo}" /></td>
 								<c:set var="srNo" value="${srNo+1}"></c:set>
 								<td width="200px" ><c:out value="${item.itemName}" /></td>
-								<td width="50px" style="text-align:center;">${editQty}</td> 
+								<td width="50px" style="text-align:center;font-weight: bold;">${editQty}</td> 
 								<td width="30px" align="right"></td> 
 								<%-- <td width="60px" align="right">${item.itemRate1}</td>
 							 	<td width="60px" align="right"><fmt:formatNumber type="number"
@@ -246,7 +246,8 @@ Production Start Date &nbsp; ${billDate} &nbsp;&nbsp; Dispatch Sheet &nbsp;&nbsp
 			</tr>  --%>
 		</tbody>
 	</table>
-</div><div class="page-break"></div>
+</div>		<div style="page-break-after: always;"></div>
+
 
 </c:forEach>
 	<!-- END Main Content -->

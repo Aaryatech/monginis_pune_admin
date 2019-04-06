@@ -149,7 +149,7 @@
 																				<td align="left"><c:out value="${list.frName}" />
 																				</td>
 																				  <c:forEach items="${list.itemList}" var="itemList" >
-																				  <td style="text-align: right;">
+																				  <td style="text-align:center; font-weight: bold;font-size: 16px;">
                                                                                    <c:choose>
 																			  <c:when test="${itemList.orderQty>0}">
 																			 
@@ -180,7 +180,7 @@
 																	<c:choose> 
 																		<c:when test="${itemListStatioinWiseList.stationNo==staionListWithFranchiseeList.stationNo}"> 	
 																			<c:forEach items="${itemListStatioinWiseList.typeWiseItemTotalList}" var="typeWiseItemTotalList" > 
-																				  <td style="text-align: right;"><b>${typeWiseItemTotalList.aTotal}</b></td>  
+																				  <td style="text-align: right;font-size: 16px;"><b>${typeWiseItemTotalList.aTotal}</b></td>  
 																			</c:forEach>
 																		</c:when>
 																	</c:choose>
@@ -201,7 +201,7 @@
 																			<td align="left"><c:out value="${list.frName}" />
 																			</td>
 																			  <c:forEach items="${list.itemList}" var="itemList" >
-																			  <td style="text-align: right;">
+																			  <td style="text-align:center; font-weight: bold;font-size: 16px;">
  																			<c:choose>
 																			  <c:when test="${itemList.orderQty>0}">
 																			 
@@ -232,7 +232,7 @@
 																<c:choose> 
 																	<c:when test="${itemListStatioinWiseList.stationNo==staionListWithFranchiseeList.stationNo}"> 	
 																		<c:forEach items="${itemListStatioinWiseList.typeWiseItemTotalList}" var="typeWiseItemTotalList" > 
-																			  <td style="text-align: right;"><b>${typeWiseItemTotalList.bTotal}</b></td>  
+																			  <td style="text-align: right;font-size: 16px;"><b>${typeWiseItemTotalList.bTotal}</b></td>  
 																		</c:forEach>
 																	</c:when>
 																</c:choose>
@@ -253,7 +253,7 @@
 																				<td align="left"><c:out value="${list.frName}" />
 																				</td>
 																				  <c:forEach items="${list.itemList}" var="itemList" >
-																				  <td style="text-align: right;">
+																				  <td style="text-align:center; font-weight: bold;font-size: 16px;">
 																				     <c:choose>
 																			  <c:when test="${itemList.orderQty>0}">
 																			 
@@ -283,7 +283,7 @@
 																	<c:choose> 
 																		<c:when test="${itemListStatioinWiseList.stationNo==staionListWithFranchiseeList.stationNo}"> 	
 																			<c:forEach items="${itemListStatioinWiseList.typeWiseItemTotalList}" var="typeWiseItemTotalList" > 
-																				  <td style="text-align: right;"><b>${typeWiseItemTotalList.cTotal}</b></td>  
+																				  <td style="text-align: right;font-size: 16px;"><b>${typeWiseItemTotalList.cTotal}</b></td>  
 																			</c:forEach>
 																		</c:when>
 																	</c:choose>
@@ -299,7 +299,7 @@
 															<c:choose> 
 																<c:when test="${itemListStatioinWiseList.stationNo==staionListWithFranchiseeList.stationNo}"> 	
 																	<c:forEach items="${itemListStatioinWiseList.typeWiseItemTotalList}" var="typeWiseItemTotalList" > 
-																		  <td style="text-align: right;"><b>${typeWiseItemTotalList.aTotal+typeWiseItemTotalList.bTotal+
+																		  <td style="text-align: right;font-size: 16px;"><b>${typeWiseItemTotalList.aTotal+typeWiseItemTotalList.bTotal+
 																		  typeWiseItemTotalList.cTotal}</b></td>  
 																	</c:forEach>
 																</c:when>

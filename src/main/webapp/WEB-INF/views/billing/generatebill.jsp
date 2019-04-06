@@ -433,7 +433,7 @@
 																+ bill.orderQty
 																+ "</td>";
 
-														 var billQty = "<td align=center><input type=number min=0 style='width: 5em' class=form-control   onkeyup= updateTotal("
+														 var billQty = "<td align=center><input type='text' min=0 style='width: 5em' class=form-control   onkeyup= updateTotal("
 																+ bill.orderId + ","
 																+ bill.orderRate + ") onchange= updateTotal("+ bill.orderId+ ","+ bill.orderRate+ ")  id=billQty"+ bill.orderId+ " name=billQty"+bill.orderId+" value = "+ bill.orderQty+ "></td>"; 
 														

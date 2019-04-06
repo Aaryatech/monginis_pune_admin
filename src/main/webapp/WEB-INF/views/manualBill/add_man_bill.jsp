@@ -1,4 +1,6 @@
+<%@ page contentType="text/html;charset=UTF-8"%>
 <%@page import="com.ats.adminpanel.model.franchisee.SubCategory"%>
+
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@page
@@ -117,7 +119,7 @@
             packages: "transliteration"
           });
 
-      function onLoad() {
+      function onLoad(frId) {
         var options = {
             sourceLanguage:
                 google.elements.transliteration.LanguageCode.ENGLISH,
@@ -134,7 +136,7 @@
 
         // Enable transliteration in the textbox with id
         // 'transliterateTextarea'.
-        control.makeTransliteratable(['transliterateTextarea']);   showCtype();
+        control.makeTransliteratable(['transliterateTextarea']);   showCtype();findFranchiseeData(frId)
       }
    
       google.setOnLoadCallback(onLoad);
@@ -149,7 +151,7 @@ select {
 
 
 </head>
-<body onload="onLoad()">
+<body onload="onLoad(${frId})">
 
 	<c:url var="getFlavourBySpfId" value="/getFlavourBySpfId" />
 	<c:url var="findAddOnRate" value="/getAddOnRate" />
@@ -746,7 +748,7 @@ select {
 			<!-- END Main Content -->
 
 			<footer>
-				<p>2019 © MONGINIS.</p>
+				<p>2019 Â© MONGINIS.</p>
 			</footer>
 
 			<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
@@ -1253,11 +1255,13 @@ function showDiv(elem){
    if(elem.value == 1)
 	   {
          document.getElementById('marathiDiv').style.display= "block";
+         document.getElementById('transliterateTextarea').value = '';
          document.getElementById('englishDiv').style="display:none";
 	   }
    else if(elem.value == 2)
    {
 	   document.getElementById('englishDiv').style.display = "block";
+	   document.getElementById('textarea').value = '';
 	   document.getElementById('marathiDiv').style="display:none";
    }
  
@@ -1337,7 +1341,7 @@ function validate() {
       
         isValid= false;
     }else  if (eventName == "") {
-        alert("Please Enter Message");
+        alert("Please Enter Message/Name");
         document.getElementById('event_name').focus();
         
         isValid=false;
@@ -1378,13 +1382,13 @@ function validate() {
         document.getElementById('cust_email').focus();
         isValid= false;
     }
-    else  if(!spCustMob.match(phoneNo))  
+   /*  else  if(!spCustMob.match(phoneNo))  
 	  {  
     	 alert("Not a valid Mobile Number");  
 	     document.getElementById('cust_mobile').value="";
 	     document.getElementById('cust_mobile').focus();
 	     return false;  
-	  }  
+	  }   */
 	  else   if (spMenuId== "") {
 	 
 		  alert("Please Select Menu");

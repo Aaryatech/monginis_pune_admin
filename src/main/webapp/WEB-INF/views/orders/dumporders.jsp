@@ -69,7 +69,7 @@
 		<!-- END Page Title -->
 
 	<form id="submitDumpOrderForm"
-				action="${pageContext.request.contextPath}/submitDumpOrder"
+				action="${pageContext.request.contextPath}/submitDumpOrder" onsubmit="submitOrder.disabled = true; return confirm('Do you want to Submit ?');"
 				method="post">
 		<!-- BEGIN Main Content -->
 		<div class="box">
@@ -134,6 +134,10 @@
 
 							</select>
 						</div>
+						<label class=" col-md-2 control-label franchisee_label">Discount % </label>
+						<div class="col-md-1">
+							<input type="text" name="discPer" id="discPer" value="0" class="form-control" width="30px"/>
+						</div>
 					<!-- </div>
 					
 					
@@ -142,6 +146,8 @@
 
 				<div class="row">
 					<div class="col-md-12" style="text-align: center"> -->
+					
+					
 						<input type="button" id="searchFr" class="btn btn-info" value="Search"
 							onclick="searchOrders()" />
 						
@@ -216,9 +222,19 @@
 
 
 					<div class="row" align="center">
-						<div class="col-md-offset-6 col-md-5" align="center">
+					<label class=" col-md-1 control-label franchisee_label">Production Date</label>
+						<div class="col-sm-3 col-lg-2 controls">
+										<input class="form-control date-picker" placeholder="dd-mm-yyyy" id="date" size="19"
+											type="text" name="date" value="" required />
+									</div>
+				<label class=" col-md-1 control-label franchisee_label">Delivery Date</label>
+						<div class="col-sm-3 col-lg-2 controls">
+										<input class="form-control date-picker" placeholder="dd-mm-yyyy" id="deldate" size="19"
+											type="text" name="deldate" value="" required />
+									</div>
+						<div class="col-md-offset-0 col-md-1" align="center">
 
-							<button class="btn btn-info pull-right"
+							<button class="btn btn-info pull-left"
 								style="margin-right: 5px;" onclick="submitOrder()" id="submitOrder" disabled>Submit</button>
 						</div>
 					</div>
@@ -298,6 +314,7 @@
 			if (isValid) {
 				document.getElementById("searchFr").disabled=true;
 				var selectedMenu = $("#selectMenu").val();
+				var discPer = $("#discPer").val();
 				var selectedFr = $("#selectFr").val();
 				var preOrderDate = document.getElementById("dp2").value;
 				franchasee();
@@ -341,7 +358,7 @@
 														var tr = $('<tr></tr>');
 														tr.append($('<td></td>').html(""+index));
 													  	tr.append($('<td></td>').html(orderdata.itemName));
-
+														tr.append($('<td></td>').html("<input type='text' name=disc_per"+orderdata.itemId+" style='width:45px' class='form-control' id=disc_per"+orderdata.itemId+" value="+discPer+" > "));
 													  
 													      $.each(frId, function(key, id){    
 													    	 	 var qty=0;
@@ -412,10 +429,7 @@
 
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script type="text/javascript">
-
-		
-    
-	function franchasee() {
+function franchasee() {
         var frName = [];
        
         var i=0;
@@ -425,6 +439,7 @@
 
         tr.insertCell(0).outerHTML = "<th>Sr.</th>"
         tr.insertCell(1).outerHTML = "<th>ItemName</th>"
+        tr.insertCell(2).outerHTML = "<th>Disc%</th>"
         $.each($("#selectFr option:selected"), function(){            
         	frName.push($(this).text());
         	i++;
@@ -432,7 +447,7 @@
         i=i-1;
         $.each(frName, function(){  
        
-            tr.insertCell(2).outerHTML = "<th>"+frName[i] +"</th>"
+            tr.insertCell(3).outerHTML = "<th>"+frName[i] +"</th>"
             i--;
        });
         	

@@ -54,8 +54,20 @@ public class GetSpCkOrder {
 	
 	private String frRType;//new for slip
 
+	private String exVar1;//new for alpha/numerical type
 	
 	
+	
+	public String getExVar1() {
+		return exVar1;
+	}
+
+
+	public void setExVar1(String exVar1) {
+		this.exVar1 = exVar1;
+	}
+
+
 	public String getFrRType() {
 		return frRType;
 	}
@@ -311,9 +323,11 @@ public class GetSpCkOrder {
 				+ ", spDeliveryPlace=" + spDeliveryPlace + ", spCustName=" + spCustName + ", spEvents=" + spEvents
 				+ ", spEventsName=" + spEventsName + ", spCustMobNo=" + spCustMobNo + ", spfName=" + spfName
 				+ ", cusChoicePhoto=" + cusChoicePhoto + ", orderPhoto=" + orderPhoto + ", slipMrp=" + slipMrp
-				+ ", slipNo=" + slipNo + ", frCity=" + frCity + ", frRType=" + frRType + "]";
+				+ ", slipNo=" + slipNo + ", frCity=" + frCity + ", frRType=" + frRType + ", exVar1=" + exVar1 + "]";
 	}
 
+
+	
     
 	}
 	

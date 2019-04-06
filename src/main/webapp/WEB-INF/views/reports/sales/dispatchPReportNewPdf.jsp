@@ -93,7 +93,7 @@ th {
 																		<td align="left"  ><c:out value="${list.frName}" />
 																		</td>
 																		  <c:forEach items="${list.itemList}" var="itemList" >
-																		  <td style="text-align: right;">
+																		  <td style="text-align:center; font-weight: bold;">
 																		  
 																		   <c:choose>
 																			  <c:when test="${itemList.orderQty>0}">
@@ -145,7 +145,7 @@ th {
 																		<td align="left"><c:out value="${list.frName}" />
 																		</td>
 																		  <c:forEach items="${list.itemList}" var="itemList" >
-																		  <td style="text-align: right;">
+																		  <td style="text-align:center; font-weight: bold;">
 																		   <c:choose>
 																			  <c:when test="${itemList.orderQty>0}">
 																			 
@@ -195,7 +195,7 @@ th {
 																		<td align="left"><c:out value="${list.frName}" />
 																		</td>
 																		  <c:forEach items="${list.itemList}" var="itemList" >
-																		  <td style="text-align: right;">
+																		  <td style="text-align:center; font-weight: bold;">
 																		   <c:choose>
 																			  <c:when test="${itemList.orderQty>0}">
 																			 

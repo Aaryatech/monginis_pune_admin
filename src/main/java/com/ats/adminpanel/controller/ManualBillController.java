@@ -137,7 +137,7 @@ public class ManualBillController {
 
 				String date = simpleDateFormat.format(new Date());
 				model.addObject("unSelectedFrList", allFrIdNameList.getFrIdNamesList());
-				model.addObject("billBy", 0);
+				model.addObject("billBy", 1);
 				model.addObject("date", date);
 
 			} catch (Exception e) {
@@ -255,11 +255,11 @@ public class ManualBillController {
 
 				if (billBy == 0) { // means calc by mrp
 					sprRate = specialCake.getMrpRate1();
-					spBackendRate = specialCake.getSpRate1();
+					spBackendRate = specialCake.getMrpRate1();
 				} else {// means calc by rate
 
 					sprRate = specialCake.getSpRate1();
-					spBackendRate = specialCake.getMrpRate1();
+					spBackendRate = specialCake.getSpRate1();
 				}
 
 			} else {
@@ -268,11 +268,11 @@ public class ManualBillController {
 				if (billBy == 0) {
 
 					sprRate = specialCake.getMrpRate3();
-					spBackendRate = specialCake.getSpRate3();
+					spBackendRate =specialCake.getMrpRate3(); 
 				} else {
 
 					sprRate = specialCake.getSpRate3();
-					spBackendRate = specialCake.getMrpRate3();
+					spBackendRate = specialCake.getSpRate3();
 				}
 
 			}
@@ -455,15 +455,18 @@ public class ManualBillController {
 
 			String spEvents = request.getParameter("sp_event");
 			logger.info("12spEvents" + spEvents);
-
-			String spInstructions = request.getParameter("sp_inst1");
-			logger.info("Marathi Inst :" + spInstructions);
-
-			if (spInstructions.isEmpty() || spInstructions == null) {
-				spInstructions = request.getParameter("sp_inst2");
-				logger.info("English Inst :" + spInstructions);
-
-			}
+			
+			 int  instLang = Integer.parseInt(request.getParameter("showtextarea"));
+			   
+			    String spInstructions="";
+			    if(instLang==1)
+			    {
+			    	spInstructions =request.getParameter("sp_inst1");
+			    }else
+			    {
+			    	spInstructions =request.getParameter("sp_inst2");
+			    }
+				logger.info("spInstructions" + spInstructions);
 
 			String spDeliveryDt = request.getParameter("datepicker");
 			logger.info("14spDeliveryDt" + spDeliveryDt);
@@ -868,7 +871,7 @@ public class ManualBillController {
 			}
 
 			// --------------------------------------------------------------------------------------------
-			if (spCakeOrderRes.getErrorMessage().isError() != true) {
+			/*if (spCakeOrderRes.getErrorMessage().isError() != true) {
 				PostBillDataCommon postBillDataCommon = new PostBillDataCommon();
 
 				List<PostBillHeader> postBillHeaderList = new ArrayList<PostBillHeader>();
@@ -999,14 +1002,14 @@ public class ManualBillController {
 
 				int itemShelfLife = 1;
 
-				/*
+				
 				 * // inc exp date if these menuId if (gBill.getMenuId() == 44 ||
 				 * gBill.getMenuId() == 45 || gBill.getMenuId() == 46) {
 				 * 
 				 * calculatedDate = incrementDate(calculatedDate, 1);
 				 * 
 				 * }
-				 */
+				 
 
 				DateFormat Df = new SimpleDateFormat("dd-MM-yyyy");
 				String deliveryDate = Df.format(header.getBillDate());
@@ -1056,7 +1059,7 @@ public class ManualBillController {
 						postBillDataCommon, List.class);
 
 				System.out.println("Info Data insertBillData response " + info.toString());
-			}
+			}*/
 
 		} catch (Exception e) {
 			System.err.println("Exx in insertManualSpBill " + e.getMessage());
@@ -1065,7 +1068,7 @@ public class ManualBillController {
 
 		// return "redirect:/pdf/showBillPdf/-/-/1,9";
 
-		return "redirect:/showBillListForPrint";
+		return "redirect:/showManualBill";
 
 	}
 

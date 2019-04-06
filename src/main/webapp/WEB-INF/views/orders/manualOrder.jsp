@@ -236,7 +236,7 @@ select {
 						<div class="form-group">
 			<label class="col-sm-3 col-lg-2 control-label">Order Type</label>
 									  <label class="col-sm-3 col-lg-2 control-label">
-    <input type="radio" name="ordertype" class="order" value="0" id="or1" onchange="checkCheckedStatus()">
+    <input type="radio" name="ordertype" class="order" value="0" id="or1" checked onchange="checkCheckedStatus()">
   <label for="or1"> Manual Order</label>
   </label>
 <label class="col-sm-3 col-lg-2 control-label">
@@ -304,7 +304,7 @@ select {
 											<div class="col-sm-9 col-lg-2 controls">
 				<input type="text" name="address" value="-"	id="address" class="form-control"/>						
 											</div>
-		  <input type="button" class="btn btn-primary" id="searchBtn" value="Search" onclick="onSearch()" disabled >
+		  <input type="button" class="btn btn-primary" id="searchBtn" value="Search" onclick="onSearch()"  >
 											
 		</div>								
 									<!-- 	<div class="form-group">
@@ -372,7 +372,7 @@ select {
 					<div class="row">
 						<div class="col-md-12" style="text-align: center">
 							<input type="submit" class="btn btn-info" value="ORDER" name="submitorder" id="submitorder"  disabled>
-<input type="submit" class="btn btn-info" value="ORDER_&_BILL" name="submitbill" id="submitbill"  disabled>
+<input type="submit" class="btn btn-info" value="ORDER_&_BILL" name="submitbill" id="submitbill" style="display: none;"  disabled>
 						</div>
 					</div>
 

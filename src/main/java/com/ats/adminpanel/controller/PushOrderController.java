@@ -109,9 +109,14 @@ public class PushOrderController {
 			selectedMenuList = new ArrayList<Menu>();
 
 			for (int i = 0; i < menuList.size(); i++) {
-				if (menuList.get(i).getMenuId() == 26 || menuList.get(i).getMenuId() == 66
+				/*if (menuList.get(i).getMenuId() == 26 || menuList.get(i).getMenuId() == 66
 						|| menuList.get(i).getMenuId() == 33 || menuList.get(i).getMenuId() == 34
 						|| menuList.get(i).getMenuId() == 81) {
+					selectedMenuList.add(menuList.get(i));
+				}*/
+				
+				if (menuList.get(i).getMainCatId()!=5)
+				{
 					selectedMenuList.add(menuList.get(i));
 				}
 			}
@@ -333,10 +338,12 @@ public class PushOrderController {
 		// --------------------------Date
 		// Added--------------------------------------------------
 		String dateStr = request.getParameter("date");
-		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+		String delDateStr = request.getParameter("deldate");
+		SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy");
 		java.util.Date udate = sdf1.parse(dateStr);
+		java.util.Date udeldate = sdf1.parse(delDateStr);
 		java.sql.Date sqlCurrDate = new java.sql.Date(udate.getTime());
-		java.sql.Date deliveryDate = new java.sql.Date(tomarrowDate(udate).getTime());
+		java.sql.Date deliveryDate = new java.sql.Date(udeldate.getTime());
 		System.err.println("deliveryDate" + deliveryDate + "sqlCurrDate" + sqlCurrDate);
 		// -----------------------------------------------------------------------------
 		// get all Franchisee details
@@ -360,7 +367,7 @@ public class PushOrderController {
 			for (int j = 0; j < items.size(); j++) {
 
 				// if (pushOrderData.get(m).getItemId() != items.get(j).getId()) {
-
+				float discPer =Float.parseFloat(request.getParameter("disc_per" + items.get(j).getId()));
 				// System.out.println(items.get(j).getId());
 				for (int i = 0; i < selectedFrIdList.size(); i++) {
 
@@ -386,16 +393,17 @@ public class PushOrderController {
 
 							order.setOrderDatetime(todaysDate);
 							order.setFrId(selectedFrIdList.get(i));
-							order.setRefId(items.get(j).getId());
+							order.setOrderSubType(items.get(j).getItemGrp2());
 							order.setItemId(String.valueOf(items.get(j).getId()));
 							order.setOrderQty(qty);
 							order.setEditQty(qty);
 							order.setProductionDate(sqlCurrDate);// date var removed
 							order.setOrderDate(sqlCurrDate);// date var removed
 							order.setDeliveryDate(deliveryDate);
-							order.setMenuId(0);
-							order.setGrnType(4);
+							//order.setGrnType(4);
 							order.setIsEdit(0);
+							order.setRefId(1);
+							order.setIsPositive(discPer);
 							order.setMenuId(menuId);
 							order.setOrderType(selectedMainCatId);
 
@@ -403,16 +411,13 @@ public class PushOrderController {
 								for (int k = 0; k < franchaseeList.size(); k++) {
 									if (selectedFrIdList.get(l) == franchaseeList.get(k).getFrId()) {
 										if (franchaseeList.get(k).getFrRateCat() == 1) {
-											order.setOrderRate(items.get(j).getItemRate3());
-											order.setOrderMrp(items.get(j).getItemMrp3());
-										} else if (franchaseeList.get(k).getFrRateCat() == 2) {
-											order.setOrderRate(items.get(j).getItemRate3());
-											order.setOrderMrp(items.get(j).getItemMrp3());
-										} else if (franchaseeList.get(k).getFrRateCat() == 3) {
+											order.setOrderRate(items.get(j).getItemRate1());
+											order.setOrderMrp(items.get(j).getItemMrp1());
+										}  else if (franchaseeList.get(k).getFrRateCat() == 3) {
 											order.setOrderRate(items.get(j).getItemRate3());
 											order.setOrderMrp(items.get(j).getItemMrp3());
 										}
-
+										order.setGrnType(franchaseeList.get(k).getGrnTwo());//new
 									}
 								}
 							}
@@ -438,6 +443,7 @@ public class PushOrderController {
 		if (pushItem == false) {
 			for (int j = 0; j < items.size(); j++) {
 
+				float discPer =Float.parseFloat(request.getParameter("disc_per" + items.get(j).getId()));
 				// System.out.println(items.get(j).getId());
 				for (int i = 0; i < selectedFrIdList.size(); i++) {
 
@@ -453,15 +459,17 @@ public class PushOrderController {
 
 						order.setOrderDatetime(todaysDate);
 						order.setFrId(selectedFrIdList.get(i));
-						order.setRefId(items.get(j).getId());
+						order.setRefId(1);
 						order.setItemId(String.valueOf(items.get(j).getId()));
 						order.setOrderQty(qty);
 						order.setEditQty(qty);
 						order.setProductionDate(sqlCurrDate);// date var removed
 						order.setOrderDate(sqlCurrDate);// date var removed
 						order.setDeliveryDate(deliveryDate);
-						order.setMenuId(0);
-						order.setGrnType(4);
+						order.setOrderSubType(items.get(j).getItemGrp2());
+						//order.setMenuId(0);
+						//order.setGrnType(4);
+						order.setIsPositive(discPer);
 						order.setIsEdit(0);
 						order.setMenuId(menuId);
 						order.setOrderType(selectedMainCatId);
@@ -470,16 +478,13 @@ public class PushOrderController {
 							for (int k = 0; k < franchaseeList.size(); k++) {
 								if (selectedFrIdList.get(l) == franchaseeList.get(k).getFrId()) {
 									if (franchaseeList.get(k).getFrRateCat() == 1) {
-										order.setOrderRate(items.get(j).getItemRate3());
-										order.setOrderMrp(items.get(j).getItemMrp3());
-									} else if (franchaseeList.get(k).getFrRateCat() == 2) {
-										order.setOrderRate(items.get(j).getItemRate3());
-										order.setOrderMrp(items.get(j).getItemMrp3());
-									} else if (franchaseeList.get(k).getFrRateCat() == 3) {
+										order.setOrderRate(items.get(j).getItemRate1());
+										order.setOrderMrp(items.get(j).getItemMrp1());
+									}  else if (franchaseeList.get(k).getFrRateCat() == 3) {
 										order.setOrderRate(items.get(j).getItemRate3());
 										order.setOrderMrp(items.get(j).getItemMrp3());
 									}
-
+									order.setGrnType(franchaseeList.get(k).getGrnTwo());//new
 								}
 							}
 						}

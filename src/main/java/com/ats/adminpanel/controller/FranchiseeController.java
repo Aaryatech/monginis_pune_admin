@@ -2063,6 +2063,40 @@ public class FranchiseeController {
 
 		return mav;
 	}
+	@RequestMapping(value = "/getItemsByMenuIdMultiple", method = RequestMethod.GET)
+	@ResponseBody
+	public List<ItemIdOnly> getItemsByMenuIdMultiple(HttpServletRequest request, HttpServletResponse response) {
+
+		 
+		List<ItemIdOnly> itemList = null;
+
+		try {
+			String menuId = request.getParameter("menuId");
+			StringBuilder sb = new StringBuilder();
+
+			menuId = menuId.substring(1, menuId.length() - 1);
+			menuId = menuId.replaceAll("\"", "");
+			logger.info("menuIds" + menuId);
+			
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+			map.add("menuId", menuId);
+			RestTemplate restTemplate = new RestTemplate();
+
+			 itemList = restTemplate.postForObject(Constants.url + "/getItemsByMenuIdMultiple",map,
+					List.class);
+			 
+			System.out.println("itemList" +itemList.toString());
+
+		} catch (Exception e) {
+
+		 
+			e.printStackTrace();
+		}
+
+		return itemList;
+
+	}
+	
 	//Sumit Mashalkar
 	
 	@RequestMapping(value = "/getItemsByMenuId", method = RequestMethod.GET)

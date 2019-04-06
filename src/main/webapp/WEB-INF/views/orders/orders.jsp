@@ -36,12 +36,14 @@ td, th {
 
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 
-
+    <c:url var="callSearchOrdersProcessByItem" value="/searchOrdersProcessByItem" />
 	<c:url var="callSearchOrdersProcess" value="/searchOrdersProcess" />
 	<c:url var="callChangeQty" value="/callChangeQty" />
 	<c:url var="callDeleteOrder" value="/callDeleteOrder" />
+	<c:url var="callDeleteOrderMultiple" value="/callDeleteOrderMultiple" />
 	<c:url var="updateOrderDetails" value="/updateOrderDetails" />
 
+ <c:url var="getItemListByMenuId" value="/getItemsByMenuIdMultiple"></c:url>
 
 
 
@@ -202,9 +204,9 @@ td, th {
 								<div class="form-group"> -->
 									<label for="textfield2" class="col-xs-3 col-lg-1 control-label">Menu</label>
 									<div class="col-sm-9 col-lg-3 controls">
-										<select class="form-control chosen" multiple="multiple"
-											tabindex="6" name="item_id" id="item_id">
-
+										<select class="form-control chosen" 
+											tabindex="6" name="menuId" id="menuId" onchange="getItemsByMenuId()">
+											<option value="">Select MenuId</option>
 											<c:forEach items="${menuList}" var="menuList">
 												<option value="${menuList.menuId}">${menuList.menuTitle}</option>
 
@@ -226,11 +228,27 @@ td, th {
 								<div align="center" class="form-group">
 									<div
 										class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-0"> -->
-										<input type="button" class="btn btn-primary" value="Submit"
-											id="callSubmit" onclick="callSearch()">
+									
 
 
 									</div>
+									<div class="form-group">
+											<label class="col-sm-3 col-lg-1 control-label">Items</label>
+											<div class="col-sm-9 col-lg-10 controls">
+												<select data-placeholder="Select Items" name="items[]"
+													class="form-control chosen" tabindex="-1" id="item" multiple="multiple"
+													data-rule-required="true">
+                                                      <option value=""> </option>
+													<optgroup label="All Items">
+														<option value=""></option>
+													
+													</optgroup>
+												</select>
+												
+											</div>
+												<input type="button" class="btn btn-primary" value="Submit"
+											id="callSubmit" onclick="callSearch()">
+										</div>
 									<div align="center" id="loader" style="display: none">
 
 										<span>
@@ -384,13 +402,19 @@ td, th {
 									
 
 <br>
-									
+								<input type="button" class="btn btn-primary"  value="Delete"  disabled="disabled" id="calldelete" onclick="deleteMultipleOrder()">
+								<br>	
 									<div class="form-group" align="left" style="display: none;" id="opt">
 										<div >
+										  <label class=" col-md-2">Production Date</label>
+										<div class="col-md-2">
+										<input class="form-control"	 name="production_date" id="production_date" type="date" />
+										  </div>
                                        <label class=" col-md-2">Delivery Date</label>
 										<div class="col-md-2">
 										<input class="form-control"	 name="delivery_date" id="delivery_date" type="date" />
 										  </div>
+										
 									  </div>
 									    
 				<div class="col-md-1">
@@ -414,7 +438,7 @@ td, th {
 			</div></div>
 			<!-- END Main Content -->
 			<footer>
-				<p>2018 © MONGINIS.</p>
+				<p>2019 © MONGINIS.</p>
 			</footer>
 
 
@@ -492,23 +516,32 @@ td, th {
 <script type="text/javascript">
 function updateDetails()
 {
+	
 	var delDate=$("#delivery_date").val();
-	/* var checkedVals = $('.selorder:checkbox:checked').map(function() {
-	    return this.value;
-	}).get(); */
+	var prodDate=$("#production_date").val();
+	 if(prodDate==""){
+		
+			alert("Please Select Production Date");
+		}else if(delDate==""){
+			alert("Please Select Delivery Date");
+		}
+		else{
 	var selectedItems = new Array();
-	/* $("input:checkbox[name=selorder]:checked").each(function () {
-		selectedItems.push(this.id);
-	}); */
+	
 	var checkedVals = $('.selorder:checkbox:checked').map(function() {
 	    return this.value;
 	}).get();
-	//alert(checkedVals.join(","));
-//alert(JSON.stringify(selectedItems));
+	
+	if(checkedVals=="")
+		{
+		 alert("Please select atleast one order!!")
+		}else{
+	
 	$.getJSON('${updateOrderDetails}', {
 
 		ids:checkedVals.join(","),
 		delDate:delDate,
+		prodDate:prodDate,
 		ajax : 'true'
 
 	}, function(data) {
@@ -524,15 +557,16 @@ function updateDetails()
 			 alert("Delivery Date Not Updated.");
 			}
 	});
-	
+		}
+	}
 }
 </script>
 <script type="text/javascript">
 	function validate() {
 	
-		var menu =$("#item_id").val();
+		var menu =$("#menuId").val();
 		var selectFr =$("#fr_id").val();
-		
+		var selectItem =$("#item").val();
 
 		var isValid = true;
 
@@ -543,6 +577,10 @@ function updateDetails()
 
 			isValid = false;
 			alert("Please Select Menu");
+		}else if (selectItem == "" || selectItem == null) {
+
+			isValid = false;
+			alert("Please Select Items");
 		}
 		return isValid;
 
@@ -566,8 +604,8 @@ function callSearch() {
 
 	var isValid=validate();
 	if(isValid==true){
-	var itemIds=$("#item_id").val();
-	
+	var menuIds=$("#menuId").val();
+	var itemId=$("#item").val();
 	var array=[];
 	
 	var routeIds=$("#selectRoute").val();
@@ -577,11 +615,11 @@ function callSearch() {
 	var date = $("#date").val(); 
 	//alert(date);
 	$('#loader').show();
-
+if(itemId=="-1" || itemId==""){
 $.getJSON('${callSearchOrdersProcess}', {
 
 	fr_id_list : JSON.stringify(frIds),
-	item_id_list : JSON.stringify(itemIds),
+	item_id_list : JSON.stringify(menuIds),
 	route_id:routeIds,
 	date : date,
 	
@@ -590,7 +628,7 @@ $.getJSON('${callSearchOrdersProcess}', {
 }, function(data) {
 	document.getElementById("expExcel").disabled=true;
 	document.getElementById("callupdate").disabled=false;
-
+	document.getElementById("calldelete").disabled=true;
 	$("#opt").css("display","block");
 
 	$('#loader').hide();
@@ -601,6 +639,8 @@ $.getJSON('${callSearchOrdersProcess}', {
 
 	$.each(data,function(key, orders) {
 		document.getElementById("expExcel").disabled=false;
+		document.getElementById("calldelete").disabled=false;
+
 		document.getElementById('range').style.display = 'block';
 	var tr = $('<tr></tr>');
 	
@@ -615,10 +655,10 @@ $.getJSON('${callSearchOrdersProcess}', {
   	tr.append($('<td></td>').html(orders.catName));
   	
 	if(isEdit==1){
-	 	tr.append($('<td></td>').html("<input type=number onkeypress='return IsNumeric(event);' ondrop='return false;' onpaste='return false;' style='text-align: center;    height: 24px;' class='form-control' min=0 id="+orders.orderId+" Value="+orders.orderQty+" disabled>"));
+	 	tr.append($('<td></td>').html("<input type='number' onkeypress='return IsNumeric(event);' ondrop='return false;' onpaste='return false;' style='text-align: center;    height: 24px;' class='form-control' min='0' id=qty"+orders.orderId+" value="+orders.orderQty+" disabled='disabled' >"));
   		
   	}else{
-	 	tr.append($('<td></td>').html("<input type=number onkeypress='return IsNumeric(event);' disabled ondrop='return false;' onpaste='return false;' style='text-align: center;    height: 24px;' class='form-control' min=0 id="+orders.orderId+" Value="+orders.orderQty+" disabled>"));
+	 	tr.append($('<td></td>').html("<input type='number' onkeypress='return IsNumeric(event);'  ondrop='return false;' onpaste='return false;' style='text-align: center;    height: 24px;' class='form-control' min='0' id=qty"+orders.orderId+" value="+orders.orderQty+"  disabled='disabled' >"));
   		
   	}
 	tr.append($('<td></td>').html(orders.deliveryDate));
@@ -627,7 +667,7 @@ if(isDelete==1){
 tr.append($('<td></td>').html(' <a>   <span class="glyphicon glyphicon-edit" id="edit'+orders.orderId+'" onClick=editQty('+orders.orderId+');> </span> </a><a><span class="glyphicon glyphicon-remove" id="delete'+orders.orderId+'" onClick=deleteOrder('+orders.orderId+');> </span></a>'));
 
 }else{
-	 	tr.append($('<td></td>').html(' <a>  <span class="glyphicon glyphicon-edit" id="edit'+orders.orderId+'" onClick=editQty('+orders.orderId+');> </span> </a><a><span class="glyphicon glyphicon-remove" id="delete'+orders.orderId+'" onClick=('+orders.orderId+');> </span></a>'));
+	 	tr.append($('<td></td>').html(' <a>  <span class="glyphicon glyphicon-edit" id="edit'+orders.orderId+'" onClick=editQty('+orders.orderId+');> </span> </a><a><span class="glyphicon glyphicon-remove" id="delete'+orders.orderId+'" onClick=deleteOrder('+orders.orderId+');> </span></a>'));
   	}
 
 
@@ -641,6 +681,83 @@ tr.append($('<td></td>').html(' <a>   <span class="glyphicon glyphicon-edit" id=
 })
 
 });
+
+}
+else
+	{
+	
+
+	$.getJSON('${callSearchOrdersProcessByItem}', {
+
+		fr_id_list : JSON.stringify(frIds),
+		item_id_list : JSON.stringify(menuIds),
+		itemId: JSON.stringify(itemId),
+		route_id:routeIds,
+		date : date,
+		
+		ajax : 'true'
+
+	}, function(data) {
+		document.getElementById("expExcel").disabled=true;
+		document.getElementById("callupdate").disabled=false;
+		document.getElementById("calldelete").disabled=true;
+
+		$("#opt").css("display","block");
+
+		$('#loader').hide();
+		var len = data.length;
+
+
+		$('#table1 td').remove();
+
+		$.each(data,function(key, orders) {
+			document.getElementById("expExcel").disabled=false;
+			document.getElementById("calldelete").disabled=false;
+
+			document.getElementById('range').style.display = 'block';
+		var tr = $('<tr></tr>');
+		
+		tr.append($('<td class="col-sm-1"></td>').html("<input type='checkbox' name='selorder' class='selorder' id="+orders.orderId+"   value="+orders.orderId+">"));
+
+	  	tr.append($('<td></td>').html(key+1));
+
+	  	tr.append($('<td></td>').html(orders.frName));
+
+	  	tr.append($('<td></td>').html(orders.itemName));
+
+	  	tr.append($('<td></td>').html(orders.catName));
+	  	
+		if(isEdit==1){
+		 	tr.append($('<td></td>').html("<input type='number' onkeypress='return IsNumeric(event);' ondrop='return false;' onpaste='return false;' style='text-align: center;    height: 24px;' class='form-control' min='0' id=qty"+orders.orderId+" value="+orders.orderQty+" disabled='disabled' >"));
+	  		
+	  	}else{
+		 	tr.append($('<td></td>').html("<input type='number' onkeypress='return IsNumeric(event);'  ondrop='return false;' onpaste='return false;' style='text-align: center;    height: 24px;' class='form-control' min='0' id=qty"+orders.orderId+" value="+orders.orderQty+"  disabled='disabled' >"));
+	  		
+	  	}
+		tr.append($('<td></td>').html(orders.deliveryDate));
+	  	
+	if(isDelete==1){
+	tr.append($('<td></td>').html(' <a>   <span class="glyphicon glyphicon-edit" id="edit'+orders.orderId+'" onClick=editQty('+orders.orderId+');> </span> </a><a><span class="glyphicon glyphicon-remove" id="delete'+orders.orderId+'" onClick=deleteOrder('+orders.orderId+');> </span></a>'));
+
+	}else{
+		 	tr.append($('<td></td>').html(' <a>  <span class="glyphicon glyphicon-edit" id="edit'+orders.orderId+'" onClick=editQty('+orders.orderId+');> </span> </a><a><span class="glyphicon glyphicon-remove" id="delete'+orders.orderId+'" onClick=deleteOrder('+orders.orderId+');> </span></a>'));
+	  	}
+
+
+	 	//tr.append($('<td></td>').html("<input type=number onkeypress='return IsNumeric(event);' ondrop='return false;' onpaste='return false;' style='text-align: center;' class='form-control' min=0 id="+orders.orderId+" Value="+orders.orderQty+" disabled>"));
+	  
+	 //tr.append($('<td></td>').html(' <a>   <span class="glyphicon glyphicon-edit" id="edit'+orders.orderId+'" onClick=editQty('+orders.orderId+');> </span> </a><a><span class="glyphicon glyphicon-remove" id="delete'+orders.orderId+'" onClick=deleteOrder('+orders.orderId+');> </span></a>'));
+	  		
+	 
+		$('#table1 tbody').append(tr);
+
+	})
+
+	});
+
+	
+	
+	}
 	}
 
 }
@@ -653,22 +770,22 @@ tr.append($('<td></td>').html(' <a>   <span class="glyphicon glyphicon-edit" id=
 	<script type="text/javascript">
 		function editQty(orderId)
 		{
-			var state=document.getElementById(orderId).disabled;
-			var textId=document.getElementById(orderId).value;
-			//alert(textId);
+			var state=document.getElementById("qty"+orderId).disabled;
+			var textId=document.getElementById("qty"+orderId).value;
+			
 			//document.getElementById(orderId).disabled=false;
 			if(state)
 				{
 				$("#edit"+orderId).removeClass("glyphicon glyphicon-edit");
 				 $("#edit"+orderId).addClass("glyphicon glyphicon-ok");
-				document.getElementById(orderId).disabled=false;
+				document.getElementById("qty"+orderId).disabled=false;
 				
 				}
 			else{
 				$("#edit"+orderId).removeClass("glyphicon glyphicon-ok");
 				 $("#edit"+orderId).addClass("glyphicon glyphicon-edit");
-				document.getElementById(orderId).disabled=true;
-				$.getJSON('${callChangeQty}',
+				document.getElementById("qty"+orderId).disabled=true;
+			$.getJSON('${callChangeQty}',
 						{
 					
 							order_id : orderId,
@@ -676,7 +793,7 @@ tr.append($('<td></td>').html(' <a>   <span class="glyphicon glyphicon-edit" id=
 							
 							ajax : 'true'
 							
-						});
+						}); 
 			}
 		}
 		
@@ -708,6 +825,9 @@ tr.append($('<td></td>').html(' <a>   <span class="glyphicon glyphicon-edit" id=
 							
 						}, function(data) {
 							document.getElementById("expExcel").disabled=true;
+							document.getElementById("callupdate").disabled=false;
+							document.getElementById("calldelete").disabled=true;
+
 							$('#loader').hide();
 							var len = data.length;
 
@@ -716,8 +836,12 @@ tr.append($('<td></td>').html(' <a>   <span class="glyphicon glyphicon-edit" id=
 							
 							$.each(data,function(key, orders) {
 								document.getElementById("expExcel").disabled=false;
+								document.getElementById("calldelete").disabled=false;
+
 								document.getElementById('range').style.display = 'block';
 							var tr = $('<tr></tr>');
+
+							tr.append($('<td class="col-sm-1"></td>').html("<input type='checkbox' name='selorder' class='selorder' id="+orders.orderId+"   value="+orders.orderId+">"));
 
 						  	tr.append($('<td></td>').html(key+1));
 
@@ -728,21 +852,21 @@ tr.append($('<td></td>').html(' <a>   <span class="glyphicon glyphicon-edit" id=
 						  	tr.append($('<td></td>').html(orders.catName));
 						  	
 						  	if(isEdit==1){
-							 	tr.append($('<td></td>').html("<input type=number onkeypress='return IsNumeric(event);' ondrop='return false;' onpaste='return false;' style='text-align: center;' class='form-control' min=0 id="+orders.orderId+" Value="+orders.orderQty+" disabled>"));
+							 	tr.append($('<td></td>').html("<input type=number onkeypress='return IsNumeric(event);' ondrop='return false;' onpaste='return false;' style='text-align: center;' class='form-control' min=0 id=qty"+orders.orderId+" Value="+orders.orderQty+"  disabled='disabled' >"));
 
 						  		
 						  	}else{
-							 	tr.append($('<td></td>').html("<input type=number onkeypress='return IsNumeric(event);' disabled ondrop='return false;' onpaste='return false;' style='text-align: center;' class='form-control' min=0 id="+orders.orderId+" Value="+orders.orderQty+" disabled>"));
+							 	tr.append($('<td></td>').html("<input type=number onkeypress='return IsNumeric(event);' disabled ondrop='return false;' onpaste='return false;' style='text-align: center;' class='form-control' min=0 id=qty"+orders.orderId+" Value="+orders.orderQty+"  disabled='disabled' >"));
 
 						  		
 						  	}
-
+						  	tr.append($('<td></td>').html(orders.deliveryDate));
 						  	
  				if(isDelete==1){
 	 			tr.append($('<td></td>').html(' <a>   <span class="glyphicon glyphicon-edit" id="edit'+orders.orderId+'" onClick=editQty('+orders.orderId+');> </span> </a><a><span class="glyphicon glyphicon-remove" id="delete'+orders.orderId+'" onClick=deleteOrder('+orders.orderId+');> </span></a>'));
 		
 				}else{
-							 	tr.append($('<td></td>').html(' <a>  <span class="glyphicon glyphicon-edit" id="edit'+orders.orderId+'" onClick=editQty('+orders.orderId+');> </span> </a><a><span class="glyphicon glyphicon-remove" id="delete'+orders.orderId+'" onClick=('+orders.orderId+');> </span></a>'));
+							 	tr.append($('<td></td>').html(' <a>  <span class="glyphicon glyphicon-edit" id="edit'+orders.orderId+'" onClick=editQty('+orders.orderId+');> </span> </a><a><span class="glyphicon glyphicon-remove" id="delete'+orders.orderId+'" onClick=deleteOrder('+orders.orderId+');> </span></a>'));
 						  	}
 
  	
@@ -766,7 +890,86 @@ tr.append($('<td></td>').html(' <a>   <span class="glyphicon glyphicon-edit" id=
 		}
 		
 		</script>
+<script type="text/javascript">
+		function deleteMultipleOrder()
+		{
+			var isDelete=document.getElementById("isDelete").value;
+			var isEdit=document.getElementById("isEdit").value;
+			
+			var checkedVals = $('.selorder:checkbox:checked').map(function() {
+			    return this.value;
+			}).get();
+			if(checkedVals!=""){
+		    if (confirm("Do you want to Delete this order?") == true) {
+		    	$.getJSON('${callDeleteOrderMultiple}',
+						{
+							orderId : checkedVals.join(","),
+							
+							ajax : 'true'
+							
+						}, function(data) {
+							callSearch();
+							/* document.getElementById("expExcel").disabled=true;
+							$('#loader').hide();
+							var len = data.length;
 
+
+							$('#table1 td').remove();
+							
+							$.each(data,function(key, orders) {
+								document.getElementById("expExcel").disabled=false;
+								document.getElementById('range').style.display = 'block';
+							var tr = $('<tr></tr>');
+
+							tr.append($('<td class="col-sm-1"></td>').html("<input type='checkbox' name='selorder' class='selorder' id="+orders.orderId+"   value="+orders.orderId+">"));
+
+						  	tr.append($('<td></td>').html(key+1));
+
+						  	tr.append($('<td></td>').html(orders.frName));
+
+						  	tr.append($('<td></td>').html(orders.itemName));
+
+						  	tr.append($('<td></td>').html(orders.catName));
+						  	
+						  	if(isEdit==1){
+							 	tr.append($('<td></td>').html("<input type=number onkeypress='return IsNumeric(event);' ondrop='return false;' onpaste='return false;' style='text-align: center;' class='form-control' min=0 id=qty"+orders.orderId+" Value="+orders.orderQty+"  disabled='disabled' >"));
+
+						  		
+						  	}else{
+							 	tr.append($('<td></td>').html("<input type=number onkeypress='return IsNumeric(event);' disabled ondrop='return false;' onpaste='return false;' style='text-align: center;' class='form-control' min=0 id=qty"+orders.orderId+" Value="+orders.orderQty+"  disabled='disabled' >"));
+
+						  		
+						  	}
+						  	tr.append($('<td></td>').html(orders.deliveryDate));
+						  	
+ 				if(isDelete==1){
+	 			tr.append($('<td></td>').html(' <a>   <span class="glyphicon glyphicon-edit" id="edit'+orders.orderId+'" onClick=editQty('+orders.orderId+');> </span> </a><a><span class="glyphicon glyphicon-remove" id="delete'+orders.orderId+'" onClick=deleteOrder('+orders.orderId+');> </span></a>'));
+		
+				}else{
+							 	tr.append($('<td></td>').html(' <a>  <span class="glyphicon glyphicon-edit" id="edit'+orders.orderId+'" onClick=editQty('+orders.orderId+');> </span> </a><a><span class="glyphicon glyphicon-remove" id="delete'+orders.orderId+'" onClick=deleteOrder('+orders.orderId+');> </span></a>'));
+						  	}
+
+ 	
+ 	
+						 
+							$('#table1 tbody').append(tr);
+
+						})
+ */
+					
+		    } );
+		    
+		    }		
+			}
+			else
+				{
+				alert("Please Select atleast 1 record to delete!!");
+				}
+			
+
+		}
+		
+		</script>
 	<script>
 	function exportToExcel()
 		{
@@ -799,6 +1002,48 @@ function disableRoute(){
 }
 
 </script>
-
+<script>
+function getItemsByMenuId() {
+	
+	var menuIds=$("#menuId").val();
+	
+	 
+		 if(menuIds=="" || menuIds==null){
+			 
+			  
+				$('#item')
+			    .find('option')
+			    .remove()
+			    .end()
+			    $("#item").trigger("chosen:updated");
+		 }else{
+				$.getJSON('${getItemListByMenuId}', {
+					
+					menuId: JSON.stringify(menuIds),
+					ajax : 'true'
+				}, function(data) {
+				 	var html = '<option value="">Select Item</option>';
+				
+					var len = data.length;
+					
+					$('#item')
+				    .find('option')
+				    .remove()
+				    .end()
+				    
+				 $("#item").append($("<option></option>").attr( "value",-1).text("ALL"));
+					
+					for ( var i = 0; i < len; i++) {
+			            $("#item").append(
+			                    $("<option ></option>").attr(
+			                        "value", data[i].id).text(data[i].itemName)
+			                );
+					}
+					   $("#item").trigger("chosen:updated");
+				}); 
+		 }
+}
+	
+	</script>
 </body>
 </html>

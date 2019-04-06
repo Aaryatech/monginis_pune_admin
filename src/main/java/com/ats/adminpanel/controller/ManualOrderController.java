@@ -245,7 +245,7 @@ public class ManualOrderController {
 				order.setItemId(String.valueOf(item.getId()));
 				order.setItemName(item.getItemName() + "--[" + franchiseeList.getFrCode() + "]");
 				order.setFrId(frId);
-				if (menuId == 44 || menuId == 45) {
+				if (menuId == 29 || menuId == 86 || menuId == 87 ) {
 					order.setDeliveryDate(sqlCurrDate);
 				} else {
 					order.setDeliveryDate(sqlTommDate);
@@ -367,7 +367,7 @@ public class ManualOrderController {
 			order.setItemId(String.valueOf(itemId));
 			order.setItemName(item.getItemName() + "--[" + franchiseeList.getFrCode() + "]");
 			order.setFrId(frId);
-			if (menuId == 44 || menuId == 45) {
+			if (menuId == 29 || menuId == 86 || menuId == 87) {
 				order.setDeliveryDate(sqlCurrDate);
 			} else {
 				order.setDeliveryDate(sqlTommDate);

@@ -11,9 +11,10 @@
 <body>
 
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
+<c:url var="routListByAbcType" value="/routListByAbcType"></c:url>
 
 	<c:url var="getBillList" value="/getPDispatchReportByRoute"></c:url>
-   	<c:url var="getFranchisees" value="/getFranchises"></c:url>
+   	<c:url var="getFranchisees" value="/getFranchiseByRouteMul"></c:url>
    	<c:url var="getSubCatByCatId" value="/getSubCatByCatId"></c:url>
    	<c:url var="getAllMenusForDisp" value="/getAllMenusForDisp"></c:url>
 	<!-- BEGIN Sidebar -->
@@ -69,21 +70,36 @@
 
 					<div class="form-group">
 						<label class="col-sm-3 col-lg-2	 control-label">Delivery Date</label>
-						<div class="col-sm-6 col-lg-4 controls date_select">
+						<div class="col-sm-6 col-lg-2 controls date_select">
 							<input class="form-control date-picker" id="billDate"
 								name="billDate" size="30" type="text" value="${todaysDate}" />
 						</div>
-                    <label class="col-sm-3 col-lg-2 control-label">Select
-							Route</label>
-						<div class="col-sm-6 col-lg-4 controls">
+						<label class="col-sm-3 col-lg-2 control-label">ABC Type</label>
+						<div class="col-sm-3 col-lg-2">
+
+							<select data-placeholder="Choose Category"
+								class="form-control chosen"   onchange="routListByAbcType()"
+								id="abcType" name="abcType">
+
+								<option value="">Select</option>
+								<option value="1">A</option>
+								<option value="2">B</option>
+								<option value="3">C</option>
+								<%-- <c:forEach items="${catList}" var="cat" varStatus="count">
+									<option value="${cat.catId}"><c:out value="${cat.catName}"/></option>
+								</c:forEach> --%>
+							</select>
+						</div>
+                    <label class="col-sm-3 col-lg-1 control-label">Route</label>
+						<div class="col-sm-6 col-lg-3 controls">
 							<select data-placeholder="Select Route" 
 								class="form-control chosen" name="selectRoute" id="selectRoute"
-								> <!-- onchange="getFranchise(this.value)" -->
+								onchange="getFranchise(this.value)" >
 								<option value="0">Select Route</option>
-								<c:forEach items="${routeList}" var="route" varStatus="count">
+								<%-- <c:forEach items="${routeList}" var="route" varStatus="count">
 									<option value="${route.routeId}"><c:out value="${route.routeName}"/> </option>
 
-								</c:forEach>
+								</c:forEach> --%>
 							</select>
 
 						</div>
@@ -177,9 +193,9 @@
 								<option value="">Select Franchisee</option>
 								<option value="-1"><c:out value="All"/></option>
 								
-                                	<c:forEach items="${frListRes}" var="frListRes" varStatus="cnt">
+                               <%--  	<c:forEach items="${frListRes}" var="frListRes" varStatus="cnt">
 									<option value="${frListRes.frId}">${frListRes.frName}</option>
-								</c:forEach>
+								</c:forEach> --%>
 								
 							</select>
 						</div>
@@ -281,7 +297,7 @@
 			
 				$.getJSON('${getFranchisees}', {
 					
-					routeId : routeId,
+					routeId :routeId ,
 					ajax : 'true'
 				}, function(data) {
 				 	var html = '<option value="">Select Franchisee</option>';
@@ -844,7 +860,7 @@
 				var selectedCat = $("#selectSubCat").val();//new for pune on 14 feb 19
 				var frId = $("#fraId").val();
 				
-				  window.open('pdf/getDispatchPReportPdfForDispatch/'
+				  window.open('pdfForDisReport?url=pdf/getDispatchPReportPdfForDispatch/'
 							+ billDate + '/'+menuId+'/'+routeId+'/'+selectedCat+'/'+frId);
 			}
 			/* var fld = document.getElementById('fraId');
@@ -1025,6 +1041,69 @@ function onMenuChange(menuId)
 		}
 	
 }
+</script>
+<script type="text/javascript">
+
+function routListByAbcType() {
+	
+	var abcType = $("#abcType").val();
+	$('#fraId')
+    .find('option')
+    .remove()
+    .end()
+      $("#fraId").trigger("chosen:updated");
+	
+	if(abcType!=0){
+		 
+				$.getJSON('${routListByAbcType}', {
+					
+					abcType : abcType,
+					ajax : 'true'
+				}, function(data) {
+				 	var html = '<option value="">Select Route</option>';
+				
+					var len = data.length;
+					
+					$('#selectRoute')
+				    .find('option')
+				    .remove()
+				    .end();
+					var allSelected="";
+				    	for ( var i = 0; i < len; i++) {
+				    		allSelected=allSelected+""+data[i].routeId+",";
+				    		}
+				    	if(allSelected.length>0){
+				    	allSelected = allSelected.substring(0, allSelected.length - 1);
+				    	}
+				    	$("#selectRoute").append(
+				                 $("<option></option>").attr(
+				                     "value", 0).text("Select Route"));
+				$("#selectRoute").append(
+                 $("<option></option>").attr(
+                     "value", allSelected).text("All"));
+					
+					for ( var i = 0; i < len; i++) {
+			            $("#selectRoute").append(
+			                    $("<option></option>").attr(
+			                        "value", data[i].routeId).text(data[i].routeName)
+			                );
+					}
+					   $("#selectRoute").trigger("chosen:updated");
+				}); 
+	}
+	else{
+		$('#selectRoute')
+	    .find('option')
+	    .remove()
+	    .end()
+		 $("#selectRoute").append(
+                 $("<option></option>").attr(
+                     "value", 0).text("Select Route")
+             );
+		 $("#selectRoute").trigger("chosen:updated");
+	}
+}
+
 </script>
 </body>
 </html>

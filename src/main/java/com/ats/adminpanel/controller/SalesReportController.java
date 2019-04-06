@@ -3728,7 +3728,28 @@ public class SalesReportController {
 		}
 		return "redirect:/showPDispatchItemReport";
 	}
+	@RequestMapping(value = "/getFranchiseByRouteMul", method = RequestMethod.GET)
+	public @ResponseBody List<FranchiseForDispatch> getFranchiseByRouteMul(
+			@RequestParam(value = "routeId", required = true) String routeId) {
+		RestTemplate restTemplate = new RestTemplate();
 
+		List<FranchiseForDispatch> frNameIdByRouteIdList = null;
+		try {
+		
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		
+			map.add("routeId", routeId);
+
+			FranchiseForDispatch[] frNameId = restTemplate.postForObject(Constants.url + "getFranchiseForDispatchRouteID", map,
+					FranchiseForDispatch[].class);
+
+			frNameIdByRouteIdList = new ArrayList<>(Arrays.asList(frNameId));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return frNameIdByRouteIdList;
+	}
 	@RequestMapping(value = "/getFranchiseByRoute", method = RequestMethod.GET)
 	public @ResponseBody List<FranchiseForDispatch> getFranchiseByRoute(
 			@RequestParam(value = "routeId", required = true) int routeId) {
@@ -4399,7 +4420,7 @@ public class SalesReportController {
 		RestTemplate restTemplate = new RestTemplate();
 
 		List<PDispatchReport> dispatchReportList = new ArrayList<PDispatchReport>();
-		PDispatchReportList dispatchReports = new PDispatchReportList();
+		//PDispatchReportList dispatchReports = new PDispatchReportList();
 		try {
 			String convertedDate = "";
 			try {
@@ -5257,9 +5278,9 @@ public class SalesReportController {
 		String url = request.getParameter("url");
 		System.out.println("URL " + url);
 
-		File f = new File("/home/supertom/apache-tomcat-8.5.35/webapps/admin/report.pdf");
+		 File f = new File("/home/supertom/apache-tomcat-8.5.35/webapps/admin/report.pdf");
 		// File f = new File("/opt/apache-tomcat-8.5.6/webapps/uploads/report.pdf");
-		// File f = new File("/home/ats-12/Report.pdf");
+		 //File f = new File("/home/ats-12/Report.pdf");
 
 		try {
 			runConverter1(Constants.ReportURL + url, f, request, response);
@@ -5273,9 +5294,9 @@ public class SalesReportController {
 		// get absolute path of the application
 		ServletContext context = request.getSession().getServletContext();
 		String appPath = context.getRealPath("");
-		String filePath = "/home/supertom/apache-tomcat-8.5.35/webapps/admin/report.pdf";
+		 String filePath = "/home/supertom/apache-tomcat-8.5.35/webapps/admin/report.pdf";
 
-		// String filePath = "/home/ats-12/Report.pdf";
+		 //String filePath = "/home/ats-12/Report.pdf";
 
 		// construct the complete absolute path of the file
 		String fullPath = appPath + filePath;
