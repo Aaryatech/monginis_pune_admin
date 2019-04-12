@@ -195,7 +195,7 @@
 
 
 								<div class="form-group">
-									<label class="col-sm-3 col-lg-2 control-label">Production
+									<label class="col-sm-3 col-lg-2 control-label">Delivery
 										Date</label>
 									<div class="col-sm-5 col-lg-3 controls">
 										<input class="form-control date-picker" value="${todayDate }" id="dp2" size="16"

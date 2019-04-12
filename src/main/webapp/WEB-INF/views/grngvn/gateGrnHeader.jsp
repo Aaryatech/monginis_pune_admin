@@ -96,28 +96,57 @@
 										<select data-placeholder="Choose Franchisee"
 											class="form-control chosen" multiple="multiple" tabindex="6"
 											id="selectFr" name="selectFr" onchange="getDate()" required>
-											<option value="-1"><c:out value="All"/></option>
-
-
-
-											<c:forEach items="${unSelectedFrList}" var="fr"
+											<c:choose>
+                                          <c:when test="${frSelectedFlag==0}">
+                                          	<option value="-1"><c:out value="All"/></option>
+                                          <c:forEach items="${unSelectedFrList}" var="fr"
 												varStatus="count2">
-
-											<%--	<c:forEach items="${selectedFr}" var="selFr"
+													<option value="${fr.frId}"><c:out value="${fr.frName}"/></option>
+												
+										   </c:forEach>
+                                          
+                                          </c:when>
+                                            <c:when test="${frSelectedFlag==1}">
+                                            	<option value="-1" selected><c:out value="All"/></option>
+                                          <c:forEach items="${unSelectedFrList}" var="fr"
+												varStatus="count2">
+													<option value="${fr.frId}"><c:out value="${fr.frName}"/></option>
+												
+										   </c:forEach>
+                                          
+                                          </c:when>
+                                            <c:when test="${frSelectedFlag==2}">
+                                            	<option value="-1"><c:out value="All"/></option>
+                                          <c:forEach items="${unSelectedFrList}" var="fr"
+												varStatus="count2">
+												<c:set var="flag" value="0"></c:set>
+													<c:forEach items="${franchiseList}" var="selFr"
 													varStatus="count2">
 													 <c:choose>
 														<c:when test="${selFr==fr.frId}">
 															<option selected value="${fr.frId}"><c:out value="${fr.frName}"/></option>
+																<c:set var="flag" value="1"></c:set>
 														</c:when>
-														<c:otherwise> --%>
-															<option value="${fr.frId}"><c:out value="${fr.frName}"/></option>
+														<c:otherwise>  
+											
+	                                     
 
-
-														<%-- </c:otherwise>
+											 </c:otherwise>
 														</c:choose>
-												</c:forEach>
- --%>
-											</c:forEach>
+												</c:forEach> 		
+													<c:choose>
+												<c:when test="${flag==0}">
+												 <option value="${fr.frId}"><c:out value="${fr.frName}"/></option>
+												</c:when>
+												</c:choose>
+										   </c:forEach>
+                                          
+                                          </c:when>
+                                          <c:otherwise>
+                                          
+                                          
+                                          </c:otherwise>
+                                          </c:choose>
 
 										</select>
 									</div>
@@ -154,6 +183,7 @@
 													<tr>
 														<th class="col-md-2">GrnSr No</th>
 														<th class="col-md-1">Date</th>
+														<th class="col-md-1">Franchisee</th>
 														<th class="col-md-2">Taxable Amt</th>
 														<th class="col-md-2">Tax Amt</th>
 														<th class="col-md-2">Amount</th>
@@ -176,6 +206,17 @@
 																value="${grnList.grnGvnHeaderId}"></td>
 															<td class="col-md-1"><c:out
 																	value="${grnList.grngvnDate}" /></td>
+																		<td class="col-md-1">		
+												<c:forEach items="${unSelectedFrList}" var="fr"	varStatus="cnt">
+												<c:choose>
+												<c:when test="${grnList.frId==fr.frId}">
+												${fr.frName}
+												</c:when>
+												<c:otherwise>
+											
+												</c:otherwise>
+												</c:choose>
+												</c:forEach></td>
 															<td class="col-md-1"><c:out
 																	value="${grnList.taxableAmt}" /></td>
 															<td class="col-md-1"><c:out

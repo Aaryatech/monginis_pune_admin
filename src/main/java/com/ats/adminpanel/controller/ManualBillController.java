@@ -791,13 +791,13 @@ public class ManualBillController {
 			spCakeOrder.setCustGstin(custGstNo);
 			spCakeOrder.setSpCustMobNo(spCustMobNo);
 			// -----------------for slip no-------------
-			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-			map.add("settingKeyList", "sp_slip_no");
-			FrItemStockConfigureList settingListForSlipNo = restTemplate
-					.postForObject(Constants.url + "getDeptSettingValue", map, FrItemStockConfigureList.class);
-			List<FrItemStockConfigure> settingListResForSlipNo = settingListForSlipNo.getFrItemStockConfigure();
+			//MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			//map.add("settingKeyList", "sp_slip_no");
+			//FrItemStockConfigureList settingListForSlipNo = restTemplate
+			//		.postForObject(Constants.url + "getDeptSettingValue", map, FrItemStockConfigureList.class);
+			//List<FrItemStockConfigure> settingListResForSlipNo = settingListForSlipNo.getFrItemStockConfigure();
 			// ---------------------------------------
-			spCakeOrder.setSlipNo("" + settingListResForSlipNo.get(0).getSettingValue());// slipNo
+			spCakeOrder.setSlipNo("0");// slipNo
 
 			// Float floatBackEndRate = backendSpRate*spWeight;
 			// float intAddonRatePerKG = Float.parseFloat(spAddRate);
@@ -812,7 +812,7 @@ public class ManualBillController {
 			float floatBackEndRate = ((backendSpRate + intAddonRatePerKG) * spWeight) + extraCharges;
 			System.out.println("Placing Order: \n Back End Rate " + floatBackEndRate);
 			System.out.println("Placing Order: \n Add On Rate " + intAddonRatePerKG);
-
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			spCakeOrder.setSpBackendRate(floatBackEndRate);
 			try {
 				HttpHeaders httpHeaders = new HttpHeaders();
@@ -856,13 +856,13 @@ public class ManualBillController {
 					Info updateFrSettingGrnGvnNo = restTemplate.postForObject(Constants.url + "updateFrSettingSpNo",
 							map, Info.class);
 
-					map = new LinkedMultiValueMap<String, Object>();
-					map.add("settingValue", settingListResForSlipNo.get(0).getSettingValue() + 1);// +1 to slip no in
+					//map = new LinkedMultiValueMap<String, Object>();
+					//map.add("settingValue", settingListResForSlipNo.get(0).getSettingValue() + 1);// +1 to slip no in
 																									// setting table
-					map.add("settingKey", "sp_slip_no");
+					//map.add("settingKey", "sp_slip_no");
 
-					Info updateSetting = restTemplate.postForObject(Constants.url + "updateSeetingForPB", map,
-							Info.class);
+					//Info updateSetting = restTemplate.postForObject(Constants.url + "updateSeetingForPB", map,
+					//		Info.class);
 
 				}
 

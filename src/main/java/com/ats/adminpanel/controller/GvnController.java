@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -120,9 +122,9 @@ public class GvnController {
 			model = new ModelAndView("grngvn/gateGvnHeader");
 
 			boolean isAllFrSelected = false;
-
+			   int frSelectedFlag=0;
 			try {
-
+				 List<Integer> franchiseList=new ArrayList<>();
 				RestTemplate restTemplate = new RestTemplate();
 
 				MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
@@ -194,6 +196,7 @@ public class GvnController {
 					}
 
 					if (isAllFrSelected) {
+						frSelectedFlag=1;
 						// all Fr selected Web Service
 						System.out.println("All Fr Selected =true");
 
@@ -213,7 +216,7 @@ public class GvnController {
 						System.out.println("Grn Gate Header List  All FR" + gvnGateHeaderList.toString());
 
 					} else {
-
+						frSelectedFlag=2;
 						System.out.println("Specific Fr Selected ");
 
 						map = new LinkedMultiValueMap<String, Object>();
@@ -230,7 +233,9 @@ public class GvnController {
 								GrnGvnHeaderList.class);
 
 						gvnGateHeaderList = headerList.getGrnGvnHeader();
-
+						List<Integer> frids = Stream.of(frSelectedGateGvnHeader.split(",")).map(Integer::parseInt)
+								.collect(Collectors.toList());
+						franchiseList.addAll(frids);
 						System.out.println("Grn Gate Header List  specific FR " + gvnGateHeaderList.toString());
 					}
 
@@ -242,6 +247,9 @@ public class GvnController {
 				model.addObject("selectedFr", frList);
 				gateGvnHeaderFromDate = null;
 				gateGvnHeaderToDate = null;
+
+				model.addObject("franchiseList", franchiseList);
+				model.addObject("frSelectedFlag", 	frSelectedFlag);
 			} catch (Exception e) {
 
 				System.out.println("Excep in Gate Header List /getGrnHeaderForGate " + e.getMessage());
@@ -1613,9 +1621,9 @@ public class GvnController {
 			model = new ModelAndView("grngvn/accGvnHeader");
 
 			boolean isAllFrSelected = false;
-
+			  int frSelectedFlag=0;
 			try {
-
+				 List<Integer> franchiseList=new ArrayList<>();
 				RestTemplate restTemplate = new RestTemplate();
 
 				MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
@@ -1686,6 +1694,7 @@ public class GvnController {
 					}
 
 					if (isAllFrSelected) {
+						frSelectedFlag=1;
 						// all Fr selected Web Service
 						System.out.println("All Fr Selected =true");
 
@@ -1705,7 +1714,7 @@ public class GvnController {
 						System.out.println("Grn Gate Header List  All FR" + gvnAccHeaderList.toString());
 
 					} else {
-
+						frSelectedFlag=2;
 						System.out.println("Specific Fr Selected ");
 
 						map = new LinkedMultiValueMap<String, Object>();
@@ -1721,7 +1730,9 @@ public class GvnController {
 								GrnGvnHeaderList.class);
 
 						gvnAccHeaderList = headerList.getGrnGvnHeader();
-
+						List<Integer> frids = Stream.of(frSelectedAccGvnHeader.split(",")).map(Integer::parseInt)
+								.collect(Collectors.toList());
+						franchiseList.addAll(frids);
 						System.out.println("Grn Acc Header List  specific FR " + gvnAccHeaderList.toString());
 					}
 
@@ -1733,6 +1744,9 @@ public class GvnController {
 				model.addObject("selectedFr", frList);
 				accGvnHeaderFromDate = null;
 				accGvnHeaderToDate = null;
+				
+				model.addObject("franchiseList", franchiseList);
+				model.addObject("frSelectedFlag", 	frSelectedFlag);
 			} catch (Exception e) {
 
 				System.out.println("Excep in Gate Header List /getGvnHeaderForAcc " + e.getMessage());

@@ -17,6 +17,9 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -209,7 +212,8 @@ public class CreditNoteController {
 					CrnHsnwiseExcelReport[].class);
 			crnExcelListRes = new ArrayList<CrnHsnwiseExcelReport>(Arrays.asList(crnExcelList));
 			System.out.println("crnExcelList " + crnExcelListRes.toString());
-
+			List<Integer> crnIds = Stream.of(checkboxes.split(",")).map(Integer::parseInt)
+					.collect(Collectors.toList());
 			try {
 				List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
 
@@ -237,7 +241,53 @@ public class CreditNoteController {
 
 				expoExcel.setRowData(rowData);
 				exportToExcelList.add(expoExcel);
-				for (int i = 0; i < crnExcelListRes.size(); i++) {
+				
+				for(int l=0;l<crnIds.size();l++)
+				{
+					float docAmt=0;
+					
+					for(int j=0;j<crnExcelListRes.size();j++)
+					{
+						if(crnIds.get(l)==crnExcelListRes.get(j).getCrnId())
+						{
+							docAmt=docAmt+roundUp(crnExcelListRes.get(j).getTaxableAmt() + crnExcelListRes.get(j).getCgstRs()
+									+ crnExcelListRes.get(j).getSgstRs());
+						}
+					}
+					for(int i=0;i<crnExcelListRes.size();i++)
+					{
+						if(crnIds.get(l)==crnExcelListRes.get(i).getCrnId())
+						{
+					expoExcel = new ExportToExcel();
+					rowData = new ArrayList<String>();
+					rowData.add("" + (i + 1));
+					rowData.add("" + crnExcelListRes.get(i).getSupplierInvoiceNo());
+					rowData.add("" + crnExcelListRes.get(i).getSupplierInvoiceDate());
+					rowData.add("" + crnExcelListRes.get(i).getInvoiceNo());
+					rowData.add("" + crnExcelListRes.get(i).getInvoiceDate());
+					rowData.add("" + crnExcelListRes.get(i).getFrName());
+					rowData.add("" + crnExcelListRes.get(i).getItemHsncd());
+					rowData.add("" + roundUp(crnExcelListRes.get(i).getQty()));
+					rowData.add("" + roundUp(crnExcelListRes.get(i).getTaxableAmt()));
+					rowData.add("" + roundUp(crnExcelListRes.get(i).getCgstRs()));
+					rowData.add("" + roundUp(crnExcelListRes.get(i).getSgstRs()));
+					rowData.add("" + roundUp(crnExcelListRes.get(i).getIgstRs()));
+					rowData.add("" + roundUp(crnExcelListRes.get(i).getTaxRate()));
+					rowData.add(roundUp(crnExcelListRes.get(i).getTaxableAmt() + crnExcelListRes.get(i).getCgstRs()
+							+ crnExcelListRes.get(i).getSgstRs()) + "");
+					rowData.add("" + roundUp(docAmt));
+					rowData.add("" + crnExcelListRes.get(i).getFrGstNo());
+					rowData.add("" + crnExcelListRes.get(i).getCountry());
+					rowData.add("" + crnExcelListRes.get(i).getState());
+
+					expoExcel.setRowData(rowData);
+					exportToExcelList.add(expoExcel);
+						}
+					}
+				}
+				
+				
+			/*	for (int i = 0; i < crnExcelListRes.size(); i++) {
 					expoExcel = new ExportToExcel();
 					rowData = new ArrayList<String>();
 					rowData.add("" + (i + 1));
@@ -263,7 +313,7 @@ public class CreditNoteController {
 					expoExcel.setRowData(rowData);
 					exportToExcelList.add(expoExcel);
 
-				}
+				}*/
 
 				HttpSession session = request.getSession();
 				session.setAttribute("exportExcelList", exportToExcelList);
@@ -283,7 +333,7 @@ public class CreditNoteController {
 	public ModelAndView insertCreditNote(HttpServletRequest request, HttpServletResponse response) {
 
 		ModelAndView model = new ModelAndView("creditNote/generateCreditNote");
-		System.err.println("inside insert credit note ");
+		//System.err.println("inside insert credit note ");
 
 		try {
 			HttpSession session = request.getSession();
@@ -363,7 +413,7 @@ public class CreditNoteController {
 						creditNoteDetail.setIgstRs(roundUp(igstRs));
 
 						creditNoteDetail.setDelStatus(0);
-						creditNoteDetail.setGrnGvnAmt(creditNote.getAprGrandTotal());
+						creditNoteDetail.setGrnGvnAmt(roundUp(creditNote.getAprGrandTotal()));
 						creditNoteDetail.setGrnGvnDate(grnGvnDate);
 						creditNoteDetail.setGrnGvnId(creditNote.getGrnGvnId());
 						creditNoteDetail.setGrnGvnQty(creditNote.getAprQtyAcc());
@@ -373,8 +423,8 @@ public class CreditNoteController {
 						creditNoteDetail.setIsGrn(creditNote.getIsGrn());
 						creditNoteDetail.setItemId(creditNote.getItemId());
 
-						creditNoteDetail.setTaxableAmt(creditNote.getAprTaxableAmt());
-						creditNoteDetail.setTotalTax(creditNote.getAprTotalTax());
+						creditNoteDetail.setTaxableAmt(roundUp(creditNote.getAprTaxableAmt()));
+						creditNoteDetail.setTotalTax(roundUp(creditNote.getAprTotalTax()));
 
 						creditNoteDetail.setBillDate(creditNote.getRefInvoiceDate());
 
@@ -392,9 +442,9 @@ public class CreditNoteController {
 
 						creditHeader.setPostCreditNoteDetails(postCreditNoteDetailsListMatched);
 
-						creditHeader.setCrnTaxableAmt(creditHeader.getCrnTaxableAmt() + creditNote.getAprTaxableAmt());
+						creditHeader.setCrnTaxableAmt(roundUp(creditHeader.getCrnTaxableAmt() + creditNote.getAprTaxableAmt()));
 
-						creditHeader.setCrnTotalTax(creditHeader.getCrnTotalTax() + creditNote.getAprTotalTax());
+						creditHeader.setCrnTotalTax(roundUp(creditHeader.getCrnTotalTax() + creditNote.getAprTotalTax()));
 
 						if (creditHeader.getGrnGvnSrNoList() == null) {
 
@@ -417,7 +467,7 @@ public class CreditNoteController {
 
 						float roundOff = grandTotal - roundUp(grandTotal);
 
-						creditHeader.setRoundOff(roundOff);
+						creditHeader.setRoundOff(roundUp(roundOff));
 
 					}
 
@@ -434,10 +484,10 @@ public class CreditNoteController {
 
 					if (isGrn == 1) {
 
-						System.err.println("Value of isGrn ==1");
+						//System.err.println("Value of isGrn ==1");
 						postCreditHeader.setIsGrn(1);
 					} else {
-						System.err.println("Value of isGrn ==0");
+						//System.err.println("Value of isGrn ==0");
 						postCreditHeader.setIsGrn(0);
 					}
 
@@ -451,13 +501,13 @@ public class CreditNoteController {
 					postCreditHeader.setCrnDate(creditNoteDate);
 					postCreditHeader.setCrnFinalAmt(Math.round(creditNote.getAprGrandTotal()));
 					postCreditHeader.setCrnGrandTotal(Math.round(creditNote.getAprGrandTotal()));
-					postCreditHeader.setCrnTaxableAmt(creditNote.getAprTaxableAmt());
-					postCreditHeader.setCrnTotalTax(creditNote.getAprTotalTax());
+					postCreditHeader.setCrnTaxableAmt(roundUp(creditNote.getAprTaxableAmt()));
+					postCreditHeader.setCrnTotalTax(roundUp(creditNote.getAprTotalTax()));
 					postCreditHeader.setFrId(creditNote.getFrId());
 					postCreditHeader.setIsTallySync(creditNote.getIsTallySync());
-					postCreditHeader.setRoundOff(creditNote.getAprROff());
+					postCreditHeader.setRoundOff(roundUp(creditNote.getAprROff()));
 					postCreditHeader.setUserId(userId);
-					postCreditHeader.setCrnNo("gfpl :default");
+					postCreditHeader.setCrnNo("luft :default");
 
 					// newly set 23 FEB
 
@@ -490,23 +540,23 @@ public class CreditNoteController {
 					creditNoteDetail.setCessRs(00);
 					creditNoteDetail.setCgstPer(creditNote.getCgstPer());
 					float cgstRs = (creditNote.getCgstPer() * creditNote.getAprTaxableAmt()) / 100;
-					creditNoteDetail.setCgstRs(cgstRs);
+					creditNoteDetail.setCgstRs(roundUp(cgstRs));
 					creditNoteDetail.setSgstPer(creditNote.getSgstPer());
 					float sgstRs = (creditNote.getSgstPer() * creditNote.getAprTaxableAmt()) / 100;
-					creditNoteDetail.setSgstRs(sgstRs);
+					creditNoteDetail.setSgstRs(roundUp(sgstRs));
 					creditNoteDetail.setIgstPer(creditNote.getIgstPer());
 					float igstRs = (creditNote.getIgstPer() * creditNote.getAprTaxableAmt()) / 100;
-					creditNoteDetail.setIgstRs(igstRs);
+					creditNoteDetail.setIgstRs(roundUp(igstRs));
 					creditNoteDetail.setDelStatus(0);
-					creditNoteDetail.setGrnGvnAmt(creditNote.getAprGrandTotal());
+					creditNoteDetail.setGrnGvnAmt(roundUp(creditNote.getAprGrandTotal()));
 					creditNoteDetail.setGrnGvnDate(grnGvnDate);
 					creditNoteDetail.setGrnGvnId(creditNote.getGrnGvnId());
 					creditNoteDetail.setGrnGvnQty(creditNote.getAprQtyAcc());
 					creditNoteDetail.setGrnType(creditNote.getGrnType());
 					creditNoteDetail.setIsGrn(creditNote.getIsGrn());
 					creditNoteDetail.setItemId(creditNote.getItemId());
-					creditNoteDetail.setTaxableAmt(creditNote.getAprTaxableAmt());
-					creditNoteDetail.setTotalTax(creditNote.getAprTotalTax());
+					creditNoteDetail.setTaxableAmt(roundUp(creditNote.getAprTaxableAmt()));
+					creditNoteDetail.setTotalTax(roundUp(creditNote.getAprTotalTax()));
 
 					// newly added
 
@@ -815,19 +865,19 @@ public class CreditNoteController {
 					rowData.add("" + report.getFrGstNo());
 					rowData.add("" + report.getCrnTaxableAmt());
 					if (report.getIsSameState() == 1) {
-						rowData.add("" + report.getSgstSum());
-						rowData.add("" + report.getCgstSum());
+						rowData.add(roundUp(report.getSgstSum())+"");
+						rowData.add(roundUp(report.getCgstSum())+"");
 						rowData.add("" + 0);
 
 					} else {
 
 						rowData.add("" + 0);
 						rowData.add("" + 0);
-						rowData.add("" + report.getIgstSum());
+						rowData.add(roundUp(report.getIgstSum())+"");
 
 					}
-					rowData.add("" + report.getCrnTotalTax());
-					rowData.add("" + report.getCrnGrandTotal());
+					rowData.add(roundUp(report.getCrnTotalTax())+"");
+					rowData.add(roundUp(report.getCrnGrandTotal())+"");
 
 					expoExcel.setRowData(rowData);
 					exportToExcelList.add(expoExcel);
@@ -836,7 +886,7 @@ public class CreditNoteController {
 
 				HttpSession session = request.getSession();
 				session.setAttribute("exportExcelList", exportToExcelList);
-				session.setAttribute("excelName", "creaditNote");
+				session.setAttribute("excelName", "creditNote");
 			} catch (Exception e) {
 				e.printStackTrace();
 				System.out.println("Exception to genrate excel ");

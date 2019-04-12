@@ -16,6 +16,10 @@ import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -130,7 +134,7 @@ public class MessageController {
 			// msgImage = String.valueOf(lo);
 
 			String curTimeStamp = String.valueOf(lo);
-
+/*
 			try {
 
 				upload.saveUploadedFiles(file, Constants.MESSAGE_IMAGE_TYPE,
@@ -141,13 +145,37 @@ public class MessageController {
 
 				System.out.println("Exce in File Upload In Item Insert " + e.getMessage());
 				e.printStackTrace();
-			}
-
+			}*/
 			RestTemplate rest = new RestTemplate();
+			try {
+				
+			    LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+			    String tempFileName;
+			    FileOutputStream fo;
+
+			            tempFileName = curTimeStamp + "-" + file.get(0).getOriginalFilename();
+			            fo = new FileOutputStream(tempFileName);
+			            fo.write(file.get(0).getBytes());
+			            fo.close();
+			            map.add("file", new FileSystemResource(tempFileName));
+			            map.add("imageName", tempFileName);
+						map.add("type", "msg");
+			        HttpHeaders headers = new HttpHeaders();
+			        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+			        HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
+			        Info infoRes = rest.postForObject(Constants.url + "/photoUpload", requestEntity, Info.class);
+
+		
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+
+
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			map.add("msgFrdt", msgFrdt);
 			map.add("msgTodt", msgTodt);
-			map.add("msgImage", curTimeStamp + "-" + file.get(0).getOriginalFilename().replace(' ', '_'));
+			map.add("msgImage", curTimeStamp + "-" + file.get(0).getOriginalFilename());
 			map.add("msgHeader", msgHeader);
 			map.add("msgDetails", msgDetails);
 			map.add("isActive", isActive);
@@ -263,16 +291,28 @@ public class MessageController {
 				msgImage = String.valueOf(lo);
 
 				try {
+					
+				    LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+				    String tempFileName;
+				    FileOutputStream fo;
 
-					upload.saveUploadedFiles(file, Constants.MESSAGE_IMAGE_TYPE,
-							msgImage + "-" + file.get(0).getOriginalFilename().replace(' ', '_'));
-					System.out.println("upload method called " + file.toString());
+				            tempFileName = msgImage + "-" + file.get(0).getOriginalFilename();
+				            fo = new FileOutputStream(tempFileName);
+				            fo.write(file.get(0).getBytes());
+				            fo.close();
+				            map.add("file", new FileSystemResource(tempFileName));
+				            map.add("imageName", tempFileName);
+							map.add("type", "msg");
+				        HttpHeaders headers = new HttpHeaders();
+				        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
-				} catch (IOException e) {
+				        HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
+				        Info infoRes = restTemplate.postForObject(Constants.url + "/photoUpload", requestEntity, Info.class);
 
-					System.out.println("Exce in File Upload In Item Insert " + e.getMessage());
-					e.printStackTrace();
-				}
+			
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
 			}
 
 			// String msgImage= ImageS3Util.uploadMessageImage(file);
@@ -280,7 +320,7 @@ public class MessageController {
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			map.add("msgFrdt", msgFrdt);
 			map.add("msgTodt", msgTodt);
-			map.add("msgImage", msgImage + "-" + file.get(0).getOriginalFilename().replace(' ', '_'));
+			map.add("msgImage", msgImage + "-" + file.get(0).getOriginalFilename());
 			map.add("msgHeader", msgHeader);
 			map.add("msgDetails", msgDetails);
 			map.add("isActive", isActive);

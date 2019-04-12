@@ -2,12 +2,18 @@ package com.ats.adminpanel.controller;
 
 import java.awt.Dimension;
 import java.awt.Insets;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.net.URLConnection;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -33,6 +39,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -63,6 +70,8 @@ import com.ats.adminpanel.model.Route;
 import com.ats.adminpanel.model.Tax1Report;
 import com.ats.adminpanel.model.Tax2Report;
 import com.ats.adminpanel.model.accessright.ModuleJson;
+import com.ats.adminpanel.model.creditnote.GetCreditNoteReport;
+import com.ats.adminpanel.model.creditnote.GetCreditNoteReportList;
 import com.ats.adminpanel.model.franchisee.AllMenuResponse;
 import com.ats.adminpanel.model.franchisee.FrNameIdByRouteId;
 import com.ats.adminpanel.model.franchisee.FrNameIdByRouteIdResponse;
@@ -80,6 +89,18 @@ import com.ats.adminpanel.model.salesreport.SalesReportBillwiseAllFr;
 import com.ats.adminpanel.model.salesreport.SalesReportItemwise;
 import com.ats.adminpanel.model.salesreport.SalesReportRoyalty;
 import com.ats.adminpanel.model.salesreport.SalesReportRoyaltyFr;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Font.FontFamily;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 
 @Controller
 @Scope("session")
@@ -4411,7 +4432,7 @@ public class SalesReportController {
 		return model;
 
 	}
-
+	
 	@RequestMapping(value = "pdf/getDispatchPReportPdfForDispatch/{billDate}/{menuId}/{routeId}/{selectedCat}/{frId}", method = RequestMethod.GET)
 	public ModelAndView getDispatchPReportPdfForDispatch(@PathVariable String billDate, @PathVariable String menuId, @PathVariable String routeId,
 			@PathVariable String selectedCat, @PathVariable String frId, HttpServletRequest request,
@@ -5168,7 +5189,7 @@ public class SalesReportController {
 		System.out.println("URL " + url);
 
 		File f = new
-		File("/home/devour/apache-tomcat-9.0.12/webapps/uploads/report1.pdf");
+		File("/home/supertom/apache-tomcat-8.5.35/webapps/admin/report.pdf");
 		// File f = new File("/home/ats-12/Report.pdf");
 
 		try {
@@ -5185,7 +5206,7 @@ public class SalesReportController {
 		String appPath = context.getRealPath("");
 		//String filePath = "/home/ats-12/Report.pdf";
 
-		 String filePath = "/home/devour/apache-tomcat-9.0.12/webapps/uploads/report1.pdf";
+		 String filePath = "/home/supertom/apache-tomcat-8.5.35/webapps/admin/report.pdf";
 
 		// construct the complete absolute path of the file
 		String fullPath = appPath + filePath;
@@ -5280,7 +5301,7 @@ public class SalesReportController {
 
 		 File f = new File("/home/supertom/apache-tomcat-8.5.35/webapps/admin/report.pdf");
 		// File f = new File("/opt/apache-tomcat-8.5.6/webapps/uploads/report.pdf");
-		 //File f = new File("/home/ats-12/Report.pdf");
+		 // File f = new File("/home/ats-12/Report.pdf");
 
 		try {
 			runConverter1(Constants.ReportURL + url, f, request, response);
@@ -5294,9 +5315,9 @@ public class SalesReportController {
 		// get absolute path of the application
 		ServletContext context = request.getSession().getServletContext();
 		String appPath = context.getRealPath("");
-		 String filePath = "/home/supertom/apache-tomcat-8.5.35/webapps/admin/report.pdf";
+		String filePath = "/home/supertom/apache-tomcat-8.5.35/webapps/admin/report.pdf";
 
-		 //String filePath = "/home/ats-12/Report.pdf";
+		 //   	String filePath = "/home/ats-12/Report.pdf";
 
 		// construct the complete absolute path of the file
 		String fullPath = appPath + filePath;

@@ -241,10 +241,10 @@ select {
 													<c:forEach items="${specialCakeList}" var="spCake">
 														<c:choose>
 															<c:when test="${specialCake.spCode==spCake.spCode}">
-																<option selected value="${spCake.spCode}">${spCake.spCode}-${spCake.spName}</option>
+																<option selected value="${spCake.spCode}">${spCake.spCode} - ${spCake.spName}</option>
 															</c:when>
 															<c:otherwise>
-																<option value="${spCake.spCode}">${spCake.spCode}-${spCake.spName}</option>
+																<option value="${spCake.spCode}">${spCake.spCode} - ${spCake.spName}</option>
 															</c:otherwise>
 														</c:choose>
 													</c:forEach>
@@ -348,11 +348,11 @@ select {
 							<!--------------------------2- End-------------------------->
 						</div>
 						<div class="form-group">
-						   <div class="col-md-2">Weight</div> 
-						   <div class="col-md-1">
+						   <div class="col-md-1">Weight</div> 
+						   <div class="col-md-2">
 						   <input type="hidden" name="dbRate" id="dbRate" value="${sprRate}">
 						   
-						      <select name="spwt" id="spwt" class="form-control" onchange="onChange('${sprRate}')" required>
+						      <select name="spwt" id="spwt" class="form-control" onchange="onChange('${sprRate}')" required  >
             				     <c:forEach items="${weightList}" var="weightList">
                   				 <option value="${weightList}">${weightList}</option>
             				     </c:forEach> 

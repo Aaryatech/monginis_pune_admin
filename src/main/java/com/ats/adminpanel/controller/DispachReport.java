@@ -2,11 +2,17 @@ package com.ats.adminpanel.controller;
 
 import java.awt.Dimension;
 import java.awt.Insets;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLConnection;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -14,6 +20,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -28,6 +35,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -66,7 +74,19 @@ import com.ats.adminpanel.model.franchisee.SubCategory;
 import com.ats.adminpanel.model.item.AllItemsListResponse;
 import com.ats.adminpanel.model.item.CategoryListResponse;
 import com.ats.adminpanel.model.item.Item;
-import com.ats.adminpanel.model.item.MCategoryList; 
+import com.ats.adminpanel.model.item.MCategoryList;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Font.FontFamily;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter; 
 
 @Controller
 @Scope("session")
@@ -210,7 +230,7 @@ public class DispachReport {
 
 	}
 	
-	@RequestMapping(value = "/getPDispatchReportItemwiseResult", method = RequestMethod.GET)
+	@RequestMapping(value = "/getPDispatchReportItemwiseResult", method = RequestMethod.POST)
 	public ModelAndView getDispatchReportitemwise(HttpServletRequest request,
 			HttpServletResponse response) {
 
@@ -357,7 +377,153 @@ public class DispachReport {
 
 	}
 	
-	
+
+	@RequestMapping(value = "pdf/getPDispatchReportItemwisePdf", method = RequestMethod.GET)
+	public ModelAndView getPDispatchReportItemwisePdf(HttpServletRequest request,
+			HttpServletResponse response) {
+
+		ModelAndView model = new ModelAndView("reports/itemWiseDispatchReportPdf");
+		List<PDispatchReport> dispatchReportList = new ArrayList<PDispatchReport>();
+		List<Item> ItemList = new ArrayList<Item>();
+		PDispatchReportList dispatchReports = new PDispatchReportList();
+		try {
+			
+			
+			
+			
+			
+			System.out.println("Inside get Dispatch Report");
+			String billDate = request.getParameter("bdate");
+			String[] selectedFranchase = request.getParameterValues("frids");
+			String[] selectedMenu = request.getParameterValues("menus");
+			String[] selectedItem = request.getParameterValues("items");
+			System.out.println("billDate"+billDate);
+			System.out.println("selectedFranchase"+selectedFranchase);
+			System.out.println("selectedMenu"+selectedMenu);
+			System.out.println("selectedItem"+selectedItem);
+			
+			
+
+			boolean isAllFranchaseSelected = false;
+			boolean isAllMenuSelected = false;
+			boolean isAllItemSelected = false;
+			
+			
+
+			String strselectedFranchase=new String();
+			for(int i=0; i < selectedFranchase.length ; i++) {
+				strselectedFranchase=strselectedFranchase+","+selectedFranchase[i];
+			}
+			strselectedFranchase=strselectedFranchase.substring(1, strselectedFranchase.length());
+			strselectedFranchase = strselectedFranchase.replaceAll("\"", "");
+			
+			String strselectedMenu=new String();
+			for(int i=0; i < selectedMenu.length ; i++) {
+				strselectedMenu=strselectedMenu+","+selectedMenu[i];
+			}
+			strselectedMenu=strselectedMenu.substring(1, strselectedMenu.length());
+			strselectedMenu = strselectedMenu.replaceAll("\"", "");
+			
+			String strselectedItem=new String();
+			for(int i=0; i < selectedItem.length ; i++) {
+				strselectedItem=strselectedItem+","+selectedItem[i];
+			}
+			strselectedItem=strselectedItem.substring(1, strselectedItem.length());
+			strselectedItem = strselectedItem.replaceAll("\"", "");
+			
+
+			List<Integer> frids = Stream.of(strselectedFranchase.split(",")).map(Integer::parseInt)
+					.collect(Collectors.toList());
+				
+				
+				System.out.println("strselectedFranchase" + strselectedFranchase.toString());
+				System.out.println("strselectedMenu" + strselectedMenu.toString());
+				System.out.println("strselectedItem" + strselectedItem.toString());
+			
+			
+
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+
+			RestTemplate restTemplate = new RestTemplate();
+
+
+			allFrIdNameList = new AllFrIdNameList();
+			try {
+
+				allFrIdNameList = restTemplate.getForObject(Constants.url + "getAllFrIdName", AllFrIdNameList.class);
+
+			} catch (Exception e) {
+				System.out.println("Exception in getAllFrIdName" + e.getMessage());
+				e.printStackTrace();
+
+			}
+			
+			List<FrNameIdByRouteId> FrNameList = new ArrayList<>();
+			
+			for (int i = 0; i < allFrIdNameList.getFrIdNamesList().size(); i++) 
+			{
+				for(int j=0;j<frids.size();j++) {
+					if(frids.get(j)==allFrIdNameList.getFrIdNamesList().get(i).getFrId()) {
+						FrNameIdByRouteId objFranchace=new FrNameIdByRouteId();
+						objFranchace.setFrId(allFrIdNameList.getFrIdNamesList().get(i).getFrId());
+						objFranchace.setFrName(allFrIdNameList.getFrIdNamesList().get(i).getFrName());
+						objFranchace.setFrRouteId(0);
+						FrNameList.add(objFranchace);
+					}
+				
+				}
+			}
+			
+				
+				map = new LinkedMultiValueMap<String, Object>();
+				map.add("menu", strselectedMenu);
+				map.add("productionDate", billDate);
+				map.add("frId", strselectedFranchase);
+				map.add("ItemId", strselectedItem);
+
+				ParameterizedTypeReference<List<PDispatchReport>> typeRef = new ParameterizedTypeReference<List<PDispatchReport>>() {
+				};
+
+				ResponseEntity<List<PDispatchReport>> responseEntity = restTemplate.exchange(
+						Constants.url + "getPDispatchItemReportMenuwise", HttpMethod.POST, new HttpEntity<>(map), typeRef);
+				System.out.println("Items:" + responseEntity.toString());
+
+				dispatchReportList = responseEntity.getBody();
+				
+				System.out.println("dispatchReportList = " + dispatchReportList.toString());
+				
+				
+				
+
+				map = new LinkedMultiValueMap<String, Object>();
+				map.add("itemList", strselectedItem);
+				
+				ParameterizedTypeReference<List<Item>> typeRef1 = new ParameterizedTypeReference<List<Item>>() {
+				};
+
+				ResponseEntity<List<Item>> responseEntity1 = restTemplate.exchange(
+						Constants.url + "getItemsByItemId", HttpMethod.POST, new HttpEntity<>(map), typeRef1);
+				
+				System.out.println("Items = " + responseEntity1.getBody());
+				
+				ItemList = responseEntity1.getBody();
+				System.out.println("Items = " + ItemList);
+
+				model.addObject("dispatchReportList", dispatchReportList);
+				model.addObject("FrNameList", FrNameList);
+				model.addObject("Items", ItemList);
+				
+			
+
+		} catch (Exception e) {
+			System.out.println("get Dispatch Report Exception: " + e.getMessage());
+			e.printStackTrace();
+
+		}
+
+		return model;
+
+	}
 	
 	
 	@RequestMapping(value = "/showPDispatchItemReportNew", method = RequestMethod.GET)
@@ -472,7 +638,7 @@ public class DispachReport {
 		try {
 			
 			String date = request.getParameter("billDate");
-			int stationId = Integer.parseInt(request.getParameter("stanId"));
+			String[] stationId = request.getParameterValues("stanId");
 			int abcType = Integer.parseInt(request.getParameter("abcType"));
 			int routId = Integer.parseInt(request.getParameter("selectRoute"));
 			String[] menuId =  request.getParameterValues("menuId") ;
@@ -487,8 +653,16 @@ public class DispachReport {
 				menuIds=menuIds+","+menuId[i];
 			}
 			menuIds=menuIds.substring(1, menuIds.length());
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < stationId.length; i++) {
+	 			sb = sb.append(stationId[i] + ",");
+	 		}
 			
-			if(stationId==-1) {
+			String stns = sb.toString();
+			stns = stns.substring(0, stns.length() - 1);
+			List<Integer> stIds = Stream.of(stns.split(",")).map(Integer::parseInt)
+					.collect(Collectors.toList());
+			if(stIds.contains(-1)) {
 				
 				for(int i=0; i < stationList.size() ; i++) {
 					
@@ -497,9 +671,9 @@ public class DispachReport {
 				stationIds=stationIds.substring(1, stationIds.length());
 				
 			}else {
-				stationIds=String.valueOf(stationId);
+				stationIds=String.valueOf(stns);
 			}
-			
+			System.err.println("stationIds"+stationIds.toString());
 			if(abcType==0) {
 				 
 				abcTypes="1,2,3";
@@ -643,7 +817,7 @@ public class DispachReport {
 			model.addObject("allFrIdNameList", allFrIdNameList.getFrIdNamesList());
 			model.addObject("itemListStatioinWiseList", itemListStatioinWiseList);
 			model.addObject("date", date);
-			model.addObject("stationId", stationId);
+			model.addObject("stationId", stns);
 			model.addObject("abcType", abcType);
 			model.addObject("routId", routId);
 			model.addObject("menuIds", menuIds);
@@ -657,8 +831,9 @@ public class DispachReport {
 
 	}
 	
-	 @RequestMapping(value = "/pdf/getPDispatchReportNewPdf/{date}/{stationId}/{abcType}/{routId}/{menuIds}", method = RequestMethod.GET)
-	public ModelAndView getPDispatchReportNewPdf(@PathVariable String date,@PathVariable int stationId,@PathVariable int abcType,
+	/* commented on 8 April for dispatch Stationwise itext pdf new logic
+	 */ @RequestMapping(value = "/pdf/getPDispatchReportNewPdf/{date}/{stationId}/{abcType}/{routId}/{menuIds}", method = RequestMethod.GET)
+	public ModelAndView getPDispatchReportNewPdf(@PathVariable String date,@PathVariable String stationId,@PathVariable int abcType,
 			@PathVariable int routId,@PathVariable String menuIds,HttpServletRequest request, HttpServletResponse response) {
 		
 		ModelAndView model = new ModelAndView("reports/sales/dispatchPReportNewPdf");
@@ -668,8 +843,9 @@ public class DispachReport {
 			RestTemplate restTemplate = new RestTemplate();
 			String stationIds = new String();
 			String abcTypes = new String();
-			
-			if(stationId==-1) {
+			List<Integer> stIds = Stream.of(stationId.split(",")).map(Integer::parseInt)
+					.collect(Collectors.toList());
+			if(stIds.contains(-1)) {
 				
 				Integer[] array = restTemplate.getForObject(Constants.url + "/itemListGroupByStationNo",
 						Integer[].class);
@@ -685,7 +861,7 @@ public class DispachReport {
 			}else {
 				stationIds=String.valueOf(stationId);
 			}
-			
+			System.out.println(stationIds+"stationIds");
 			if(abcType==0) {
 				 
 				abcTypes="1,2,3";
@@ -823,6 +999,884 @@ public class DispachReport {
 		return model;
 
 	}
+	 
+	 @RequestMapping(value = "/pdf/getPDispatchReportMinPdf/{date}/{stationId}/{abcType}/{routId}/{menuIds}", method = RequestMethod.GET)
+		public ModelAndView getPDispatchReportMinPdf(@PathVariable String date,@PathVariable String stationId,@PathVariable int abcType,
+				@PathVariable int routId,@PathVariable String menuIds,HttpServletRequest request, HttpServletResponse response) {
+			
+			ModelAndView model = new ModelAndView("reports/sales/dispatchPReportNewPdf");
+			 
+			try {
+				 
+				RestTemplate restTemplate = new RestTemplate();
+				String stationIds = new String();
+				String abcTypes = new String();
+				List<Integer> stIds = Stream.of(stationId.split(",")).map(Integer::parseInt)
+						.collect(Collectors.toList());
+				if(stIds.contains(-1)) {
+					
+					Integer[] array = restTemplate.getForObject(Constants.url + "/itemListGroupByStationNo",
+							Integer[].class);
+					List<Integer> stationList = new ArrayList<Integer>(Arrays.asList(array)); 
+					model.addObject("stationList", stationList);
+					
+					for(int i=0; i < stationList.size() ; i++) {
+						
+						stationIds = stationIds+","+stationList.get(i);
+					}
+					stationIds=stationIds.substring(1, stationIds.length());
+					
+				}else {
+					stationIds=String.valueOf(stationId);
+				}
+				System.out.println(stationIds+"stationIds");
+				if(abcType==0) {
+					 
+					abcTypes="1,2,3";
+					
+				}else {
+					abcTypes=String.valueOf(abcType);
+				}
+				
+				
+				MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+				map.add("date", DateConvertor.convertToYMD(date));
+				map.add("abcType", abcTypes);
+				map.add("stationNos", stationIds);
+				map.add("routId", routId);
+				map.add("menuIds", menuIds);
+				System.out.println("map " + map); 
+	 
+				StaionListWithFranchiseeList[] array = restTemplate.postForObject(Constants.url + "/getAbcDepatchReport",map,
+						StaionListWithFranchiseeList[].class);
+				
+				List<StaionListWithFranchiseeList> staionListWithFranchiseeList = new ArrayList<StaionListWithFranchiseeList>(Arrays.asList(array));
+				 
+				System.err.println(staionListWithFranchiseeList);
+				
+				Item[] item = restTemplate.getForObject(Constants.url + "/getItemListForDispatchReport", 
+						Item[].class);
+
+				List<Item> itemList = new ArrayList<Item>(Arrays.asList(item));
+				
+				 AllFrIdNameList allFrIdNameList = restTemplate.getForObject(Constants.url + "/getAllFrIdName", AllFrIdNameList.class);
+				 
+				 List<ItemListStatioinWise> itemListStatioinWiseList = new ArrayList<>();
+				 
+				 for(int i=0; i < staionListWithFranchiseeList.size() ; i++) {
+						
+						ItemListStatioinWise itemListStatioinWise = new ItemListStatioinWise();
+						itemListStatioinWise.setStationNo(staionListWithFranchiseeList.get(i).getStationNo());
+						List<TypeWiseItemTotal> typeWiseItemTotalList= new ArrayList<>();
+						
+						for(int j=0 ; j<itemList.size() ; j++) {
+							
+							if(itemList.get(j).getItemMrp2()==staionListWithFranchiseeList.get(i).getStationNo()) {
+								
+								TypeWiseItemTotal itemListForDispatchReport = new TypeWiseItemTotal();
+								itemListForDispatchReport.setItemId(itemList.get(j).getId());
+								itemListForDispatchReport.setItemName(itemList.get(j).getItemName());
+								typeWiseItemTotalList.add(itemListForDispatchReport);
+							}
+							
+						}
+						itemListStatioinWise.setTypeWiseItemTotalList(typeWiseItemTotalList);
+						itemListStatioinWiseList.add(itemListStatioinWise);
+					}
+				 
+				 for(int i=0; i < staionListWithFranchiseeList.size() ; i++) {
+					 
+						for(int j=0 ; j<itemListStatioinWiseList.size() ; j++) {
+							
+							if(itemListStatioinWiseList.get(j).getStationNo()==staionListWithFranchiseeList.get(i).getStationNo()) {
+								
+								for(int k=0 ;k<staionListWithFranchiseeList.get(i).getList().size() ; k++)
+								{
+									 
+										if(staionListWithFranchiseeList.get(i).getList().get(k).getAbcType()==1) {
+											
+											for(int m=0 ;m<staionListWithFranchiseeList.get(i).getList().get(k).getItemList().size() ; m++)
+											{
+												for(int l=0 ;l<itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().size() ; l++)
+												{
+													if(staionListWithFranchiseeList.get(i).getList().get(k).getItemList().get(m).getItemId()
+															==itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l).getItemId()) {
+														itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l).setaTotal(
+																itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l).getaTotal()+
+																staionListWithFranchiseeList.get(i).getList().get(k).getItemList().get(m).getOrderQty()); 
+														break;
+													}
+												} 
+											}
+											
+										}else if(staionListWithFranchiseeList.get(i).getList().get(k).getAbcType()==2) {
+											
+											for(int m=0 ;m<staionListWithFranchiseeList.get(i).getList().get(k).getItemList().size() ; m++)
+											{
+												for(int l=0 ;l<itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().size() ; l++)
+												{
+													if(staionListWithFranchiseeList.get(i).getList().get(k).getItemList().get(m).getItemId()
+															==itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l).getItemId()) {
+														itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l).setbTotal(
+																itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l).getbTotal()+
+																staionListWithFranchiseeList.get(i).getList().get(k).getItemList().get(m).getOrderQty()); 
+														break;
+													}
+												}
+												
+											}
+											
+										}else if(staionListWithFranchiseeList.get(i).getList().get(k).getAbcType()==3) {
+											
+											for(int m=0 ;m<staionListWithFranchiseeList.get(i).getList().get(k).getItemList().size() ; m++)
+											{
+												for(int l=0 ;l<itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().size() ; l++)
+												{
+													if(staionListWithFranchiseeList.get(i).getList().get(k).getItemList().get(m).getItemId()
+															==itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l).getItemId()) {
+														itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l).setcTotal(
+																itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l).getcTotal()+
+																staionListWithFranchiseeList.get(i).getList().get(k).getItemList().get(m).getOrderQty());
+														break;
+													}
+												}
+											}
+											
+										}
+								 
+								}
+								 
+							}
+							
+						}
+						 
+						
+					}
+				 
+				model.addObject("itemListStatioinWiseList", itemListStatioinWiseList);
+				model.addObject("staionListWithFranchiseeList", staionListWithFranchiseeList);
+				model.addObject("itemList", itemList);
+				model.addObject("allFrIdNameList", allFrIdNameList.getFrIdNamesList());
+				model.addObject("date", date);
+				model.addObject("abcType", abcType);
+			} catch (Exception e) {
+				System.out.println("get Dispatch Report Exception: " + e.getMessage());
+				e.printStackTrace();
+
+			}
+			return model;
+
+		}
+	 
+	 @RequestMapping(value = "/getPDispatchReportStationwisePdf/{date}/{stationId}/{abcType}/{routId}/{menuIds}", method = RequestMethod.GET)
+		public void getPDispatchReportStationwisePdf(@PathVariable String date,@PathVariable int stationId,@PathVariable int abcType,
+				@PathVariable int routId,@PathVariable String menuIds,HttpServletRequest request, HttpServletResponse response) {
+						 
+			try {
+				 
+				RestTemplate restTemplate = new RestTemplate();
+				String stationIds = new String();
+				String abcTypes = new String();
+				
+				if(stationId==-1) {
+					
+					Integer[] array = restTemplate.getForObject(Constants.url + "/itemListGroupByStationNo",
+							Integer[].class);
+					List<Integer> stationList = new ArrayList<Integer>(Arrays.asList(array)); 
+				//	model.addObject("stationList", stationList);
+					
+					for(int i=0; i < stationList.size() ; i++) {
+						
+						stationIds = stationIds+","+stationList.get(i);
+					}
+					stationIds=stationIds.substring(1, stationIds.length());
+					
+				}else {
+					stationIds=String.valueOf(stationId);
+				}
+				
+				if(abcType==0) {
+					 
+					abcTypes="1,2,3";
+					
+				}else {
+					abcTypes=String.valueOf(abcType);
+				}
+				
+				
+				MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+				map.add("date", DateConvertor.convertToYMD(date));
+				map.add("abcType", abcTypes);
+				map.add("stationNos", stationIds);
+				map.add("routId", routId);
+				map.add("menuIds", menuIds);
+				System.out.println("map " + map); 
+	 
+				StaionListWithFranchiseeList[] array = restTemplate.postForObject(Constants.url + "/getAbcDepatchReport",map,
+						StaionListWithFranchiseeList[].class);
+				
+				List<StaionListWithFranchiseeList> staionListWithFranchiseeList = new ArrayList<StaionListWithFranchiseeList>(Arrays.asList(array));
+				 
+				System.err.println(staionListWithFranchiseeList);
+				
+				Item[] item = restTemplate.getForObject(Constants.url + "/getItemListForDispatchReport", 
+						Item[].class);
+
+				List<Item> itemList = new ArrayList<Item>(Arrays.asList(item));
+				
+				 AllFrIdNameList allFrIdNameList = restTemplate.getForObject(Constants.url + "/getAllFrIdName", AllFrIdNameList.class);
+				 
+				 List<ItemListStatioinWise> itemListStatioinWiseList = new ArrayList<>();
+				 
+				 for(int i=0; i < staionListWithFranchiseeList.size() ; i++) {
+						
+						ItemListStatioinWise itemListStatioinWise = new ItemListStatioinWise();
+						itemListStatioinWise.setStationNo(staionListWithFranchiseeList.get(i).getStationNo());
+						List<TypeWiseItemTotal> typeWiseItemTotalList= new ArrayList<>();
+						
+						for(int j=0 ; j<itemList.size() ; j++) {
+							
+							if(itemList.get(j).getItemMrp2()==staionListWithFranchiseeList.get(i).getStationNo()) {
+								
+								TypeWiseItemTotal itemListForDispatchReport = new TypeWiseItemTotal();
+								itemListForDispatchReport.setItemId(itemList.get(j).getId());
+								itemListForDispatchReport.setItemName(itemList.get(j).getItemName());
+								typeWiseItemTotalList.add(itemListForDispatchReport);
+							}
+							
+						}
+						itemListStatioinWise.setTypeWiseItemTotalList(typeWiseItemTotalList);
+						itemListStatioinWiseList.add(itemListStatioinWise);
+					}
+				 
+				 for(int i=0; i < staionListWithFranchiseeList.size() ; i++) {
+					 
+						for(int j=0 ; j<itemListStatioinWiseList.size() ; j++) {
+							
+							if(itemListStatioinWiseList.get(j).getStationNo()==staionListWithFranchiseeList.get(i).getStationNo()) {
+								
+								for(int k=0 ;k<staionListWithFranchiseeList.get(i).getList().size() ; k++)
+								{
+									 
+										if(staionListWithFranchiseeList.get(i).getList().get(k).getAbcType()==1) {
+											
+											for(int m=0 ;m<staionListWithFranchiseeList.get(i).getList().get(k).getItemList().size() ; m++)
+											{
+												for(int l=0 ;l<itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().size() ; l++)
+												{
+													if(staionListWithFranchiseeList.get(i).getList().get(k).getItemList().get(m).getItemId()
+															==itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l).getItemId()) {
+														itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l).setaTotal(
+																itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l).getaTotal()+
+																staionListWithFranchiseeList.get(i).getList().get(k).getItemList().get(m).getOrderQty()); 
+														break;
+													}
+												} 
+											}
+											
+										}else if(staionListWithFranchiseeList.get(i).getList().get(k).getAbcType()==2) {
+											
+											for(int m=0 ;m<staionListWithFranchiseeList.get(i).getList().get(k).getItemList().size() ; m++)
+											{
+												for(int l=0 ;l<itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().size() ; l++)
+												{
+													if(staionListWithFranchiseeList.get(i).getList().get(k).getItemList().get(m).getItemId()
+															==itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l).getItemId()) {
+														itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l).setbTotal(
+																itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l).getbTotal()+
+																staionListWithFranchiseeList.get(i).getList().get(k).getItemList().get(m).getOrderQty()); 
+														break;
+													}
+												}
+												
+											}
+											
+										}else if(staionListWithFranchiseeList.get(i).getList().get(k).getAbcType()==3) {
+											
+											for(int m=0 ;m<staionListWithFranchiseeList.get(i).getList().get(k).getItemList().size() ; m++)
+											{
+												for(int l=0 ;l<itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().size() ; l++)
+												{
+													if(staionListWithFranchiseeList.get(i).getList().get(k).getItemList().get(m).getItemId()
+															==itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l).getItemId()) {
+														itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l).setcTotal(
+																itemListStatioinWiseList.get(j).getTypeWiseItemTotalList().get(l).getcTotal()+
+																staionListWithFranchiseeList.get(i).getList().get(k).getItemList().get(m).getOrderQty());
+														break;
+													}
+												}
+											}
+											
+										}
+								 
+								}
+								 
+							}
+							
+						}
+						 
+						
+					}
+				 
+			//	model.addObject("itemListStatioinWiseList", itemListStatioinWiseList);
+			//	model.addObject("staionListWithFranchiseeList", staionListWithFranchiseeList);
+			//	model.addObject("itemList", itemList);
+			//	model.addObject("allFrIdNameList", allFrIdNameList.getFrIdNamesList());
+			//	model.addObject("date", date);
+			//	model.addObject("abcType", abcType);
+				 
+				 
+				 BufferedOutputStream outStream = null;
+				    Document document = new Document(PageSize.A4);
+				  
+					String FILE_PATH = Constants.REPORT_SAVE;
+					File file = new File(FILE_PATH);
+
+					PdfWriter writer = null;
+
+					FileOutputStream out = new FileOutputStream(FILE_PATH);
+					try {
+						writer = PdfWriter.getInstance(document, out);
+					} catch (DocumentException e) {
+
+						e.printStackTrace();
+					}
+					 document.open();		
+					 
+					try {
+			   for(int i=0;i<staionListWithFranchiseeList.size();i++) {
+				   
+				 
+					
+			    Paragraph stNo = new Paragraph("Station No:"+ staionListWithFranchiseeList.get(i).getStationNo() + " &nbsp; Production Date :"+date, new Font(FontFamily.TIMES_ROMAN, 12, Font.BOLD, BaseColor.BLACK));
+			    document.add(stNo);
+			    if(abcType==0)
+			    {
+			    	 document.add(new Paragraph("  All Routes\n"));
+			    }else if(abcType==1)
+			    {
+			    	 document.add(new Paragraph("A Route\n"));
+			    }else if(abcType==2)
+			    {
+			    	 document.add(new Paragraph("B Route\n"));
+			    }
+			    else
+			    {
+			    	 document.add(new Paragraph("C Route\n"));
+			    }
+			   
+			    
+			    
+					PdfPTable table = new PdfPTable(4);
+					table.setHeaderRows(1);
+
+						table.setWidthPercentage(100);
+						table.setWidths(new float[] { 0.4f, 4.0f, 1.9f, 1.7f});
+						Font headFont = new Font(FontFamily.TIMES_ROMAN, 12, Font.NORMAL, BaseColor.BLACK);
+						Font headFont1 = new Font(FontFamily.HELVETICA, 12, Font.BOLD, BaseColor.BLACK);
+						Font f = new Font(FontFamily.TIMES_ROMAN, 12.0f, Font.BOLD, BaseColor.BLUE);
+						Font f1 = new Font(FontFamily.TIMES_ROMAN, 10.0f, Font.NORMAL, BaseColor.BLACK);
+						PdfPCell hcell = new PdfPCell();
+					
+					
+						hcell = new PdfPCell(new Phrase("Sr.", headFont1));
+						hcell.setPadding(5);
+						hcell.setBackgroundColor(BaseColor.PINK);
+						hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+						table.addCell(hcell);
+
+						hcell = new PdfPCell(new Phrase("FRANCHISE NAME", headFont1));
+						hcell.setBackgroundColor(BaseColor.PINK);
+						hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+						hcell.setPadding(5);
+						table.addCell(hcell);
+                        int itemCount=2;
+						for(int j=0;j<itemList.size();i++)
+						{
+							if(itemList.get(j).getItemMrp2()==staionListWithFranchiseeList.get(i).getStationNo())
+							{
+								hcell = new PdfPCell(new Phrase(""+itemList.get(j).getItemName(), headFont1));
+								hcell.setPadding(5);
+								hcell.setBackgroundColor(BaseColor.PINK);
+								hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+								table.addCell(hcell);
+								
+								itemCount=itemCount+1;
+
+							}
+						}
+						
+						if(abcType==0 || abcType==1)
+						{
+							int srNo=0;
+							for(int k=0;k<staionListWithFranchiseeList.get(i).getList().size();k++)
+							{
+								for(int l=0;l<allFrIdNameList.getFrIdNamesList().size();l++)
+								{
+									if(allFrIdNameList.getFrIdNamesList().get(l).getFrId()==staionListWithFranchiseeList.get(i).getList().get(k).getFrId() && staionListWithFranchiseeList.get(i).getList().get(k).getAbcType()==1)
+									{
+										
+										PdfPCell cell;
+										srNo=srNo+1;
+										cell = new PdfPCell(new Phrase((srNo+1)+"", headFont));
+										cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+										cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+										cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+										cell.setPadding(4);
+										table.addCell(cell);
+
+										cell = new PdfPCell(new Phrase("" +staionListWithFranchiseeList.get(i).getList().get(k).getFrName() , headFont));
+										cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+										cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+										cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+										cell.setPaddingRight(2);
+										cell.setPadding(4);
+										table.addCell(cell);
+										
+										for(int m=0;m<staionListWithFranchiseeList.get(i).getList().get(k).getItemList().size();m++)
+										{
+											if(staionListWithFranchiseeList.get(i).getList().get(k).getItemList().get(m).getOrderQty()>0) {
+											cell = new PdfPCell(new Phrase("" +staionListWithFranchiseeList.get(i).getList().get(k).getItemList().get(m).getOrderQty() , headFont));
+											cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+											cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+											cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+											cell.setPaddingRight(2);
+											cell.setPadding(4);
+											table.addCell(cell);
+											}
+											else
+											{
+												cell = new PdfPCell(new Phrase("", headFont));
+												cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+												cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+												cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+												cell.setPaddingRight(2);
+												cell.setPadding(4);
+												table.addCell(cell);
+											}
+											
+										}
+										
+										
+									}
+									
+									
+								}
+							}
+							
+							
+							PdfPCell cell;
+
+							cell = new PdfPCell(new Phrase("Route A Total", headFont));	cell.setColspan(2);
+							cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+							cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+							cell.setPadding(4);
+							table.addCell(cell);
+							
+							for(int n=0;n<itemListStatioinWiseList.size();n++)
+							{
+								if(itemListStatioinWiseList.get(n).getStationNo()==staionListWithFranchiseeList.get(i).getStationNo())
+								{
+									for(int o=0;o<itemListStatioinWiseList.get(n).getTypeWiseItemTotalList().size();o++)
+									{
+										cell = new PdfPCell(new Phrase("" +itemListStatioinWiseList.get(n).getTypeWiseItemTotalList().get(o).getbTotal(), headFont));
+										cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+										cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+										cell.setPaddingRight(2);
+										cell.setPadding(4);
+										table.addCell(cell);
+									}
+								}
+								
+							}
+						
+							
+							
+						}
+						if(abcType==0 || abcType==2)
+						{
+
+							int srNo=0;
+							for(int k=0;k<staionListWithFranchiseeList.get(i).getList().size();k++)
+							{
+								for(int l=0;l<allFrIdNameList.getFrIdNamesList().size();l++)
+								{
+									if(allFrIdNameList.getFrIdNamesList().get(l).getFrId()==staionListWithFranchiseeList.get(i).getList().get(k).getFrId() && staionListWithFranchiseeList.get(i).getList().get(k).getAbcType()==2)
+									{
+										
+										PdfPCell cell;
+										srNo=srNo+1;
+										cell = new PdfPCell(new Phrase((srNo+1)+"", headFont));
+										cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+										cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+										cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+										cell.setPadding(4);
+										table.addCell(cell);
+
+										cell = new PdfPCell(new Phrase("" +staionListWithFranchiseeList.get(i).getList().get(k).getFrName() , headFont));
+										cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+										cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+										cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+										cell.setPaddingRight(2);
+										cell.setPadding(4);
+										table.addCell(cell);
+										
+										for(int m=0;m<staionListWithFranchiseeList.get(i).getList().get(k).getItemList().size();m++)
+										{
+											if(staionListWithFranchiseeList.get(i).getList().get(k).getItemList().get(m).getOrderQty()>0) {
+											cell = new PdfPCell(new Phrase("" +staionListWithFranchiseeList.get(i).getList().get(k).getItemList().get(m).getOrderQty() , headFont));
+											cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+											cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+											cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+											cell.setPaddingRight(2);
+											cell.setPadding(4);
+											table.addCell(cell);
+											}
+											else
+											{
+												cell = new PdfPCell(new Phrase("", headFont));
+												cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+												cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+												cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+												cell.setPaddingRight(2);
+												cell.setPadding(4);
+												table.addCell(cell);
+											}
+											
+										}
+										
+										
+									}
+									
+									
+								}
+							}
+							
+							
+							PdfPCell cell;
+
+							cell = new PdfPCell(new Phrase("Route B Total", headFont));	cell.setColspan(2);
+							cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+							cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+							cell.setPadding(4);
+							table.addCell(cell);
+							
+							for(int n=0;n<itemListStatioinWiseList.size();n++)
+							{
+								if(itemListStatioinWiseList.get(n).getStationNo()==staionListWithFranchiseeList.get(i).getStationNo())
+								{
+									for(int o=0;o<itemListStatioinWiseList.get(n).getTypeWiseItemTotalList().size();o++)
+									{
+										cell = new PdfPCell(new Phrase("" +itemListStatioinWiseList.get(n).getTypeWiseItemTotalList().get(o).getaTotal(), headFont));
+										cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+										cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+										cell.setPaddingRight(2);
+										cell.setPadding(4);
+										table.addCell(cell);
+									}
+								}
+								
+							}
+						
+							
+						}
+
+						if(abcType==0 || abcType==3)
+						{
+
+							int srNo=0;
+							for(int k=0;k<staionListWithFranchiseeList.get(i).getList().size();k++)
+							{
+								for(int l=0;l<allFrIdNameList.getFrIdNamesList().size();l++)
+								{
+									if(allFrIdNameList.getFrIdNamesList().get(l).getFrId()==staionListWithFranchiseeList.get(i).getList().get(k).getFrId() && staionListWithFranchiseeList.get(i).getList().get(k).getAbcType()==3)
+									{
+										
+										PdfPCell cell;
+										srNo=srNo+1;
+										cell = new PdfPCell(new Phrase((srNo+1)+"", headFont));
+										cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+										cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+										cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+										cell.setPadding(4);
+										table.addCell(cell);
+
+										cell = new PdfPCell(new Phrase("" +staionListWithFranchiseeList.get(i).getList().get(k).getFrName() , headFont));
+										cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+										cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+										cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+										cell.setPaddingRight(2);
+										cell.setPadding(4);
+										table.addCell(cell);
+										
+										for(int m=0;m<staionListWithFranchiseeList.get(i).getList().get(k).getItemList().size();m++)
+										{
+											if(staionListWithFranchiseeList.get(i).getList().get(k).getItemList().get(m).getOrderQty()>0) {
+											cell = new PdfPCell(new Phrase("" +staionListWithFranchiseeList.get(i).getList().get(k).getItemList().get(m).getOrderQty() , headFont));
+											cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+											cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+											cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+											cell.setPaddingRight(2);
+											cell.setPadding(4);
+											table.addCell(cell);
+											}
+											else
+											{
+												cell = new PdfPCell(new Phrase("", headFont));
+												cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+												cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+												cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+												cell.setPaddingRight(2);
+												cell.setPadding(4);
+												table.addCell(cell);
+											}
+											
+										}
+										
+										
+									}
+									
+									
+								}
+							}
+							
+							
+							PdfPCell cell;
+
+							cell = new PdfPCell(new Phrase("Rout C Total", headFont));	cell.setColspan(2);
+							cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+							cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+							cell.setPadding(4);
+							table.addCell(cell);
+							
+							for(int n=0;n<itemListStatioinWiseList.size();n++)
+							{
+								if(itemListStatioinWiseList.get(n).getStationNo()==staionListWithFranchiseeList.get(i).getStationNo())
+								{
+									for(int o=0;o<itemListStatioinWiseList.get(n).getTypeWiseItemTotalList().size();o++)
+									{
+										cell = new PdfPCell(new Phrase("" +itemListStatioinWiseList.get(n).getTypeWiseItemTotalList().get(o).getcTotal(), headFont));
+										cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+										cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+										cell.setPaddingRight(2);
+										cell.setPadding(4);
+										table.addCell(cell);
+									}
+								}
+								
+							}
+						
+							
+						}
+						PdfPCell cell;
+
+						cell = new PdfPCell(new Phrase("Station "+staionListWithFranchiseeList.get(i).getStationNo() +" Total ", headFont));
+						cell.setColspan(2);
+						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+						cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+						cell.setPadding(4);
+						table.addCell(cell);
+						
+						for(int n=0;n<itemListStatioinWiseList.size();n++)
+						{
+							if(itemListStatioinWiseList.get(n).getStationNo()==staionListWithFranchiseeList.get(i).getStationNo())
+							{
+								for(int o=0;o<itemListStatioinWiseList.get(n).getTypeWiseItemTotalList().size();o++)
+								{
+									cell = new PdfPCell(new Phrase((itemListStatioinWiseList.get(n).getTypeWiseItemTotalList().get(o).getaTotal()+itemListStatioinWiseList.get(n).getTypeWiseItemTotalList().get(o).getbTotal()+itemListStatioinWiseList.get(n).getTypeWiseItemTotalList().get(o).getcTotal())+"", headFont));
+									cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+									cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+									cell.setPaddingRight(2);
+									cell.setPadding(4);
+									table.addCell(cell);
+								}
+							}
+							
+						}
+						
+						/*  for(int j=0;j<subCatAList.size();j++) {
+							  int flagnew=0;
+							  int srNo=1;
+							  for(int k=0;k<itemsList.size();k++) {
+								if(itemsList.get(k).getItemGrp2()==subCatAList.get(j).getSubCatId())
+								{
+									int editQty=0;
+									
+									for(int l=0;l<frNameIdByRouteIdList.size();l++) {
+										
+										if(frNameIdByRouteIdList.get(l).getFrId()==frListOrdersPresent.get(i))
+										{
+											for(int m=0;m<dispatchReportList.size();m++) {
+												
+												
+												if(dispatchReportList.get(m).getItemId()==itemsList.get(k).getId())
+												{
+													if(dispatchReportList.get(m).getFrId()==frNameIdByRouteIdList.get(l).getFrId())
+													{
+														editQty=dispatchReportList.get(m).getEditQty();
+													}
+													
+												}
+												
+												
+											}
+										}
+										
+									}
+									
+									if(editQty>0)
+									{
+										if(flagnew==0)
+										{
+											PdfPCell cell;
+
+											cell = new PdfPCell(new Phrase("", headFont));
+											cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+											cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+											cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+											cell.setPadding(4);
+											table.addCell(cell);
+
+											cell = new PdfPCell(new Phrase("" +subCatAList.get(j).getSubCatName() , headFont));
+											cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+											cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+											cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+											cell.setPaddingRight(2);
+											cell.setPadding(4);
+											table.addCell(cell);
+
+											cell = new PdfPCell(new Phrase("", headFont));
+											cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+											cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+											cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+											cell.setPaddingRight(2);
+											cell.setPadding(4);
+											table.addCell(cell);
+
+											cell = new PdfPCell(new Phrase("", headFont));
+											cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+											cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+											cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+											cell.setPaddingRight(2);
+											cell.setPadding(4);
+											table.addCell(cell);
+											
+											flagnew=1;
+										}
+										
+										PdfPCell cell;
+
+										cell = new PdfPCell(new Phrase(""+srNo, headFont));
+										cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+										cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+										cell.setPadding(4);
+										table.addCell(cell);
+
+										srNo=srNo+1;
+										
+										cell = new PdfPCell(new Phrase("" +itemsList.get(k).getItemName() , headFont));
+										cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+										cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+										cell.setPaddingRight(2);
+										cell.setPadding(4);
+										table.addCell(cell);
+
+										cell = new PdfPCell(new Phrase(""+editQty, headFont));
+										cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+										cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+										cell.setPaddingRight(2);
+										cell.setPadding(4);
+										table.addCell(cell);
+
+										cell = new PdfPCell(new Phrase("", headFont));
+										cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+										cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+										cell.setPaddingRight(2);
+										cell.setPadding(4);
+										table.addCell(cell);
+										
+									}
+									
+									
+									
+								}
+							  }
+						  }*/
+						 
+						
+					
+
+						DateFormat DF = new SimpleDateFormat("dd-MM-yyyy");
+						String reportDate = DF.format(new Date());
+			/*			for(int l=0;l<frNameIdByRouteIdList.size();l++) {
+							if(frNameIdByRouteIdList.get(l).getFrId()==frListOrdersPresent.get(i)) {
+								
+								Paragraph company = new Paragraph("MONGINIS -- SHOP NAME :--"+frNameIdByRouteIdList.get(l).getFrName() + "\n", new Font(FontFamily.TIMES_ROMAN, 12, Font.BOLD, BaseColor.MAGENTA));
+								company.setAlignment(Element.ALIGN_CENTER);
+								document.add(company);
+								Paragraph  header=new Paragraph(" Dispatch Sheet    Dispatch Date:  "+billDate,f1);
+					        	document.add(header);
+							}
+						}
+						*/
+						document.add(new Paragraph("\n"));
+						document.add(table);
+						document.add(new Paragraph("\n"));
+
+						int totalPages = writer.getPageNumber();
+
+						System.out.println("Page no " + totalPages);
+						document.newPage();
+				    	}
+						document.close();
+						// Atul Sir code to open a Pdf File
+						if (file != null) {
+
+							String mimeType = URLConnection.guessContentTypeFromName(file.getName());
+
+							if (mimeType == null) {
+
+								mimeType = "application/pdf";
+
+							}
+
+							response.setContentType(mimeType);
+
+							response.addHeader("content-disposition", String.format("inline; filename=\"%s\"", file.getName()));
+
+							response.setContentLength((int) file.length());
+
+							InputStream inputStream = null;
+							try {
+								inputStream = new BufferedInputStream(new FileInputStream(file));
+							} catch (FileNotFoundException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+
+							try {
+								FileCopyUtils.copy(inputStream, response.getOutputStream());
+							} catch (IOException e) {
+								System.out.println("Excep in Opening a Pdf File");
+								e.printStackTrace();
+							}
+						}
+
+					} catch (DocumentException ex) {
+
+						System.out.println("Pdf Generation Error: BOm Prod  View Prod" + ex.getMessage());
+
+						ex.printStackTrace();
+
+					}
+			} catch (Exception e) {
+				System.out.println("get Dispatch Report Exception: " + e.getMessage());
+				e.printStackTrace();
+
+			}
+		//	return model;
+
+		}
 	 
 	 @RequestMapping(value = "/addSection", method = RequestMethod.GET)
 		public ModelAndView addSection(HttpServletRequest request, HttpServletResponse response) {
@@ -980,9 +2034,9 @@ public class DispachReport {
 		String url = request.getParameter("url");
 		System.out.println("URL " + url);
 		
-		//File f = new File("/home/supertom/apache-tomcat-8.5.35/webapps/admin/report.pdf");
+		File f = new File("/home/supertom/apache-tomcat-8.5.35/webapps/admin/report.pdf");
 		//File f = new File("/opt/apache-tomcat-8.5.6/webapps/uploads/report.pdf");
-		File f =new File("/home/lenovo/Documents/pdf/Report.pdf");
+		//File f =new File("/home/ats-12/Report.pdf");
 
 		try {
 			runConverter1(Constants.ReportURL + url, f, request, response);
@@ -996,9 +2050,9 @@ public class DispachReport {
 		// get absolute path of the application
 		ServletContext context = request.getSession().getServletContext();
 		String appPath = context.getRealPath("");
-		//String filePath = "/home/supertom/apache-tomcat-8.5.35/webapps/admin/report.pdf";
+		String filePath = "/home/supertom/apache-tomcat-8.5.35/webapps/admin/report.pdf";
 
-		String filePath ="/home/lenovo/Documents/pdf/Report.pdf";
+		//String filePath ="/home/lenovo/Documents/pdf/Report.pdf";
 
 		// construct the complete absolute path of the file
 		String fullPath = appPath + filePath;

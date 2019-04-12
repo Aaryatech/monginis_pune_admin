@@ -66,7 +66,7 @@
 
 
 				</div>
-				</div>
+				
 				 
 				<%--  <c:forEach items="${dispatchReportList}" var="dispatchReportList"> --%>
 			 
@@ -143,7 +143,7 @@
 		</div>
 		</div>
 		
-
+</div>
 		<footer>
 			<p>2019 © Monginis.</p>
 		</footer>

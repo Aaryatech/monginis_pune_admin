@@ -11,6 +11,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -124,7 +126,7 @@ public class GrnGvnController {
 		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
 		Info view = AccessControll.checkAccess("getGrnHeaderForGate", "getGrnHeaderForGate", "1", "0", "0", "0",
 				newModuleList);
-
+		 List<Integer> franchiseList=new ArrayList<>();
 		if (view.getError() == true) {
 
 			model = new ModelAndView("accessDenied");
@@ -133,9 +135,9 @@ public class GrnGvnController {
 			model = new ModelAndView("grngvn/gateGrnHeader");
 
 			boolean isAllFrSelected = false;
-
+			 int frSelectedFlag=0;
 			try {
-
+				
 				RestTemplate restTemplate = new RestTemplate();
 
 				MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
@@ -192,6 +194,7 @@ public class GrnGvnController {
 					}
 
 					if (isAllFrSelected) {
+						frSelectedFlag=1;
 						// all Fr selected Web Service
 						System.out.println("All Fr Selected =true");
 
@@ -211,7 +214,7 @@ public class GrnGvnController {
 						System.out.println("Grn Gate Header List  All FR" + grnGateHeaderList.toString());
 
 					} else {
-
+						frSelectedFlag=2;
 						System.out.println("Specific Fr Selected ");
 
 						map = new LinkedMultiValueMap<String, Object>();
@@ -227,7 +230,9 @@ public class GrnGvnController {
 								GrnGvnHeaderList.class);
 
 						grnGateHeaderList = headerList.getGrnGvnHeader();
-
+						List<Integer> frids = Stream.of(frSelectedGateHeader.split(",")).map(Integer::parseInt)
+								.collect(Collectors.toList());
+						franchiseList.addAll(frids);
 						System.out.println("Grn Gate Header List  specific FR " + grnGateHeaderList.toString());
 					}
 
@@ -237,6 +242,8 @@ public class GrnGvnController {
 				model.addObject("toDate", gateGrnHeaderToDate);
 				model.addObject("grnList", grnGateHeaderList);
 				model.addObject("selectedFr", frList);
+				
+				
 
 			} catch (Exception e) {
 
@@ -245,6 +252,9 @@ public class GrnGvnController {
 			}
 			gateGrnHeaderFromDate = null;
 			gateGrnHeaderToDate = null;
+			
+			model.addObject("franchiseList", franchiseList);
+			model.addObject("frSelectedFlag", 	frSelectedFlag);
 		}
 		return model;
 	}
@@ -836,9 +846,9 @@ public class GrnGvnController {
 			model = new ModelAndView("grngvn/accGrnHeader");
 
 			boolean isAllFrSelected = false;
-
+            int frSelectedFlag=0;
 			try {
-
+			    List<Integer> franchiseList=new ArrayList<>();
 				RestTemplate restTemplate = new RestTemplate();
 
 				MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
@@ -857,7 +867,7 @@ public class GrnGvnController {
 				model.addObject("unSelectedFrList", allFrIdNameList.getFrIdNamesList());
 
 				if (accGrnHeaderFromDate == "" || accGrnHeaderFromDate == null) {
-
+					
 					DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 					Calendar cal = Calendar.getInstance();
 
@@ -904,6 +914,7 @@ public class GrnGvnController {
 				else {
 
 					if (frList.contains("-1")) {
+						frSelectedFlag=1;
 						/*
 						 * isAllFrSelected = true;
 						 * 
@@ -930,7 +941,7 @@ public class GrnGvnController {
 						System.out.println("Grn Acc Header List  All FR" + grnAccHeaderList.toString());
 
 					} else {
-
+						frSelectedFlag=2;
 						System.out.println("Specific Fr Selected ");
 
 						map = new LinkedMultiValueMap<String, Object>();
@@ -946,7 +957,9 @@ public class GrnGvnController {
 								GrnGvnHeaderList.class);
 
 						grnAccHeaderList = headerList.getGrnGvnHeader();
-
+						List<Integer> frids = Stream.of(frSelectedAccHeader.split(",")).map(Integer::parseInt)
+								.collect(Collectors.toList());
+						franchiseList.addAll(frids);
 						System.out.println("Grn Acc Header List  specific FR " + grnAccHeaderList.toString());
 					}
 
@@ -959,7 +972,9 @@ public class GrnGvnController {
 
 				accGrnHeaderFromDate = null;
 				accGrnHeaderToDate = null;
-
+				
+				model.addObject("franchiseList", franchiseList);
+				model.addObject("frSelectedFlag", 	frSelectedFlag);
 			} catch (Exception e) {
 
 				System.out.println("Excep in Acc GrN Header List /getGrnHeaderForAcc " + e.getMessage());
@@ -1089,7 +1104,7 @@ public class GrnGvnController {
 
 			if (detail.getGrnType() == 1) {
 
-				grnRate = detail.getBaseRate() * 90 / 100;
+				grnRate = detail.getBaseRate() * 70 / 100;
 			}
 
 			if (detail.getGrnType() == 2 || detail.getGrnType() == 4) {
@@ -1212,7 +1227,7 @@ public class GrnGvnController {
 
 					if (detail.getGrnType() == 1) {
 
-						grnRate = detail.getBaseRate() * 90 / 100;
+						grnRate = detail.getBaseRate() * 70 / 100;
 					}
 
 					if (detail.getGrnType() == 2 || detail.getGrnType() == 4) {
@@ -1559,7 +1574,7 @@ public class GrnGvnController {
 
 					if (detail.getGrnType() == 1) {
 
-						grnRate = detail.getBaseRate() * 90 / 100;
+						grnRate = detail.getBaseRate() * 70 / 100;
 					}
 
 					if (detail.getGrnType() == 2 || detail.getGrnType() == 4) {
@@ -1912,7 +1927,7 @@ public class GrnGvnController {
 
 						if (detail.getGrnType() == 1) {
 
-							grnRate = detail.getBaseRate() * 90 / 100;
+							grnRate = detail.getBaseRate() * 70 / 100;
 						}
 
 						if (detail.getGrnType() == 2 || detail.getGrnType() == 4) {

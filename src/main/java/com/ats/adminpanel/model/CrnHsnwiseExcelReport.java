@@ -5,6 +5,8 @@ public class CrnHsnwiseExcelReport{
 
 	private String id;
 	
+	private int crnId;
+	
 	private String supplierInvoiceNo;
 	
 	private String supplierInvoiceDate;
@@ -38,6 +40,16 @@ public class CrnHsnwiseExcelReport{
 	private String country;
 
 	private String state;
+
+	
+	
+	public int getCrnId() {
+		return crnId;
+	}
+
+	public void setCrnId(int crnId) {
+		this.crnId = crnId;
+	}
 
 	public String getId() {
 		return id;
@@ -185,12 +197,12 @@ public class CrnHsnwiseExcelReport{
 
 	@Override
 	public String toString() {
-		return "CrnHsnwiseExcelReport [id=" + id + ", supplierInvoiceNo=" + supplierInvoiceNo + ", supplierInvoiceDate="
-				+ supplierInvoiceDate + ", invoiceNo=" + invoiceNo + ", invoiceDate=" + invoiceDate + ", frId=" + frId
-				+ ", frName=" + frName + ", itemHsncd=" + itemHsncd + ", qty=" + qty + ", taxableAmt=" + taxableAmt
-				+ ", cgstRs=" + cgstRs + ", sgstRs=" + sgstRs + ", igstRs=" + igstRs + ", taxRate=" + taxRate
-				+ ", documentAmount=" + documentAmount + ", frGstNo=" + frGstNo + ", country=" + country + ", state="
-				+ state + "]";
+		return "CrnHsnwiseExcelReport [id=" + id + ", crnId=" + crnId + ", supplierInvoiceNo=" + supplierInvoiceNo
+				+ ", supplierInvoiceDate=" + supplierInvoiceDate + ", invoiceNo=" + invoiceNo + ", invoiceDate="
+				+ invoiceDate + ", frId=" + frId + ", frName=" + frName + ", itemHsncd=" + itemHsncd + ", qty=" + qty
+				+ ", taxableAmt=" + taxableAmt + ", cgstRs=" + cgstRs + ", sgstRs=" + sgstRs + ", igstRs=" + igstRs
+				+ ", taxRate=" + taxRate + ", documentAmount=" + documentAmount + ", frGstNo=" + frGstNo + ", country="
+				+ country + ", state=" + state + "]";
 	}
 	
 	

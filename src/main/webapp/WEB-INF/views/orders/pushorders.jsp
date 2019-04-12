@@ -133,7 +133,7 @@
 						
 							<label class=" col-md-1 control-label franchisee_label">Discount % </label>
 						<div class="col-md-1">
-							<input type="text" name="discPer" id="discPer" value="0" class="form-control" width="30px"/>
+							<input type="text" name="discPer" id="discPer" value="1" class="form-control" width="30px"/>
 						</div>
 					<!-- </div>
 					

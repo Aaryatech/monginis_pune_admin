@@ -62,28 +62,29 @@
 				</h3>
 
 			</div>
-<form id="submitBillForm"
+<form id="validation-form"
 					action="${pageContext.request.contextPath}/getPDispatchReportItemwiseResult"
-					method="get">
+					method="post">
 		
 			<div class="box-content">
 				<div class="row">
 
 
 					<div class="form-group">
-						<label class="col-sm-3 col-lg-1	 control-label">Delivery Date</label>
+						<label class="col-sm-3 col-lg-2	 control-label">Delivery Date</label>
 						<div class="col-sm-5 col-lg-2 controls date_select">
 							<input class="form-control date-picker" id="billDate"
 								name="billDate" size="10" type="text" value="${todaysDate}" />
 						</div>
                    
-					<label class="col-sm-3 col-lg-1 control-label">	Route Type</label>
-							<div class="col-sm-3 col-lg-2 controls">
+					<label class="col-sm-3 col-lg-2 control-label">	Route Type</label>
+							<div class="col-sm-5 col-lg-4 controls">
 					<select data-placeholder="Choose Category"
 								class="form-control chosen"   onchange="routListByAbcType(0)"
 								id="abcType" name="abcType">
 
 								<option value="">Select Route Type</option>
+								<option value="0">ALL</option>
 								<option value="1">A</option>
 								<option value="2">B</option>
 								<option value="3">C</option>
@@ -92,14 +93,18 @@
 								</c:forEach> --%>
 							</select>
 							</div>
+						</div>
+					</div>	
+					<br>
+				<div class="row">	
 							<label class="col-sm-3 col-lg-1 control-label">Select
 							Route</label>
-							<div class="col-sm-5 col-lg-5  controls">
+							<div class="col-sm-5 col-lg-11  controls">
 							<select data-placeholder="Select Route"
 								class="form-control chosen" name="selectRoute" id="selectRoute" multiple="multiple"  onchange="FranchasiListByRouteID()">
 								 
 							</select>
-					</div>
+				
 					</div>
 					</div>
 					
@@ -195,7 +200,7 @@
  
 					<input type="submit" id="submit" class="btn btn-primary" value="Search"  >
 					
-						 
+				
 					</div>
 			</div>
 
@@ -203,8 +208,20 @@
 
 				</div>
 				 
-			</div>
-	</form>
+			
+	</form><form id="validation-form1"
+					action="${pageContext.request.contextPath}/pdf/getPDispatchReportItemwisePdf"
+					method="get">
+					<input type="hidden" id="bdate" name="bdate"/>
+					<input type="hidden" id="abc" name="abc"/>
+					<input type="hidden" id="routes" name="routes"/>
+					<input type="hidden" id="frids" name="frids"/>
+					<input type="hidden" id="sections" name="sections"/>
+					<input type="hidden" id="menus" name="menus"/>
+					<input type="hidden" id="items" name="items"/>
+						<div class="form-group" align="center">
+						<input type="button" id="pdf" class="btn btn-primary" value="PDF"  onclick="onPdfClick()">	 
+						</div></form></div>
 
 					</div>
 					</div>
@@ -217,7 +234,29 @@
 		<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
 			class="fa fa-chevron-up"></i></a>
 
-
+<script type="text/javascript">
+function onPdfClick()
+{
+	var sectionId = $("#sectionId").val();
+	var abcType = $("#abcType").val();
+	var routeIds = $("#selectRoute").val();
+	var billDate = $("#billDate").val();
+	var selectedfranchase = $("#frid").val();
+	var selectedMenu = $("#menuId").val();
+	var selecteditems = $("#itemId").val();
+	
+	 document.getElementById("sections").value=sectionId;
+	 document.getElementById("abc").value=abcType;
+	 document.getElementById("routes").value=routeIds;
+	 document.getElementById("bdate").value=billDate;
+	 document.getElementById("frids").value=selectedfranchase;
+	 document.getElementById("menus").value=selectedMenu;
+	 document.getElementById("items").value=selecteditems;
+	
+	  var form = document.getElementById("validation-form1");
+	    form.submit();
+}
+</script>
 
 <script type="text/javascript">
 
@@ -310,7 +349,7 @@ function getMenuListBySectionId() {
 								abcType : abcType,
 								ajax : 'true'
 							}, function(data) {
-							 	var html = '<option value="">Select Rout</option>';
+							 	var html = '<option value="">Select Routes</option>';
 							
 								var len = data.length;
 								
@@ -319,10 +358,10 @@ function getMenuListBySectionId() {
 							    .remove()
 							    .end()
 							    
-						 /* 	$("#selectRoute").append(
+							$("#selectRoute").append(
 			                 $("<option></option>").attr(
 			                     "value", -1).text("All") ); 
-								 */
+								
 								for ( var i = 0; i < len; i++) {
 						            $("#selectRoute").append(
 						                    $("<option selected></option>").attr(
@@ -330,6 +369,8 @@ function getMenuListBySectionId() {
 						                );
 								}
 								   $("#selectRoute").trigger("chosen:updated");
+								   $("#selectRoute").trigger("change");
+
 							}); 
 							
 							
@@ -343,7 +384,7 @@ function getMenuListBySectionId() {
 						abcType : abcType,
 						ajax : 'true'
 					}, function(data) {
-					 	var html = '<option value="">Select Rout</option>';
+					 	var html = '<option value="">Select Routes</option>';
 					
 						var len = data.length;
 						
@@ -352,10 +393,10 @@ function getMenuListBySectionId() {
 					    .remove()
 					    .end()
 					    
-				/*  	$("#selectRoute").append(
+			 	$("#selectRoute").append(
 	                 $("<option></option>").attr(
 	                     "value", -1).text("All") ); 
-						 */
+						
 						for ( var i = 0; i < len; i++) {
 				            $("#selectRoute").append(
 				                    $("<option ></option>").attr(
@@ -433,6 +474,11 @@ function getMenuListBySectionId() {
 							
 							var routeIds = $("#selectRoute").val();
 						
+							if(routeIds=="-1")
+								{
+								routListByAbcType(-1); 
+								}
+							
 							if(routeIds=="" ||routeIds==null){
 							$('#frid')
 						    .find('option')

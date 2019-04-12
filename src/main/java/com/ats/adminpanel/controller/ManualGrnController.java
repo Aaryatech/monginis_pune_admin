@@ -45,7 +45,7 @@ import com.ats.adminpanel.model.stock.PostFrItemStockDetail;
 public class ManualGrnController {
 
 	public String getGrnGvnSrNo(HttpServletRequest request, HttpServletResponse response, String frCode) {
-
+		String grnGvnNo = null;
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 		RestTemplate restTemplate = new RestTemplate();
 
@@ -92,25 +92,25 @@ public class ManualGrnController {
 			System.out.println("Month >=4::Cur Str Year " + curStrYear);
 		}
 
-		////
-
 		int length = String.valueOf(settingValue).length();
 
 		String invoiceNo = null;
 
 		if (length == 1)
 
-			invoiceNo = curStrYear + "-" + frCode + "-" + "000" + settingValue;
+			invoiceNo = curStrYear + "-"+ "000" + settingValue;
 		if (length == 2)
 
-			invoiceNo = curStrYear + "-" + frCode + "-" + "00" + settingValue;
+			invoiceNo = curStrYear + "-" + "00" + settingValue;
 
 		if (length == 3)
 
-			invoiceNo = curStrYear + "-" + frCode + "-" + "0" + settingValue;
+			invoiceNo = curStrYear + "-"+ "0" + settingValue;
 
-		System.out.println("*** invoiceNo= " + invoiceNo);
-		return invoiceNo;
+		
+		grnGvnNo=frCode+invoiceNo;
+		//System.out.println("*** invoiceNo= " + invoiceNo);
+		return grnGvnNo;
 
 	}
 
@@ -319,8 +319,8 @@ public class ManualGrnController {
 					}
 
 					if (selectedGrn.get(i).getGrnType() == 1) {
-						grnBaseRate = baseRate * 90 / 100;
-						grnRate = (selectedGrn.get(i).getRate() * 90) / 100;
+						grnBaseRate = baseRate * 70 / 100;
+						grnRate = (selectedGrn.get(i).getRate() * 70) / 100;
 						// postGrnGvn.setGrnGvnAmt(roundUp(grnAmt));
 					}
 

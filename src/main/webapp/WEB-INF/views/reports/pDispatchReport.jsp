@@ -204,10 +204,11 @@
 					<!-- 	<button class="btn btn-primary" value="PDF" id="PDFButton"
 							onclick="genPdfBill()">Franchise PDF</button> -->
 							
-							&nbsp;
+							
 						<button class="btn btn-primary" value="PDF" id="PDFButton"
-							onclick="genDispatchPdf()">Dispatch PDF</button>
-						
+							onclick="genDispatchPdf()">PDF</button> 
+						<button class="btn btn-primary" value="PDF" id="PDFButton"
+							onclick="genDispatchItextPdf()">Disp PDF1</button>
 							</div>
 							
 					<div align="center" id="loader" style="display: none">
@@ -871,6 +872,18 @@
 				
 			  }
 			} */
+			
+			function genDispatchItextPdf()
+			{
+				var billDate = $("#billDate").val();
+				var routeId = $("#selectRoute").val();
+				var menuId = $("#menuId").val();
+				var selectedCat = $("#selectSubCat").val();//new for pune on 14 feb 19
+				var frId = $("#fraId").val();
+				
+				  window.open('getDispatchPdfForDispatch/'
+							+ billDate + '/'+menuId+'/'+routeId+'/'+selectedCat+'/'+frId);
+			}
 		</script>
 		<!--basic scripts-->
 		<script

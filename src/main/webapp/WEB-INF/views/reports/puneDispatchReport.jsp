@@ -81,8 +81,7 @@
 							Station</label>
 						<div class="col-sm-6 col-lg-4 controls">
 							<select data-placeholder="Select Route"
-								class="form-control chosen" name="stanId" id="stanId"
-								  >
+								class="form-control chosen" name="stanId" id="stanId" multiple="multiple"  >
 								<option value="-1">All</option>
 								<c:forEach items="${stationList}" var="stationList" varStatus="count">
 									<option value="${stationList}"><c:out value="${stationList}"/> </option>
@@ -144,7 +143,7 @@
 
 							<select data-placeholder="Choose Category"
 								class="form-control chosen"   onchange="getMenuListBySectionId()"
-								id="sectionId" name="sectionId">
+								id="sectionId" name="sectionId" >
 
 								 <option value="" selected>Select Section</option>
 								 
@@ -159,7 +158,7 @@
 
 							<select data-placeholder="Select Menu "
 								class="form-control chosen" 
-								id="menuId" name="menuId" multiple="multiple" required>
+								id="menuId" name="menuId" multiple="multiple" required   onchange="onChangeMenu(this.value)">
 
 								<%--  <option value="0" selected>All</option>
 								<c:forEach items="${menuList}" var="menuList" >
@@ -184,7 +183,8 @@
 							Report</button> 
 						<button class="btn btn-primary" value="PDF" id="PDFButton"
 							onclick="genPdf()">PDF</button> -->
-						 
+							 <input type="button" class="btn btn-primary" value="PDF" id="PDFButton"
+							onclick="genPdf()" value="PDF" /> 
 					</div>
 
 
@@ -254,7 +254,7 @@
 		<!-- END Main Content -->
 
 		<footer>
-			<p>2018 © Monginis.</p>
+			<p>2019 © Monginis.</p>
 		</footer>
 
 		<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
@@ -263,7 +263,46 @@
 
 
 <script type="text/javascript">
+function onChangeMenu(menuId) {
 
+	if(menuId==0){
+	var sectionId = $("#sectionId").val();
+	 if(sectionId=="" || sectionId==null){
+				$('#menuId')
+			    .find('option')
+			    .remove()
+			    .end()
+			    $("#menuId").trigger("chosen:updated");
+		 }else{
+				$.getJSON('${getMenuListBySectionId}', {
+					
+					sectionId : sectionId,
+					ajax : 'true'
+				}, function(data) {
+				 	var html = '<option value="">Select Section</option>';
+				
+					var len = data.length;
+					
+					$('#menuId')
+				    .find('option')
+				    .remove()
+				    .end()
+				    
+				$("#menuId").append(
+                 $("<option ></option>").attr(
+                     "value", 0).text("All") );
+					
+					for ( var i = 0; i < len; i++) {
+			            $("#menuId").append(
+			                    $("<option selected></option>").attr(
+			                        "value", data[i].menuId).text(data[i].menuTitle)
+			                );
+					}
+					   $("#menuId").trigger("chosen:updated");
+				}); 
+		 }
+	}
+}
 
 
 function getMenuListBySectionId() {
@@ -295,7 +334,7 @@ function getMenuListBySectionId() {
 				    .end()
 				    
 				$("#menuId").append(
-                 $("<option selected></option>").attr(
+                 $("<option ></option>").attr(
                      "value", 0).text("All") );
 					
 					for ( var i = 0; i < len; i++) {
@@ -842,10 +881,23 @@ function routListByAbcType() {
 
 			}
 		</script>
+	<script type="text/javascript">
+			function genPdf() {
+				 
+				 var date = $("#billDate").val();
+				 var stationId = $("#stanId").val();
+				 var abcType = $("#abcType").val();
+				 var routId = $("#selectRoute").val();
+				 var menuIds = $("#menuId").val();
+				 
+				window.open('pdfForDisReport?url=pdf/getPDispatchReportNewPdf/'+date+'/'+stationId+'/'+abcType+'/'+routId+'/'+menuIds);
 
+			}
+	</script>
 
 		<script type="text/javascript">
-			function genPdf() {
+		
+			/* function genPdf() {
 				var billDate = $("#billDate").val();
 				var routeId = $("#selectRoute").val();
 				var selectedCat = $("#selectCat").val();
@@ -853,7 +905,7 @@ function routListByAbcType() {
 				window.open('pdfForDisReport?url=pdf/getPDispatchReportPdf/'
 						+ billDate + '/'+routeId+'/'+selectedCat);
 
-			}
+			} */
 			function exportToExcel()
 			{
 				 

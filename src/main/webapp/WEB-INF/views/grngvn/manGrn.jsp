@@ -3,6 +3,7 @@
 	uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
+ 	 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/tableSearch.css">
 
 <jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
 <body>
@@ -35,13 +36,13 @@
 				<h1>
 					<i class="fa fa-file-o"></i>Manual Grn
 				</h1>
-				<h4>Franchise Manual Grn</h4>
+				<!-- <h4>Franchise Manual Grn</h4> -->
 			</div>
 		</div>
 		<!-- END Page Title -->
 
 		<!-- BEGIN Breadcrumb -->
-		<div id="breadcrumbs">
+<%-- 		<div id="breadcrumbs">
 			<ul class="breadcrumb">
 				<li><i class="fa fa-home"></i> <a
 					href="${pageContext.request.contextPath}/home">Home</a> <span
@@ -50,7 +51,7 @@
 					class="divider"><i class="fa fa-angle-right"></i></span></li>	
 				<li class="active">Franchise Opening Stock</li> -->
 			</ul>
-		</div>
+		</div> --%>
 		<!-- END Breadcrumb -->
 
 		<!-- BEGIN Main Content -->
@@ -111,9 +112,14 @@
 
 						</div>
 					</div>
-
+<div class="col-md-9" ></div> 
+					<label for="search" class="col-md-3" id="search">
+    <i class="fa fa-search" style="font-size:20px"></i>
+									<input type="text"  style="border-radius:25px;" id="myInput" onkeyup="myFunction()" style="border-radius: 25px;" placeholder="Search by ItemName" >
+										</label>  
 				</div>
 			</div>
+			
 		</div>
 		<div class="box">
 			<div class="box-title">
@@ -170,7 +176,7 @@
 	<!-- END Main Content -->
 
 	<footer>
-		<p>2017 © Monginis.</p>
+		<p>2019 © Monginis.</p>
 	</footer>
 
 	<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
@@ -348,8 +354,8 @@
 				 if(grnType==1){
 
 						var grnRate=rate;
-						grnBaseRate = baseRate * 90 / 100;
-						grnRate=(rate * 90) / 100;
+						grnBaseRate = baseRate * 70 / 100;
+						grnRate=(rate * 70) / 100;
 					
 						}
 				 
@@ -444,5 +450,28 @@
 	<script src="${pageContext.request.contextPath}/resources/js/flaty.js"></script>
 	<script
 		src="${pageContext.request.contextPath}/resources/js/flaty-demo-codes.js"></script>
+		<script>
+function myFunction() {
+  var input, filter, table, tr, td,td1, i;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("table_grid");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[1];
+    td1 = tr[i].getElementsByTagName("td")[2];
+
+    if (td) {
+      if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      }else if (td1.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      }  else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+}
+</script>
 </body>
 </html>
