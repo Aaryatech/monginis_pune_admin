@@ -120,9 +120,8 @@
 					</div>
 						
 					</div>
-				</div>
-
-				<br>
+				
+				
 				<div class="row">
 					<div class="col-md-12" style="text-align: center;">
 						
@@ -141,6 +140,7 @@
 				</div>
 
 			</div>
+	</div>
 	
 
 
@@ -168,7 +168,7 @@
 										<th>NET Value</th>
 										<th>GRN</th>
 										<th>NET Value</th>
-										<th>In Lac</th>
+										<th>In Lakh</th>
 										<th>Return %</th>
 									</tr>
 								</thead>
@@ -183,7 +183,7 @@
 											<div class="col-sm-3  controls">
 											</div>
 											</div>
-								<div align="center" id="showchart" style="display: none">
+								<div align="center" id="showchart" style="display: none; background-color:white;">
 						</div>
 					</div>
 					
@@ -204,7 +204,7 @@
 	<!-- END Main Content -->
 	
 	<footer>
-	<p>2018 © Monginis.</p>
+	<p>2019 © Monginis.</p>
 	</footer>
 
 	<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
@@ -239,7 +239,7 @@
 
 									$('#table_grid td').remove();
 									$('#loader').hide();
-alert("data " +data);
+
 									if (data == "") {
 										alert("No records found !!");
 										  document.getElementById("expExcel").disabled=true;
@@ -263,20 +263,22 @@ alert("data " +data);
 														var tr = $('<tr></tr>');
 													  	tr.append($('<td></td>').html(report.frCode));
 													  	tr.append($('<td></td>').html(report.frName));
-													  	tr.append($('<td style="text-align:right;"></td>').html(report.saleValue));
-													  	tr.append($('<td style="text-align:right;"></td>').html(report.gvnValue));
+													  	tr.append($('<td style="text-align:right;"></td>').html(report.saleValue.toFixed(2)));
+													  	tr.append($('<td style="text-align:right;"></td>').html(report.gvnValue.toFixed(2)));
 													  	var netVal1=parseFloat(report.saleValue)-parseFloat(report.gvnValue)
 													  	tr.append($('<td style="text-align:right;"></td>').html(netVal1.toFixed(2)));
 													 	var netVal2=parseFloat(netVal1)-(report.grnValue);
 														  tr.append($('<td style="text-align:right;"></td>').html((report.grnValue).toFixed(2)));
-														  	tr.append($('<td style="text-align:right;"></td>').html(netVal2));
+														  	tr.append($('<td style="text-align:right;"></td>').html(netVal2.toFixed(2)));
 														  	var inLac=(parseFloat(netVal2)/100000).toFixed(2);
 //alert("In Lac  " +inLac)
 														  	tr.append($('<td style="text-align:right;"></td>').html(inLac));
 														  	
-														  var retPer=(parseFloat(report.grnValue))/(parseFloat(netVal2));
-														  retPer=parseFloat(retPer)/100;
-														  	tr.append($('<td style="text-align:right;"></td>').html(retPer.toFixed(6)));
+														  var retPer=0;
+														  if(report.grnValue>0){
+															  retPer=(report.grnValue)/(report.saleValue/100);
+														  }
+														  	tr.append($('<td style="text-align:right;"></td>').html(retPer.toFixed(2)));
 
 														
 														$('#table_grid tbody')

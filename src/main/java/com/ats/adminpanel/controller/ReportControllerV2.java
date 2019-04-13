@@ -160,11 +160,11 @@ public class ReportControllerV2 {
 			rowData.add("Party Code");
 			rowData.add("Party Name");
 			rowData.add("Sales");
-			rowData.add("GVN");
+			rowData.add("G.V.N");
 			rowData.add("NET Value");
-			rowData.add("GRN");
+			rowData.add("G.R.N");
 			rowData.add("NET Value");
-			rowData.add("In Lac");
+			rowData.add("In Lakh");
 			rowData.add("Return %");
 
 			expoExcel.setRowData(rowData);
@@ -180,13 +180,15 @@ public class ReportControllerV2 {
 				float netVal1 = (saleReportList.get(i).getSaleValue()) - (saleReportList.get(i).getGvnValue());
 				float netVal2 = (netVal1) - (saleReportList.get(i).getGrnValue());
 				float inLac = (netVal2) / 100000;
-				float retPer = ((saleReportList.get(i).getGrnValue()) / (netVal2));
-
-				rowData.add("" + netVal1);
+				float retPer = 0.0f;
+				if(saleReportList.get(i).getGrnValue()>0) {
+				retPer=((saleReportList.get(i).getGrnValue()) / (saleReportList.get(i).getSaleValue()/100));
+				}
+				rowData.add("" + roundUp(netVal1));
 				rowData.add("" + roundUp(saleReportList.get(i).getGrnValue()));
 				rowData.add("" + roundUp(netVal2));
 				rowData.add("" + roundUp(inLac));
-				rowData.add("" + retPer / 100);
+				rowData.add("" + roundUp(retPer));
 
 				expoExcel.setRowData(rowData);
 				exportToExcelList.add(expoExcel);
@@ -315,13 +317,13 @@ public class ReportControllerV2 {
 				cell.setPaddingRight(8);
 				table.addCell(cell);
 
-				cell = new PdfPCell(new Phrase(String.valueOf(saleReportList.get(j).getSaleValue()), headFont));
+				cell = new PdfPCell(new Phrase(roundUp(saleReportList.get(j).getSaleValue())+"", headFont));
 				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 				cell.setPaddingRight(8);
 				table.addCell(cell);
 
-				cell = new PdfPCell(new Phrase(String.valueOf(saleReportList.get(j).getGvnValue()), headFont));
+				cell = new PdfPCell(new Phrase(roundUp(saleReportList.get(j).getGvnValue())+"", headFont));
 				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 				cell.setPaddingRight(8);
@@ -330,7 +332,10 @@ public class ReportControllerV2 {
 				float netVal1 = (saleReportList.get(j).getSaleValue()) - (saleReportList.get(j).getGvnValue());
 				float netVal2 = (netVal1) - (saleReportList.get(j).getGrnValue());
 				float inLac = (netVal2) / 100000;
-				float retPer = ((saleReportList.get(j).getGrnValue()) / (netVal2));
+				float retPer =0.0f;
+				if(saleReportList.get(j).getGrnValue()>0) {
+					retPer=((saleReportList.get(j).getGrnValue()) / (saleReportList.get(j).getSaleValue()/100));
+				}
 
 				cell = new PdfPCell(new Phrase(String.valueOf(roundUp(netVal1)), headFont));
 				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -338,7 +343,7 @@ public class ReportControllerV2 {
 				cell.setPaddingRight(8);
 				table.addCell(cell);
  
-				cell = new PdfPCell(new Phrase(String.valueOf(saleReportList.get(j).getGrnValue()), headFont));
+				cell = new PdfPCell(new Phrase(String.valueOf(roundUp(saleReportList.get(j).getGrnValue())), headFont));
 				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 				cell.setPaddingRight(8);
@@ -356,7 +361,7 @@ public class ReportControllerV2 {
 				cell.setPaddingRight(8);
 				table.addCell(cell);
 
-				cell = new PdfPCell(new Phrase(String.valueOf(retPer / 100), headFont));
+				cell = new PdfPCell(new Phrase(String.valueOf(roundUp(retPer)), headFont));
 				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 				cell.setPaddingRight(8);

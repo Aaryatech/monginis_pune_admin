@@ -879,7 +879,7 @@ public class DispachReport {
 			map.add("menuIds", menuIds);
 			System.out.println("map " + map); 
  
-			StaionListWithFranchiseeList[] array = restTemplate.postForObject(Constants.url + "/getAbcDepatchReportMin",map,
+			StaionListWithFranchiseeList[] array = restTemplate.postForObject(Constants.url + "/getAbcDepatchReport",map,
 					StaionListWithFranchiseeList[].class);
 			
 			List<StaionListWithFranchiseeList> staionListWithFranchiseeList = new ArrayList<StaionListWithFranchiseeList>(Arrays.asList(array));
