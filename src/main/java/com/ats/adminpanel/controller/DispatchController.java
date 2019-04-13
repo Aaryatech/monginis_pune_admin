@@ -251,11 +251,11 @@ public class DispatchController {
 		try {
    for(int i=0;i<frListOrdersPresent.size();i++) {
 	   
-		PdfPTable table = new PdfPTable(3);
+		PdfPTable table = new PdfPTable(4);
 		table.setHeaderRows(1);
-		table.setHorizontalAlignment(0);
-			table.setWidthPercentage(50);
-			table.setWidths(new float[] { 0.4f, 3.0f, 0.5f});
+
+			table.setWidthPercentage(100);
+			table.setWidths(new float[] { 0.4f, 4.0f, 1.9f, 1.7f});
 			Font headFont = new Font(FontFamily.TIMES_ROMAN, 12, Font.NORMAL, BaseColor.BLACK);
 			Font headFont1 = new Font(FontFamily.HELVETICA, 12, Font.BOLD, BaseColor.BLACK);
 			Font f = new Font(FontFamily.TIMES_ROMAN, 12.0f, Font.BOLD, BaseColor.BLUE);
@@ -264,7 +264,7 @@ public class DispatchController {
 		
 		
 			hcell = new PdfPCell(new Phrase("Sr.", headFont1));
-			hcell.setPadding(2);
+			hcell.setPadding(5);
 			hcell.setBackgroundColor(BaseColor.PINK);
 			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
 			table.addCell(hcell);
@@ -272,21 +272,21 @@ public class DispatchController {
 			hcell = new PdfPCell(new Phrase("ITEM NAME", headFont1));
 			hcell.setBackgroundColor(BaseColor.PINK);
 			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-			hcell.setPadding(2);
+			hcell.setPadding(5);
 			table.addCell(hcell);
 
-			hcell = new PdfPCell(new Phrase("Qty", headFont1));
-			hcell.setPadding(2);
-			hcell.setBackgroundColor(BaseColor.PINK);
-			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-			table.addCell(hcell);
-
-			/*hcell = new PdfPCell(new Phrase("SENT", headFont1));
+			hcell = new PdfPCell(new Phrase("DISPATCH QTY", headFont1));
 			hcell.setPadding(5);
 			hcell.setBackgroundColor(BaseColor.PINK);
 			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
 			table.addCell(hcell);
-*/
+
+			hcell = new PdfPCell(new Phrase("SENT", headFont1));
+			hcell.setPadding(5);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			table.addCell(hcell);
+
 
 			  for(int j=0;j<subCatAList.size();j++) {
 				  int flagnew=0;
@@ -347,13 +347,13 @@ public class DispatchController {
 								cell.setPadding(4);
 								table.addCell(cell);
 
-							/*	cell = new PdfPCell(new Phrase("", headFont));
+								cell = new PdfPCell(new Phrase("", headFont));
 								cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 								cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
 								cell.setHorizontalAlignment(Element.ALIGN_LEFT);
 								cell.setPaddingRight(2);
 								cell.setPadding(4);
-								table.addCell(cell);*/
+								table.addCell(cell);
 								
 								flagnew=1;
 							}
@@ -382,12 +382,12 @@ public class DispatchController {
 							cell.setPadding(4);
 							table.addCell(cell);
 
-							/*cell = new PdfPCell(new Phrase("", headFont));
+							cell = new PdfPCell(new Phrase("", headFont));
 							cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 							cell.setHorizontalAlignment(Element.ALIGN_LEFT);
 							cell.setPaddingRight(2);
 							cell.setPadding(4);
-							table.addCell(cell);*/
+							table.addCell(cell);
 							
 						}
 						

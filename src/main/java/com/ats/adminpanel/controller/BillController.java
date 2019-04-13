@@ -412,7 +412,7 @@ public class BillController {
 						String calculatedDate = incrementDate(deliveryDate, itemShelfLife);
 
 						// inc exp date if these menuId
-						if (gBill.getMenuId() == 44 || gBill.getMenuId() == 45 || gBill.getMenuId() == 46) {
+						if (gBill.getMenuId() == 67 || gBill.getMenuId() == 86 || gBill.getMenuId() == 90) {
 
 							calculatedDate = incrementDate(calculatedDate, 1);
 

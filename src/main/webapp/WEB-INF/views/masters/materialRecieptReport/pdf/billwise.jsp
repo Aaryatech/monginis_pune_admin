@@ -39,8 +39,8 @@ th {
 
 </head>
 <body onload="myFunction()">
-<h3 align="center">Galdhar Foods Pvt Ltd</h3>
-<p align="center">A-89, Shendra M.I.D.C., Aurangabad</p>
+<h3 align="center">LUTF FOODS PVT. LTD.</h3>
+<p align="center">Sr No 37, Near Angraj Hotel, Kondhwa, Pune, Maharashtra 411048</p>
 <div align="center"> <h5> Purchase Report (Bill wise ) &nbsp;&nbsp;&nbsp;&nbsp; From &nbsp; ${fromDate}  &nbsp;To &nbsp; ${toDate}</h5></div>
 	<table  align="center" border="1" cellspacing="0" cellpadding="1" 
 		id="table_grid" class="table table-bordered">

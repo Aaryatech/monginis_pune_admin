@@ -549,8 +549,7 @@ public class BomController {
 
 			document.open();
 			Paragraph company = new Paragraph(
-					"Galdhar Foods Pvt.Ltd\n" + "Factory Add: A-32 Shendra, MIDC, Auraangabad-4331667"
-							+ "Phone:0240-2466217, Email: aurangabad@monginis.net",
+					"LUTF FOODS PVT. LTD.\n" + "Sr No 37, Near Angraj Hotel, Kondhwa, Pune, Maharashtra 411048",
 					f);
 			company.setAlignment(Element.ALIGN_CENTER);
 			document.add(company);

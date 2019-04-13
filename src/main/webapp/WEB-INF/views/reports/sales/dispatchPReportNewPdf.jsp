@@ -94,19 +94,21 @@ th {
 																		</td>
 																		  <c:forEach items="${list.itemList}" var="itemList" >
 																		  <td style="text-align:center; font-weight: bold;">
-																		  
-																		   <c:choose>
-																			  <c:when test="${itemList.orderQty>0}">
+																		<c:choose> 
+																<c:when test="${staionListWithFranchiseeList.stationNo==itemList.itemMrp2}">
+																		   <%--  <c:choose>
+																			  <c:when test="${itemList.orderQty>0}"> --%>
 																			 
 																			<fmt:formatNumber type="number"	minFractionDigits="0" maxFractionDigits="0"	value="${itemList.orderQty}"/>
 																			 
-																			  </c:when>
+																		<%--   </c:when>
 																			  <c:otherwise>
-																			 
+																			
 																			  
 																			  </c:otherwise>
 																			  
-																			  </c:choose>
+																			  </c:choose> --%> </c:when>
+																	</c:choose>
 																		  </td> 
 																		  </c:forEach>
 																		</tr>
