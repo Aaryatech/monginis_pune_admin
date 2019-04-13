@@ -388,7 +388,7 @@ public class ReportControllerV2 {
 				String mimeType = URLConnection.guessContentTypeFromName(file.getName());
 
 				if (mimeType == null) {
-
+ 
 					mimeType = "application/pdf";
 
 				}
