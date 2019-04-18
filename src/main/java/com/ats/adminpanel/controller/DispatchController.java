@@ -251,20 +251,22 @@ public class DispatchController {
 		try {
    for(int i=0;i<frListOrdersPresent.size();i++) {
 	   
-		PdfPTable table = new PdfPTable(4);
+		PdfPTable table = new PdfPTable(6);
 		table.setHeaderRows(1);
-
+int itemcount=0;
 			table.setWidthPercentage(100);
-			table.setWidths(new float[] { 0.4f, 4.0f, 1.9f, 1.7f});
-			Font headFont = new Font(FontFamily.TIMES_ROMAN, 12, Font.NORMAL, BaseColor.BLACK);
-			Font headFont1 = new Font(FontFamily.HELVETICA, 12, Font.BOLD, BaseColor.BLACK);
-			Font f = new Font(FontFamily.TIMES_ROMAN, 12.0f, Font.BOLD, BaseColor.BLUE);
+			table.setWidths(new float[] { 0.4f, 4.0f, 1.0f,0.4f, 4.0f, 1.0f});
+			Font headFont0 = new Font(FontFamily.TIMES_ROMAN, 6, Font.NORMAL, BaseColor.BLACK);
+			Font headFont = new Font(FontFamily.TIMES_ROMAN, 10, Font.NORMAL, BaseColor.BLACK);
+			Font headFont1 = new Font(FontFamily.HELVETICA, 9, Font.BOLD, BaseColor.BLACK);
+			Font headFont2 = new Font(FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.BLACK);
+			Font f1111 = new Font(FontFamily.TIMES_ROMAN, 12.0f, Font.BOLD, BaseColor.BLUE);
 			Font f1 = new Font(FontFamily.TIMES_ROMAN, 10.0f, Font.NORMAL, BaseColor.BLACK);
 			PdfPCell hcell = new PdfPCell();
 		
 		
 			hcell = new PdfPCell(new Phrase("Sr.", headFont1));
-			hcell.setPadding(5);
+			hcell.setPadding(1);
 			hcell.setBackgroundColor(BaseColor.PINK);
 			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
 			table.addCell(hcell);
@@ -272,20 +274,33 @@ public class DispatchController {
 			hcell = new PdfPCell(new Phrase("ITEM NAME", headFont1));
 			hcell.setBackgroundColor(BaseColor.PINK);
 			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-			hcell.setPadding(5);
+			hcell.setPadding(1);
 			table.addCell(hcell);
 
-			hcell = new PdfPCell(new Phrase("DISPATCH QTY", headFont1));
-			hcell.setPadding(5);
+			hcell = new PdfPCell(new Phrase("QTY", headFont1));
+			hcell.setPadding(1);
 			hcell.setBackgroundColor(BaseColor.PINK);
 			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
 			table.addCell(hcell);
 
-			hcell = new PdfPCell(new Phrase("SENT", headFont1));
-			hcell.setPadding(5);
-			hcell.setBackgroundColor(BaseColor.PINK);
-			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-			table.addCell(hcell);
+			PdfPCell hcell1 = new PdfPCell();
+			hcell1 = new PdfPCell(new Phrase("Sr.", headFont1));
+			hcell1.setPadding(1);
+			hcell1.setBackgroundColor(BaseColor.PINK);
+			hcell1.setHorizontalAlignment(Element.ALIGN_CENTER);
+			table.addCell(hcell1);
+
+			hcell1 = new PdfPCell(new Phrase("ITEM NAME", headFont1));
+			hcell1.setBackgroundColor(BaseColor.PINK);
+			hcell1.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell1.setPadding(1);
+			table.addCell(hcell1);
+
+			hcell1 = new PdfPCell(new Phrase("QTY", headFont1));
+			hcell1.setPadding(1);
+			hcell1.setBackgroundColor(BaseColor.PINK);
+			hcell1.setHorizontalAlignment(Element.ALIGN_CENTER);
+			table.addCell(hcell1);
 
 
 			  for(int j=0;j<subCatAList.size();j++) {
@@ -320,15 +335,51 @@ public class DispatchController {
 						
 						if(editQty>0)
 						{
+							
+							
+							int row_num=itemcount/20;
+							int size= itemcount % 2;
+							System.out.println("itemcount="+itemcount +"row_num"+row_num+"size"+size );
 							if(flagnew==0)
 							{
 								PdfPCell cell;
-
+									if(size==1)
+									{
+										cell = new PdfPCell(new Phrase("", headFont));
+										cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+										//cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+										cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+										
+										cell.setPaddingRight(2);
+										cell.setPadding(4);
+										table.addCell(cell);
+										
+										cell = new PdfPCell(new Phrase("", headFont));
+										cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+										//cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+										cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+										cell.setPaddingRight(2);
+										cell.setPadding(4);
+										table.addCell(cell);
+										
+										cell = new PdfPCell(new Phrase("", headFont));
+										cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+										//cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+										cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+										cell.setPaddingRight(2);
+										cell.setPadding(4);
+										table.addCell(cell);
+										itemcount=itemcount+1;
+										
+									}
+									
+								
 								cell = new PdfPCell(new Phrase("", headFont));
 								cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
 								cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 								cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-								cell.setPadding(4);
+								cell.setPadding(2);
+								
 								table.addCell(cell);
 
 								cell = new PdfPCell(new Phrase("" +subCatAList.get(j).getSubCatName() , headFont));
@@ -336,30 +387,81 @@ public class DispatchController {
 								cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
 								cell.setHorizontalAlignment(Element.ALIGN_LEFT);
 								cell.setPaddingRight(2);
-								cell.setPadding(4);
+								cell.setPadding(2);
+								
 								table.addCell(cell);
 
+								cell = new PdfPCell(new Phrase("", headFont));
+								cell.setVerticalAlignment(Element.ALIGN_CENTER);
+								cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+								cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+								cell.setPaddingRight(2);
+								cell.setPadding(2);
+								table.addCell(cell);
+								
 								cell = new PdfPCell(new Phrase("", headFont));
 								cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 								cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
 								cell.setHorizontalAlignment(Element.ALIGN_CENTER);
 								cell.setPaddingRight(2);
-								cell.setPadding(4);
+								cell.setPadding(2);
 								table.addCell(cell);
-
+								
 								cell = new PdfPCell(new Phrase("", headFont));
 								cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 								cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
-								cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+								cell.setHorizontalAlignment(Element.ALIGN_CENTER);
 								cell.setPaddingRight(2);
-								cell.setPadding(4);
+								cell.setPadding(2);
 								table.addCell(cell);
 								
+								cell = new PdfPCell(new Phrase("", headFont));
+								cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+								cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+								cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+								cell.setPaddingRight(2);
+								cell.setPadding(2);
+								table.addCell(cell);
+								
+								
 								flagnew=1;
+								
 							}
 							
-							PdfPCell cell;
+							
+								
+							//	if(size==0)
+								//{	
+								
+							
+									PdfPCell cell;
+							cell = new PdfPCell(new Phrase(""+srNo, headFont0));
+							cell.setVerticalAlignment(Element.ALIGN_CENTER);
+							cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+							cell.setPadding(2);
+							table.addCell(cell);
 
+							srNo=srNo+1;
+							
+							cell = new PdfPCell(new Phrase("" +itemsList.get(k).getItemName() , headFont));
+							cell.setVerticalAlignment(Element.ALIGN_CENTER);
+							cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+							cell.setPaddingRight(2);
+							cell.setPadding(2);
+							table.addCell(cell);
+
+							cell = new PdfPCell(new Phrase(""+editQty, headFont2));
+							cell.setVerticalAlignment(Element.ALIGN_CENTER);
+							cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+							
+							cell.setPaddingRight(2);
+							cell.setPadding(2);
+							table.addCell(cell);
+							
+								/*}
+								else
+								{
+									PdfPCell cell;		
 							cell = new PdfPCell(new Phrase(""+srNo, headFont));
 							cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 							cell.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -375,20 +477,16 @@ public class DispatchController {
 							cell.setPadding(4);
 							table.addCell(cell);
 
-							cell = new PdfPCell(new Phrase(""+editQty, headFont));
+							cell = new PdfPCell(new Phrase(""+editQty, headFont2));
 							cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 							cell.setHorizontalAlignment(Element.ALIGN_CENTER);
 							cell.setPaddingRight(2);
 							cell.setPadding(4);
 							table.addCell(cell);
-
-							cell = new PdfPCell(new Phrase("", headFont));
-							cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-							cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-							cell.setPaddingRight(2);
-							cell.setPadding(4);
-							table.addCell(cell);
+								
 							
+							}*/
+								itemcount=itemcount+1;
 						}
 						
 						

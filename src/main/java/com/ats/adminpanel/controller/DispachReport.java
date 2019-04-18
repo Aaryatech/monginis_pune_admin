@@ -588,6 +588,8 @@ public class DispachReport {
 					SectionMaster.class);
 			 
 			 menuList =  routeMaster.getMenuList();
+			 
+			 System.out.println("menuList"+menuList.toString());
 
 		} catch (Exception e) {
 
@@ -879,7 +881,7 @@ public class DispachReport {
 			map.add("menuIds", menuIds);
 			System.out.println("map " + map); 
  
-			StaionListWithFranchiseeList[] array = restTemplate.postForObject(Constants.url + "/getAbcDepatchReport",map,
+			StaionListWithFranchiseeList[] array = restTemplate.postForObject(Constants.url + "/getAbcDepatchReportMin",map,
 					StaionListWithFranchiseeList[].class);
 			
 			List<StaionListWithFranchiseeList> staionListWithFranchiseeList = new ArrayList<StaionListWithFranchiseeList>(Arrays.asList(array));
@@ -985,6 +987,8 @@ public class DispachReport {
 					
 				}
 			 
+			System.err.println("itemListStatioinWiseList"+ itemListStatioinWiseList.toString());
+			System.err.println("staionListWithFranchiseeList"+ staionListWithFranchiseeList);
 			model.addObject("itemListStatioinWiseList", itemListStatioinWiseList);
 			model.addObject("staionListWithFranchiseeList", staionListWithFranchiseeList);
 			model.addObject("itemList", itemList);
@@ -2145,6 +2149,125 @@ public class DispachReport {
 		}
 	} 
 
-	 
+	@RequestMapping(value = "/SpCakeDispatchReport", method = RequestMethod.GET)
+	public ModelAndView SpCakeDispatchReport(HttpServletRequest request, HttpServletResponse response) {
+
+		ModelAndView model = new ModelAndView("reports/spCakeDispatchReport");
+ 
+
+		try {
+			ZoneId z = ZoneId.of("Asia/Calcutta");
+
+			LocalDate date = LocalDate.now(z);
+			DateTimeFormatter formatters = DateTimeFormatter.ofPattern("d-MM-uuuu");
+			todaysDate = date.format(formatters);
+
+			RestTemplate restTemplate = new RestTemplate();
+
+				
+			List<FranchiseeList> franchiseeList=null;
+			
+				FranchiseeAndMenuList	franchiseeAndMenuList = restTemplate.getForObject(Constants.url + "getFranchiseeAndMenu",
+						FranchiseeAndMenuList.class);
+				franchiseeList=franchiseeAndMenuList.getAllFranchisee();
+				
+				model.addObject("franchiseeList", franchiseeList);
+				
+			
+			/*Menu[] allMenus = restTemplate.getForObject(Constants.url + "/getAllMenuList",
+					Menu[].class);
+			   menuList = new ArrayList (Arrays.asList(allMenus)); */
+			 
+			model.addObject("menuList", menuList);   
+			model.addObject("todaysDate", todaysDate); 
+			
+			
+			SectionMaster[] sectionMasterArray = restTemplate.getForObject(Constants.url + "/getSectionListOnly",
+					SectionMaster[].class);
+			 List<SectionMaster> sectionList = new ArrayList<SectionMaster>(Arrays.asList(sectionMasterArray)); 
+			model.addObject("sectionList", sectionList);
+
+		} catch (Exception e) {
+
+			System.out.println("Exc in show sales report bill wise  " + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return model;
+
+	}
+	//------------------------------------------------------Sumit Special cake dispatch report  SUMIT  19 Apr 2019 ------------------------------------------------------------------
+	@RequestMapping(value = "pdf/getPDispatchFranchasewiseSpCake", method = RequestMethod.GET)
+	public ModelAndView getPDispatchReportFranchasiwiseSpecialCakePdf(HttpServletRequest request,
+			HttpServletResponse response) {
+		
+		ModelAndView model = new ModelAndView("reports/specialCakeFranchasiWiseDispatchReportPdf");
+		List<PDispatchReport> dispatchReportList = new ArrayList<PDispatchReport>();
+		
+		PDispatchReportList dispatchReports = new PDispatchReportList();
+		try {
+			System.out.println("Inside get Dispatch Report");
+			String billDate = request.getParameter("bdate");
+			String[] selectedFranchase = request.getParameterValues("frids");
+			String[] selectedMenu = request.getParameterValues("menus");
+			
+			System.out.println("billDate"+billDate);
+			System.out.println("selectedFranchase"+selectedFranchase);
+			System.out.println("selectedMenu"+selectedMenu);
+			
+			String strselectedFranchase=new String();
+			for(int i=0; i < selectedFranchase.length ; i++) {
+				strselectedFranchase=strselectedFranchase+","+selectedFranchase[i];
+			}
+			strselectedFranchase=strselectedFranchase.substring(1, strselectedFranchase.length());
+			strselectedFranchase = strselectedFranchase.replaceAll("\"", "");
+			
+			String strselectedMenu=new String();
+			for(int i=0; i < selectedMenu.length ; i++) {
+				strselectedMenu=strselectedMenu+","+selectedMenu[i];
+			}
+			strselectedMenu=strselectedMenu.substring(1, strselectedMenu.length());
+			strselectedMenu = strselectedMenu.replaceAll("\"", "");
+			
+			System.out.println("strselectedFranchase" + strselectedFranchase.toString());
+			System.out.println("strselectedMenu" + strselectedMenu.toString());
+			
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+
+			RestTemplate restTemplate = new RestTemplate();
+				map = new LinkedMultiValueMap<String, Object>();
+				map.add("menu", strselectedMenu);
+				map.add("deliveryDate", billDate);
+				map.add("frId", strselectedFranchase);
+				
+
+				ParameterizedTypeReference<List<PDispatchReport>> typeRef = new ParameterizedTypeReference<List<PDispatchReport>>() {
+				};
+
+				ResponseEntity<List<PDispatchReport>> responseEntity = restTemplate.exchange(
+						Constants.url + "getPDispatchFranchasewiseSpCake", HttpMethod.POST, new HttpEntity<>(map), typeRef);
+				System.out.println("Items:" + responseEntity.toString());
+
+				dispatchReportList = responseEntity.getBody();
+				
+				System.out.println("dispatchReportList = " + dispatchReportList.toString());
+				
+				model.addObject("dispatchReportList", dispatchReportList);
+				
+				
+				
+			
+
+		} catch (Exception e) {
+			System.out.println("get Dispatch Report Exception: " + e.getMessage());
+			e.printStackTrace();
+
+		}
+
+		return model;
+
+	}
+	
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------------
      
 }
