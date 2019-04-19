@@ -65,10 +65,10 @@
 
 			<div class="box-content">
 				<div class="row">
-					<div class="form-group col-md-9">
+					<div class="form-group">
 						<label class=" col-md-2 control-label franchisee_label">Select
 							Franchise </label>
-						<div class=" col-md-7 controls franchisee_select">
+						<div class=" col-md-3 controls franchisee_select">
 							<select class="form-control chosen " tabindex="6" id="selectFr"
 								name="selectFr" onchange="getBills()">
 
@@ -79,12 +79,10 @@
 
 							</select>
 						</div>
-					</div>
-
-					<div class="form-group col-md-9">
-						<label class=" col-md-2 control-label menu_label">Select
+					
+						<label class="col-md-2 control-label menu_label">Select
 							Bill</label>
-						<div class=" col-md-5 controls menu_select">
+						<div class=" col-md-3 controls menu_select">
 
 							<select data-placeholder="Choose Bill"
 								class="form-control chosen" tabindex="6" id="selectMenu"
@@ -93,7 +91,14 @@
 						</div>
 					</div>
 
-					<div class="form-group col-md-9">
+					<div class="form-group col-md-2">
+						<div class="row" align="left">
+							<div class="col-md-12" style="text-align: center">
+								<button class="btn btn-primary" onclick="getItems()">Search</button>
+
+							</div>
+
+						</div>
 						<div align="center" id="loader" style="display: none">
 
 							<span>
@@ -104,13 +109,7 @@
 								class="l-3"></span> <span class="l-4"></span> <span class="l-5"></span>
 							<span class="l-6"></span>
 						</div>
-						<div class="row" align="left">
-							<div class="col-md-12" style="text-align: center">
-								<button class="btn btn-primary" onclick="getItems()">Search</button>
-
-							</div>
-
-						</div>
+					
 					</div>
 <div class="col-md-9" ></div> 
 					<label for="search" class="col-md-3" id="search">
@@ -131,7 +130,7 @@
 
 			<form id="openingStockForm"
 				action="${pageContext.request.contextPath}/insertManGrn"
-				method="post">
+				method="post"  onsubmit="btnSubmit.disabled = true; return confirm('Do you want to save Grn ?');">
 				<div class=" box-content">
 					<div class="row">
 						<div class="col-md-12 table-responsive">
@@ -163,9 +162,15 @@
 
 					<div class="row">
 						<div class="form-group">
-							<div class="col-sm-9 col-sm-offset-3 col-lg-11 col-lg-offset-3">
+						
+					<label class=" col-md-1 control-label franchisee_label">Date</label>
+						<div class="col-sm-3 col-lg-2 controls">
+										<input class="form-control date-picker" id="date" size="19" placeholder="dd-mm-yyyy"
+											type="text" name="date"  required/>
+									</div>
+							<div class="col-sm-9 col-sm-offset-1 col-lg-1 col-lg-offset-1">
 
-								<input type="submit" class="btn btn-primary" value="Submit">
+								<input type="submit" class="btn btn-primary" value="Submit"  id="btnSubmit"   disabled="disabled">
 							</div>
 						</div>
 					</div>
@@ -235,9 +240,13 @@
 					}, function(data) {
 						//alert(data);
 						var len = data.length;
+						$('#btnSubmit').removeAttr("disabled");
+
 						if(data==null){
 							alert("No Record Found ")
 							$('#loader').hide();
+							$("#btnSubmit").attr("disabled", true);
+
 						}
 						
 						$('#table_grid td').remove();
@@ -280,7 +289,7 @@
 						  	
 						  //	tr.append($('<td></td>').html(bill.rate));
 
-						 	tr.append($('<td></td>').html("<input type=text  onkeyup='return calcGrn("+bill.grnType+","+bill.rate+","+bill.itemId+","+bill.sgstPer+","+bill.cgstPer+","+bill.billDetailNo+","+bill.discPer+")' ondrop='return false;' onpaste='return false;' style='text-align: center;' class='form-control' min=0 id="+bill.billDetailNo+" name=qty"+bill.billDetailNo+" Value="+0+" >"));
+						 	tr.append($('<td></td>').html("<input type=text  onkeyup='return calcGrn("+bill.billQty+","+bill.grnType+","+bill.rate+","+bill.itemId+","+bill.sgstPer+","+bill.cgstPer+","+bill.billDetailNo+","+bill.discPer+")' ondrop='return false;' onpaste='return false;' style='text-align: center;' class='form-control' min=0 id=qty"+bill.billDetailNo+" name=qty"+bill.billDetailNo+" Value="+0+" >"));
 						  	tr.append($('<td></td>').html(bill.igstPer));
 						  	tr.append($('<td id=taxable_amt'+bill.billDetailNo+'></td>').html(""));
 						  	tr.append($('<td id=tax_amt'+bill.billDetailNo+'></td>').html(""));
@@ -327,20 +336,28 @@
 
 				}
 				
-				function calcGrn(grnType,rate,itemId,cgstPer,sgstPer,dNo,discPer) {
-				//document.getElementById("taxable_amt"+dNo).html="100";
-				//var r=140;
-				//$("#taxable_amt"+dNo).html(r);
-					/* alert("In ");
-					alert("type " +grnType);
-					alert("rate " +rate);
-					alert("itemId " +itemId);
-					alert("t1" +t1);
-					alert("t2 " +t2);
-					alert("d No  " +dNo); */
-					
-				    var grnQty =document.getElementById(""+dNo).value;
-					//alert("qty " +grnQty);
+				function calcGrn(billQty,grnType,rate,itemId,cgstPer,sgstPer,dNo,discPer) {
+				
+					document.getElementById("check"+dNo).checked = false;
+				    var grnQty =document.getElementById("qty"+dNo).value;
+				    
+				    if(parseInt(grnQty)>billQty){
+						alert("Grn Quantity can not be greater than Purchase Quantity");
+						
+						document.getElementById("qty"+dNo).value=0;
+						
+						$("#grn_amt"+dNo).html(0.00);
+						$("#taxable_amt"+dNo).html(0.00);
+						$("#tax_amt"+dNo).html(0.00);
+						
+						document.getElementById("check"+dNo).checked = false;
+						
+					}else{
+				    if(grnQty>0)
+					{
+					document.getElementById("check"+dNo).checked = true;
+				
+					}
 					var baseRate=rate;
 					
 					var grnBaseRate;
@@ -392,6 +409,7 @@
 					$("#tax_per"+dNo).html(totTaxPer.toFixed(2));
 					$("#taxable_amt"+dNo).html(taxableAmt.toFixed(2));
 					$("#tax_amt"+dNo).html(totalTax.toFixed(2));
+					}
 				}
 					
 			</script>

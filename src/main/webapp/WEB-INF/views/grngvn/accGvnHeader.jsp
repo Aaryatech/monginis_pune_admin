@@ -203,8 +203,8 @@
 												<thead style="background-color:#f3b5db; ">
 													<tr>
 														<th class="col-md-2">GvnSr No</th>
-														<th class="col-md-1">Date</th>
-														<th class="col-md-1">Franchisee</th>
+													
+														<th class="col-md-1">Franchisee</th>	<th class="col-md-1">Date</th>
 														<th class="col-md-2">Taxable Amt</th>
 														<th class="col-md-2">Tax Amt</th>
 														<th class="col-md-2">Amount</th>

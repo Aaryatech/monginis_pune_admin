@@ -120,9 +120,7 @@
 					</div>
 						
 					</div>
-				</div>
-
-				<br>
+				
 				<div class="row">
 					<div class="col-md-12" style="text-align: center;">
 						
@@ -141,7 +139,9 @@
 				</div>
 
 			</div>
-	
+	</div>
+
+		</div>
 
 
 		<div class="box" >
@@ -180,9 +180,7 @@
 								</tbody>
 							</table>
 							<div class="form-group" style="display: none;" id="range">
-								 
-											 
-											 
+								 		 
 											<div class="col-sm-3  controls">
 											</div>
 											</div>
@@ -242,7 +240,6 @@
 
 									$('#table_grid td').remove();
 									$('#loader').hide();
-alert("data " +data);
 									if (data == "") {
 										alert("No records found !!");
 										  document.getElementById("expExcel").disabled=true;
@@ -266,17 +263,17 @@ alert("data " +data);
 														var tr = $('<tr></tr>');
 													  	tr.append($('<td></td>').html(report.invoiceNo));
 													  	tr.append($('<td></td>').html(report.billDate));
-													  	tr.append($('<td style="text-align:right;"></td>').html(report.frName));
-													  	tr.append($('<td style="text-align:right;"></td>').html(report.gvnValue));
-													  	tr.append($('<td style="text-align:right;"></td>').html(report.hsnCode));
+													  	tr.append($('<td style="text-align:left;"></td>').html(report.frName));
+													  	tr.append($('<td style="text-align:left;"></td>').html(report.frGstNo));
+													  	tr.append($('<td style="text-align:left;"></td>').html(report.hsnCode));
 														  tr.append($('<td style="text-align:right;"></td>').html((report.billQty)));
-														  	tr.append($('<td style="text-align:right;"></td>').html(report.taxableAmt));
+														  	tr.append($('<td style="text-align:right;"></td>').html(report.taxableAmt.toFixed(2)));
 														  	tr.append($('<td style="text-align:right;"></td>').html(report.cgstPer));
-														  	tr.append($('<td style="text-align:right;"></td>').html(report.cgstAmt));
+														  	tr.append($('<td style="text-align:right;"></td>').html(report.cgstAmt.toFixed(2)));
 														  	
 															tr.append($('<td style="text-align:right;"></td>').html(report.sgstPer));
-														  	tr.append($('<td style="text-align:right;"></td>').html(report.sgstAmt));
-														  	tr.append($('<td style="text-align:right;"></td>').html(report.grandTotal));
+														  	tr.append($('<td style="text-align:right;"></td>').html(report.sgstAmt.toFixed(2)));
+														  	tr.append($('<td style="text-align:right;"></td>').html(report.grandTotal.toFixed(2)));
 
 														$('#table_grid tbody')
 																.append(

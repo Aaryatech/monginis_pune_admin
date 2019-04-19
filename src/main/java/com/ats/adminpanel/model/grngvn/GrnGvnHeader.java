@@ -28,7 +28,7 @@ public class GrnGvnHeader {
 	
 	private int isCreditNote;
 
-	private int creditNoteId;
+	private String creditNoteId;
 	
 	private String approvedDatetime;
 
@@ -136,11 +136,11 @@ public class GrnGvnHeader {
 		this.isCreditNote = isCreditNote;
 	}
 
-	public int getCreditNoteId() {
+	public String getCreditNoteId() {
 		return creditNoteId;
 	}
 
-	public void setCreditNoteId(int creditNoteId) {
+	public void setCreditNoteId(String creditNoteId) {
 		this.creditNoteId = creditNoteId;
 	}
 

@@ -62,8 +62,8 @@
 
 
 					<div class="form-group">
-						<label class="col-sm-3 col-lg-2	 control-label">From Date</label>
-						<div class="col-sm-6 col-lg-4 controls date_select">
+						<label class="col-sm-3 col-lg-1	 control-label">From Date</label>
+						<div class="col-sm-6 col-lg-2 controls date_select">
 							<input class="form-control date-picker" id="fromDate"
 								name="fromDate" size="30" type="text" value="${todaysDate}" />
 						</div>
@@ -72,22 +72,19 @@
 
 					<div class="form-group  "> -->
 
-						<label class="col-sm-3 col-lg-2	 control-label">To Date</label>
-						<div class="col-sm-6 col-lg-4 controls date_select">
+						<label class="col-sm-3 col-lg-1	 control-label">To Date</label>
+						<div class="col-sm-6 col-lg-2 controls date_select">
 							<input class="form-control date-picker" id="toDate" name="toDate"
 								size="30" type="text" value="${todaysDate}" />
 						</div>
-					</div>
+				<!-- 	</div>
 
 				</div>
 
 
 				<br>
-
-				<!-- <div class="col-sm-9 col-lg-5 controls">
- -->
-				<div class="row">
-					<div class="form-group">
+<div class="row">
+					<div class="form-group"> -->
 					<%-- <label class="col-sm-3 col-lg-2 control-label"><b></b>Select
 							Franchisee</label>
 						<div class="col-sm-6 col-lg-4">
@@ -122,8 +119,8 @@
 					</div>
 				</div>
 
-				<br>
-				<div class="row">
+			
+				<div class="row" style="background-color: white;">
 					<div class="col-md-12" style="text-align: center;">
 						
 				</div>
@@ -161,6 +158,7 @@
 								style="width: 100%" id="table_grid" >
 								<thead style="background-color: #f3b5db;">
 									<tr>
+										<th>Sr</th>
 										<th>CRN No</th>
 										<th>CRN Date</th>
 										<th>Invoice No</th>
@@ -209,7 +207,7 @@
 	<!-- END Main Content -->
 	
 	<footer>
-	<p>2018 © Monginis.</p>
+	<p>2019 © Monginis.</p>
 	</footer>
 
 	<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
@@ -240,7 +238,7 @@
 
 									$('#table_grid td').remove();
 									$('#loader').hide();
-alert("data " +data);
+
 									if (data == "") {
 										alert("No records found !!");
 										  document.getElementById("expExcel").disabled=true;
@@ -262,22 +260,23 @@ alert("data " +data);
 														var index = key + 1;
 														//var tr = "<tr>";
 														var tr = $('<tr></tr>');
+														tr.append($('<td></td>').html(""+index));
 														tr.append($('<td></td>').html(report.crnId));
 													  	tr.append($('<td></td>').html(report.crnDate));
 													  	tr.append($('<td></td>').html(report.invoiceNo));
 													  	tr.append($('<td></td>').html(report.billDate));
-													  	tr.append($('<td style="text-align:right;"></td>').html(report.frName));
-													  	tr.append($('<td style="text-align:right;"></td>').html(report.frGstNo));
+													  	tr.append($('<td style="text-align:left;"></td>').html(report.frName));
+													  	tr.append($('<td style="text-align:left;"></td>').html(report.frGstNo));
 
-													  	tr.append($('<td style="text-align:right;"></td>').html(report.hsnCode));
-														  tr.append($('<td style="text-align:right;"></td>').html((report.crnQty)));
-														  	tr.append($('<td style="text-align:right;"></td>').html(report.crnTaxable));
-														  	tr.append($('<td style="text-align:right;"></td>').html(report.cgstPer));
-														  	tr.append($('<td style="text-align:right;"></td>').html(report.cgstAmt));
+													  	tr.append($('<td style="text-align:left;"></td>').html(report.hsnCode));
+														  tr.append($('<td style="text-align:center;"></td>').html((report.crnQty)));
+														  	tr.append($('<td style="text-align:right;"></td>').html(report.crnTaxable.toFixed(2)));
+														  	tr.append($('<td style="text-align:right;"></td>').html(report.cgstPer.toFixed(2)));
+														  	tr.append($('<td style="text-align:right;"></td>').html(report.cgstAmt.toFixed(2)));
 														  	
-															tr.append($('<td style="text-align:right;"></td>').html(report.sgstPer));
-														  	tr.append($('<td style="text-align:right;"></td>').html(report.sgstAmt));
-														  	tr.append($('<td style="text-align:right;"></td>').html(report.crnAmt));
+															tr.append($('<td style="text-align:right;"></td>').html(report.sgstPer.toFixed(2)));
+														  	tr.append($('<td style="text-align:right;"></td>').html(report.sgstAmt.toFixed(2)));
+														  	tr.append($('<td style="text-align:right;"></td>').html(report.crnAmt.toFixed(2)));
 
 														$('#table_grid tbody')
 																.append(

@@ -65,7 +65,11 @@
 								class="form-horizontal" method="post" id="validation-form">
 									<input type="hidden" value="${headerId}" id="headerId"
 									name="headerId">
-								<div class="box">
+								<div class="box" style="margin-bottom: 20px;
+    box-shadow: 0 0px 0px 0 rgba(255, 111, 0, 0.3);
+    background: #ff6f00;
+    background: -webkit-linear-gradient(45deg, #ff6f00 0%, #ffca28 100%);
+    background: linear-gradient(45deg, #d66f3f 0%, #e696ca 100%);">
 									<div class="box-title">
 										<h3>
 											<i class="fa fa-table"></i> GVN List  GVN List Date-${grnDate} srNo-${srNo}
@@ -128,7 +132,7 @@
 															<c:when
 																test="${gvnList.aprQtyGate!=gvnList.grnGvnQty or gvnList.aprQtyStore!=gvnList.aprQtyGate}">
 
-																<c:set var="color" value="blue"></c:set>
+																<c:set var="color" value="white"></c:set>
 															</c:when>
 															<c:otherwise>
 																<c:set var="color" value="white"></c:set>
@@ -604,9 +608,14 @@
 										<!-- this is for ajax call<input type="submit" class="btn btn-primary" value="Submit"
 										id="callSubmit" onclick="callSubmitGrn(); getGrnId();"> -->
 
-
+ <label class=" col-md-2 control-label franchisee_label"><input type="checkbox" name="isDateUpdate" value="1">GRN Date</label>
+						<div class="col-sm-3 col-lg-2 controls">
+						
+										<input class="form-control date-picker" id="date" size="19" placeholder="dd-mm-yyyy"
+											type="text" name="date" value="${grnDate}" required/>
+									</div>
 										<div
-											class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-0">
+											class="col-sm-2 col-sm-offset-0 col-lg-2 col-lg-offset-0">
 											<input type="submit" value="Submit" class="btn btn-primary">
 
 

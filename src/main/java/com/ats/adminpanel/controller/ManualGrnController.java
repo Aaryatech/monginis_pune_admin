@@ -228,7 +228,7 @@ public class ManualGrnController {
 	}
 
 	@RequestMapping(value = "/insertManGrn", method = RequestMethod.POST)
-	public ModelAndView insertManGrn(HttpServletRequest request, HttpServletResponse response) {
+	public String insertManGrn(HttpServletRequest request, HttpServletResponse response) {
 
 		System.err.println("Inside insertManGrn");
 		ModelAndView model = new ModelAndView("grngvn/manGrn");
@@ -236,7 +236,7 @@ public class ManualGrnController {
 		try {
 
 			RestTemplate restTemplate = new RestTemplate();
-
+			String date = request.getParameter("date");
 			for (int i = 0; i < grnConfList.size(); i++) {
 				String billNo = request.getParameter("" + grnConfList.get(i).getBillDetailNo());
 
@@ -257,8 +257,9 @@ public class ManualGrnController {
 
 			FranchiseeList frList = restTemplate.getForObject(Constants.url + "getFranchisee?frId={frId}",
 					FranchiseeList.class, frId);
-
-			java.sql.Date grnGvnDate = new java.sql.Date(Calendar.getInstance().getTime().getTime());
+			SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy");
+			java.util.Date udate = sdf1.parse(date);
+			java.sql.Date grnGvnDate = new java.sql.Date(udate.getTime());
 
 			List<GrnGvn> postGrnGvnList = new ArrayList<GrnGvn>();
 
@@ -445,7 +446,7 @@ public class ManualGrnController {
 			grnHeader.setFrId(Integer.parseInt(frId));
 			grnHeader.setApporvedAmt(sumTotalAmt);
 			grnHeader.setApprovedDatetime(curDateTime);
-			grnHeader.setCreditNoteId(0);
+			grnHeader.setCreditNoteId("");
 			grnHeader.setGrngvnDate(new SimpleDateFormat("dd-MM-yyyy").format(grnGvnDate));
 			grnHeader.setGrngvnSrno(getGrnGvnSrNo(request, response, frList.getFrCode()));
 			grnHeader.setGrngvnStatus(6);
@@ -508,7 +509,7 @@ public class ManualGrnController {
 
 		}
 
-		return model;
+		return "redirect:/showManGrn";
 
 	}
 

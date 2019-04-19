@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -65,6 +66,8 @@ import com.ats.adminpanel.model.creditnote.GetGrnGvnForCreditNoteList;
 import com.ats.adminpanel.model.creditnote.PostCreditNoteDetails;
 import com.ats.adminpanel.model.creditnote.PostCreditNoteHeader;
 import com.ats.adminpanel.model.creditnote.PostCreditNoteHeaderList;
+import com.ats.adminpanel.model.franchisee.FranchiseeAndMenuList;
+import com.ats.adminpanel.model.franchisee.FranchiseeList;
 import com.ats.adminpanel.model.login.UserResponse;
 import com.ats.adminpanel.model.production.GetProdDetailBySubCat;
 import com.ats.adminpanel.model.production.GetProdDetailBySubCatList;
@@ -91,17 +94,25 @@ public class CreditNoteController {
 	}
 
 	GetGrnGvnForCreditNoteList getGrnGvnForCreditNoteList;
-
+	String selectedFr="";
 	List<GetGrnGvnForCreditNote> getGrnGvnForCreditNote;
-
+	List<FranchiseeList> franchiseeList=null;
+	LinkedHashMap<Integer, GetCreditNoteHeaders> crnHeadersMap =null;
+	LinkedHashMap<Integer, List<GetCrnDetails>> crnDetailsMap =null;
+	
 	@RequestMapping(value = "/showInsertCreditNote", method = RequestMethod.GET)
 	public ModelAndView showCrediNotePage(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = null;
 		HttpSession session = request.getSession();
-
+		crnHeadersMap = new LinkedHashMap<Integer, GetCreditNoteHeaders>();
+	    crnDetailsMap = new LinkedHashMap<Integer, List<GetCrnDetails>>();
+	    
 		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
 		Info view = AccessControll.checkAccess("showAddNewFranchisee", "showAddNewFranchisee", "1", "0", "0", "0",
 				newModuleList);
+		String pattern = "dd-MM-yyyy";
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+		String date = simpleDateFormat.format(new Date());
 
 		if (view.getError() == true) {
 
@@ -112,6 +123,22 @@ public class CreditNoteController {
 			model.addObject("type", 1);
 
 		}
+		RestTemplate restTemplate = new RestTemplate();
+		FranchiseeAndMenuList	franchiseeAndMenuList = restTemplate.getForObject(Constants.url + "getFranchiseeAndMenu",
+				FranchiseeAndMenuList.class);
+		franchiseeList=franchiseeAndMenuList.getAllFranchisee();
+		StringBuilder allfr = new StringBuilder();
+		for (int i = 0; i < franchiseeList.size(); i++) {
+
+			allfr = allfr.append(franchiseeList.get(i).getFrId()+ ",");
+
+		}
+
+		String strFrId = allfr.toString();
+		selectedFr = strFrId.substring(0, strFrId.length() - 1);
+		model.addObject("franchiseeList", franchiseeList);
+		model.addObject("fromDate", date);
+		model.addObject("toDate", date);
 		return model;
 
 	}
@@ -144,28 +171,49 @@ public class CreditNoteController {
 		// Constants.subAct = 72;
 
 		ModelAndView model = new ModelAndView("creditNote/generateCreditNote");
-
+        int isAllFrSel=0;
 		try {
 			String type = request.getParameter("selectType");
-
+			String fromdate = request.getParameter("fromdate");
+			String todate = request.getParameter("todate");
+			String[] selectedFranchase = request.getParameterValues("frid");
+			String strselectedFranchase=new String();
+			for(int i=0; i < selectedFranchase.length ; i++) {
+				strselectedFranchase=strselectedFranchase+","+selectedFranchase[i];
+			}
+			strselectedFranchase=strselectedFranchase.substring(1, strselectedFranchase.length());
+			strselectedFranchase = strselectedFranchase.replaceAll("\"", "");
+			
+			System.err.println(strselectedFranchase+"strselectedFranchase");
+			
+			  List<String> list = Arrays.asList(selectedFranchase);
+		        
+		        if(list.contains("-1")){
+		        	isAllFrSel=1;
+		        	strselectedFranchase=selectedFr;
+		        }
+			
 			RestTemplate restTemplate = new RestTemplate();
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 
 			if (type.equals("1")) {
 
 				map.add("isGrn", 1);
+				map.add("fromDate", DateConvertor.convertToYMD(fromdate));
+				map.add("toDate", DateConvertor.convertToYMD(todate));
+				map.add("frList", strselectedFranchase);
 				isGrn = 1;
-				// get /grnGvnDetailForCreditNote for GRN
 
 				getGrnGvnForCreditNoteList = restTemplate.postForObject(Constants.url + "grnGvnDetailForCreditNote",
 						map, GetGrnGvnForCreditNoteList.class);
 
 			} else {
 				isGrn = 0;
-				// get /grnGvnDetailForCreditNote for GVN
+			
 				map.add("isGrn", 0);
-
-				// get /grnGvnDetailForCreditNote for GRN
+				map.add("fromDate", DateConvertor.convertToYMD(fromdate));
+				map.add("toDate", DateConvertor.convertToYMD(todate));
+				map.add("frList", strselectedFranchase);
 
 				getGrnGvnForCreditNoteList = restTemplate.postForObject(Constants.url + "grnGvnDetailForCreditNote",
 						map, GetGrnGvnForCreditNoteList.class);
@@ -180,6 +228,14 @@ public class CreditNoteController {
 
 			model.addObject("creditNoteList", getGrnGvnForCreditNote);
 			model.addObject("type", type);
+			model.addObject("fromDate", fromdate);
+			model.addObject("toDate", todate);
+			
+			List<Integer> frids = Stream.of(strselectedFranchase.split(",")).map(Integer::parseInt)
+					.collect(Collectors.toList());
+			model.addObject("selFranchise", frids);
+			model.addObject("franchiseeList", franchiseeList);
+            model.addObject("isAllFrSel", isAllFrSel);
 		} catch (Exception e) {
 
 			System.out.println("Error in Getting grngvn for credit details " + e.getMessage());
@@ -330,12 +386,13 @@ public class CreditNoteController {
 	}
 
 	@RequestMapping(value = "/insertCreditNote", method = RequestMethod.POST)
-	public ModelAndView insertCreditNote(HttpServletRequest request, HttpServletResponse response) {
+	public String insertCreditNote(HttpServletRequest request, HttpServletResponse response) {
 
 		ModelAndView model = new ModelAndView("creditNote/generateCreditNote");
 		//System.err.println("inside insert credit note ");
 
 		try {
+			String date = request.getParameter("date");
 			HttpSession session = request.getSession();
 			UserResponse userResponse = (UserResponse) session.getAttribute("UserDetail");
 			int userId = userResponse.getUser().getId();
@@ -430,7 +487,7 @@ public class CreditNoteController {
 
 						// newly added
 						creditNoteDetail.setCatId(creditNote.getCatId());
-						creditNoteDetail.setBaseRate(creditNote.getBaseRate());
+						creditNoteDetail.setBaseRate(roundUp(creditNote.getBaseRate()));
 						creditNoteDetail.setCessPer(0);
 						creditNoteDetail.setRefInvoiceNo(creditNote.getInvoiceNo());
 
@@ -461,11 +518,11 @@ public class CreditNoteController {
 
 						float grandTotal = creditHeader.getCrnTotalTax() + creditHeader.getCrnTaxableAmt();
 
-						creditHeader.setCrnGrandTotal(Math.round(grandTotal));
+						creditHeader.setCrnGrandTotal(roundUp(grandTotal));
 
 						creditHeader.setCrnFinalAmt(Math.round((grandTotal)));
 
-						float roundOff = grandTotal - roundUp(grandTotal);
+						float roundOff = roundUp(grandTotal)-Math.round(grandTotal);
 
 						creditHeader.setRoundOff(roundUp(roundOff));
 
@@ -492,15 +549,17 @@ public class CreditNoteController {
 					}
 
 					// System.out.println("grnGvnDate= "+grnGvnDate);
-
+					SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy");
+					java.util.Date udate = sdf1.parse(date);
+					java.sql.Date creditNoteDate = new java.sql.Date(udate.getTime());
 					DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-					Calendar cal = Calendar.getInstance();
-					java.sql.Date creditNoteDate = new java.sql.Date(Calendar.getInstance().getTime().getTime());
+					Calendar cal = Calendar.getInstance();//prev 
+					//java.sql.Date creditNoteDate = new java.sql.Date(Calendar.getInstance().getTime().getTime());commented on 15april
 
 					postCreditHeader.setCreatedDateTime(dateFormat.format(cal.getTime()));
 					postCreditHeader.setCrnDate(creditNoteDate);
 					postCreditHeader.setCrnFinalAmt(Math.round(creditNote.getAprGrandTotal()));
-					postCreditHeader.setCrnGrandTotal(Math.round(creditNote.getAprGrandTotal()));
+					postCreditHeader.setCrnGrandTotal(roundUp(creditNote.getAprGrandTotal()));
 					postCreditHeader.setCrnTaxableAmt(roundUp(creditNote.getAprTaxableAmt()));
 					postCreditHeader.setCrnTotalTax(roundUp(creditNote.getAprTotalTax()));
 					postCreditHeader.setFrId(creditNote.getFrId());
@@ -562,7 +621,7 @@ public class CreditNoteController {
 
 					creditNoteDetail.setRefInvoiceNo(creditNote.getInvoiceNo());
 					creditNoteDetail.setCatId(creditNote.getCatId());
-					creditNoteDetail.setBaseRate(creditNote.getBaseRate());
+					creditNoteDetail.setBaseRate(roundUp(creditNote.getBaseRate()));
 					creditNoteDetail.setCessPer(00);
 					creditNoteDetail.setBillDate(creditNote.getRefInvoiceDate());
 
@@ -598,7 +657,7 @@ public class CreditNoteController {
 
 		}
 
-		return model;
+		return "redirect:/showInsertCreditNote";
 
 	}
 
@@ -973,6 +1032,12 @@ public class CreditNoteController {
 			@PathVariable("crnId") int crnId) {
 		ModelAndView model = new ModelAndView("creditNote/crnDetails");
 		System.out.println("In detail Page");
+		try {
+			
+		String fromDate=request.getParameter("from_date");
+		String toDate=request.getParameter("to_date");
+		String selectFr=request.getParameter("selectFr");
+		
 		GetCreditNoteHeaders creditNoteHeaders = new GetCreditNoteHeaders();
 		RestTemplate restTemplate = new RestTemplate();
 
@@ -990,13 +1055,173 @@ public class CreditNoteController {
 				break;
 			}
 		}
-
+		crnHeadersMap.put(crnId, creditNoteHeaders);
+		crnDetailsMap.put(crnId, crnDetailList);//added crn details
+		System.err.println(crnDetailsMap.toString()+"crnDetailsMap");
 		model.addObject("crnDetailList", crnDetailList);
 		model.addObject("creditNoteHeaders", creditNoteHeaders);
-
+		model.addObject("fromDate", fromDate);
+		model.addObject("toDate", toDate);
+		model.addObject("selectFr", selectFr);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 		return model;
 	}
+	
+	@RequestMapping(value = "/updateCreditNote", method = RequestMethod.POST)
+	public String updateCreditNote(HttpServletRequest request, HttpServletResponse response) {
 
+		ModelAndView model = new ModelAndView("creditNote/crnDetails");
+		RestTemplate restTemplate = new RestTemplate();
+		int crnId = 0;
+		
+		String fromDate=request.getParameter("fromDate");
+		String toDate=request.getParameter("toDate");
+		try {
+			
+			
+			String date = request.getParameter("date");
+			 crnId = Integer.parseInt(request.getParameter("crnId"));
+			
+			HttpSession session = request.getSession();
+			UserResponse userResponse = (UserResponse) session.getAttribute("UserDetail");
+			int userId = userResponse.getUser().getId();
+			
+			GetCreditNoteHeaders crnHeaderMap=crnHeadersMap.get(crnId);
+			List<GetCrnDetails> crnDetailListMap=crnDetailsMap.get(crnId);
+			//List<PostCreditNoteDetails> postCreditNoteDetailsListMatched=new ArrayList<>();
+			
+			List<PostCreditNoteHeader> creditHeaderList = new ArrayList<>();
+			List<PostCreditNoteDetails> postCreditNoteDetailsList = new ArrayList<>();
+			PostCreditNoteHeader postCreditHeader = new PostCreditNoteHeader();
+
+			SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy");
+			java.util.Date udate = sdf1.parse(date);
+			java.sql.Date creditNoteDate = new java.sql.Date(udate.getTime());
+			//DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			//Calendar cal = Calendar.getInstance();//prev 
+
+			postCreditHeader.setCrnDate(creditNoteDate);
+			float finalAmt =0.0f;float totalRoundUpAmt =0.0f;float totalCrnTax=0.0f;float totTaxableAmt=0.0f;float totGrandAmt=0.0f;
+			
+			for (int i = 0;i < crnDetailListMap.size(); i++) {
+					
+				int grnGvnQty = Integer.parseInt(request.getParameter("grnGvnQty"+crnDetailListMap.get(i).getCrndId()));
+				float totalTaxPer = Float.parseFloat(request.getParameter("totalTaxPer"+crnDetailListMap.get(i).getCrndId()));
+				float grnBaseRate = Float.parseFloat(request.getParameter("grnBaseRate"+crnDetailListMap.get(i).getCrndId()));
+
+				float cgstPer=totalTaxPer/2;
+				float sgstPer=totalTaxPer/2;
+				
+				PostCreditNoteDetails creditNoteDetail = new PostCreditNoteDetails();
+                float grnBaseRateTaxable=roundUp(grnBaseRate*grnGvnQty);
+				System.err.println("grnBaseRateTaxable"+grnBaseRateTaxable);
+                
+				float aprTotalTax = (grnBaseRateTaxable * (sgstPer + cgstPer)) / 100;
+				System.err.println("aprTotalTax"+aprTotalTax);
+				
+				float grandTotal = grnBaseRateTaxable + aprTotalTax;
+				System.err.println("grandTotal"+grandTotal);
+				
+				totGrandAmt=totGrandAmt+grandTotal;
+				System.err.println("totGrandAmt"+totGrandAmt);
+				
+				totTaxableAmt=totTaxableAmt+grnBaseRateTaxable;
+				System.err.println("totGrandAmt"+totGrandAmt);
+				
+				totalCrnTax=totalCrnTax+aprTotalTax;
+				System.err.println("totalCrnTax"+totalCrnTax);
+				
+				creditNoteDetail.setBillNo(crnDetailListMap.get(i).getBillNo());
+				creditNoteDetail.setCessRs(00);
+				creditNoteDetail.setCgstPer(cgstPer);
+				float cgstRs = (cgstPer * grnBaseRateTaxable) / 100;
+				System.err.println("cgstRs"+cgstRs);
+				
+				creditNoteDetail.setCgstRs(roundUp(cgstRs));
+				creditNoteDetail.setSgstPer(sgstPer);
+				float sgstRs = (sgstPer * grnBaseRateTaxable) / 100;
+				System.err.println("sgstRs"+sgstRs);
+				
+				creditNoteDetail.setSgstRs(roundUp(sgstRs));
+				creditNoteDetail.setIgstPer(totalTaxPer);
+				float igstRs = (totalTaxPer * grnBaseRateTaxable) / 100;
+				System.err.println("igstRs"+igstRs);
+				
+				creditNoteDetail.setIgstRs(roundUp(igstRs));
+				creditNoteDetail.setDelStatus(0);
+				creditNoteDetail.setGrnGvnAmt(roundUp(grandTotal));
+				String pattern = "dd-MM-yyyy";
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+
+				creditNoteDetail.setGrnGvnDate(simpleDateFormat.parse(crnDetailListMap.get(i).getGrnGvnDate()));
+				creditNoteDetail.setGrnGvnId(crnDetailListMap.get(i).getGrnGvnId());
+				creditNoteDetail.setGrnGvnQty(grnGvnQty);
+				creditNoteDetail.setGrnType(crnDetailListMap.get(i).getGrnType());
+				creditNoteDetail.setIsGrn(crnDetailListMap.get(i).getIsGrn());
+				creditNoteDetail.setItemId(crnDetailListMap.get(i).getItemId());
+				creditNoteDetail.setTaxableAmt(roundUp(grnBaseRateTaxable));
+				creditNoteDetail.setTotalTax(roundUp(aprTotalTax));
+                creditNoteDetail.setBaseRate(roundUp(crnDetailListMap.get(i).getBaseRate()));
+				creditNoteDetail.setCessPer(00);
+
+				creditNoteDetail.setCrndId(crnDetailListMap.get(i).getCrndId());
+				creditNoteDetail.setCrnId(crnDetailListMap.get(i).getCrnId());
+				creditNoteDetail.setCatId(crnDetailListMap.get(i).getCatId());
+			    creditNoteDetail.setBillDate(crnDetailListMap.get(i).getBillDate());
+			    creditNoteDetail.setRefInvoiceNo(crnDetailListMap.get(i).getRefInvoiceNo());
+			    creditNoteDetail.setGrngvnSrno(crnDetailListMap.get(i).getGrngvnSrno());
+			    creditNoteDetail.setGrnGvnHeaderId(crnDetailListMap.get(i).getGrnGvnHeaderId());
+			    
+				postCreditNoteDetailsList.add(creditNoteDetail);
+			}
+			totalRoundUpAmt=Math.round(totGrandAmt)-roundUp(totGrandAmt);
+			
+			postCreditHeader.setCreatedDateTime(crnHeaderMap.getCreatedDateTime());
+			postCreditHeader.setCrnFinalAmt(Math.round(totGrandAmt));
+			postCreditHeader.setCrnGrandTotal(roundUp(totGrandAmt));
+			postCreditHeader.setCrnTaxableAmt(roundUp(totTaxableAmt));
+			postCreditHeader.setCrnTotalTax(roundUp(totalCrnTax));
+			postCreditHeader.setRoundOff(roundUp(totalRoundUpAmt));
+			postCreditHeader.setUserId(userId);
+			postCreditHeader.setCrnId(crnId);
+			postCreditHeader.setCrnNo(crnHeaderMap.getCrnNo());
+			postCreditHeader.setExInt1(crnHeaderMap.getExInt1());
+			postCreditHeader.setExVarchar1(crnHeaderMap.getExVarchar1());
+			postCreditHeader.setFrId(crnHeaderMap.getFrId());
+			postCreditHeader.setGrnGvnSrNoList(crnHeaderMap.getGrnGvnSrNoList());
+			postCreditHeader.setIsDeposited(crnHeaderMap.getIsDeposited());
+			postCreditHeader.setIsGrn(crnHeaderMap.getIsGrn());
+			postCreditHeader.setIsTallySync(crnHeaderMap.getIsTallySync());
+			
+			
+				postCreditHeader.setPostCreditNoteDetails(postCreditNoteDetailsList);
+
+				creditHeaderList.add(postCreditHeader);
+			
+				PostCreditNoteHeaderList postCreditNoteHeaderList = new PostCreditNoteHeaderList();
+
+				postCreditNoteHeaderList.setPostCreditNoteHeader(creditHeaderList);
+				System.err.println("postCreditNoteHeaderList**" + postCreditNoteHeaderList.toString());
+				Info info = restTemplate.postForObject(Constants.url + "postCreditNote", postCreditNoteHeaderList,
+						Info.class);
+			
+
+
+		} catch (Exception e) {
+
+			System.out.println("Error in  : Insert Credit Note " + e.getMessage());
+
+			e.printStackTrace();
+
+		}
+
+		return "redirect:/getCrnDetailList/"+crnId+"?from_date="+fromDate+"&to_date="+toDate+"&selectFr=-1";
+
+	}
+	
 	@RequestMapping(value = "genCrnReport/{checked}/{fromDate}/{toDate}", method = RequestMethod.GET)
 	public void genCrnReportPdf(HttpServletRequest request, HttpServletResponse response,
 			@PathVariable("checked") String[] checked, @PathVariable("fromDate") String fromDate,

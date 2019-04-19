@@ -84,7 +84,11 @@
 									<input type="hidden" value="${headerId}" id="headerId"
 									name="headerId">
 
-								<div class="box">
+								<div class="box" style="margin-bottom: 20px;
+    box-shadow: 0 0px 0px 0 rgba(255, 111, 0, 0.3);
+    background: #ff6f00;
+    background: -webkit-linear-gradient(45deg, #ff6f00 0%, #ffca28 100%);
+    background: linear-gradient(45deg, #d66f3f 0%, #e696ca 100%);">
 									<div class="box-title">
 										<h3>
 											<i class="fa fa-table"></i> GRN List  Date-${grnDate} SrNo- ${srNo}
@@ -150,13 +154,13 @@
 															<c:when
 																test="${grnList.grnGvnQty!=grnList.grnGvnQtyAuto}">
 
-																<c:set var="color" value="red"></c:set>
+																<c:set var="color" value="white"></c:set>
 															</c:when>
 															
 															<c:when
 																test="${grnList.grnGvnQty!=grnList.aprQtyGate}">
 
-																<c:set var="color" value="blue"></c:set>
+																<c:set var="color" value="white"></c:set>
 															</c:when>
 															
 															<c:otherwise>
@@ -460,7 +464,7 @@
 																		<ul class="table-menu">
 
 																			<li><a href="" id="callSubmit"
-																				class="disableClick"
+																			
 																				onclick="insertGrnCall(${grnList.grnGvnId})"><i
 																					class="fa fa-check"></i></a></li>
 																			<li>
@@ -635,10 +639,16 @@
 
 										<!-- this is for ajax call<input type="submit" class="btn btn-primary" value="Submit"
 										id="callSubmit" onclick="callSubmitGrn(); getGrnId();"> -->
+							
 
-
+                       <label class=" col-md-2 control-label franchisee_label"><input type="checkbox" name="isDateUpdate" value="1">GRN Date</label>
+						<div class="col-sm-3 col-lg-2 controls">
+						
+										<input class="form-control date-picker" id="date" size="19" placeholder="dd-mm-yyyy"
+											type="text" name="date" value="${grnDate}" required/>
+									</div>
 										<div
-											class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-0">
+											class="col-sm-1 col-sm-offset-1 col-lg-1 col-lg-offset-0">
 											<input type="button" value="Submit" onclick="callSubmit()"
 												class="btn btn-primary">
 

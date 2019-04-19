@@ -29,6 +29,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.ats.adminpanel.commons.AccessControll;
 import com.ats.adminpanel.commons.Constants;
+import com.ats.adminpanel.commons.DateConvertor;
 import com.ats.adminpanel.commons.Firebase;
 import com.ats.adminpanel.model.AllFrIdNameList;
 import com.ats.adminpanel.model.Info;
@@ -2581,7 +2582,16 @@ public class GvnController {
 		System.out.println("in checkboxes ");
 
 		// ModelAndView model = new ModelAndView("grngvn/accGrn");
+		String date = request.getParameter("date");//new
+		int key = Integer.parseInt(request.getParameter("headerId"));
 
+		int isDateUpdate=0;
+		try {
+			isDateUpdate=Integer.parseInt(request.getParameter("isDateUpdate"));
+		}
+		catch (Exception e) {
+			isDateUpdate=0;
+		}
 		// ModelAndView modelAndView = null;
 		try {
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -2595,7 +2605,8 @@ public class GvnController {
 			int accApproveLogin = userResponse.getUser().getId();
 
 			String[] grnIdList = request.getParameterValues("select_to_agree");
-
+			
+			
 			RestTemplate restTemplate = new RestTemplate();
 
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
@@ -2614,7 +2625,6 @@ public class GvnController {
 
 			GetGrnGvnDetails detail = new GetGrnGvnDetails();
 
-			int key = Integer.parseInt(request.getParameter("headerId"));
 			System.err.println("Key " + key);
 			gvnAccDetailList = hashMap.get(key);
 			globalGvnAccHeaderId = key;
@@ -2864,6 +2874,7 @@ public class GvnController {
 			GrnGvnHeader accHeaderRes = restTemplate.postForObject(Constants.url + "updateGrnGvnHeader", accHeader,
 					GrnGvnHeader.class);
 
+			
 			System.out.println("GRN HEADER rESPONSE " + accHeaderRes.toString());
 
 			// -----------------------For Notification-----------------
@@ -2894,7 +2905,25 @@ public class GvnController {
 			e.printStackTrace();
 
 		}
+        finally {
+        	//----code to update GrnGvnDate----
+			try {
+			if(isDateUpdate==1)
+			{
+								
+				MultiValueMap<String, Object> map1 = new LinkedMultiValueMap<String, Object>();
+				map1.add("grnGvnHeaderId", key);
+				map1.add("grnGvnDate",DateConvertor.convertToYMD(date));
+				RestTemplate restTemp = new RestTemplate();
 
+				Info info = restTemp.postForObject(Constants.url + "updateGrnGvnDate", map1, Info.class);
+			}
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+			//------------------------------------
+		}
 		// return "redirect:/getAccGvnDetail/" + globalGvnAccHeaderId;
 
 		accGvnHeaderFromDate = null;

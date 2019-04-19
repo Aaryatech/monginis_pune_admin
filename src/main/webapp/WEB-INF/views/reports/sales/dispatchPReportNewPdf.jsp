@@ -1,8 +1,10 @@
+<%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ page import="java.util.*"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -66,12 +68,22 @@ th {
 				<th width="3%">Sr.No.</th>
 				<th >Franchisee Name</th>
 			  	<c:set var="itemCount" value="2"></c:set> 
-											 
+					 <%
+
+							List<Integer> newList = new ArrayList<Integer>();
+
+						%>						 
 				<c:forEach items="${itemList}" var="itemList">
 					<c:choose>
 					 <c:when test="${itemList.itemMrp2==staionListWithFranchiseeList.stationNo}">
 						 <th style="font-size: 12px;">${itemList.itemName}</th> 
 						 <c:set var="itemCount" value="${itemCount+1}"></c:set>
+						 	<c:set var="id" value="${itemList.id}"></c:set>
+						 <%
+						 int itemid = (int) pageContext.getAttribute("id");
+						 newList.add(itemid);
+
+						%>
 					 </c:when>
 					</c:choose>
 			
@@ -80,7 +92,7 @@ th {
 			</tr>
 		</thead>
 		<tbody>
-		
+					
 											<c:choose>
 												<c:when test="${abcType==0 || abcType==1}">
 											<c:set var="sr" value="0"></c:set>
@@ -92,25 +104,51 @@ th {
 																		<td width="3%"><c:out value="${sr+1}" /><c:set var="sr" value="${sr+1}"></c:set></td> 
 																		<td align="left"  ><c:out value="${list.frName}" />
 																		</td>
-																		  <c:forEach items="${list.itemList}" var="itemList" >
-																		  <td style="text-align:center; font-weight: bold;">
-																		<c:choose> 
-																<c:when test="${staionListWithFranchiseeList.stationNo==itemList.itemMrp2}">
-																		   <%--  <c:choose>
-																			  <c:when test="${itemList.orderQty>0}"> --%>
+												<%
+												for(int i=0;i<newList.size();i++)
+												{
+												%>
+												     <c:forEach items="${list.itemList}" var="itemList" >
+																		
+												 <c:set var="itemId" value="${itemList.itemId}"></c:set>
+												 <%
+													 int itemid = (int) pageContext.getAttribute("itemId");
+												
+													if(itemid==newList.get(i)){
+													
+												%>
+												  <td style="text-align:center; font-weight: bold;">
+											<c:choose> 
+										<c:when test="${staionListWithFranchiseeList.stationNo==itemList.itemMrp2}"> 
+												
+										
+																	
+																		     <c:choose>
+																			  <c:when test="${itemList.orderQty>0}"> 
 																			 
 																			<fmt:formatNumber type="number"	minFractionDigits="0" maxFractionDigits="0"	value="${itemList.orderQty}"/>
 																			 
-																		<%--   </c:when>
+																		  </c:when>
 																			  <c:otherwise>
 																			
 																			  
 																			  </c:otherwise>
 																			  
-																			  </c:choose> --%> </c:when>
-																	</c:choose>
-																		  </td> 
+																			  </c:choose>
+								 
+																			
+								
+						 </c:when> 
+							<c:otherwise>ER</c:otherwise>
+							</c:choose>		
+							  </td> 	
+							 <%
+									}
+								
+								 %>					
+																		
 																		  </c:forEach>
+																		  <%	} %>
 																		</tr>
 																	
 																
@@ -146,8 +184,22 @@ th {
 																		<td><c:out value="${sr+1}" /><c:set var="sr" value="${sr+1}"></c:set></td> 
 																		<td align="left"><c:out value="${list.frName}" />
 																		</td>
+												<%
+												for(int i=0;i<newList.size();i++)
+												{
+												%>
 																		  <c:forEach items="${list.itemList}" var="itemList" >
+												 <c:set var="itemId" value="${itemList.itemId}"></c:set>
+												 <%
+													 int itemid = (int) pageContext.getAttribute("itemId");
+													
+													if(itemid==newList.get(i)){
+													
+												%>
 																		  <td style="text-align:center; font-weight: bold;">
+											  
+																		 <c:choose> 
+																<c:when test="${staionListWithFranchiseeList.stationNo==itemList.itemMrp2}"> 
 																		   <c:choose>
 																			  <c:when test="${itemList.orderQty>0}">
 																			 
@@ -160,8 +212,15 @@ th {
 																			  </c:otherwise>
 																			  
 																			  </c:choose>
+																			</c:when>  <c:otherwise>ER</c:otherwise></c:choose> 
+										
 																		  </td> 
+									 <%
+									}
+								
+								 %>
 																		  </c:forEach>
+										  <%	} %>
 																		</tr>
 																	
 																
@@ -196,8 +255,22 @@ th {
 																		<td><c:out value="${sr+1}" /><c:set var="sr" value="${sr+1}"></c:set></td> 
 																		<td align="left"><c:out value="${list.frName}" />
 																		</td>
+												<%
+												for(int i=0;i<newList.size();i++)
+												{
+												%>
 																		  <c:forEach items="${list.itemList}" var="itemList" >
+												  <c:set var="itemId" value="${itemList.itemId}"></c:set>
+												 <%
+													 int itemid = (int) pageContext.getAttribute("itemId");
+													
+													if(itemid==newList.get(i)){
+													
+												%>
 																		  <td style="text-align:center; font-weight: bold;">
+							 
+																		  <c:choose> 
+																<c:when test="${staionListWithFranchiseeList.stationNo==itemList.itemMrp2}"> 
 																		   <c:choose>
 																			  <c:when test="${itemList.orderQty>0}">
 																			 
@@ -210,8 +283,17 @@ th {
 																			  </c:otherwise>
 																			  
 																			  </c:choose>
+																			  </c:when>
+																			  <c:otherwise>ER</c:otherwise>
+																			  </c:choose> 
+							
 																		  </td> 
+										<%
+									}
+								
+								 %>
 																		  </c:forEach>
+								  <%	} %>
 																		</tr>
 																	
 																

@@ -636,16 +636,17 @@ public class ReportControllerV2 {
 			}
 
 			PdfPTable table = new PdfPTable(13);
+			table.setHeaderRows(1);
 			try {
 				System.out.println("Inside PDF Table try");
 				table.setWidthPercentage(100);
-				table.setWidths(new float[] { 0.7f, 1.1f, 1.9f, 1.0f, 0.9f, 0.9f, 0.9f, 1.2f, 0.9f, 1.2f,1.2f, 0.9f, 1.2f });
+				table.setWidths(new float[] { 0.7f, 2.1f, 1.9f, 2.0f, 2.0f, 0.9f, 0.9f, 1.2f, 0.9f, 1.2f,1.2f, 0.9f, 1.2f });
 				Font headFont = new Font(FontFamily.HELVETICA, 10, Font.NORMAL, BaseColor.BLACK);
 				Font headFont1 = new Font(FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.BLACK);
 				Font f = new Font(FontFamily.TIMES_ROMAN, 10.0f, Font.UNDERLINE, BaseColor.BLUE);
 
 				PdfPCell hcell;
-				hcell = new PdfPCell(new Phrase("Sr.No.", headFont1));
+				hcell = new PdfPCell(new Phrase("Sr.", headFont1));
 				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
 				hcell.setBackgroundColor(BaseColor.PINK);
 				table.addCell(hcell);
@@ -725,7 +726,7 @@ public class ReportControllerV2 {
 
 					cell = new PdfPCell(new Phrase(gstRegItemList.get(j).getInvoiceNo(), headFont));
 					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-					cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+					cell.setHorizontalAlignment(Element.ALIGN_LEFT);
 					cell.setPaddingRight(8);
 					table.addCell(cell);
 
@@ -737,19 +738,19 @@ public class ReportControllerV2 {
 
 					cell = new PdfPCell(new Phrase(String.valueOf(gstRegItemList.get(j).getFrName()), headFont));
 					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-					cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+					cell.setHorizontalAlignment(Element.ALIGN_LEFT);
 					cell.setPaddingRight(8);
 					table.addCell(cell);
 
 					cell = new PdfPCell(new Phrase(String.valueOf(gstRegItemList.get(j).getFrGstNo()), headFont));
 					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-					cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+					cell.setHorizontalAlignment(Element.ALIGN_LEFT);
 					cell.setPaddingRight(8);
 					table.addCell(cell);
 					
 					cell = new PdfPCell(new Phrase(String.valueOf(gstRegItemList.get(j).getHsnCode()), headFont));
 					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-					cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+					cell.setHorizontalAlignment(Element.ALIGN_LEFT);
 					cell.setPaddingRight(8);
 					table.addCell(cell);
 
@@ -1079,11 +1080,12 @@ public class ReportControllerV2 {
 				}
 
 				PdfPTable table = new PdfPTable(15);
+				table.setHeaderRows(1);
 				try {
 					System.out.println("Inside PDF Table try");
 					table.setWidthPercentage(100);
-					table.setWidths(new float[] { 0.7f, 1.1f, 1.9f,1.1f, 1.9f, 1.0f, 0.9f, 0.9f, 0.9f, 1.2f, 0.9f, 1.2f,1.2f, 0.9f, 1.2f });
-					Font headFont = new Font(FontFamily.HELVETICA, 10, Font.NORMAL, BaseColor.BLACK);
+					table.setWidths(new float[] { 0.7f, 1.1f, 2.0f,2.1f, 2.3f, 2.0f, 2.2f, 1.2f, 1.2f, 1.2f, 0.9f, 1.2f,1.2f, 0.9f, 1.2f });
+					Font headFont = new Font(FontFamily.HELVETICA, 8, Font.NORMAL, BaseColor.BLACK);
 					Font headFont1 = new Font(FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.BLACK);
 					Font f = new Font(FontFamily.TIMES_ROMAN, 10.0f, Font.UNDERLINE, BaseColor.BLUE);
 
@@ -1181,45 +1183,45 @@ public class ReportControllerV2 {
 						
 						cell = new PdfPCell(new Phrase(""+crNoteRegItemList.get(j).getCrnId(), headFont));
 						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-						cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-						cell.setPaddingRight(8);
+						cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+						cell.setPaddingRight(1);
 						table.addCell(cell);
 
 						cell = new PdfPCell(new Phrase(String.valueOf(crNoteRegItemList.get(j).getCrnDate()), headFont));
 						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-						cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-						cell.setPaddingRight(8);
+						cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+						cell.setPaddingRight(1);
 						table.addCell(cell);
 
 
 						cell = new PdfPCell(new Phrase(crNoteRegItemList.get(j).getInvoiceNo(), headFont));
 						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-						cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-						cell.setPaddingRight(8);
+						cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+						cell.setPaddingRight(1);
 						table.addCell(cell);
 
 						cell = new PdfPCell(new Phrase(String.valueOf(crNoteRegItemList.get(j).getBillDate()), headFont));
 						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-						cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-						cell.setPaddingRight(8);
+						cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+						cell.setPaddingRight(1);
 						table.addCell(cell);
 
 						cell = new PdfPCell(new Phrase(String.valueOf(crNoteRegItemList.get(j).getFrName()), headFont));
 						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 						cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-						cell.setPaddingRight(8);
+						cell.setPaddingRight(1);
 						table.addCell(cell);
 
 						cell = new PdfPCell(new Phrase(String.valueOf(crNoteRegItemList.get(j).getFrGstNo()), headFont));
 						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 						cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-						cell.setPaddingRight(8);
+						cell.setPaddingRight(1);
 						table.addCell(cell);
 						
 						cell = new PdfPCell(new Phrase(String.valueOf(crNoteRegItemList.get(j).getHsnCode()), headFont));
 						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 						cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-						cell.setPaddingRight(8);
+						cell.setPaddingRight(1);
 						table.addCell(cell);
 
 
@@ -1230,7 +1232,7 @@ public class ReportControllerV2 {
 						cell.setPaddingRight(8);
 						table.addCell(cell);
 
-						cell = new PdfPCell(new Phrase(String.valueOf(crNoteRegItemList.get(j).getCrnTaxable()), headFont));
+						cell = new PdfPCell(new Phrase(String.valueOf(roundUp(crNoteRegItemList.get(j).getCrnTaxable())), headFont));
 						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 						cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 						cell.setPaddingRight(8);
@@ -1244,7 +1246,7 @@ public class ReportControllerV2 {
 						table.addCell(cell);
 						
 
-						cell = new PdfPCell(new Phrase(String.valueOf(crNoteRegItemList.get(j).getCgstAmt()), headFont));
+						cell = new PdfPCell(new Phrase(String.valueOf(roundUp(crNoteRegItemList.get(j).getCgstAmt())), headFont));
 						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 						cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 						cell.setPaddingRight(8);
@@ -1258,7 +1260,7 @@ public class ReportControllerV2 {
 						table.addCell(cell);
 						
 
-						cell = new PdfPCell(new Phrase(String.valueOf(crNoteRegItemList.get(j).getSgstAmt()), headFont));
+						cell = new PdfPCell(new Phrase(String.valueOf(roundUp(crNoteRegItemList.get(j).getSgstAmt())), headFont));
 						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 						cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 						cell.setPaddingRight(8);

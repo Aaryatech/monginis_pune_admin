@@ -44,7 +44,7 @@
 
 				<div class="form-group">
 					<label class="col-sm-4 col-lg-1 control-label">Type</label>
-					<div class="col-sm-5 col-lg-3 controls">
+					<div class="col-sm-5 col-lg-2 controls">
 						<select class="form-control" name="selectType" id="selectType">
 						<c:choose>
 						<c:when test="${type==1}">
@@ -63,20 +63,70 @@
 						
 						</select>
 					</div>
-					<section>
-						<div class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-0">
-							<input type="button" value="Search" onclick="getGrnGvnDetail()"
-								class="btn btn-primary">&nbsp;&nbsp; <input
+					<label class="col-sm-3 col-lg-1 control-label">From Date</label>
+									<div class="col-sm-5 col-lg-2 controls">
+										<input class="form-control date-picker" id="fromdate" size="16"
+											type="text" name="fromdate" value="${fromDate}" required />
+									</div>
+					<label class="col-sm-3 col-lg-1 control-label">To Date</label>
+									<div class="col-sm-5 col-lg-2 controls">
+										<input class="form-control date-picker" id="todate" size="16"
+											type="text" name="todate" value="${toDate}" required />
+									</div>				
+				</div>
+				<div class="form-group">
+				<label class="col-sm-3 col-lg-1	 control-label">Franchise</label>
+						
+						<div class="col-sm-10 col-lg-8  controls">
+						
+						<select data-placeholder="Franchise Name"
+								class="form-control chosen"   
+								id="frid" name="frid" multiple="multiple" required>
+								<%--  <option value="${selectedFr}">All</option>
+								 
+								  <c:forEach items="${franchiseeList}" var="franchiseeList" >
+									<option value="${franchiseeList.frId}"><c:out value="${franchiseeList.frName}"/></option>
+								</c:forEach>   --%>
+								<c:choose>
+										<c:when test="${isAllFrSel==0}">
+								        <option value="-1"><c:out value="All"/></option>
+                                          <c:forEach items="${franchiseeList}" var="fr"
+												varStatus="count2">
+												<c:set var="flag" value="0"></c:set>
+									     <c:forEach items="${selFranchise}" var="selFr"	varStatus="count2">
+										   <c:choose>
+														<c:when test="${selFr==fr.frId}">
+															<option selected value="${fr.frId}"><c:out value="${fr.frName}"/></option>
+																<c:set var="flag" value="1"></c:set>
+														</c:when>
+														<c:otherwise>  
+										    	 </c:otherwise>
+									           </c:choose>
+												</c:forEach> 		
+													<c:choose>
+												<c:when test="${flag==0}">
+												 <option value="${fr.frId}"><c:out value="${fr.frName}"/></option>
+												</c:when>
+												</c:choose>
+										   </c:forEach>
+										   </c:when>
+										   <c:otherwise>
+										   <option value="-1" selected>All</option>
+								 
+								  <c:forEach items="${franchiseeList}" var="franchiseeList" >
+									<option value="${franchiseeList.frId}"><c:out value="${franchiseeList.frName}"/></option>
+								</c:forEach>   
+										   </c:otherwise></c:choose>
+							</select>
+                    </div>
+						<input type="button" value="Search" onclick="getGrnGvnDetail()"
+								class="btn btn-primary">&nbsp;<input
 								type="button" value="View Credit Notes"
 								onclick="viewCreditNotes()" class="btn btn-primary">
-						</div>
-					</section>
-
-					<div class="col-sm-5 col-lg-3 controls"></div>
 				</div>
 			</form>
 			<form action="${pageContext.request.contextPath}/insertCreditNote"
-				class="form-horizontal" method="post" id="validation-form" onsubmit="submitCRNote.disabled = true; return confirm('Do you want to Generate Credit Note ?');">
+				class="form-horizontal" method="post" id="validation-form" onsubmit="return confirm('Do you want to Generate Credit Note ?');">
 
 
 
@@ -184,7 +234,12 @@
 									</table>
 
 									<div
-										class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-0">
+										class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-2">
+										<label class=" col-md-1 control-label franchisee_label">Date</label>
+						<div class="col-sm-3 col-lg-2 controls">
+										<input class="form-control date-picker" id="date" size="19" placeholder="dd-mm-yyyy"
+											type="text" name="date" autocomplete="off" required/>
+									</div>
 										<input type="submit" class="btn btn-primary"
 											value="Generate Credit Note" id="submitCRNote"/>
 									</div>
@@ -196,7 +251,7 @@
 			</form>
 			<!-- END Main Content -->
 			<footer>
-				<p>2018 © MONGINIS.</p>
+				<p>2019 © MONGINIS.</p>
 			</footer>
 
 			<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i

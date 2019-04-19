@@ -69,10 +69,13 @@
 
 						<div class="box-content">
 
-							<form
-								action=""
-								class="form-horizontal" method="post" id="validation-form">
+							<form action="${pageContext.request.contextPath}/updateCreditNote"
+				class="form-horizontal" method="post" id="validation-form" onsubmit="return confirm('Do you want to update Credit Note ?');">
 
+              <input type="hidden" name="crnId" id="crnId" value="${creditNoteHeaders.crnId}" />
+             <input type="hidden" name="fromDate" id="fromDate" value="${fromDate}" />
+              <input type="hidden" name="toDate" id="toDate" value="${toDate}" />
+               <input type="hidden" name="selectFr" id="selectFr" value="${selectFr}" />
 								<div class="box">
 									<div class="box-title">
 										<h3>
@@ -94,7 +97,9 @@
 										<tbody>
 											<tr >
 											<td style="border: 1px dashed;font-weight: bold;">&nbsp;CREDIT NOTE NO: </td><td style="border: 1px dashed;">&nbsp; <b> ${creditNoteHeaders.crnNo} </b></td>
-											<td style="border: 1px dashed;font-weight: bold;">&nbsp;DATE:</td><td style="border: 1px dashed;">&nbsp;<b> ${creditNoteHeaders.crnDate} </b></td>
+											<td style="border: 1px dashed;font-weight: bold;">&nbsp;DATE:</td><td style="border: 1px dashed;"><b>
+											<input class="form-control date-picker" id="date" size="19" style="width:170px;" placeholder="dd-mm-yyyy" type="text" name="date" value="${creditNoteHeaders.crnDate}" required/>
+											  </b></td>
 											</tr>
 											<tr style="border: 1px dashed;">
 											<td style="border: 1px dashed;font-weight: bold;">&nbsp;INVOICE NO:</td><td style="border: 1px dashed;">&nbsp;<b> ${creditNoteHeaders.exVarchar1} </b></td>
@@ -125,7 +130,9 @@
 														<th>Invoice No</th>
 														<th>Item Name</th>
 														<th>Type</th>
+														<th>GrnBaseRate</th>
 														<th>Quantity</th>
+														<th>Tax %</th>
 														<th>Taxable Amt</th>
 														<th>Tax Amt</th>
 														<th>Amount</th>
@@ -185,19 +192,23 @@
 
 																</c:when>
 															</c:choose>
-
+  
 															<td align="left"><c:out value="${type}"></c:out></td>
-
-															<td align="left"><c:out value="${crnDetail.grnGvnQty}" />
+                                                          <fmt:formatNumber type = "number"       maxFractionDigits = "2" minFractionDigits = "2" value = "${crnDetail.taxableAmt/crnDetail.grnGvnQty}" var="grnBaseRate"/>
+                                                           
+                                                            <td align="left">${grnBaseRate}
+                                                            <input type="hidden" name="grnBaseRate${crnDetail.crndId}" id="grnBaseRate${crnDetail.crndId}" value="${grnBaseRate}" />
+                                                            </td>
+															<td align="left"><input type="text" class="form-control"  style="width:80px;" name="grnGvnQty${crnDetail.crndId}" id="grnGvnQty${crnDetail.crndId}"  value="${crnDetail.grnGvnQty}"      onchange="calCrnValues(${crnDetail.crndId},${grnBaseRate})"/>
 																</td>
-
-															<td align="left"><c:out
+                                                            	<td align="left"><input type="text" class="form-control"  style="width:80px;" name="totalTaxPer${crnDetail.crndId}" id="totalTaxPer${crnDetail.crndId}"  value="${crnDetail.cgstPer+crnDetail.sgstPer}" onchange="calCrnValues(${crnDetail.crndId},${grnBaseRate})"/> </td>
+															<td align="left" id="taxableAmt${crnDetail.crndId}"><c:out
 																	value="${crnDetail.taxableAmt}"></c:out></td>
 
-															<td align="left"><c:out
+															<td align="left" id="totalTax${crnDetail.crndId}"><c:out
 																	value="${crnDetail.totalTax}"></c:out></td>
 
-															<td align="left"><c:out
+															<td align="left"  id="grnGvnAmt${crnDetail.crndId}"><c:out
 																	value="${crnDetail.grnGvnAmt}"></c:out></td>
 														</tr>
 
@@ -210,7 +221,7 @@
 
 									</div>
 								</div>
-
+                          <center>   <input type="submit" class="btn btn-primary" value="Update CRN" id="submitCRNote"/></center>
 							</form>
 						</div>
 				<!-- 	</div> -->
@@ -218,7 +229,7 @@
 			</div>
 			<!-- END Main Content -->
 			<footer>
-				<p>2018 © MONGINIS.</p>
+				<p>2019 © MONGINIS.</p>
 			</footer>
 
 
@@ -307,7 +318,25 @@ function myFunction() {
   }
 }
 </script>
+<script type="text/javascript">
+function calCrnValues(crndId,grnBaseRate)
+{
+	
+    var grnGvnQty=parseFloat(document.getElementById("grnGvnQty"+crndId).value);
+    var totalTaxPer=parseFloat(document.getElementById("totalTaxPer"+crndId).value);
+    var grnBaseRate=parseFloat(document.getElementById("grnBaseRate"+crndId).value);
+   
+	var taxableAmt=grnGvnQty*grnBaseRate;
+	
+	var taxAmt=(taxableAmt * totalTaxPer) / 100;
+	
+	var grandAmt=taxableAmt+taxAmt;
+	 $('#taxableAmt'+crndId).html(taxableAmt.toFixed(2));
+	 $('#totalTax'+crndId).html(taxAmt.toFixed(2));
+	 $('#grnGvnAmt'+crndId).html(grandAmt.toFixed(2));
 
+}
+</script>
 
 </body>
 </html>
