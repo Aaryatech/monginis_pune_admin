@@ -244,8 +244,8 @@ select {
 										   <div class="form-group">
 											<label class="col-sm-3 col-lg-2 control-label">Menu List</label>
 											<div class="col-sm-9 col-lg-10 controls">
-												<select data-placeholder="Select Menu" name="MenuId"
-													class="form-control chosen"  id="menuId" onchange="getItemsByMenuId()"
+												<select data-placeholder="Select Menu" name="menu_id"
+													class="form-control chosen"  id="menu_id" onchange="getItemsByMenuId()"
 													>
                                                    <option value=""> </option>
 													<optgroup label="All Menu">
@@ -273,12 +273,12 @@ select {
                                                       <option value=""> </option>
 													<optgroup label="All Items">
 														<option value=""></option>
-														<c:forEach
+														<%-- <c:forEach
 															items="${itemList}"
 															var="item">
 															<option value="${item.id}">${item.itemName}</option>
 
-														</c:forEach>
+														</c:forEach> --%>
 													</optgroup>
 												</select>
 												
@@ -288,13 +288,13 @@ select {
 									  <label class="col-sm-3 col-lg-2 control-label">Order From
 										Date</label>
 									    <div class="col-sm-3 col-lg-3 controls">
-										  <input class="form-control date-picker" id="from_order_date" size="16"
+										  <input class="form-control date-picker" id="from_order_date" size="16" autocomplete="off"
 											type="text" name="from_order_date"  data-rule-required="true"  placeholder="From Order"/>
 									   </div>
 							
 									<label class="col-sm-3 col-lg-2 control-label"> Order To Date</label>
 									<div class="col-sm-3 col-lg-3 controls">
-										<input class="form-control date-picker" id="to_order_date" size="16"
+										<input class="form-control date-picker" id="to_order_date" size="16" autocomplete="off"
 											type="text" name="to_order_date"  data-rule-required="true"  placeholder="To Order"/>
 									</div>
 								</div>
@@ -302,13 +302,13 @@ select {
 	                              <div class="form-group">
 									  <label class="col-sm-3 col-lg-2 control-label">Delivery Date</label>
 									    <div class="col-md-10 col-lg-3 controls">
-										  <input class="form-control date-picker" id="from_delivery_date" size="16"
+										  <input class="form-control date-picker" id="from_delivery_date" size="16" autocomplete="off"
 											type="text" name="from_delivery_date"  data-rule-required="true"  placeholder="Delivery Date" onblur="selectDate()" />
 									   </div>
 							
 									<!-- <label type = "hidden" class="col-sm-3 col-lg-2 control-label">Delivery To Date</label> -->
 									<div class="col-sm-3 col-lg-3 controls">
-										<input class="form-control date-picker" id="to_delivery_date" size="16" type="hidden" 
+										<input class="form-control date-picker" id="to_delivery_date" size="16" type="hidden"  
 											type="text" name="to_delivery_date"   placeholder="To Date"  />
 									</div>
 								</div>
@@ -426,7 +426,7 @@ select {
 											</div>
 										</div>
 
-                              <input type="hidden"  name="menu_id" id="menu_id" value="${menuId}">
+                            <%--   <input type="hidden"  name="menu_id" id="menu_id" value="${menuId}"> --%>
                              <input type="hidden"  name="cat_id" id="cat_id" value="${catId}">
 									</form>
 
@@ -462,9 +462,9 @@ select {
 
 function getItemsByMenuId() {
 	
-	var menuId = $("#menuId").val();
+	var menuId = $("#menu_id").val();
 	
-	 alert(menuId);
+
 		 if(menuId=="" || menuId==null){
 			 
 			  
@@ -508,7 +508,7 @@ function getItemsByMenuId() {
 
 
 	function selectDate() {
-		alert(to_delivery_date);
+		//alert(to_delivery_date);
 		var to_delivery_date = $("#from_delivery_date").val();
 		document.getElementById("to_delivery_date").setAttribute("value",to_delivery_date);
 		}
@@ -516,9 +516,9 @@ function getItemsByMenuId() {
 function getCatIdByMenuId() {
 	
 	
-	var menuId = $("#menuId").val();
+	var menuId = $("#menu_id").val();
 	
-	 alert(menuId);
+	// alert(menuId);
 		 if(menuId=="" || menuId==null){
 			 
 			  
@@ -545,7 +545,7 @@ function getCatIdByMenuId() {
 					}
 					
 					
-					document.getElementById("menu_id").setAttribute("value",menuId);
+				//	document.getElementById("menu_id").setAttribute("value",menuId);
 					
 					
 					

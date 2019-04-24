@@ -248,317 +248,219 @@ public class DispatchController {
 		}
 		 document.open();		
 		 
-		try {
-   for(int i=0;i<frListOrdersPresent.size();i++) {
-	   
-		PdfPTable table = new PdfPTable(6);
-		table.setHeaderRows(1);
-int itemcount=0;
-			table.setWidthPercentage(100);
-			table.setWidths(new float[] { 0.4f, 4.0f, 1.0f,0.4f, 4.0f, 1.0f});
-			Font headFont0 = new Font(FontFamily.TIMES_ROMAN, 6, Font.NORMAL, BaseColor.BLACK);
-			Font headFont = new Font(FontFamily.TIMES_ROMAN, 10, Font.NORMAL, BaseColor.BLACK);
-			Font headFont1 = new Font(FontFamily.HELVETICA, 9, Font.BOLD, BaseColor.BLACK);
-			Font headFont2 = new Font(FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.BLACK);
-			Font f1111 = new Font(FontFamily.TIMES_ROMAN, 12.0f, Font.BOLD, BaseColor.BLUE);
-			Font f1 = new Font(FontFamily.TIMES_ROMAN, 10.0f, Font.NORMAL, BaseColor.BLACK);
-			PdfPCell hcell = new PdfPCell();
-		
-		
-			hcell = new PdfPCell(new Phrase("Sr.", headFont1));
-			hcell.setPadding(1);
-			hcell.setBackgroundColor(BaseColor.PINK);
-			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-			table.addCell(hcell);
+		 try {
+			   for(int i=0;i<frListOrdersPresent.size();i++) {
+				   
+					PdfPTable table = new PdfPTable(4);
+					table.setHeaderRows(1);
 
-			hcell = new PdfPCell(new Phrase("ITEM NAME", headFont1));
-			hcell.setBackgroundColor(BaseColor.PINK);
-			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-			hcell.setPadding(1);
-			table.addCell(hcell);
+						table.setWidthPercentage(100);
+						table.setWidths(new float[] { 0.4f, 4.0f, 1.9f, 1.7f});
+						Font headFont = new Font(FontFamily.TIMES_ROMAN, 12, Font.NORMAL, BaseColor.BLACK);
+						Font headFont1 = new Font(FontFamily.HELVETICA, 12, Font.BOLD, BaseColor.BLACK);
+						Font f = new Font(FontFamily.TIMES_ROMAN, 12.0f, Font.BOLD, BaseColor.BLUE);
+						Font f1 = new Font(FontFamily.TIMES_ROMAN, 10.0f, Font.NORMAL, BaseColor.BLACK);
+						PdfPCell hcell = new PdfPCell();
+					
+					
+						hcell = new PdfPCell(new Phrase("Sr.", headFont1));
+						hcell.setPadding(5);
+						hcell.setBackgroundColor(BaseColor.PINK);
+						hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+						table.addCell(hcell);
 
-			hcell = new PdfPCell(new Phrase("QTY", headFont1));
-			hcell.setPadding(1);
-			hcell.setBackgroundColor(BaseColor.PINK);
-			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-			table.addCell(hcell);
+						hcell = new PdfPCell(new Phrase("ITEM NAME", headFont1));
+						hcell.setBackgroundColor(BaseColor.PINK);
+						hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+						hcell.setPadding(5);
+						table.addCell(hcell);
 
-			PdfPCell hcell1 = new PdfPCell();
-			hcell1 = new PdfPCell(new Phrase("Sr.", headFont1));
-			hcell1.setPadding(1);
-			hcell1.setBackgroundColor(BaseColor.PINK);
-			hcell1.setHorizontalAlignment(Element.ALIGN_CENTER);
-			table.addCell(hcell1);
+						hcell = new PdfPCell(new Phrase("DISPATCH QTY", headFont1));
+						hcell.setPadding(5);
+						hcell.setBackgroundColor(BaseColor.PINK);
+						hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+						table.addCell(hcell);
 
-			hcell1 = new PdfPCell(new Phrase("ITEM NAME", headFont1));
-			hcell1.setBackgroundColor(BaseColor.PINK);
-			hcell1.setHorizontalAlignment(Element.ALIGN_CENTER);
-			hcell1.setPadding(1);
-			table.addCell(hcell1);
-
-			hcell1 = new PdfPCell(new Phrase("QTY", headFont1));
-			hcell1.setPadding(1);
-			hcell1.setBackgroundColor(BaseColor.PINK);
-			hcell1.setHorizontalAlignment(Element.ALIGN_CENTER);
-			table.addCell(hcell1);
+						hcell = new PdfPCell(new Phrase("SENT", headFont1));
+						hcell.setPadding(5);
+						hcell.setBackgroundColor(BaseColor.PINK);
+						hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+						table.addCell(hcell);
 
 
-			  for(int j=0;j<subCatAList.size();j++) {
-				  int flagnew=0;
-				  int srNo=1;
-				  for(int k=0;k<itemsList.size();k++) {
-					if(itemsList.get(k).getItemGrp2()==subCatAList.get(j).getSubCatId())
-					{
-						int editQty=0;
-						
-						for(int l=0;l<frNameIdByRouteIdList.size();l++) {
-							
-							if(frNameIdByRouteIdList.get(l).getFrId()==frListOrdersPresent.get(i))
-							{
-								for(int m=0;m<dispatchReportList.size();m++) {
+						  for(int j=0;j<subCatAList.size();j++) {
+							  int flagnew=0;
+							  int srNo=1;
+							  for(int k=0;k<itemsList.size();k++) {
+								if(itemsList.get(k).getItemGrp2()==subCatAList.get(j).getSubCatId())
+								{
+									int editQty=0;
 									
-									
-									if(dispatchReportList.get(m).getItemId()==itemsList.get(k).getId())
-									{
-										if(dispatchReportList.get(m).getFrId()==frNameIdByRouteIdList.get(l).getFrId())
+									for(int l=0;l<frNameIdByRouteIdList.size();l++) {
+										
+										if(frNameIdByRouteIdList.get(l).getFrId()==frListOrdersPresent.get(i))
 										{
-											editQty=dispatchReportList.get(m).getEditQty();
+											for(int m=0;m<dispatchReportList.size();m++) {
+												
+												
+												if(dispatchReportList.get(m).getItemId()==itemsList.get(k).getId())
+												{
+													if(dispatchReportList.get(m).getFrId()==frNameIdByRouteIdList.get(l).getFrId())
+													{
+														editQty=dispatchReportList.get(m).getEditQty();
+													}
+													
+												}
+												
+												
+											}
 										}
 										
 									}
 									
-									
-								}
-							}
-							
-						}
-						
-						if(editQty>0)
-						{
-							
-							
-							int row_num=itemcount/20;
-							int size= itemcount % 2;
-							System.out.println("itemcount="+itemcount +"row_num"+row_num+"size"+size );
-							if(flagnew==0)
-							{
-								PdfPCell cell;
-									if(size==1)
+									if(editQty>0)
 									{
-										cell = new PdfPCell(new Phrase("", headFont));
-										cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-										//cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
-										cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+										if(flagnew==0)
+										{
+											PdfPCell cell;
+
+											cell = new PdfPCell(new Phrase("", headFont));
+											cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+											cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+											cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+											cell.setPadding(4);
+											table.addCell(cell);
+
+											cell = new PdfPCell(new Phrase("" +subCatAList.get(j).getSubCatName() , headFont));
+											cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+											cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+											cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+											cell.setPaddingRight(2);
+											cell.setPadding(4);
+											table.addCell(cell);
+
+											cell = new PdfPCell(new Phrase("", headFont));
+											cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+											cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+											cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+											cell.setPaddingRight(2);
+											cell.setPadding(4);
+											table.addCell(cell);
+
+											cell = new PdfPCell(new Phrase("", headFont));
+											cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+											cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+											cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+											cell.setPaddingRight(2);
+											cell.setPadding(4);
+											table.addCell(cell);
+											
+											flagnew=1;
+										}
 										
+										PdfPCell cell;
+
+										cell = new PdfPCell(new Phrase(""+srNo, headFont));
+										cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+										cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+										cell.setPadding(4);
+										table.addCell(cell);
+
+										srNo=srNo+1;
+										
+										cell = new PdfPCell(new Phrase("" +itemsList.get(k).getItemName() , headFont));
+										cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+										cell.setHorizontalAlignment(Element.ALIGN_LEFT);
 										cell.setPaddingRight(2);
 										cell.setPadding(4);
 										table.addCell(cell);
-										
-										cell = new PdfPCell(new Phrase("", headFont));
+
+										cell = new PdfPCell(new Phrase(""+editQty, headFont));
 										cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-										//cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
 										cell.setHorizontalAlignment(Element.ALIGN_CENTER);
 										cell.setPaddingRight(2);
 										cell.setPadding(4);
 										table.addCell(cell);
-										
+
 										cell = new PdfPCell(new Phrase("", headFont));
 										cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-										//cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
-										cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+										cell.setHorizontalAlignment(Element.ALIGN_LEFT);
 										cell.setPaddingRight(2);
 										cell.setPadding(4);
 										table.addCell(cell);
-										itemcount=itemcount+1;
 										
 									}
 									
-								
-								cell = new PdfPCell(new Phrase("", headFont));
-								cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
-								cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-								cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-								cell.setPadding(2);
-								
-								table.addCell(cell);
-
-								cell = new PdfPCell(new Phrase("" +subCatAList.get(j).getSubCatName() , headFont));
-								cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-								cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
-								cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-								cell.setPaddingRight(2);
-								cell.setPadding(2);
-								
-								table.addCell(cell);
-
-								cell = new PdfPCell(new Phrase("", headFont));
-								cell.setVerticalAlignment(Element.ALIGN_CENTER);
-								cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
-								cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-								cell.setPaddingRight(2);
-								cell.setPadding(2);
-								table.addCell(cell);
-								
-								cell = new PdfPCell(new Phrase("", headFont));
-								cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-								cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
-								cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-								cell.setPaddingRight(2);
-								cell.setPadding(2);
-								table.addCell(cell);
-								
-								cell = new PdfPCell(new Phrase("", headFont));
-								cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-								cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
-								cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-								cell.setPaddingRight(2);
-								cell.setPadding(2);
-								table.addCell(cell);
-								
-								cell = new PdfPCell(new Phrase("", headFont));
-								cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-								cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
-								cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-								cell.setPaddingRight(2);
-								cell.setPadding(2);
-								table.addCell(cell);
-								
-								
-								flagnew=1;
-								
-							}
-							
-							
-								
-							//	if(size==0)
-								//{	
-								
-							
-									PdfPCell cell;
-							cell = new PdfPCell(new Phrase(""+srNo, headFont0));
-							cell.setVerticalAlignment(Element.ALIGN_CENTER);
-							cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-							cell.setPadding(2);
-							table.addCell(cell);
-
-							srNo=srNo+1;
-							
-							cell = new PdfPCell(new Phrase("" +itemsList.get(k).getItemName() , headFont));
-							cell.setVerticalAlignment(Element.ALIGN_CENTER);
-							cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-							cell.setPaddingRight(2);
-							cell.setPadding(2);
-							table.addCell(cell);
-
-							cell = new PdfPCell(new Phrase(""+editQty, headFont2));
-							cell.setVerticalAlignment(Element.ALIGN_CENTER);
-							cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-							
-							cell.setPaddingRight(2);
-							cell.setPadding(2);
-							table.addCell(cell);
-							
-								/*}
-								else
-								{
-									PdfPCell cell;		
-							cell = new PdfPCell(new Phrase(""+srNo, headFont));
-							cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-							cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-							cell.setPadding(4);
-							table.addCell(cell);
-
-							srNo=srNo+1;
-							
-							cell = new PdfPCell(new Phrase("" +itemsList.get(k).getItemName() , headFont));
-							cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-							cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-							cell.setPaddingRight(2);
-							cell.setPadding(4);
-							table.addCell(cell);
-
-							cell = new PdfPCell(new Phrase(""+editQty, headFont2));
-							cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-							cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-							cell.setPaddingRight(2);
-							cell.setPadding(4);
-							table.addCell(cell);
-								
-							
-							}*/
-								itemcount=itemcount+1;
-						}
+									
+									
+								}
+							  }
+						  }
+						 
 						
-						
-						
-					}
-				  }
-			  }
-			 
-			
-		
-
-			DateFormat DF = new SimpleDateFormat("dd-MM-yyyy");
-			String reportDate = DF.format(new Date());
-			for(int l=0;l<frNameIdByRouteIdList.size();l++) {
-				if(frNameIdByRouteIdList.get(l).getFrId()==frListOrdersPresent.get(i)) {
 					
-					Paragraph company = new Paragraph("MONGINIS -- SHOP NAME :--"+frNameIdByRouteIdList.get(l).getFrName() + "\n", new Font(FontFamily.TIMES_ROMAN, 12, Font.BOLD, BaseColor.MAGENTA));
-					company.setAlignment(Element.ALIGN_CENTER);
-					document.add(company);
-					Paragraph  header=new Paragraph(" Dispatch Sheet    Dispatch Date:  "+billDate,f1);
-		        	document.add(header);
-				}
-			}document.add(new Paragraph("\n"));
-			document.add(table);
-			document.add(new Paragraph("\n"));
 
-			int totalPages = writer.getPageNumber();
+						DateFormat DF = new SimpleDateFormat("dd-MM-yyyy");
+						String reportDate = DF.format(new Date());
+						for(int l=0;l<frNameIdByRouteIdList.size();l++) {
+							if(frNameIdByRouteIdList.get(l).getFrId()==frListOrdersPresent.get(i)) {
+								
+								Paragraph company = new Paragraph("MONGINIS -- SHOP NAME :--"+frNameIdByRouteIdList.get(l).getFrName() + "\n", new Font(FontFamily.TIMES_ROMAN, 12, Font.BOLD, BaseColor.MAGENTA));
+								company.setAlignment(Element.ALIGN_CENTER);
+								document.add(company);
+								Paragraph  header=new Paragraph(" Dispatch Sheet    Dispatch Date:  "+billDate,f1);
+					        	document.add(header);
+							}
+						}document.add(new Paragraph("\n"));
+						document.add(table);
+						document.add(new Paragraph("\n"));
 
-			System.out.println("Page no " + totalPages);
-			document.newPage();
-	    	}
-			document.close();
-			// Atul Sir code to open a Pdf File
-			if (file != null) {
+						int totalPages = writer.getPageNumber();
 
-				String mimeType = URLConnection.guessContentTypeFromName(file.getName());
+						System.out.println("Page no " + totalPages);
+						document.newPage();
+				    	}
+						document.close();
+						// Atul Sir code to open a Pdf File
+						if (file != null) {
 
-				if (mimeType == null) {
+							String mimeType = URLConnection.guessContentTypeFromName(file.getName());
 
-					mimeType = "application/pdf";
+							if (mimeType == null) {
 
-				}
+								mimeType = "application/pdf";
 
-				response.setContentType(mimeType);
+							}
 
-				response.addHeader("content-disposition", String.format("inline; filename=\"%s\"", file.getName()));
+							response.setContentType(mimeType);
 
-				response.setContentLength((int) file.length());
+							response.addHeader("content-disposition", String.format("inline; filename=\"%s\"", file.getName()));
 
-				InputStream inputStream = null;
-				try {
-					inputStream = new BufferedInputStream(new FileInputStream(file));
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+							response.setContentLength((int) file.length());
 
-				try {
-					FileCopyUtils.copy(inputStream, response.getOutputStream());
-				} catch (IOException e) {
-					System.out.println("Excep in Opening a Pdf File");
-					e.printStackTrace();
-				}
-			}
+							InputStream inputStream = null;
+							try {
+								inputStream = new BufferedInputStream(new FileInputStream(file));
+							} catch (FileNotFoundException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
 
-		} catch (DocumentException ex) {
+							try {
+								FileCopyUtils.copy(inputStream, response.getOutputStream());
+							} catch (IOException e) {
+								System.out.println("Excep in Opening a Pdf File");
+								e.printStackTrace();
+							}
+						}
 
-			System.out.println("Pdf Generation Error: BOm Prod  View Prod" + ex.getMessage());
+					} catch (DocumentException ex) {
 
-			ex.printStackTrace();
+						System.out.println("Pdf Generation Error: BOm Prod  View Prod" + ex.getMessage());
 
-		}
+						ex.printStackTrace();
+
+					}
 
 	}
 

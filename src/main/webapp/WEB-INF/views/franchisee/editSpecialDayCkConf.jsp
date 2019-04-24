@@ -133,6 +133,8 @@ select {
 
 
 
+ <c:url var="getItemListByMenuId" value="/getItemsByMenuId"></c:url>
+ <c:url var="getCatidByMenuId" value="/getCatidByMenuId"></c:url>
 
 
 	<c:url var="setAllItemSelected" value="/setAllItemSelected" />
@@ -205,7 +207,7 @@ select {
 								</div>
 
                                         	<input type="hidden" name="sp_day_id" id="sp_day_id"  value="${spdayId}">      
-                                            <input type="hidden" name="menu_id" id="menu_id" value="${menuId}">
+                                         <%--  <input type="hidden" name="menu_id" id="menu_id" value="${menuId}">  --%>
                                             <input type="hidden" name="cat_id" id="cat_id" value="${catId}">
                              										 
                                 <div class="form-group">
@@ -234,12 +236,39 @@ select {
 												
 											</div>
 										</div>
-																		
+												   <div class="form-group">
+											<label class="col-sm-3 col-lg-2 control-label">Menu List</label>
+											<div class="col-sm-9 col-lg-10 controls">
+												<select data-placeholder="Select Menu" name="menu_id"
+													class="form-control chosen"  id="menu_id" onchange="getItemsByMenuId()"
+													>
+                                                   <option value=""> </option>
+													<optgroup label="All Menu">
+														
+														<c:forEach
+															items="${menuList}"
+															var="menuList">
+															<c:choose>
+															<c:when test="${menuList.menuId==getConfiguredSpDayCk.menuId}">
+															<option value="${menuList.menuId}" selected>${menuList.menuTitle}</option>
+															</c:when>
+															<c:otherwise>
+															<option value="${menuList.menuId}">${menuList.menuTitle}</option>
+															</c:otherwise>
+															</c:choose>
+															
+
+														</c:forEach>
+													</optgroup>
+												</select>
+												
+											</div>
+										</div>						
 											<div class="form-group">
 											<label class="col-sm-3 col-lg-2 control-label">Items</label>
 											<div class="col-sm-9 col-lg-10 controls">
 												<select data-placeholder="Select Items" name="items[]"
-													class="form-control chosen" tabindex="-1" id="items" multiple="multiple"
+													class="form-control chosen" tabindex="-1" id="item" multiple="multiple"
 													data-rule-required="true">
                                                       <option value=""> </option>
 													<optgroup label="All FItems">
@@ -423,7 +452,7 @@ select {
 			<!-- END Main Content -->
 
 			<footer>
-				<p>2017 © MONGINIS.</p>
+				<p>2019 © MONGINIS.</p>
 			</footer>
 <script
 	src="${pageContext.request.contextPath}/resources/assets/bootstrap/js/bootstrap.min.js"></script> 
@@ -434,7 +463,102 @@ select {
 	</div>
 	<!-- END Container -->
 	<!-- END Container -->
+<script type="text/javascript">
 
+
+function getItemsByMenuId() {
+	
+	var menuId = $("#menu_id").val();
+	
+	// alert(menuId);
+		 if(menuId=="" || menuId==null){
+			 
+			  
+				$('#item')
+			    .find('option')
+			    .remove()
+			    .end()
+			    $("#item").trigger("chosen:updated");
+		 }else{
+				$.getJSON('${getItemListByMenuId}', {
+					
+					menuId : menuId,
+					ajax : 'true'
+				}, function(data) {
+				 	var html = '<option value="">Select Item</option>';
+				
+					var len = data.length;
+					
+					$('#item')
+				    .find('option')
+				    .remove()
+				    .end()
+				    
+				
+					
+					for ( var i = 0; i < len; i++) {
+			            $("#item").append(
+			                    $("<option selected></option>").attr(
+			                        "value", data[i].id).text(data[i].itemName)
+			                );
+					}
+					   $("#item").trigger("chosen:updated");
+				}); 
+		 }
+		 getCatIdByMenuId();
+}
+</script>
+<script type="text/javascript">
+
+
+	function selectDate() {
+		//alert(to_delivery_date);
+		var to_delivery_date = $("#from_delivery_date").val();
+		document.getElementById("to_delivery_date").setAttribute("value",to_delivery_date);
+		}
+		
+function getCatIdByMenuId() {
+	
+	
+	var menuId = $("#menu_id").val();
+	
+	// alert(menuId);
+		 if(menuId=="" || menuId==null){
+			 
+			  
+				$('#cat_id')
+			    .find('option')
+			    .remove()
+			    .end()
+			    $("#cat_id").trigger("chosen:updated");
+		 }else{
+				$.getJSON('${getCatidByMenuId}', {
+					
+					menuId : menuId,
+					ajax : 'true'
+				}, function(data) {
+				 
+					var len = data.length;
+					
+				    
+				
+					
+					for ( var i = 0; i < len; i++) {
+						document.getElementById("cat_id").setAttribute("value",data[i].catId);
+						
+					}
+					
+					
+					//document.getElementById("menu_id").setAttribute("value",menuId);
+					
+					
+					
+				}); 
+		 }
+	 
+}
+	
+	</script>
 	<!--basic scripts-->
 	<script
 		src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>

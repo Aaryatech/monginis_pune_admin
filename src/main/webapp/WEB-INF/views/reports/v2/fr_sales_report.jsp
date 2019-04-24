@@ -88,7 +88,7 @@
  -->
 				<div class="row">
 					<div class="form-group">
-					<label class="col-sm-3 col-lg-2 control-label"><b>OR</b>Select
+					<label class="col-sm-3 col-lg-2 control-label"><b></b>Select
 							Franchisee</label>
 						<div class="col-sm-6 col-lg-4">
 
