@@ -261,7 +261,7 @@
 														//var tr = "<tr>";
 														var tr = $('<tr></tr>');
 														tr.append($('<td></td>').html(""+index));
-														tr.append($('<td></td>').html(report.crnId));
+														tr.append($('<td></td>').html(report.frCode));
 													  	tr.append($('<td></td>').html(report.crnDate));
 													  	tr.append($('<td></td>').html(report.invoiceNo));
 													  	tr.append($('<td></td>').html(report.billDate));
@@ -520,7 +520,9 @@ function showChart(){
 					
 function genPdf()
 {
-	window.open('${pageContext.request.contextPath}/getCRNoteRegisterPdf');
+	var fromdate = $("#fromDate").val();
+	var todate = $("#toDate").val();
+	window.open('${pageContext.request.contextPath}/getCRNoteRegisterPdf/'+fromdate+'/'+todate+'/');
 	
 	}
 function exportToExcel()

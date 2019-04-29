@@ -11,6 +11,7 @@
 <body>
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 	<c:url var="getBillList" value="/getSaleBillwiseByFr"></c:url>
+	<c:url var="getAllCatByAjax" value="/getAllCatByAjax"></c:url>
 
 	<!-- BEGIN Sidebar -->
 	<div id="sidebar" class="navbar-collapse collapse">
@@ -108,7 +109,7 @@
 						</div>
 
 						<label class="col-sm-3 col-lg-2 control-label"><b>OR</b>Select
-							Franchisee</label>
+							Franchise</label>
 						<div class="col-sm-6 col-lg-4">
 
 							<select data-placeholder="Choose Franchisee"
@@ -270,6 +271,37 @@
 
 	<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
 		class="fa fa-chevron-up"></i></a>
+
+
+	<script type="text/javascript">
+		function setCatOptions(catId) {
+			if (catId == -1) {
+				$.getJSON('${getAllCatByAjax}', {
+					ajax : 'true'
+				}, function(data) {
+					var len = data.length;
+					$('#item_grp1').find('option').remove().end()
+
+					$("#item_grp1").append(
+							$("<option ></option>").attr("value", -1).text(
+									"Select All"));
+
+					for (var i = 0; i < len; i++) {
+
+						$("#item_grp1").append(
+								$("<option selected></option>").attr("value",
+										data[i].catId).text(data[i].catName));
+					}
+
+					$("#item_grp1").trigger("chosen:updated");
+				});
+			}
+		}
+	</script>
+
+
+
+
 
 	<script type="text/javascript">
 		function searchReport() {

@@ -119,20 +119,21 @@
 													<tr>
 													<c:choose>
 														<c:when test="${sts==1}">
-														 <th><input type="checkbox" onClick="selectedGrn(this)" disabled/>Select All<br/></th>
+														 <th><input type="checkbox" onClick="selectedGrn(this)" disabled/><br/></th>
 														</c:when>
 														<c:otherwise>
 														<th><input type="checkbox"
-													onClick="selectedGrn(this)" />Select All<br/></th>
+													onClick="selectedGrn(this)" /><br/></th>
 														</c:otherwise>
 												</c:choose>
 													
 														
 														<th>Sr No</th>
 														<th>Invoice No</th>
+														<th>Invoice Date</th>
 														<th>Franchise Name</th>
 														<th>Item Name</th>
-														<th>GRN Type</th>
+														
 														<th>Quantity</th>
 														<th>Dispatch Qty</th>
 														<th>Acc Edit</th>
@@ -233,13 +234,14 @@
 															<td><c:out value="${count.index+1}" /></td>
 
 															<td align="left"><c:out value="${grnList.invoiceNo}" /></td>
+															<td align="left"><c:out value="${grnList.refInvoiceDate}" /></td>
 
 															<td align="left"><c:out value="${grnList.frName}" /></td>
 
 
 															<td align="left"><c:out value="${grnList.itemName}" /></td>
 
-															<c:choose>
+															<%-- <c:choose>
 																<c:when test="${grnList.grnType==0}">
 																	<td align="left"><c:out value="GRN 1"></c:out></td>
 
@@ -263,7 +265,7 @@
 																</c:when>
 
 															</c:choose>
-
+ --%>
 
 															<td align="left"><c:out value="${grnList.grnGvnQty}" />
 																<input type="hidden"

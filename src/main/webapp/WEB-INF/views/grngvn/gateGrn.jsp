@@ -96,15 +96,16 @@
 													<tr>
 														<c:choose>
 														<c:when test="${sts==1}">
-														 <th><input type="checkbox" onClick="selectedGrn(this)" disabled/>Select All<br/></th>
+														 <th><input type="checkbox" onClick="selectedGrn(this)" disabled/><br/></th>
 														</c:when>
 														<c:otherwise>
 														<th><input type="checkbox"
-													onClick="selectedGrn(this)" />Select All<br/></th>
+													onClick="selectedGrn(this)" /><br/></th>
 														</c:otherwise>
 												</c:choose>
 														<th>Sr No</th>
 														<th align="center">Invoice No</th>
+														<th align="center">Invoice Date</th>
 														<th>Franchise Name</th>
 														<th>Item Name</th>
 														<th>TYPE of GRN</th>
@@ -164,6 +165,8 @@
 
 															<td align="center"><c:out
 																	value="${grnList.invoiceNo}" /></td>
+<td align="center"><c:out
+																	value="${grnList.refInvoiceDate}" /></td>
 
 															<td align="left"><c:out value="${grnList.frName}" /></td>
 

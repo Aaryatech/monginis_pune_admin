@@ -645,6 +645,23 @@ public class SalesReportController {
 
 		return saleList;
 	}
+	
+	@RequestMapping(value = "/getAllCatByAjax", method = RequestMethod.GET)
+	public @ResponseBody List<MCategoryList> getAllCatByAjax(HttpServletRequest request,
+			HttpServletResponse response) {
+		
+		/*
+		 * RestTemplate restTemplate = new RestTemplate(); CategoryListResponse
+		 * categoryListResponse; categoryListResponse =
+		 * restTemplate.getForObject(Constants.url + "showAllCategory",
+		 * CategoryListResponse.class);
+		 * 
+		 * mCategoryList = categoryListResponse.getmCategoryList();
+		 */
+		System.out.println("mCategoryList111"+mCategoryList);
+		return mCategoryList;
+	}
+	
 
 	@RequestMapping(value = "pdf/showSaleReportByDatePdf/{fDate}/{tDate}/{selectedFr}/{routeId}/{selectedCat}/", method = RequestMethod.GET)
 	public ModelAndView showSaleReportByDatePdf(@PathVariable String fDate, @PathVariable String tDate,
