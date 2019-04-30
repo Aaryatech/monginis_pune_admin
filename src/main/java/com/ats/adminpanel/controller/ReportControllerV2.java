@@ -1058,6 +1058,7 @@ public class ReportControllerV2 {
 				rowData.add("");
 				rowData.add(""+roundUp(sgstAmt));
 				rowData.add(""+Math.round(crnAmt));
+			
 				
 				expoExcel.setRowData(rowData);
 				exportToExcelList.add(expoExcel);
