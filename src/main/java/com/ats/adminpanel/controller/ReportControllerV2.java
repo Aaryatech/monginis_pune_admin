@@ -1013,6 +1013,8 @@ public class ReportControllerV2 {
 
 				expoExcel.setRowData(rowData);
 				exportToExcelList.add(expoExcel);
+				float crnQty=0.0f;float crnTaxable=0.0f;float cgstAmt=0.0f;float sgstAmt=0.0f;float crnAmt=0.0f;
+				
 				for (int i = 0; i < crNoteRegItemList.size(); i++) {
 					expoExcel = new ExportToExcel();
 					rowData = new ArrayList<String>();
@@ -1026,6 +1028,13 @@ public class ReportControllerV2 {
 
 					rowData.add("" + crNoteRegItemList.get(i).getHsnCode());
 					rowData.add("" + roundUp(crNoteRegItemList.get(i).getCrnQty()));
+					
+					crnQty=crnQty+crNoteRegItemList.get(i).getCrnQty();
+					crnTaxable=crnTaxable+crNoteRegItemList.get(i).getCrnTaxable();
+					cgstAmt=cgstAmt+crNoteRegItemList.get(i).getCgstAmt();
+					sgstAmt=sgstAmt+crNoteRegItemList.get(i).getSgstAmt();
+					crnAmt=crnAmt+crNoteRegItemList.get(i).getCrnAmt();
+					
 					rowData.add("" + roundUp(crNoteRegItemList.get(i).getCrnTaxable()));
 					rowData.add("" + crNoteRegItemList.get(i).getCgstPer());
 					rowData.add("" + roundUp(crNoteRegItemList.get(i).getCgstAmt()));
@@ -1038,7 +1047,26 @@ public class ReportControllerV2 {
 					exportToExcelList.add(expoExcel);
 
 				}
-
+				expoExcel = new ExportToExcel();
+				rowData = new ArrayList<String>();
+				rowData.add("");
+				rowData.add("");
+				rowData.add("");
+				rowData.add("");
+				rowData.add("");
+				rowData.add("");
+				rowData.add("");
+				rowData.add("Total");
+				rowData.add(""+roundUp(crnQty));
+				rowData.add(""+roundUp(crnTaxable));
+				rowData.add("");
+				rowData.add(""+roundUp(cgstAmt));
+				rowData.add("");
+				rowData.add(""+roundUp(sgstAmt));
+				rowData.add(""+Math.round(crnAmt));
+				
+				expoExcel.setRowData(rowData);
+				exportToExcelList.add(expoExcel);
 				HttpSession session = request.getSession();
 				session.setAttribute("exportExcelList", exportToExcelList);
 				session.setAttribute("excelName", "CR Note Register" + fromDate + "-" + toDate);

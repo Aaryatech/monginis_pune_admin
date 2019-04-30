@@ -3,8 +3,8 @@
 	uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 	
-	 <script src="${pageContext.request.contextPath}/resources/js/main.js"></script>
-	
+<%-- 	 <script src="${pageContext.request.contextPath}/resources/js/main.js"></script>
+ --%>	
 	<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
 	<body>
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
@@ -246,7 +246,7 @@
 
 										  
 									}
-
+									var crnQty=0;var crnTaxable=0;var cgstAmt=0;var sgstAmt=0;var crnAmt=0;
 									$
 											.each(
 													data,
@@ -267,7 +267,11 @@
 													  	tr.append($('<td></td>').html(report.billDate));
 													  	tr.append($('<td style="text-align:left;"></td>').html(report.frName));
 													  	tr.append($('<td style="text-align:left;"></td>').html(report.frGstNo));
-
+													  	crnQty=crnQty+report.crnQty;
+													  	crnTaxable=crnTaxable+report.crnTaxable;
+													  	cgstAmt=cgstAmt+report.cgstAmt;
+													  	sgstAmt=sgstAmt+report.sgstAmt;
+													  	crnAmt=crnAmt+report.crnAmt;
 													  	tr.append($('<td style="text-align:left;"></td>').html(report.hsnCode));
 														  tr.append($('<td style="text-align:center;"></td>').html((report.crnQty)));
 														  	tr.append($('<td style="text-align:right;"></td>').html(report.crnTaxable.toFixed(2)));
@@ -283,6 +287,24 @@
 																		tr);
 
 													})
+													var tr = $('<tr></tr>');
+									tr.append($('<td></td>').html(""));
+									tr.append($('<td></td>').html(""));
+									tr.append($('<td></td>').html(""));
+									tr.append($('<td></td>').html(""));
+									tr.append($('<td></td>').html(""));
+									tr.append($('<td></td>').html(""));
+									tr.append($('<td style="font-weight:12px;"></td>').html(""));
+									tr.append($('<td></td>').html("Total"));
+									tr.append($('<td style="font-weight:12px;"></td>').html(""+crnQty.toFixed(2)));
+									tr.append($('<td style="font-weight:12px;"></td>').html(""+crnTaxable.toFixed(2)));
+									tr.append($('<td></td>').html(""));
+									tr.append($('<td style="font-weight:12px;"></td>').html(""+cgstAmt.toFixed(2)));
+									tr.append($('<td></td>').html(""));
+									tr.append($('<td style="font-weight:12px;"></td>').html(""+sgstAmt.toFixed(2)));
+									tr.append($('<td style="font-weight:12px;"></td>').html(""+crnAmt.toFixed(0)));
+									$('#table_grid tbody')
+									.append(tr);
 
 								});
 	
