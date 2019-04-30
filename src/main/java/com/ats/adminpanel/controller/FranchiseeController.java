@@ -1,4 +1,4 @@
-package com.ats.adminpanel.controller;
+ package com.ats.adminpanel.controller;
 
 import java.io.FileOutputStream;
 import java.text.DateFormat;
@@ -12,7 +12,6 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.security.auth.message.callback.PrivateKeyCallback.Request;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -2371,7 +2370,7 @@ public class FranchiseeController {
 		FranchiseeAndMenuList franchiseeAndMenuList = restTemplate.getForObject(Constants.url + "getFranchiseeAndMenu",
 				FranchiseeAndMenuList.class);
 
-		//logger.info("Franchisee Response " + franchiseeAndMenuList.getAllFranchisee());
+		logger.info("Franchisee Response " + franchiseeAndMenuList.getAllFranchisee());
 
 		List<Menu> menuList = franchiseeAndMenuList.getAllMenu();
 		Menu frMenu = new Menu();
@@ -2393,11 +2392,11 @@ public class FranchiseeController {
 
 		// ------------------------------------------------------------------------
 
-		//logger.info("-------------SELECTED getConfiguredSpDayCk-------------");
+		logger.info("-------------SELECTED getConfiguredSpDayCk-------------");
 
 		String frPrevItems = getConfiguredSpDayCk.getItemId();
 
-	//	logger.info("-------------frPrevItems--------------------" + frPrevItems.toString());
+		logger.info("-------------frPrevItems--------------------" + frPrevItems.toString());
 
 		List<String> frPrevItemsList = Arrays.asList(frPrevItems.split("\\s*,\\s*"));
 
@@ -2505,13 +2504,13 @@ public class FranchiseeController {
 		model.addObject("remFrList", tempFrList);
 
 		// ------------------------------------------------------------------------------------
-		model.addObject("catId", getConfiguredSpDayCk.getCatId());
+		model.addObject("catId", catId);
 		model.addObject("menuId", menuId);
 
 		model.addObject("franchiseeAndMenuList", franchiseeAndMenuList);
 
 		model.addObject("getConfiguredSpDayCk", getConfiguredSpDayCk);
-        model.addObject("menuList", menuList);
+
 		model.addObject("spdayId", spdayId);
 
 		return model;

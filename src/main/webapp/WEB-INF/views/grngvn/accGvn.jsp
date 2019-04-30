@@ -100,16 +100,17 @@
 													<tr>
 													<c:choose>
 														<c:when test="${sts==1}">
-														 <th><input type="checkbox" onClick="selectedGvn(this)" disabled/>Select All<br/></th>
+														 <th><input type="checkbox" onClick="selectedGvn(this)" disabled/><br/></th>
 														</c:when>
 														<c:otherwise>
-														<th><input type="checkbox" onClick="selectedGvn(this)" />Select All</th>
+														<th><input type="checkbox" onClick="selectedGvn(this)" /></th>
 														</c:otherwise>
 												</c:choose>
 														
 														
 														<th style="width: 18px" align="left">Sr No</th>
-														<th >Bill No</th>
+														<th >Invoice No</th>
+														<th >Invoice Date</th>
 														<th >Franchise Name</th>
 														<th >Item Name</th>
 														<th >GVN Quantity</th>
@@ -161,7 +162,8 @@
 																</c:otherwise>
 															</c:choose>
 															<td><c:out value="${count.index+1}" /></td>
-															<td align="left"><c:out value="${gvnList.billNo}" /></td>
+															<td align="left"><c:out value="${gvnList.invoiceNo}" /></td>
+															<td align="left"><c:out value="${gvnList.refInvoiceDate}" /></td>
 															<td align="left"><c:out value="${gvnList.frName}" /></td>
 															<td align="left"><c:out value="${gvnList.itemName}" /></td>
 															<td align="left"><c:out value="${gvnList.grnGvnQty}" />

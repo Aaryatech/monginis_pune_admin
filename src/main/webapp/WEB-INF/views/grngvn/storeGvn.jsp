@@ -86,6 +86,7 @@
 														<th width="30"></th>
 														<th width="50" style="width: 18px" align="left">Sr No</th>
 														<th width="100" align="left">Invoice No</th>
+														<th width="100" align="left">Invoice Date</th>
 														<th width="120" align="left">Franchise Name</th>
 														<th width="120" align="left">Item Name</th>
 														<th width="100" align="left">GVN Qty</th>
@@ -147,6 +148,8 @@
 															<td><c:out value="${count.index+1}" /></td>
 
 															<td align="left"><c:out value="${gvnList.invoiceNo}" /></td>
+															
+															<td align="left"><c:out value="${gvnList.refInvoiceDate}" /></td>
 
 															<td align="left"><c:out value="${gvnList.frName}" /></td>
 

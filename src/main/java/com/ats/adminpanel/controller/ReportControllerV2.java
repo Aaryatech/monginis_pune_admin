@@ -29,6 +29,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -213,6 +214,7 @@ public class ReportControllerV2 {
 			throws FileNotFoundException {
 
 		Document document = new Document(PageSize.A4);
+		document.setPageSize(PageSize.A4.rotate());
 		// ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
@@ -234,11 +236,11 @@ public class ReportControllerV2 {
 			e.printStackTrace();
 		}
 
-		PdfPTable table = new PdfPTable(10);
+		PdfPTable table = new PdfPTable(9);
 		try {
 			System.out.println("Inside PDF Table try");
 			table.setWidthPercentage(100);
-			table.setWidths(new float[] { 0.7f, 1.1f, 1.9f, 1.0f, 0.9f, 0.9f, 0.9f, 1.2f, 0.9f, 1.2f });
+			table.setWidths(new float[] { 0.7f,  3.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f });
 			Font headFont = new Font(FontFamily.HELVETICA, 10, Font.NORMAL, BaseColor.BLACK);
 			Font headFont1 = new Font(FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.BLACK);
 			Font f = new Font(FontFamily.TIMES_ROMAN, 10.0f, Font.UNDERLINE, BaseColor.BLUE);
@@ -249,11 +251,7 @@ public class ReportControllerV2 {
 			hcell.setBackgroundColor(BaseColor.PINK);
 			table.addCell(hcell);
 
-			hcell = new PdfPCell(new Phrase("Code", headFont1));
-			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-			hcell.setBackgroundColor(BaseColor.PINK);
-			table.addCell(hcell);
-
+			
 			hcell = new PdfPCell(new Phrase("Party Name", headFont1));
 			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
 			hcell.setBackgroundColor(BaseColor.PINK);
@@ -305,11 +303,7 @@ public class ReportControllerV2 {
 				cell.setHorizontalAlignment(Element.ALIGN_CENTER);
 				table.addCell(cell);
 
-				cell = new PdfPCell(new Phrase(saleReportList.get(j).getFrCode(), headFont));
-				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-				cell.setPaddingRight(8);
-				table.addCell(cell);
+				
 
 				cell = new PdfPCell(new Phrase(String.valueOf(saleReportList.get(j).getFrName()), headFont));
 				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -609,13 +603,13 @@ public class ReportControllerV2 {
 	
 	
 	// getGSt Reg Pdf
-		@RequestMapping(value = "/getGstRegisterPdf", method = RequestMethod.GET)
-		public void getGstRegisterPdf(HttpServletRequest request, HttpServletResponse response)
+		@RequestMapping(value = "/getGstRegisterPdf/{fromdate}/{todate}", method = RequestMethod.GET)
+		public void getGstRegisterPdf(@PathVariable String fromdate, @PathVariable String todate,HttpServletRequest request, HttpServletResponse response)
 				throws FileNotFoundException {
 
 			Document document = new Document(PageSize.A4);
 			// ByteArrayOutputStream out = new ByteArrayOutputStream();
-
+			document.setPageSize(PageSize.A4.rotate());
 			DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 			Calendar cal = Calendar.getInstance();
 
@@ -640,7 +634,7 @@ public class ReportControllerV2 {
 			try {
 				System.out.println("Inside PDF Table try");
 				table.setWidthPercentage(100);
-				table.setWidths(new float[] { 0.7f, 2.1f, 1.9f, 2.0f, 2.0f, 0.9f, 0.9f, 1.2f, 0.9f, 1.2f,1.2f, 0.9f, 1.2f });
+				table.setWidths(new float[] { 0.7f, 1.9f, 1.9f, 3.0f, 2.0f, 1.9f, 1.2f, 1.9f, 1.2f, 1.2f,1.2f, 1.2f, 1.9f });
 				Font headFont = new Font(FontFamily.HELVETICA, 10, Font.NORMAL, BaseColor.BLACK);
 				Font headFont1 = new Font(FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.BLACK);
 				Font f = new Font(FontFamily.TIMES_ROMAN, 10.0f, Font.UNDERLINE, BaseColor.BLUE);
@@ -806,7 +800,7 @@ public class ReportControllerV2 {
 				}
 				document.open();
 			
-				Paragraph heading = new Paragraph("GST Register Report");
+				Paragraph heading = new Paragraph("GST Register Report  \n From Date:"+ fromdate+"   To Date:"+ todate);
 				heading.setAlignment(Element.ALIGN_CENTER);
 				document.add(heading);
 
@@ -1019,7 +1013,7 @@ public class ReportControllerV2 {
 					expoExcel = new ExportToExcel();
 					rowData = new ArrayList<String>();
 					rowData.add("" + (i + 1));
-					rowData.add("" + crNoteRegItemList.get(i).getCrnId());
+					rowData.add("" + crNoteRegItemList.get(i).getFrCode());
 					rowData.add("" + crNoteRegItemList.get(i).getCrnDate());
 					rowData.add("" + crNoteRegItemList.get(i).getInvoiceNo());
 					rowData.add("" + crNoteRegItemList.get(i).getBillDate());
@@ -1081,11 +1075,12 @@ public class ReportControllerV2 {
 		
 		
 		// getCRN Reg Pdf
-			@RequestMapping(value = "/getCRNoteRegisterPdf", method = RequestMethod.GET)
-			public void getCRNoteRegisterPdf(HttpServletRequest request, HttpServletResponse response)
+			@RequestMapping(value = "/getCRNoteRegisterPdf/{fromdate}/{todate}", method = RequestMethod.GET)
+			public void getCRNoteRegisterPdf(@PathVariable String fromdate, @PathVariable String todate,HttpServletRequest request, HttpServletResponse response)
 					throws FileNotFoundException {
 
 				Document document = new Document(PageSize.A4);
+				document.setPageSize(PageSize.A4.rotate());
 				// ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 				DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
@@ -1118,7 +1113,7 @@ public class ReportControllerV2 {
 					Font f = new Font(FontFamily.TIMES_ROMAN, 10.0f, Font.UNDERLINE, BaseColor.BLUE);
 
 					PdfPCell hcell;
-					hcell = new PdfPCell(new Phrase("Sr.No.", headFont1));
+					hcell = new PdfPCell(new Phrase("Sr.", headFont1));
 					hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
 					hcell.setBackgroundColor(BaseColor.PINK);
 					table.addCell(hcell);
@@ -1209,7 +1204,7 @@ public class ReportControllerV2 {
 						table.addCell(cell);
 						
 						
-						cell = new PdfPCell(new Phrase(""+crNoteRegItemList.get(j).getCrnId(), headFont));
+						cell = new PdfPCell(new Phrase(""+crNoteRegItemList.get(j).getFrCode(), headFont));
 						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 						cell.setHorizontalAlignment(Element.ALIGN_LEFT);
 						cell.setPaddingRight(1);
@@ -1303,8 +1298,8 @@ public class ReportControllerV2 {
 
 					}
 					document.open();
-				
-					Paragraph heading = new Paragraph("CR Note Register Report");
+					
+					Paragraph heading = new Paragraph("Credit Note Register Report \n From Date:"+ fromdate+" To Date:"+ todate);
 					heading.setAlignment(Element.ALIGN_CENTER);
 					document.add(heading);
 
