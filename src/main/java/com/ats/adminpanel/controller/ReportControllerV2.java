@@ -883,6 +883,8 @@ public class ReportControllerV2 {
 			return model;
 		}
 		
+		
+		
 		List<CrNoteRegItem> crNoteRegItemList = new ArrayList<>();
 		// getCRNoteRegister Ajax
 
