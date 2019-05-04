@@ -2286,7 +2286,9 @@ public class BillController {
 						e.printStackTrace();
 					}
 					postBillHeader.setBillDate(billDate);
-
+					postBillHeader.setPartyName(billHeadersList.get(j).getPartyName());
+					postBillHeader.setPartyGstin(billHeadersList.get(j).getPartyGstin());
+					postBillHeader.setPartyAddress(billHeadersList.get(j).getPartyAddress());
 					postBillHeader.setBillNo(billHeadersList.get(j).getBillNo());
 					postBillHeader.setDelStatus(0);
 					postBillHeader.setFrCode(billHeadersList.get(j).getFrCode());

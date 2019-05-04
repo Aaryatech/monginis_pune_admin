@@ -18,8 +18,37 @@ public class GetBillHeader {
     private Integer status;
     private String remark;
     private Integer delStatus;
+    private String partyName;
+	private String partyAddress;
+	private String partyGstin;
 
-    public Integer getBillNo() {
+	
+	
+    public String getPartyName() {
+		return partyName;
+	}
+
+	public void setPartyName(String partyName) {
+		this.partyName = partyName;
+	}
+
+	public String getPartyAddress() {
+		return partyAddress;
+	}
+
+	public void setPartyAddress(String partyAddress) {
+		this.partyAddress = partyAddress;
+	}
+
+	public String getPartyGstin() {
+		return partyGstin;
+	}
+
+	public void setPartyGstin(String partyGstin) {
+		this.partyGstin = partyGstin;
+	}
+
+	public Integer getBillNo() {
         return billNo;
     }
 
@@ -139,9 +168,8 @@ public class GetBillHeader {
 		return "GetBillHeader [billNo=" + billNo + ", frName=" + frName + ", time=" + time + ", taxApplicable="
 				+ taxApplicable + ", invoiceNo=" + invoiceNo + ", billDate=" + billDate + ", frId=" + frId + ", frCode="
 				+ frCode + ", grandTotal=" + grandTotal + ", taxableAmt=" + taxableAmt + ", totalTax=" + totalTax
-				+ ", status=" + status + ", remark=" + remark + ", delStatus=" + delStatus + "]";
+				+ ", status=" + status + ", remark=" + remark + ", delStatus=" + delStatus + ", partyName=" + partyName
+				+ ", partyAddress=" + partyAddress + ", partyGstin=" + partyGstin + "]";
 	}
-
-
-   
+    
 }
