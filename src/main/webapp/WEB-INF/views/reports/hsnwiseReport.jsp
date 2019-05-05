@@ -139,12 +139,11 @@
 										<th>MANUF</th>
 										<th>RET</th>
 										<th>TOTAL</th>
-										<th>TAXABLE AM</th>
+										<th>TAXABLE AMT</th>
 										<th>CGST</th>
 										<th>CGST AMT</th>
 										<th>SGST</th>
 										<th>SGST AMT</th>
-
 										<th>Total</th>
 
 									</tr>
@@ -189,122 +188,99 @@
 
 			$('#loader').show();
 
-			$
-					.getJSON(
-							'${getBillList}',
+			$.getJSON('${getBillList}',
 
-							{
+			{
 
-								fromDate : from_date,
-								toDate : to_date,
+				fromDate : from_date,
+				toDate : to_date,
 
-								ajax : 'true'
+				ajax : 'true'
 
-							},
-							function(data) {
+			}, function(data) {
 
-								$('#table_grid td').remove();
-								$('#loader').hide();
+				$('#table_grid td').remove();
+				$('#loader').hide();
 
-								if (data == "") {
-									alert("No records found !!");
-									document.getElementById("expExcel").disabled = true;
-								}
+				if (data == "") {
+					alert("No records found !!");
+					document.getElementById("expExcel").disabled = true;
+				}
 
-								var totalIgst = 0;
-								var totalSgst = 0;
-								var totalCgst = 0;
-								var totalBasicValue = 0;
-								var totalRoundOff = 0;
-								var totalFinal = 0;
+				var totalTaxableAmt = 0;
+				var totalSgst = 0;
+				var totalCgst = 0;
+				var totalFinal = 0;
 
-								$
-										.each(
-												data,
-												function(key, report) {
+				$.each(data, function(key, report) {
 
-													document
-															.getElementById("expExcel").disabled = false;
-													document
-															.getElementById('range').style.display = 'block';
-													var index = key + 1;
-													//var tr = "<tr>";
+					document.getElementById("expExcel").disabled = false;
+					document.getElementById('range').style.display = 'block';
+					var index = key + 1;
+					//var tr = "<tr>";
 
-													var tr = $('<tr></tr>');
+					var tr = $('<tr></tr>');
 
-													tr.append($('<td></td>')
-															.html(key + 1));
+					tr.append($('<td></td>').html(key + 1));
 
-													tr
-															.append($(
-																	'<td></td>')
-																	.html(
-																			report.itemHsncd));
+					tr.append($('<td></td>').html(report.itemHsncd));
 
-													tr
-															.append($(
-																	'<td></td>')
-																	.html(
-																			report.itemTax1
-																					+ report.itemTax2));
+					tr.append($('<td></td>').html(
+							report.itemTax1 + report.itemTax2));
 
-													tr
-															.append($(
-																	'<td></td>')
-																	.html(
-																			report.billQty));
+					tr.append($('<td></td>').html(report.billQty));
 
-													tr
-															.append($(
-																	'<td></td>')
-																	.html(
-																			report.grnGvnQty));
-													tr
-															.append($(
-																	'<td></td>')
-																	.html(
-																			report.billQty
-																					- report.grnGvnQty));
+					tr.append($('<td></td>').html(report.grnGvnQty));
+					tr.append($('<td></td>').html(
+							report.billQty - report.grnGvnQty));
 
-													tr
-															.append($(
-																	'<td></td>')
-																	.html(
-																			report.taxableAmt));
-													tr
-															.append($(
-																	'<td></td>')
-																	.html(
-																			report.itemTax1));
-													tr
-															.append($(
-																	'<td></td>')
-																	.html(
-																			report.cgstRs));
-													tr
-															.append($(
-																	'<td></td>')
-																	.html(
-																			report.itemTax2));
-													tr
-															.append($(
-																	'<td></td>')
-																	.html(
-																			report.sgstRs));
-													tr
-															.append($(
-																	'<td></td>')
-																	.html(
-																			report.cgstRs
-																					+ report.sgstRs
-																					+ report.taxableAmt));
+					totalTaxableAmt = totalTaxableAmt + report.taxableAmt;
 
-													$('#table_grid tbody')
-															.append(tr);
+					totalSgst = totalSgst + report.sgstRs;
+					totalCgst = totalCgst + report.cgstRs;
 
-												})
+					totalFinal = totalFinal + report.cgstRs + report.sgstRs
+							+ report.taxableAmt;
 
-							});
+					tr
+							.append($('<td></td>').html(
+									report.taxableAmt.toFixed(2)));
+					tr.append($('<td></td>').html(report.itemTax1));
+					tr.append($('<td></td>').html(report.cgstRs.toFixed(2)));
+					tr.append($('<td></td>').html(report.itemTax2));
+					tr.append($('<td></td>').html(report.sgstRs.toFixed(2)));
+					tr.append($('<td></td>').html(
+							(report.cgstRs + report.sgstRs + report.taxableAmt)
+									.toFixed(2)));
+
+					$('#table_grid tbody').append(tr);
+
+				})
+
+				var tr = $('<tr></tr>');
+
+				tr.append($('<td></td>').html(""));
+				tr.append($('<td></td>').html(""));
+				tr.append($('<td></td>').html(""));
+				tr.append($('<td></td>').html(""));
+				tr.append($('<td></td>').html(""));
+				tr.append($('<td style="font-weight:bold;"></td>')
+						.html("Total"));
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalTaxableAmt.toFixed(2)));
+				tr.append($('<td></td>').html(""));
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalCgst.toFixed(2)));
+				tr.append($('<td></td>').html(""));
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalSgst.toFixed(2)));
+
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalFinal.toFixed(2)));
+
+				$('#table_grid tbody').append(tr);
+
+			});
 
 		}
 	</script>
