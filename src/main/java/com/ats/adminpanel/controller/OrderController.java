@@ -1184,7 +1184,7 @@ public class OrderController {
 	@RequestMapping(value = "/showSpcakeOrderPdfInRange/{from}/{to}", method = RequestMethod.GET)
 	public ModelAndView showSpcakeOrderPdfInRange(@PathVariable("from") int from, @PathVariable("to") int to,
 			HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView model = new ModelAndView("orders/spCakeOrderPdf");
+		ModelAndView model = new ModelAndView("orders/spCakeOrderPdfNew");
 
 		RestTemplate restTemp = new RestTemplate();
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
