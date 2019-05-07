@@ -225,6 +225,7 @@ public class ReportController {
 			rowData.add("CGST Amt");
 
 			rowData.add("SGST Amt");
+			rowData.add("Total Amt");
 			rowData.add("CRN Amt");
 
 			expoExcel.setRowData(rowData);
@@ -236,6 +237,14 @@ public class ReportController {
 			float crnAmt = 0.0f;
 
 			for (int i = 0; i < crNoteRegItemList.size(); i++) {
+				float crnTotal=0.0f;
+				for (int j = 0; j < crNoteRegItemList.size(); j++) {
+					if(crNoteRegItemList.get(i).getCrnId()==crNoteRegItemList.get(j).getCrnId())
+					{
+						crnTotal=crnTotal+roundUp(crNoteRegItemList.get(j).getCrnAmt());
+					}
+				}
+				
 				expoExcel = new ExportToExcel();
 				rowData = new ArrayList<String>();
 				rowData.add("" + (i + 1));
@@ -262,12 +271,12 @@ public class ReportController {
 				rowData.add("" + roundUp(crNoteRegItemList.get(i).getSgstAmt()));
 
 				rowData.add("" + roundUp(crNoteRegItemList.get(i).getCrnAmt()));
-
+				rowData.add(""+roundUp(crnTotal));
 				expoExcel.setRowData(rowData);
 				exportToExcelList.add(expoExcel);
 
 			}
-			expoExcel = new ExportToExcel();
+		/*	expoExcel = new ExportToExcel();
 			rowData = new ArrayList<String>();
 			rowData.add("");
 			rowData.add("");
@@ -286,7 +295,7 @@ public class ReportController {
 			rowData.add("" + Math.round(crnAmt));
 
 			expoExcel.setRowData(rowData);
-			exportToExcelList.add(expoExcel);
+			exportToExcelList.add(expoExcel);*/
 			HttpSession session = request.getSession();
 			session.setAttribute("exportExcelList", exportToExcelList);
 			session.setAttribute("excelName", "CR Note Register" + fromDate + "-" + toDate);
@@ -590,60 +599,67 @@ public class ReportController {
 
 	}
 
-	List<HSNWiseReport> hsnListBill = new ArrayList<>();
+	List<HSNWiseReport> hsnListBill = null;
 
 	@RequestMapping(value = "/getReportHSNwise", method = RequestMethod.GET)
 	public @ResponseBody List<HSNWiseReport> getReportHSNwise(HttpServletRequest request,
 			HttpServletResponse response) {
 
-		List<HSNWiseReport> hsnList = new ArrayList<>();
-
+		List<HSNWiseReport> hsnList = null;
+		
 		try {
 			System.out.println("Inside get hsnList    ");
-
+			hsnListBill = new ArrayList<>();
+			 hsnList = new ArrayList<>();
 			String fromDate = request.getParameter("fromDate");
 			String toDate = request.getParameter("toDate");
+			int type =Integer.parseInt(request.getParameter("type"));
 
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			RestTemplate restTemplate = new RestTemplate();
 
 			map.add("fromDate", DateConvertor.convertToYMD(fromDate));
 			map.add("toDate", DateConvertor.convertToYMD(toDate));
-
+               
+			 if(type==1||type==3) {
 			ParameterizedTypeReference<List<HSNWiseReport>> typeRef = new ParameterizedTypeReference<List<HSNWiseReport>>() {
 			};
 			ResponseEntity<List<HSNWiseReport>> responseEntity = restTemplate.exchange(Constants.url + "getHsnBillReport",
 					HttpMethod.POST, new HttpEntity<>(map), typeRef);
 
 			hsnListBill = responseEntity.getBody();
-
+			 }
+			 if(type==2||type==3) {
 			ParameterizedTypeReference<List<HSNWiseReport>> typeRef1 = new ParameterizedTypeReference<List<HSNWiseReport>>() {
 			};
 			ResponseEntity<List<HSNWiseReport>> responseEntity1 = restTemplate
 					.exchange(Constants.url + "getHsnReport", HttpMethod.POST, new HttpEntity<>(map), typeRef1);
 
 			hsnList = responseEntity1.getBody();
+		
 			System.out.println("hsn List Bill Wise " + hsnList.toString());
+			 }
+			 
 
 			for (int i = 0; i < hsnList.size(); i++) {
 				for (int j = 0; j < hsnListBill.size(); j++)
-
 				{
-					if (hsnList.get(i).getItemHsncd() == hsnListBill.get(j).getItemHsncd()) {
-						hsnListBill.get(j)
-								.setTaxableAmt(hsnListBill.get(j).getTaxableAmt() - hsnList.get(i).getTaxableAmt());
-						hsnListBill.get(j).setGrnGvnQty(hsnListBill.get(j).getBillQty());
+					if (hsnList.get(i).getItemHsncd().equals(hsnListBill.get(j).getItemHsncd())) {
+						hsnListBill.get(j).setTaxableAmt(hsnListBill.get(j).getTaxableAmt() - hsnList.get(i).getTaxableAmt());
+						hsnListBill.get(j).setGrnGvnQty(hsnList.get(i).getBillQty());
 
 						hsnListBill.get(j).setCgstRs(hsnListBill.get(j).getCgstRs() - hsnList.get(i).getCgstRs());
 
 						hsnListBill.get(j).setSgstRs(hsnListBill.get(j).getSgstRs() - hsnList.get(i).getSgstRs());
 
 					}
-					hsnListBill.get(j).setGrnGvnQty(0);
-
+					//hsnListBill.get(j).setGrnGvnQty(0);
 				}
 			}
-
+			if(type==2)
+			 {
+					hsnListBill.addAll(hsnList);
+			 }
 			System.out.println(hsnListBill.toString());
 			System.out.println(hsnList.toString());
 
@@ -832,63 +848,63 @@ public class ReportController {
 				cell = new PdfPCell(new Phrase(
 						"" + (hsnListBill.get(j).getItemTax1() + hsnListBill.get(j).getItemTax2()), headFont));
 				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 				cell.setPaddingRight(1);
 				table.addCell(cell);
 
 				cell = new PdfPCell(new Phrase("" + hsnListBill.get(j).getBillQty(), headFont));
 				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 				cell.setPaddingRight(1);
 				table.addCell(cell);
 
 				cell = new PdfPCell(new Phrase("" + hsnListBill.get(j).getGrnGvnQty(), headFont));
 				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 				cell.setPaddingRight(1);
 				table.addCell(cell);
 
 				cell = new PdfPCell(new Phrase(
 						"" + roundUp(hsnListBill.get(j).getBillQty() - hsnListBill.get(j).getGrnGvnQty()), headFont));
 				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 				cell.setPaddingRight(1);
 				table.addCell(cell);
 
 				cell = new PdfPCell(new Phrase("" + roundUp(hsnListBill.get(j).getTaxableAmt()), headFont));
 				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 				cell.setPaddingRight(1);
 				table.addCell(cell);
 
 				cell = new PdfPCell(new Phrase("" + roundUp(hsnListBill.get(j).getItemTax1()), headFont));
 				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 				cell.setPaddingRight(1);
 				table.addCell(cell);
 
 				cell = new PdfPCell(new Phrase("" + roundUp(hsnListBill.get(j).getCgstRs()), headFont));
 				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 				cell.setPaddingRight(1);
 				table.addCell(cell);
 
 				cell = new PdfPCell(new Phrase("" + roundUp(hsnListBill.get(j).getItemTax2()), headFont));
 				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 				cell.setPaddingRight(1);
 				table.addCell(cell);
 
 				cell = new PdfPCell(new Phrase("" + roundUp(hsnListBill.get(j).getSgstRs()), headFont));
 				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 				cell.setPaddingRight(1);
 				table.addCell(cell);
 
 				cell = new PdfPCell(new Phrase("" + roundUp(hsnListBill.get(j).getSgstRs()
 						+ hsnListBill.get(j).getTaxableAmt() + hsnListBill.get(j).getCgstRs()), headFont));
 				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 				cell.setPaddingRight(1);
 				table.addCell(cell);
 

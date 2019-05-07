@@ -297,11 +297,21 @@ public class SalesReportController {
 				rowData.add("sgst Amt");
 				rowData.add("Taxable Amt");
 				rowData.add("Total Tax");
-				rowData.add("Grand Total");
+				rowData.add("Total");
+				rowData.add("Bill Total");
 
 				expoExcel.setRowData(rowData);
 				exportToExcelList.add(expoExcel);
 				for (int i = 0; i < taxReportList.size(); i++) {
+					float finalTotal=0;
+					for (int j = 0; j < taxReportList.size(); j++) {
+						
+						if(taxReportList.get(j).getBillNo()==taxReportList.get(i).getBillNo())
+						{
+							finalTotal=finalTotal+taxReportList.get(j).getGrandTotal();
+						}
+					}
+					
 					expoExcel = new ExportToExcel();
 					rowData = new ArrayList<String>();
 					rowData.add((i + 1) + "");
@@ -319,6 +329,8 @@ public class SalesReportController {
 					rowData.add("" + taxReportList.get(i).getTaxableAmt());
 					rowData.add("" + taxReportList.get(i).getTotalTax());
 					rowData.add("" + taxReportList.get(i).getGrandTotal());
+					
+					rowData.add(""+finalTotal);
 					expoExcel.setRowData(rowData);
 					exportToExcelList.add(expoExcel);
 

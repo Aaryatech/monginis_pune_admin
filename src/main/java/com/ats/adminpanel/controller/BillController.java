@@ -1128,6 +1128,7 @@ public class BillController {
 	@ResponseBody
 	public List<HsnwiseBillExcelSummary> excelForFrBillExcel(HttpServletRequest request, HttpServletResponse response) {
 
+		System.out.println("hiiiii ");
 		List<HsnwiseBillExcelSummary> salesExcelListRes = null;
 		HsnwiseBillExcelSummary[] salesExcelList = null;
 		try {

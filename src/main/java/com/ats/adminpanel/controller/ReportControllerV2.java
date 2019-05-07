@@ -561,11 +561,21 @@ public class ReportControllerV2 {
 			rowData.add("CGST Amt");
 			rowData.add("SGST %");
 			rowData.add("SGST Amt");
+			rowData.add("Total Amt");
 			rowData.add("Bill Amt");
-
+			
 			expoExcel.setRowData(rowData);
 			exportToExcelList.add(expoExcel);
 			for (int i = 0; i < gstRegItemList.size(); i++) {
+				float totalAmt=0.0f;
+				for (int j = 0; j < gstRegItemList.size();j++) {
+					if(gstRegItemList.get(i).getBillNo()==gstRegItemList.get(j).getBillNo())
+					{
+						totalAmt=totalAmt+roundUp(gstRegItemList.get(j).getGrandTotal());
+					}
+					
+				}
+				
 				expoExcel = new ExportToExcel();
 				rowData = new ArrayList<String>();
 				rowData.add("" + (i + 1));
@@ -583,7 +593,7 @@ public class ReportControllerV2 {
 				rowData.add("" + roundUp(gstRegItemList.get(i).getSgstAmt()));
 				
 				rowData.add("" + roundUp(gstRegItemList.get(i).getGrandTotal()));
-				
+				rowData.add(""+roundUp(totalAmt));
 				expoExcel.setRowData(rowData);
 				exportToExcelList.add(expoExcel);
 
@@ -1005,6 +1015,7 @@ public class ReportControllerV2 {
 				rowData.add("CGST Amt");
 				rowData.add("SGST %");
 				rowData.add("SGST Amt");
+				rowData.add("Total Amt");
 				rowData.add("CRN Amt");
 
 				expoExcel.setRowData(rowData);
@@ -1012,6 +1023,17 @@ public class ReportControllerV2 {
 				float crnQty=0.0f;float crnTaxable=0.0f;float cgstAmt=0.0f;float sgstAmt=0.0f;float crnAmt=0.0f;
 				
 				for (int i = 0; i < crNoteRegItemList.size(); i++) {
+					
+					
+					float crnTotalAmt=0;
+					for (int k = 0; k < crNoteRegItemList.size(); k++) {
+						
+						if(crNoteRegItemList.get(i).getCrnId()==crNoteRegItemList.get(k).getCrnId())
+						{
+							crnTotalAmt=crnTotalAmt+roundUp(crNoteRegItemList.get(k).getCrnAmt());
+						}
+					}
+					
 					expoExcel = new ExportToExcel();
 					rowData = new ArrayList<String>();
 					rowData.add("" + (i + 1));
@@ -1038,12 +1060,13 @@ public class ReportControllerV2 {
 					rowData.add("" + roundUp(crNoteRegItemList.get(i).getSgstAmt()));
 					
 					rowData.add("" + roundUp(crNoteRegItemList.get(i).getCrnAmt()));
+					rowData.add("" + roundUp(crnTotalAmt));
 					
 					expoExcel.setRowData(rowData);
 					exportToExcelList.add(expoExcel);
 
 				}
-				expoExcel = new ExportToExcel();
+				/*expoExcel = new ExportToExcel();
 				rowData = new ArrayList<String>();
 				rowData.add("");
 				rowData.add("");
@@ -1060,7 +1083,7 @@ public class ReportControllerV2 {
 				rowData.add("");
 				rowData.add(""+roundUp(sgstAmt));
 				rowData.add(""+Math.round(crnAmt));
-			
+				rowData.add("");*/
 				
 				expoExcel.setRowData(rowData);
 				exportToExcelList.add(expoExcel);
@@ -1105,12 +1128,12 @@ public class ReportControllerV2 {
 					e.printStackTrace();
 				}
 
-				PdfPTable table = new PdfPTable(15);
+				PdfPTable table = new PdfPTable(16);
 				table.setHeaderRows(1);
 				try {
 					System.out.println("Inside PDF Table try");
 					table.setWidthPercentage(100);
-					table.setWidths(new float[] { 0.7f, 1.1f, 2.0f,2.1f, 2.3f, 2.0f, 2.2f, 1.2f, 1.2f, 1.2f, 0.9f, 1.2f,1.2f, 0.9f, 1.2f });
+					table.setWidths(new float[] { 0.7f, 1.1f, 2.0f,2.1f, 2.3f, 2.0f, 2.2f, 1.2f, 1.2f, 1.2f, 0.9f, 1.2f,1.2f, 0.9f, 1.2f,1.2f });
 					Font headFont = new Font(FontFamily.HELVETICA, 8, Font.NORMAL, BaseColor.BLACK);
 					Font headFont1 = new Font(FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.BLACK);
 					Font f = new Font(FontFamily.TIMES_ROMAN, 10.0f, Font.UNDERLINE, BaseColor.BLUE);
@@ -1190,7 +1213,12 @@ public class ReportControllerV2 {
 					hcell.setBackgroundColor(BaseColor.PINK);
 					table.addCell(hcell);
 					
-					hcell = new PdfPCell(new Phrase("Bill Amt", headFont1)); // Varience title replaced with P2 Production
+					hcell = new PdfPCell(new Phrase("Total Amt", headFont1)); // Varience title replaced with P2 Production
+					hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+					hcell.setBackgroundColor(BaseColor.PINK);
+					table.addCell(hcell);
+					
+					hcell = new PdfPCell(new Phrase("Crn Amt", headFont1)); // Varience title replaced with P2 Production
 					hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
 					hcell.setBackgroundColor(BaseColor.PINK);
 					table.addCell(hcell);
@@ -1198,6 +1226,15 @@ public class ReportControllerV2 {
 					int index = 0;
 					for (int j = 0; j < crNoteRegItemList.size(); j++) {
 
+						float crnTotalAmt=0;
+						for (int k = 0; k < crNoteRegItemList.size(); k++) {
+							
+							if(crNoteRegItemList.get(j).getCrnId()==crNoteRegItemList.get(k).getCrnId())
+							{
+								System.err.println("crNoteRegItemList.get(j).getCrnId()"+crNoteRegItemList.get(j).getCrnId()+"crnAmt:"+crNoteRegItemList.get(j).getCrnAmt());
+								crnTotalAmt=crnTotalAmt+roundUp(crNoteRegItemList.get(k).getCrnAmt());
+							}
+						}
 						index++;
 						PdfPCell cell;
 
@@ -1298,7 +1335,14 @@ public class ReportControllerV2 {
 						cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 						cell.setPaddingRight(8);
 						table.addCell(cell);
+						
+						cell = new PdfPCell(new Phrase(String.valueOf(roundUp(crnTotalAmt)), headFont));
+						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+						cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+						cell.setPaddingRight(8);
+						table.addCell(cell);
 
+						
 					}
 					document.open();
 					

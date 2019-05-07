@@ -661,14 +661,14 @@ form.submit();
             flag=1;
         }
     } 
-			
+		
 			 if(flag==1)
 				 {
 			$
 					.getJSON(
 							'${excelForFrBill}',
 							{
-								checkboxes : txt ,
+								checkboxes : txt,
 								all : all,
 								fromDate : fromDate,
 								toDate : toDate,
@@ -712,6 +712,7 @@ form.submit();
 			
 			 if(flag==1)
 				 {
+				
 			$
 					.getJSON(
 							'${excelForFrBillExcel}',

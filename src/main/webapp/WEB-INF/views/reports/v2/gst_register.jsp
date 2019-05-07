@@ -3,8 +3,8 @@
 	uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 	
-	 <script src="${pageContext.request.contextPath}/resources/js/main.js"></script>
-	
+<%-- 	 <script src="${pageContext.request.contextPath}/resources/js/main.js"></script>
+ --%>	
 	<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
 	<body>
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
