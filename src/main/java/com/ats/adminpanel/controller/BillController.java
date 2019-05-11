@@ -1137,21 +1137,21 @@ public class BillController {
 			int all = Integer.parseInt(request.getParameter("all"));
 			String fromDate = request.getParameter("fromDate");
 			String toDate = request.getParameter("toDate");
-			System.out.println("checkboxes " + checkboxes);
+			//System.out.println("checkboxes " + checkboxes);
 
 			if (all == 0)
 				checkboxes = checkboxes.substring(0, checkboxes.length() - 1);
-			System.out.println("string " + checkboxes);
+			//System.out.println("string " + checkboxes);
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			map.add("billNoList", checkboxes);
 			map.add("all", all);
 			map.add("fromDate", DateConvertor.convertToYMD(fromDate));
 			map.add("toDate", DateConvertor.convertToYMD(toDate));
-			System.out.println("map " + map);
+			//System.out.println("map " + map);
 			salesExcelList = restTemplate.postForObject(Constants.url + "/getHsnwiseBillDataForExcel", map,
 					HsnwiseBillExcelSummary[].class);
 			salesExcelListRes = new ArrayList<HsnwiseBillExcelSummary>(Arrays.asList(salesExcelList));
-			System.out.println("salesExcelList " + salesExcelList.toString());
+			System.out.println("salesExcelList size " + salesExcelListRes.size());
 
 			try {
 				List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
@@ -1179,6 +1179,7 @@ public class BillController {
 				expoExcel.setRowData(rowData);
 				exportToExcelList.add(expoExcel);
 				for (int i = 0; i < salesExcelListRes.size(); i++) {
+					System.err.println("In for index  " +i);
 					expoExcel = new ExportToExcel();
 					rowData = new ArrayList<String>();
 					rowData.add("" + (i + 1));
@@ -1208,7 +1209,8 @@ public class BillController {
 				session.setAttribute("excelName", "billExcel");
 			} catch (Exception e) {
 				e.printStackTrace();
-				System.out.println("Exception to genrate excel ");
+				System.out.println("Exception to genrate excel "+e.getMessage());
+				e.printStackTrace();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1226,7 +1228,8 @@ public class BillController {
 		// Constants.subAct = 83;
 
 		billHeadersList = new ArrayList<>();
-
+		List<HsnwiseBillExcelSummary> salesExcelListRes = null;
+		HsnwiseBillExcelSummary[] salesExcelList = null;
 		try {
 
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
@@ -1301,7 +1304,7 @@ public class BillController {
 				billHeadersListForPrint = responseEntity.getBody();
 
 				// model.addObject("billHeadersList",billHeadersListForPrint);
-
+				frIdString="-1";
 			} else { // few franchisee selected
 
 				System.out.println("Inside Else: Few Fr Selected ");
@@ -1316,7 +1319,7 @@ public class BillController {
 				billHeadersListForPrint = new ArrayList<>();
 				// List<GetBillDetail> billDetailsResponse = responseEntity.getBody();
 				billHeadersListForPrint = responseEntity.getBody();
-
+			}
 				/*
 				 * GetBillHeaderResponse billHeaderResponse =
 				 * restTemplate.postForObject(Constants.url + "getBillHeader", map,
@@ -1324,20 +1327,91 @@ public class BillController {
 				 * 
 				 * billHeadersList = billHeaderResponse.getGetBillHeaders();
 				 */
-			}
+				//fdfd
+				
+				SalesVoucherList salesVoucherList = new SalesVoucherList();
+
+			    map = new LinkedMultiValueMap<String, Object>();
+				map.add("frIdList", frIdString);
+				map.add("fromDate", DateConvertor.convertToYMD(fromDate));
+				map.add("toDate", DateConvertor.convertToYMD(toDate));
+				System.out.println("map " + map);
+				salesExcelList = restTemplate.postForObject(Constants.url + "/getHsnwiseBillDataForExcelV2", map,
+						HsnwiseBillExcelSummary[].class);
+				salesExcelListRes = new ArrayList<HsnwiseBillExcelSummary>(Arrays.asList(salesExcelList));
+				System.out.println("salesExcelList size " + salesExcelListRes.size());
+
+				try {
+					List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
+
+					ExportToExcel expoExcel = new ExportToExcel();
+					List<String> rowData = new ArrayList<String>();
+
+					rowData.add("Sr no");
+					rowData.add("Invoice No.");
+					rowData.add("Invoice Date");
+					rowData.add("Customer Name");
+					rowData.add("HSN CODE");
+					rowData.add("Qty");
+					rowData.add("Assessable Amt");
+					rowData.add("CGST");
+					rowData.add("SGST");
+					rowData.add("IGST");
+					rowData.add("Tax Rate");
+					rowData.add("Grand Total");
+					rowData.add("Invoice Amount");
+					rowData.add("GST No.");
+					rowData.add("Country");
+					rowData.add("State");
+
+					expoExcel.setRowData(rowData);
+					exportToExcelList.add(expoExcel);
+					for (int i = 0; i < salesExcelListRes.size(); i++) {
+						System.err.println("In for index  " +i);
+						expoExcel = new ExportToExcel();
+						rowData = new ArrayList<String>();
+						rowData.add("" + (i + 1));
+						rowData.add("" + salesExcelListRes.get(i).getInvoiceNo());
+						rowData.add("" + salesExcelListRes.get(i).getBillDate());
+						rowData.add("" + salesExcelListRes.get(i).getPartyName());
+						rowData.add("" + salesExcelListRes.get(i).getItemHsncd());
+						rowData.add("" + salesExcelListRes.get(i).getQty());
+						rowData.add("" + salesExcelListRes.get(i).getTaxableAmt());
+						rowData.add("" + salesExcelListRes.get(i).getCgstRs());
+						rowData.add("" + salesExcelListRes.get(i).getSgstRs());
+						rowData.add("" + salesExcelListRes.get(i).getIgstRs());
+						rowData.add("" + salesExcelListRes.get(i).getTaxRate());
+						rowData.add("" + salesExcelListRes.get(i).getGrandTotal());
+						rowData.add("" + salesExcelListRes.get(i).getInvoiceTotal());
+						rowData.add("" + salesExcelListRes.get(i).getPartyGstin());
+						rowData.add("" + salesExcelListRes.get(i).getCountry());
+						rowData.add("" + salesExcelListRes.get(i).getState());
+
+						expoExcel.setRowData(rowData);
+						exportToExcelList.add(expoExcel);
+
+					}
+				
+					HttpSession session = request.getSession();
+					session.setAttribute("exportExcelList", exportToExcelList);
+					session.setAttribute("excelName", "billExcel");
+				
+			
 
 			System.out.println("bill header for Print Using Ajax call  " + billHeadersListForPrint.toString());
-		} catch (
-
-		Exception e) {
+		} catch (Exception e) {
 
 			System.out
 					.println("Ex in getting billHeader List  for print using date and frId Ajax call" + e.getMessage());
 			e.printStackTrace();
 		}
-
+		}catch (Exception e) {
+			System.err.println("First try exce  " +e.getMessage());
+			e.printStackTrace();
+		}
+	
 		return billHeadersListForPrint;
-
+		
 	}
 
 	@RequestMapping(value = "/getBillDetailForPrintPdf", method = RequestMethod.GET)

@@ -294,7 +294,11 @@ td {
 											class="btn btn-primary" onclick="submitBill()"
 											value="BillDetail" style="display: none;"/>
 											<input type="button" id="expExcel" class="btn btn-primary" value="EXPORT TO Excel" onclick="createExel();" >
-									&nbsp;&nbsp;&nbsp;&nbsp; <input type="button" id="expExcel" class="btn btn-primary" value="Excel Hsnwise Summary" onclick="createExelHsnwise();" >
+											
+									&nbsp;&nbsp;&nbsp;&nbsp; <input type="button" id="expExcel" class="btn btn-primary" value="Excel Hsnwise Summary Tally" onclick="createExelHsnwise();" >
+									&nbsp;&nbsp;&nbsp;&nbsp;
+																		<input type="button" disabled id="expExcel2" class="btn btn-primary" value="Hsnwise Summary" onclick="exportToExcel();" >
+									
 									</div>
 								</div>
 							</form>
@@ -556,6 +560,9 @@ form.submit();
 													$('#table1 tbody').append(
 															tr);
 
+													document.getElementById("expExcel2").disabled=false;
+													
+													
 													/* var index = key + 1;
 													
 													var tr = "<tr>";
@@ -692,32 +699,38 @@ form.submit();
 		{
 			//alert("Export Excel");
 			window.open("${pageContext.request.contextPath}/exportToExcel"); 
+			document.getElementById("expExcel2").disabled=true;
+
 		}
 		function createExelHsnwise() {
-			 
+			 //alert("Hi");
+			  try {
 			var fromDate = document.getElementById("dp1").value;
 			var toDate = document.getElementById("dp2").value;
 			  var select_to_print = document.forms[0];
-			 // alert(JSON.stringify(select_to_print));
+			  //alert(JSON.stringify(select_to_print));
     	var txt = "";
     	var i;
     	var flag=0;
     	var all=0;
+    	//alert("before for")
     	 for (i = 0; i < select_to_print.length; i++) {
         if (select_to_print[i].checked  && select_to_print[i].value!="on") {
             txt = txt + select_to_print[i].value + ",";
             flag=1;
         }
     } 
-			
+    	 alert("in flag  after for Length " +txt.length)
 			 if(flag==1)
 				 {
+				// alert("in flag  ==1")
 				
+				 
 			$
 					.getJSON(
 							'${excelForFrBillExcel}',
 							{
-								checkboxes : txt ,
+								checkboxes : txt,
 								all : all,
 								fromDate : fromDate,
 								toDate : toDate,
@@ -725,7 +738,7 @@ form.submit();
 							},
 							function(data) {
 								
-							 //alert("Excel Ready");
+							// alert("Excel Ready");
 								 exportToExcel();
 							 
 							});
@@ -734,7 +747,10 @@ form.submit();
 				 {
 				 alert("Select Minimum 1 Bill ");
 				 }
-
+			  }catch(err) {
+				//  alert("in catch")
+				  //alert(err);
+			  }
 		}
 	</script>
 
