@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -89,6 +90,8 @@ import com.ats.adminpanel.model.salesreport.SalesReportBillwiseAllFr;
 import com.ats.adminpanel.model.salesreport.SalesReportItemwise;
 import com.ats.adminpanel.model.salesreport.SalesReportRoyalty;
 import com.ats.adminpanel.model.salesreport.SalesReportRoyaltyFr;
+import com.ats.adminpanel.model.salesvaluereport.SalesReturnQtyReportList;
+import com.ats.adminpanel.model.salesvaluereport.SalesReturnValueDaoList;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -5195,8 +5198,241 @@ public class SalesReportController {
 		return model;
 
 	}
+    //--------------------------------------------------------------------------------------------------
+	@RequestMapping(value = "/showMonthlySalesQtyWiseReport", method = RequestMethod.GET)
+	public ModelAndView showMonthlySalesQtyWiseReport(HttpServletRequest request, HttpServletResponse response) {
 
-	// pdf function
+		ModelAndView model = null;
+		/*HttpSession session = request.getSession();
+
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("showSaleReportByDate", "showSaleReportByDate", "1", "0", "0", "0",
+				newModuleList);
+		if (view.getError() == true) {
+			model = new ModelAndView("accessDenied");
+
+		} else {*/
+			model = new ModelAndView("reports/sales/monthlysalesqtyreport");
+			RestTemplate restTemplate = new RestTemplate();
+
+			try {
+				String year=request.getParameter("year");
+
+				if(year!="") {
+					String[] yrs = year.split("-"); //returns an array with the 2 parts
+
+				MultiValueMap<String, String> map = new LinkedMultiValueMap<String,String>();
+
+			   map.add("fromYear",yrs[0]);
+			   map.add("toYear", yrs[1]);
+				
+			 SalesReturnQtyReportList[]	salesReturnQtyReportListRes = restTemplate.postForObject(Constants.url + "getSalesReturnQtyReport",
+						map,  SalesReturnQtyReportList[].class);
+
+			    List<SalesReturnQtyReportList> salesReturnQtyReportList=new ArrayList<SalesReturnQtyReportList>(Arrays.asList(salesReturnQtyReportListRes));
+			
+			    SubCategory[] subCategoryList = restTemplate.getForObject(Constants.url + "getAllSubCatList",
+						SubCategory[].class);
+
+				ArrayList<SubCategory> subCatList = new ArrayList<SubCategory>(Arrays.asList(subCategoryList));
+				
+		        LinkedHashMap<Integer,SalesReturnQtyReportList> salesReturnQtyReport= new LinkedHashMap<>();
+
+		        for(int i=0;i<salesReturnQtyReportList.size();i++)
+		        {
+		        	salesReturnQtyReport.put(i, salesReturnQtyReportList.get(i));
+		        }
+				
+				model.addObject("salesReturnQtyReport", salesReturnQtyReport);
+				model.addObject("subCatList", subCatList);
+				
+				// exportToExcel
+				List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
+
+				ExportToExcel expoExcel = new ExportToExcel();
+				List<String> rowData = new ArrayList<String>();
+				rowData.add("Sr.");
+				rowData.add("Group Name");
+				for(int i=0;i<salesReturnQtyReport.size();i++)
+				{
+					rowData.add(salesReturnQtyReport.get(i).getMonth()+" Gross Sale");
+					rowData.add(salesReturnQtyReport.get(i).getMonth()+" GVN Qty");
+					rowData.add(salesReturnQtyReport.get(i).getMonth()+" GRN Qty");
+					rowData.add(salesReturnQtyReport.get(i).getMonth()+" Total");
+				}
+				rowData.add("Total Gross Sale");
+				rowData.add("Total GRN Qty");
+				rowData.add("Total GVN Qty");
+				
+				expoExcel.setRowData(rowData);
+				exportToExcelList.add(expoExcel);
+			
+				for (int k = 0; k < subCatList.size(); k++) {
+					
+					float billQty=0.0f; float grnQty=0.0f; float gvnQty=0.0f; 
+					
+					expoExcel = new ExportToExcel();
+					rowData = new ArrayList<String>();
+					rowData.add("" +(k+1));
+					rowData.add("" + subCatList.get(k).getSubCatName());
+					for (int i = 0; i < salesReturnQtyReport.size(); i++) {
+					for (int j = 0; j < salesReturnQtyReport.get(i).getSalesReturnQtyDaoList().size(); j++) {
+					
+					if(salesReturnQtyReport.get(i).getSalesReturnQtyDaoList().get(j).getSubCatId()==subCatList.get(k).getSubCatId())
+					{
+						rowData.add(""+roundUp(salesReturnQtyReport.get(i).getSalesReturnQtyDaoList().get(j).getBillQty()));
+						rowData.add(""+roundUp(salesReturnQtyReport.get(i).getSalesReturnQtyDaoList().get(j).getGvnQty()));
+						rowData.add(""+roundUp(salesReturnQtyReport.get(i).getSalesReturnQtyDaoList().get(j).getGrnQty()));
+						rowData.add(""+roundUp(salesReturnQtyReport.get(i).getSalesReturnQtyDaoList().get(j).getBillQty()-(salesReturnQtyReport.get(i).getSalesReturnQtyDaoList().get(j).getGvnQty()+salesReturnQtyReport.get(i).getSalesReturnQtyDaoList().get(j).getGrnQty())));
+						billQty=billQty+salesReturnQtyReport.get(i).getSalesReturnQtyDaoList().get(j).getBillQty();
+						grnQty=grnQty+salesReturnQtyReport.get(i).getSalesReturnQtyDaoList().get(j).getGrnQty();
+						gvnQty=gvnQty+salesReturnQtyReport.get(i).getSalesReturnQtyDaoList().get(j).getGvnQty();
+					}
+					
+					}
+					}
+					rowData.add(""+roundUp(billQty));
+					rowData.add(""+roundUp(grnQty));
+					rowData.add(""+roundUp(gvnQty));
+
+					expoExcel.setRowData(rowData);
+					exportToExcelList.add(expoExcel);
+
+				}
+
+				HttpSession session = request.getSession();
+				session.setAttribute("exportExcelList", exportToExcelList);
+				session.setAttribute("excelName", "MonthlySalesReturnQtyReport");
+				
+				
+				}
+			} catch (Exception e) {
+
+			
+			}
+	//	}
+		return model;
+
+	}
+	@RequestMapping(value = "/showMonthlySalesValueWiseReport", method = RequestMethod.GET)
+	public ModelAndView showMonthlySalesValueWiseReport(HttpServletRequest request, HttpServletResponse response) {
+
+		ModelAndView model = null;
+		/*HttpSession session = request.getSession();
+
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("showSaleReportByDate", "showSaleReportByDate", "1", "0", "0", "0",
+				newModuleList);
+		if (view.getError() == true) {
+			model = new ModelAndView("accessDenied");
+
+		} else {*/
+			model = new ModelAndView("reports/sales/monthwisesalesreturnvalue");
+			RestTemplate restTemplate = new RestTemplate();
+
+			try {
+				String year=request.getParameter("year");
+
+				if(year!="") {
+					String[] yrs = year.split("-"); //returns an array with the 2 parts
+
+				MultiValueMap<String, String> map = new LinkedMultiValueMap<String,String>();
+
+			   map.add("fromYear",yrs[0]);
+			   map.add("toYear", yrs[1]);
+				
+			   SalesReturnValueDaoList[]	salesReturnValueReportListRes = restTemplate.postForObject(Constants.url + "getSalesReturnValueReport",
+						map,  SalesReturnValueDaoList[].class);
+
+			    List<SalesReturnValueDaoList> salesReturnValueReportList=new ArrayList<SalesReturnValueDaoList>(Arrays.asList(salesReturnValueReportListRes));
+			
+			    SubCategory[] subCategoryList = restTemplate.getForObject(Constants.url + "getAllSubCatList",
+						SubCategory[].class);
+
+				ArrayList<SubCategory> subCatList = new ArrayList<SubCategory>(Arrays.asList(subCategoryList));
+				
+		        LinkedHashMap<Integer,SalesReturnValueDaoList> salesReturnValueReport= new LinkedHashMap<>();
+
+		        for(int i=0;i<salesReturnValueReportList.size();i++)
+		        {
+		        	salesReturnValueReport.put(i, salesReturnValueReportList.get(i));
+		        }
+				
+				model.addObject("salesReturnValueReport", salesReturnValueReport);
+				model.addObject("subCatList", subCatList);
+				
+				
+				
+				// exportToExcel
+				List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
+
+				ExportToExcel expoExcel = new ExportToExcel();
+				List<String> rowData = new ArrayList<String>();
+				rowData.add("Sr.");
+				rowData.add("Group Name");
+				for(int i=0;i<salesReturnValueReport.size();i++)
+				{
+					rowData.add(salesReturnValueReport.get(i).getMonth()+" Gross Sale");
+					rowData.add(salesReturnValueReport.get(i).getMonth()+" GVN Value");
+					rowData.add(salesReturnValueReport.get(i).getMonth()+" GRN Value");
+					rowData.add(salesReturnValueReport.get(i).getMonth()+" Total");
+				}
+				rowData.add("Total Gross Sale");
+				rowData.add("Total GRN Value");
+				rowData.add("Total GVN Value");
+				expoExcel.setRowData(rowData);
+				exportToExcelList.add(expoExcel);
+				
+				for (int k = 0; k < subCatList.size(); k++) {
+					
+					float grandTotal=0.0f; float grnQty=0.0f; float gvnQty=0.0f; 
+					
+					expoExcel = new ExportToExcel();
+					rowData = new ArrayList<String>();
+					rowData.add("" +(k+1));
+					rowData.add("" + subCatList.get(k).getSubCatName());
+					for (int i = 0; i < salesReturnValueReport.size(); i++) {
+					for (int j = 0; j < salesReturnValueReport.get(i).getSalesReturnQtyValueList().size(); j++) {
+					
+					if(salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getSubCatId()==subCatList.get(k).getSubCatId())
+					{
+						rowData.add(""+roundUp(salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getGrandTotal()));
+						rowData.add(""+roundUp(salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getGvnQty()));
+						rowData.add(""+roundUp(salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getGrnQty()));
+						rowData.add(""+roundUp(salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getGrandTotal()-(salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getGvnQty()+salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getGrnQty())));
+						grandTotal=grandTotal+salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getGrandTotal();
+						grnQty=grnQty+salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getGrnQty();
+						gvnQty=gvnQty+salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getGvnQty();
+					}
+					
+					}
+					}
+					rowData.add(""+roundUp(grandTotal));
+					rowData.add(""+roundUp(grnQty));
+					rowData.add(""+roundUp(gvnQty));
+
+					expoExcel.setRowData(rowData);
+					exportToExcelList.add(expoExcel);
+
+				}
+				System.err.println("exportToExcelList"+exportToExcelList.toString());
+				HttpSession session = request.getSession();
+				session.setAttribute("exportExcelList", exportToExcelList);
+				session.setAttribute("excelName", "MonthlySalesReturnValueReport");
+				
+				}
+			} catch (Exception e) {
+
+			
+			}
+	//	}
+		return model;
+
+	}
+	
+	
+	
+	//---------------------------------------------------------------------------------------------------
 
 	private Dimension format = PD4Constants.A4;
 	private boolean landscapeValue = false;

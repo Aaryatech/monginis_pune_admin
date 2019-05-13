@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -9,7 +11,7 @@
 </head>
 
 <body
-	style="margin: 0px; padding: 0px; font-family: Verdana, Geneva, sans-serif; font-size: 13px; line-height: 20px; text-transform: uppercase;">
+	style="margin: 0px; padding: 0px; font-family: Verdana, Geneva, sans-serif; font-size: 18px; line-height: 23px; text-transform: uppercase;">
 
 	<table width="96%" border="0" cellspacing="12" cellpadding="12"
 		align="center">
@@ -20,7 +22,7 @@
 
 
 				<td width="48%" style="width: 48%; float: left;">
-					<table width="100%" border="0" cellspacing="4" cellpadding="4">
+					<table width="100%" border="0" cellspacing="6" cellpadding="6">
 						<tr>
 							<td width="33.333%">SLIP.No : &nbsp; ${spCakeOrder.slipNo}</td>
 							<td width="33.333%" align="center"><strong><b><c:choose>
@@ -59,7 +61,7 @@
 							<c:set var="frCity" value="${fn:toUpperCase(spCakeOrder.frCity)}" />
 							<td width="70%"
 								style="padding: 8px 10px; height: 78px; float: left;">
-								${frName}<strong>${frCity}</strong>
+								${frName}<strong>&nbsp;&nbsp;${frCity}</strong>
 							</td>
 						</tr>
 						<tr
@@ -71,7 +73,7 @@
 						</tr>
 						<c:set var="spName" value="${fn:toUpperCase(spCakeOrder.spName)}" />
 						<tr
-							style="border-bottom: 1px dashed #CCC; display: inline-block; width: 100%; height: 50px;">
+							style="border-bottom: 1px dashed #CCC; display: inline-block; width: 100%; height: 78px;">
 							<td width="20%"
 								style="padding: 8px 10px; height: 78px; border-right: 1px dashed #CCC; float: left;">ITEM
 								:</td>
@@ -105,14 +107,15 @@
 								:</td>
 							<c:set var="spEvents"
 								value="${fn:toUpperCase(spCakeOrder.spEvents)}" />
+								<c:set var = "spEventsName" value = "${fn:toUpperCase(spCakeOrder.spEventsName)}" />
 							<td width="70%"
 								style="padding: 8px 10px; float: left; height: 78px;"><strong>
-									${spEvents}</strong></td>
+									${spEvents}</strong>- <b> ${spEventsName} </b> </td>
 						</tr>
 						<tr
-							style="border-bottom: 1px dashed #CCC; display: inline-block; width: 100%; height: 78px;">
+							style="border-bottom: 1px dashed #CCC; display: inline-block; width: 100%; height: 125px;">
 							<td width="20%"
-								style="padding: 8px 10px; border-right: 1px dashed #CCC; float: left; height: 78px;">SPL.INST
+								style="padding: 8px 10px; border-right: 1px dashed #CCC; float: left; height: 125px;">SPL.INST
 								:</td>
 							<c:set var="spInstructions"
 								value="${fn:toUpperCase(spCakeOrder.spInstructions)}" />
@@ -138,7 +141,7 @@
 						</tr>
 					</table>
 				</td>
-
+ 
 			</c:forEach>
 
 
