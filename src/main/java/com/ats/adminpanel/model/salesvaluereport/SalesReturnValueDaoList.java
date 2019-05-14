@@ -5,8 +5,17 @@ import java.util.List;
 public class SalesReturnValueDaoList {
 
 	private String month;
-	
+	private float monthTotal;
+
 	private List<SalesReturnValueDao> salesReturnQtyValueList;
+
+	public float getMonthTotal() {
+		return monthTotal;
+	}
+
+	public void setMonthTotal(float monthTotal) {
+		this.monthTotal = monthTotal;
+	}
 
 	public String getMonth() {
 		return month;
@@ -26,10 +35,8 @@ public class SalesReturnValueDaoList {
 
 	@Override
 	public String toString() {
-		return "SalesReturnValueDaoRepository [month=" + month + ", salesReturnQtyValueList=" + salesReturnQtyValueList
-				+ "]";
+		return "SalesReturnValueDaoList [month=" + month + ", monthTotal=" + monthTotal + ", salesReturnQtyValueList="
+				+ salesReturnQtyValueList + "]";
 	}
-	
-	
-	
+
 }

@@ -306,15 +306,14 @@ public class SalesReportController {
 				expoExcel.setRowData(rowData);
 				exportToExcelList.add(expoExcel);
 				for (int i = 0; i < taxReportList.size(); i++) {
-					float finalTotal=0;
+					float finalTotal = 0;
 					for (int j = 0; j < taxReportList.size(); j++) {
-						
-						if(taxReportList.get(j).getBillNo()==taxReportList.get(i).getBillNo())
-						{
-							finalTotal=finalTotal+taxReportList.get(j).getGrandTotal();
+
+						if (taxReportList.get(j).getBillNo() == taxReportList.get(i).getBillNo()) {
+							finalTotal = finalTotal + taxReportList.get(j).getGrandTotal();
 						}
 					}
-					
+
 					expoExcel = new ExportToExcel();
 					rowData = new ArrayList<String>();
 					rowData.add((i + 1) + "");
@@ -332,8 +331,8 @@ public class SalesReportController {
 					rowData.add("" + taxReportList.get(i).getTaxableAmt());
 					rowData.add("" + taxReportList.get(i).getTotalTax());
 					rowData.add("" + taxReportList.get(i).getGrandTotal());
-					
-					rowData.add(""+finalTotal);
+
+					rowData.add("" + finalTotal);
 					expoExcel.setRowData(rowData);
 					exportToExcelList.add(expoExcel);
 
@@ -513,7 +512,7 @@ public class SalesReportController {
 			selectedCat = selectedCat.replaceAll("\"", "");
 			catIdList = Arrays.asList(selectedCat);
 			System.err.println("cat Id List " + catIdList.toString());
-			
+
 			boolean isAllFrSelected = false;
 			selectedFr = selectedFr.substring(1, selectedFr.length() - 1);
 			selectedFr = selectedFr.replaceAll("\"", "");
@@ -582,7 +581,7 @@ public class SalesReportController {
 				map.add("fromDate", fromDate);
 				map.add("toDate", toDate);
 				map.add("catIdList", selectedCat);
-				
+
 				ParameterizedTypeReference<List<SalesReportBillwise>> typeRef = new ParameterizedTypeReference<List<SalesReportBillwise>>() {
 				};
 				ResponseEntity<List<SalesReportBillwise>> responseEntity = restTemplate.exchange(
@@ -603,68 +602,65 @@ public class SalesReportController {
 		}
 
 		// exportToExcel
-				List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
+		List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
 
-				ExportToExcel expoExcel = new ExportToExcel();
-				List<String> rowData = new ArrayList<String>();
+		ExportToExcel expoExcel = new ExportToExcel();
+		List<String> rowData = new ArrayList<String>();
 
-				rowData.add("Sr No");
-				rowData.add("Invoice No");
-				rowData.add("Invoice Date");
-				
-				rowData.add("Franchise Name");
-				rowData.add("Franchise City");
-				rowData.add("Franchise GST No");
-				rowData.add("Taxable Amount");
-				rowData.add("CGST Amount");
-				rowData.add("SGST Amount");
-				
-				rowData.add("IGST Amount");
-				rowData.add("Total Tax Amount");
-				rowData.add("Total");
-				
+		rowData.add("Sr No");
+		rowData.add("Invoice No");
+		rowData.add("Invoice Date");
 
-				expoExcel.setRowData(rowData);
-				int srno=1;
-				exportToExcelList.add(expoExcel);
-				for (int i = 0; i < saleList.size(); i++) {
-					expoExcel = new ExportToExcel();
-					rowData = new ArrayList<String>();
+		rowData.add("Franchise Name");
+		rowData.add("Franchise City");
+		rowData.add("Franchise GST No");
+		rowData.add("Taxable Amount");
+		rowData.add("CGST Amount");
+		rowData.add("SGST Amount");
 
-					rowData.add("" + srno);
-					rowData.add(saleList.get(i).getInvoiceNo());
-					rowData.add(saleList.get(i).getBillDate());
+		rowData.add("IGST Amount");
+		rowData.add("Total Tax Amount");
+		rowData.add("Total");
 
-					
-					rowData.add(saleList.get(i).getFrName());
+		expoExcel.setRowData(rowData);
+		int srno = 1;
+		exportToExcelList.add(expoExcel);
+		for (int i = 0; i < saleList.size(); i++) {
+			expoExcel = new ExportToExcel();
+			rowData = new ArrayList<String>();
 
-					rowData.add(saleList.get(i).getFrCity());
-					rowData.add(saleList.get(i).getFrGstNo());
-					rowData.add("" + saleList.get(i).getTaxableAmt());
-					rowData.add("" + saleList.get(i).getCgstSum());
-					rowData.add("" + saleList.get(i).getSgstSum());
-					
-					rowData.add("" + saleList.get(i).getIgstSum());
-					rowData.add("" + saleList.get(i).getTotalTax());
-					rowData.add("" + saleList.get(i).getGrandTotal());
-					srno=srno+1;
+			rowData.add("" + srno);
+			rowData.add(saleList.get(i).getInvoiceNo());
+			rowData.add(saleList.get(i).getBillDate());
 
-					expoExcel.setRowData(rowData);
-					exportToExcelList.add(expoExcel);
+			rowData.add(saleList.get(i).getFrName());
 
-				}
+			rowData.add(saleList.get(i).getFrCity());
+			rowData.add(saleList.get(i).getFrGstNo());
+			rowData.add("" + saleList.get(i).getTaxableAmt());
+			rowData.add("" + saleList.get(i).getCgstSum());
+			rowData.add("" + saleList.get(i).getSgstSum());
 
-				HttpSession session = request.getSession();
-				session.setAttribute("exportExcelList", exportToExcelList);
-				session.setAttribute("excelName", "SaleBillWiseDate");
+			rowData.add("" + saleList.get(i).getIgstSum());
+			rowData.add("" + saleList.get(i).getTotalTax());
+			rowData.add("" + saleList.get(i).getGrandTotal());
+			srno = srno + 1;
+
+			expoExcel.setRowData(rowData);
+			exportToExcelList.add(expoExcel);
+
+		}
+
+		HttpSession session = request.getSession();
+		session.setAttribute("exportExcelList", exportToExcelList);
+		session.setAttribute("excelName", "SaleBillWiseDate");
 
 		return saleList;
 	}
-	
+
 	@RequestMapping(value = "/getAllCatByAjax", method = RequestMethod.GET)
-	public @ResponseBody List<MCategoryList> getAllCatByAjax(HttpServletRequest request,
-			HttpServletResponse response) {
-		
+	public @ResponseBody List<MCategoryList> getAllCatByAjax(HttpServletRequest request, HttpServletResponse response) {
+
 		/*
 		 * RestTemplate restTemplate = new RestTemplate(); CategoryListResponse
 		 * categoryListResponse; categoryListResponse =
@@ -673,15 +669,14 @@ public class SalesReportController {
 		 * 
 		 * mCategoryList = categoryListResponse.getmCategoryList();
 		 */
-		System.out.println("mCategoryList111"+mCategoryList);
+		System.out.println("mCategoryList111" + mCategoryList);
 		return mCategoryList;
 	}
-	
 
 	@RequestMapping(value = "pdf/showSaleReportByDatePdf/{fDate}/{tDate}/{selectedFr}/{routeId}/{selectedCat}/", method = RequestMethod.GET)
 	public ModelAndView showSaleReportByDatePdf(@PathVariable String fDate, @PathVariable String tDate,
-			@PathVariable String selectedFr, @PathVariable String routeId,@PathVariable String selectedCat, HttpServletRequest request,
-			HttpServletResponse response) {
+			@PathVariable String selectedFr, @PathVariable String routeId, @PathVariable String selectedCat,
+			HttpServletRequest request, HttpServletResponse response) {
 
 		ModelAndView model = new ModelAndView("reports/sales/pdf/billwisesalesbydatePdf");
 
@@ -872,13 +867,13 @@ public class SalesReportController {
 			String fromDate = request.getParameter("fromDate");
 			String toDate = request.getParameter("toDate");
 			String routeId = request.getParameter("route_id");
-			
+
 			String selectedCat = request.getParameter("cat_id_list");
 			List<String> catIdList = new ArrayList<>();
 			selectedCat = selectedCat.substring(1, selectedCat.length() - 1);
 			selectedCat = selectedCat.replaceAll("\"", "");
 			catIdList = Arrays.asList(selectedCat);
-			
+
 			boolean isAllFrSelected = false;
 			selectedFr = selectedFr.substring(1, selectedFr.length() - 1);
 			selectedFr = selectedFr.replaceAll("\"", "");
@@ -989,8 +984,6 @@ public class SalesReportController {
 		ExportToExcel expoExcel = new ExportToExcel();
 		List<String> rowData = new ArrayList<String>();
 
-		
-		
 		rowData.add("SR NO");
 		rowData.add("Franchise Name");
 		rowData.add("Franchise City");
@@ -1001,8 +994,8 @@ public class SalesReportController {
 		rowData.add("IGST Amount");
 		rowData.add("Total Tax");
 		rowData.add("Grand Total");
-		
-		int SrNo=1;
+
+		int SrNo = 1;
 
 		expoExcel.setRowData(rowData);
 		exportToExcelList.add(expoExcel);
@@ -1011,7 +1004,7 @@ public class SalesReportController {
 			rowData = new ArrayList<String>();
 
 			rowData.add("" + SrNo);
-			
+
 			rowData.add(saleList.get(i).getFrName());
 
 			rowData.add(saleList.get(i).getFrCity());
@@ -1022,8 +1015,8 @@ public class SalesReportController {
 			rowData.add("" + saleList.get(i).getIgstSum());
 			rowData.add("" + saleList.get(i).getTotalTax());
 			rowData.add("" + saleList.get(i).getGrandTotal());
-			
-			SrNo=SrNo+1;
+
+			SrNo = SrNo + 1;
 
 			expoExcel.setRowData(rowData);
 			exportToExcelList.add(expoExcel);
@@ -1038,8 +1031,8 @@ public class SalesReportController {
 
 	@RequestMapping(value = "pdf/showSaleBillwiseByFrPdf/{fromDate}/{toDate}/{selectedFr}/{routeId}/{selectedCat}", method = RequestMethod.GET)
 	public ModelAndView showSaleBillwiseByFrPdf(@PathVariable String fromDate, @PathVariable String toDate,
-			@PathVariable String selectedFr, @PathVariable String routeId, @PathVariable String selectedCat, HttpServletRequest request,
-			HttpServletResponse response) {
+			@PathVariable String selectedFr, @PathVariable String routeId, @PathVariable String selectedCat,
+			HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView("reports/sales/pdf/billwisesalebyfrPdf");
 
 		List<SalesReportBillwise> saleList = new ArrayList<>();
@@ -1330,49 +1323,47 @@ public class SalesReportController {
 
 		}
 
-		        // exportToExcel
-				List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
+		// exportToExcel
+		List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
 
-				ExportToExcel expoExcel = new ExportToExcel();
-				List<String> rowData = new ArrayList<String>();
+		ExportToExcel expoExcel = new ExportToExcel();
+		List<String> rowData = new ArrayList<String>();
 
-				rowData.add("SR NO");
-				
-				rowData.add("Bill Date");
-				rowData.add("Taxable Amount");
-				rowData.add("SGST Amount");
-				rowData.add("CGST Amount");
-				rowData.add("IGST Amount");
-				rowData.add("Grand Total");
-				
-				int srno=1;
-				expoExcel.setRowData(rowData);
-				exportToExcelList.add(expoExcel);
-				for (int i = 0; i < saleList.size(); i++) {
-					expoExcel = new ExportToExcel();
-					rowData = new ArrayList<String>();
+		rowData.add("SR NO");
 
-					rowData.add("" +srno );
-					
-					rowData.add(saleList.get(i).getBillDate());
-					rowData.add("" + saleList.get(i).getTaxableAmt());
-					
+		rowData.add("Bill Date");
+		rowData.add("Taxable Amount");
+		rowData.add("SGST Amount");
+		rowData.add("CGST Amount");
+		rowData.add("IGST Amount");
+		rowData.add("Grand Total");
 
-					
-					rowData.add("" + saleList.get(i).getSgstSum());
-					rowData.add("" + saleList.get(i).getCgstSum());
-					rowData.add("" + saleList.get(i).getIgstSum());
-					rowData.add("" + saleList.get(i).getGrandTotal());
-					
-					srno=srno+1;
-					expoExcel.setRowData(rowData);
-					exportToExcelList.add(expoExcel);
+		int srno = 1;
+		expoExcel.setRowData(rowData);
+		exportToExcelList.add(expoExcel);
+		for (int i = 0; i < saleList.size(); i++) {
+			expoExcel = new ExportToExcel();
+			rowData = new ArrayList<String>();
 
-				}
+			rowData.add("" + srno);
 
-				HttpSession session = request.getSession();
-				session.setAttribute("exportExcelList", exportToExcelList);
-				session.setAttribute("excelName", "BillWiseGroupByDate");
+			rowData.add(saleList.get(i).getBillDate());
+			rowData.add("" + saleList.get(i).getTaxableAmt());
+
+			rowData.add("" + saleList.get(i).getSgstSum());
+			rowData.add("" + saleList.get(i).getCgstSum());
+			rowData.add("" + saleList.get(i).getIgstSum());
+			rowData.add("" + saleList.get(i).getGrandTotal());
+
+			srno = srno + 1;
+			expoExcel.setRowData(rowData);
+			exportToExcelList.add(expoExcel);
+
+		}
+
+		HttpSession session = request.getSession();
+		session.setAttribute("exportExcelList", exportToExcelList);
+		session.setAttribute("excelName", "BillWiseGroupByDate");
 		return saleList;
 
 	}
@@ -1660,49 +1651,49 @@ public class SalesReportController {
 		}
 
 		// exportToExcel
-				List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
+		List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
 
-				ExportToExcel expoExcel = new ExportToExcel();
-				List<String> rowData = new ArrayList<String>();
+		ExportToExcel expoExcel = new ExportToExcel();
+		List<String> rowData = new ArrayList<String>();
 
-				rowData.add("Sr No");
-				rowData.add("Month");
-				rowData.add("Franchisee Name");
-				rowData.add("Franchisee City");
-				rowData.add("Franchisee Gst No");
-				rowData.add("SGST sum");
-				rowData.add("CGST sum");
-				rowData.add("IGST sum");
-				rowData.add("Total Tax");
-				rowData.add("Taxable Amt");
-				rowData.add("Grand Total");
+		rowData.add("Sr No");
+		rowData.add("Month");
+		rowData.add("Franchisee Name");
+		rowData.add("Franchisee City");
+		rowData.add("Franchisee Gst No");
+		rowData.add("SGST sum");
+		rowData.add("CGST sum");
+		rowData.add("IGST sum");
+		rowData.add("Total Tax");
+		rowData.add("Taxable Amt");
+		rowData.add("Grand Total");
 
-				expoExcel.setRowData(rowData);
-				exportToExcelList.add(expoExcel);
-				for (int i = 0; i < saleList.size(); i++) {
-					expoExcel = new ExportToExcel();
-					rowData = new ArrayList<String>();
+		expoExcel.setRowData(rowData);
+		exportToExcelList.add(expoExcel);
+		for (int i = 0; i < saleList.size(); i++) {
+			expoExcel = new ExportToExcel();
+			rowData = new ArrayList<String>();
 
-					rowData.add("" +(i+1));
-					rowData.add(""+saleList.get(i).getMonth());
-					rowData.add(saleList.get(i).getFrName());
-					rowData.add(saleList.get(i).getFrCity());
-					rowData.add(saleList.get(i).getFrGstNo());
-					rowData.add("" + saleList.get(i).getSgstSum());
-					rowData.add("" + saleList.get(i).getCgstSum());
-					rowData.add("" + saleList.get(i).getIgstSum());
-					rowData.add("" + saleList.get(i).getTotalTax());
-					rowData.add("" + saleList.get(i).getTaxableAmt());
-					rowData.add("" + saleList.get(i).getGrandTotal());
+			rowData.add("" + (i + 1));
+			rowData.add("" + saleList.get(i).getMonth());
+			rowData.add(saleList.get(i).getFrName());
+			rowData.add(saleList.get(i).getFrCity());
+			rowData.add(saleList.get(i).getFrGstNo());
+			rowData.add("" + saleList.get(i).getSgstSum());
+			rowData.add("" + saleList.get(i).getCgstSum());
+			rowData.add("" + saleList.get(i).getIgstSum());
+			rowData.add("" + saleList.get(i).getTotalTax());
+			rowData.add("" + saleList.get(i).getTaxableAmt());
+			rowData.add("" + saleList.get(i).getGrandTotal());
 
-					expoExcel.setRowData(rowData);
-					exportToExcelList.add(expoExcel);
+			expoExcel.setRowData(rowData);
+			exportToExcelList.add(expoExcel);
 
-				}
+		}
 
-				HttpSession session = request.getSession();
-				session.setAttribute("exportExcelList", exportToExcelList);
-				session.setAttribute("excelName", "SaleBillWiseByMonth");
+		HttpSession session = request.getSession();
+		session.setAttribute("exportExcelList", exportToExcelList);
+		session.setAttribute("excelName", "SaleBillWiseByMonth");
 		return saleList;
 
 	}
@@ -2386,19 +2377,20 @@ public class SalesReportController {
 			expoExcel = new ExportToExcel();
 			rowData = new ArrayList<String>();
 
-			rowData.add("" + i+1);
+			rowData.add("" + i + 1);
 			rowData.add(royaltyFrList.get(i).getFrName());
 			rowData.add(royaltyFrList.get(i).getFrCity());
 			rowData.add("" + royaltyFrList.get(i).gettBillTaxableAmt());
 			rowData.add("" + royaltyFrList.get(i).gettGrnTaxableAmt());
 			rowData.add("" + royaltyFrList.get(i).gettGvnTaxableAmt());
-			rowData.add("" + (royaltyFrList.get(i).gettBillTaxableAmt()-(royaltyFrList.get(i).gettGvnTaxableAmt()+royaltyFrList.get(i).gettGrnTaxableAmt())));
-			rowData.add("" +royPer);
+			rowData.add("" + (royaltyFrList.get(i).gettBillTaxableAmt()
+					- (royaltyFrList.get(i).gettGvnTaxableAmt() + royaltyFrList.get(i).gettGrnTaxableAmt())));
+			rowData.add("" + royPer);
 			float netValue = royaltyFrList.get(i).gettBillTaxableAmt()
 					- (royaltyFrList.get(i).gettGrnTaxableAmt() + royaltyFrList.get(i).gettGvnTaxableAmt());
 
 			float rAmt = netValue * royPer / 100;
-			rowData.add("" +rAmt);
+			rowData.add("" + rAmt);
 
 			expoExcel.setRowData(rowData);
 			exportToExcelList.add(expoExcel);
@@ -2585,7 +2577,7 @@ public class SalesReportController {
 
 				mCategoryList = categoryListResponse.getmCategoryList();
 				System.out.println(" Fr " + allFrIdNameList.getFrIdNamesList());
-	            model.addObject("catList", mCategoryList);
+				model.addObject("catList", mCategoryList);
 
 				model.addObject("todaysDate", todaysDate);
 				model.addObject("unSelectedFrList", allFrIdNameList.getFrIdNamesList());
@@ -2996,65 +2988,65 @@ public class SalesReportController {
 		}
 
 		// exportToExcel
-				List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
+		List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
 
-				ExportToExcel expoExcel = new ExportToExcel();
-				List<String> rowData = new ArrayList<String>();
-				rowData.add("Sr No.");
-				rowData.add("Bill No");
-				rowData.add("Invoice No");
-				rowData.add("Bill Date");
-			
-				rowData.add("Franchisee Name");
-				rowData.add("Franchisee City");
-				rowData.add("Franchisee Gst No");
-				rowData.add("Item Name");
-				rowData.add("Item Hsn Code");
-				rowData.add("SGST %");
-				rowData.add("CGST %");
-				rowData.add("IGST %");
-				rowData.add("SGST sum");
-				rowData.add("CGST sum");
-				rowData.add("IGST sum");
-				rowData.add("Taxable Amt");
+		ExportToExcel expoExcel = new ExportToExcel();
+		List<String> rowData = new ArrayList<String>();
+		rowData.add("Sr No.");
+		rowData.add("Bill No");
+		rowData.add("Invoice No");
+		rowData.add("Bill Date");
 
-				/*
-				 * float taxableAmtSum; float sgstRsSum; float cgstRsSum; float igstRsSum;
-				 */
-				expoExcel.setRowData(rowData);
-				exportToExcelList.add(expoExcel);
-				for (int i = 0; i < saleList.size(); i++) {
-					expoExcel = new ExportToExcel();
-					rowData = new ArrayList<String>();
-					rowData.add("" +(i+1));
-					rowData.add("" + saleList.get(i).getBillNo());
-					rowData.add(saleList.get(i).getInvoiceNo());
-					rowData.add(saleList.get(i).getBillDate());
+		rowData.add("Franchisee Name");
+		rowData.add("Franchisee City");
+		rowData.add("Franchisee Gst No");
+		rowData.add("Item Name");
+		rowData.add("Item Hsn Code");
+		rowData.add("SGST %");
+		rowData.add("CGST %");
+		rowData.add("IGST %");
+		rowData.add("SGST sum");
+		rowData.add("CGST sum");
+		rowData.add("IGST sum");
+		rowData.add("Taxable Amt");
 
-					rowData.add(saleList.get(i).getFrName());
+		/*
+		 * float taxableAmtSum; float sgstRsSum; float cgstRsSum; float igstRsSum;
+		 */
+		expoExcel.setRowData(rowData);
+		exportToExcelList.add(expoExcel);
+		for (int i = 0; i < saleList.size(); i++) {
+			expoExcel = new ExportToExcel();
+			rowData = new ArrayList<String>();
+			rowData.add("" + (i + 1));
+			rowData.add("" + saleList.get(i).getBillNo());
+			rowData.add(saleList.get(i).getInvoiceNo());
+			rowData.add(saleList.get(i).getBillDate());
 
-					rowData.add(saleList.get(i).getFrCity());
-					rowData.add(saleList.get(i).getFrGstNo());
-					rowData.add("" + saleList.get(i).getItemName());
-					rowData.add("" + saleList.get(i).getItemHsncd());
-					rowData.add("" + saleList.get(i).getItemTax1());
+			rowData.add(saleList.get(i).getFrName());
 
-					rowData.add("" + saleList.get(i).getItemTax2());
-					rowData.add("" + saleList.get(i).getItemTax3());
-					rowData.add("" + saleList.get(i).getSgstRsSum());
-					rowData.add("" + saleList.get(i).getCgstRsSum());
+			rowData.add(saleList.get(i).getFrCity());
+			rowData.add(saleList.get(i).getFrGstNo());
+			rowData.add("" + saleList.get(i).getItemName());
+			rowData.add("" + saleList.get(i).getItemHsncd());
+			rowData.add("" + saleList.get(i).getItemTax1());
 
-					rowData.add("" + saleList.get(i).getIgstRsSum());
-					rowData.add("" + saleList.get(i).getTaxableAmtSum());
+			rowData.add("" + saleList.get(i).getItemTax2());
+			rowData.add("" + saleList.get(i).getItemTax3());
+			rowData.add("" + saleList.get(i).getSgstRsSum());
+			rowData.add("" + saleList.get(i).getCgstRsSum());
 
-					expoExcel.setRowData(rowData);
-					exportToExcelList.add(expoExcel);
+			rowData.add("" + saleList.get(i).getIgstRsSum());
+			rowData.add("" + saleList.get(i).getTaxableAmtSum());
 
-				}
+			expoExcel.setRowData(rowData);
+			exportToExcelList.add(expoExcel);
 
-				HttpSession session = request.getSession();
-				session.setAttribute("exportExcelList", exportToExcelList);
-				session.setAttribute("excelName", "BillWiseAllFr");
+		}
+
+		HttpSession session = request.getSession();
+		session.setAttribute("exportExcelList", exportToExcelList);
+		session.setAttribute("excelName", "BillWiseAllFr");
 		return saleList;
 	}
 	// pdf to be done
@@ -3296,7 +3288,9 @@ public class SalesReportController {
 		return model;
 
 	}
-	ArrayList<Menu>	selectedMenuList =null;
+
+	ArrayList<Menu> selectedMenuList = null;
+
 	// ---------------------------------------------------------------------------------------------------------
 	@RequestMapping(value = "/showPDispatchItemReport", method = RequestMethod.GET)
 	public ModelAndView showPDispatchItemReport(HttpServletRequest request, HttpServletResponse response) {
@@ -3356,7 +3350,7 @@ public class SalesReportController {
 				categoryList = categoryListResponse.getmCategoryList();
 
 				System.out.println(" Fra " + allFrIdNameList.getFrIdNamesList());
-				List<Menu> menuList=null;
+				List<Menu> menuList = null;
 				try {
 					AllMenuResponse allMenuResponse = restTemplate.getForObject(Constants.url + "getAllMenu",
 							AllMenuResponse.class);
@@ -3368,17 +3362,16 @@ public class SalesReportController {
 					e.printStackTrace();
 
 				}
-					selectedMenuList = new ArrayList<Menu>();
+				selectedMenuList = new ArrayList<Menu>();
 
 				for (int i = 0; i < menuList.size(); i++) {
-				
-					if (menuList.get(i).getMainCatId()!=5)
-					{
+
+					if (menuList.get(i).getMainCatId() != 5) {
 						selectedMenuList.add(menuList.get(i));
 					}
-					
+
 				}
-                model.addObject("menuList", selectedMenuList);
+				model.addObject("menuList", selectedMenuList);
 				model.addObject("catList", categoryList);
 
 				model.addObject("todaysDate", todaysDate);
@@ -3395,11 +3388,13 @@ public class SalesReportController {
 		return model;
 
 	}
+
 	@RequestMapping(value = "/getAllMenusForDisp", method = RequestMethod.GET)
 	public @ResponseBody List<Menu> getAllMenusForDisp() {
 
 		return selectedMenuList;
 	}
+
 	// ---------------------------------------------------------------------------------------------------------
 	@RequestMapping(value = "/getDispatchReportByRoute", method = RequestMethod.GET)
 	public @ResponseBody DispatchReportList getDispatchReportByRoute(HttpServletRequest request,
@@ -3781,6 +3776,7 @@ public class SalesReportController {
 		}
 		return "redirect:/showPDispatchItemReport";
 	}
+
 	@RequestMapping(value = "/getFranchiseByRouteMul", method = RequestMethod.GET)
 	public @ResponseBody List<FranchiseForDispatch> getFranchiseByRouteMul(
 			@RequestParam(value = "routeId", required = true) String routeId) {
@@ -3788,13 +3784,13 @@ public class SalesReportController {
 
 		List<FranchiseForDispatch> frNameIdByRouteIdList = null;
 		try {
-		
+
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		
+
 			map.add("routeId", routeId);
 
-			FranchiseForDispatch[] frNameId = restTemplate.postForObject(Constants.url + "getFranchiseForDispatchRouteID", map,
-					FranchiseForDispatch[].class);
+			FranchiseForDispatch[] frNameId = restTemplate
+					.postForObject(Constants.url + "getFranchiseForDispatchRouteID", map, FranchiseForDispatch[].class);
 
 			frNameIdByRouteIdList = new ArrayList<>(Arrays.asList(frNameId));
 
@@ -3803,6 +3799,7 @@ public class SalesReportController {
 		}
 		return frNameIdByRouteIdList;
 	}
+
 	@RequestMapping(value = "/getFranchiseByRoute", method = RequestMethod.GET)
 	public @ResponseBody List<FranchiseForDispatch> getFranchiseByRoute(
 			@RequestParam(value = "routeId", required = true) int routeId) {
@@ -4464,16 +4461,16 @@ public class SalesReportController {
 		return model;
 
 	}
-	
+
 	@RequestMapping(value = "pdf/getDispatchPReportPdfForDispatch/{billDate}/{menuId}/{routeId}/{selectedCat}/{frId}", method = RequestMethod.GET)
-	public ModelAndView getDispatchPReportPdfForDispatch(@PathVariable String billDate, @PathVariable String menuId, @PathVariable String routeId,
-			@PathVariable String selectedCat, @PathVariable String frId, HttpServletRequest request,
-			HttpServletResponse response) {
+	public ModelAndView getDispatchPReportPdfForDispatch(@PathVariable String billDate, @PathVariable String menuId,
+			@PathVariable String routeId, @PathVariable String selectedCat, @PathVariable String frId,
+			HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView("reports/sales/dispatchMini");/* dispatchReportPPdfBill */
 		RestTemplate restTemplate = new RestTemplate();
 
 		List<PDispatchReport> dispatchReportList = new ArrayList<PDispatchReport>();
-		//PDispatchReportList dispatchReports = new PDispatchReportList();
+		// PDispatchReportList dispatchReports = new PDispatchReportList();
 		try {
 			String convertedDate = "";
 			try {
@@ -4667,25 +4664,20 @@ public class SalesReportController {
 			model.addObject("FACTORYNAME", Constants.FACTORYNAME);
 			model.addObject("FACTORYADDRESS", Constants.FACTORYADDRESS);
 			List<Integer> frList = Stream.of(selectedFr.split(",")).map(Integer::parseInt).collect(Collectors.toList());
-			List<Integer> frListOrdersPresent=new ArrayList<>();
-			for(int l=0;l<frList.size();l++)
-			{
-				int flag=0;
-				for(int m=0;m<dispatchReportList.size();m++)
-				{
-					if(dispatchReportList.get(m).getFrId()==frList.get(l))
-					{
-						flag=1;
+			List<Integer> frListOrdersPresent = new ArrayList<>();
+			for (int l = 0; l < frList.size(); l++) {
+				int flag = 0;
+				for (int m = 0; m < dispatchReportList.size(); m++) {
+					if (dispatchReportList.get(m).getFrId() == frList.get(l)) {
+						flag = 1;
 						break;
 					}
 				}
-				if(flag==1)
-				{
+				if (flag == 1) {
 					frListOrdersPresent.add(frList.get(l));
 				}
 			}
-			
-			
+
 			model.addObject("frListSelected", frListOrdersPresent);
 
 		} catch (Exception e) {
@@ -5002,7 +4994,7 @@ public class SalesReportController {
 
 				float netValue = royaltyList.get(i).gettBillTaxableAmt()
 						- (royaltyList.get(i).gettGrnTaxableAmt() + royaltyList.get(i).gettGvnTaxableAmt());
-				//float royPer = getRoyPer();
+				// float royPer = getRoyPer();
 
 				float rAmt = netValue * royPer / 100;
 
@@ -5198,54 +5190,57 @@ public class SalesReportController {
 		return model;
 
 	}
-    //--------------------------------------------------------------------------------------------------
+
+	// --------------------------------------------------------------------------------------------------
 	@RequestMapping(value = "/showMonthlySalesQtyWiseReport", method = RequestMethod.GET)
 	public ModelAndView showMonthlySalesQtyWiseReport(HttpServletRequest request, HttpServletResponse response) {
 
 		ModelAndView model = null;
-		/*HttpSession session = request.getSession();
+		/*
+		 * HttpSession session = request.getSession();
+		 * 
+		 * List<ModuleJson> newModuleList = (List<ModuleJson>)
+		 * session.getAttribute("newModuleList"); Info view =
+		 * AccessControll.checkAccess("showSaleReportByDate", "showSaleReportByDate",
+		 * "1", "0", "0", "0", newModuleList); if (view.getError() == true) { model =
+		 * new ModelAndView("accessDenied");
+		 * 
+		 * } else {
+		 */
+		model = new ModelAndView("reports/sales/monthlysalesqtyreport");
+		RestTemplate restTemplate = new RestTemplate();
 
-		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
-		Info view = AccessControll.checkAccess("showSaleReportByDate", "showSaleReportByDate", "1", "0", "0", "0",
-				newModuleList);
-		if (view.getError() == true) {
-			model = new ModelAndView("accessDenied");
+		try {
+			String year = request.getParameter("year");
 
-		} else {*/
-			model = new ModelAndView("reports/sales/monthlysalesqtyreport");
-			RestTemplate restTemplate = new RestTemplate();
+			if (year != "") {
+				String[] yrs = year.split("-"); // returns an array with the 2 parts
 
-			try {
-				String year=request.getParameter("year");
+				MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 
-				if(year!="") {
-					String[] yrs = year.split("-"); //returns an array with the 2 parts
+				map.add("fromYear", yrs[0]);
+				map.add("toYear", yrs[1]);
 
-				MultiValueMap<String, String> map = new LinkedMultiValueMap<String,String>();
+				SalesReturnQtyReportList[] salesReturnQtyReportListRes = restTemplate.postForObject(
+						Constants.url + "getSalesReturnQtyReport", map, SalesReturnQtyReportList[].class);
 
-			   map.add("fromYear",yrs[0]);
-			   map.add("toYear", yrs[1]);
-				
-			 SalesReturnQtyReportList[]	salesReturnQtyReportListRes = restTemplate.postForObject(Constants.url + "getSalesReturnQtyReport",
-						map,  SalesReturnQtyReportList[].class);
+				List<SalesReturnQtyReportList> salesReturnQtyReportList = new ArrayList<SalesReturnQtyReportList>(
+						Arrays.asList(salesReturnQtyReportListRes));
 
-			    List<SalesReturnQtyReportList> salesReturnQtyReportList=new ArrayList<SalesReturnQtyReportList>(Arrays.asList(salesReturnQtyReportListRes));
-			
-			    SubCategory[] subCategoryList = restTemplate.getForObject(Constants.url + "getAllSubCatList",
+				SubCategory[] subCategoryList = restTemplate.getForObject(Constants.url + "getAllSubCatList",
 						SubCategory[].class);
 
 				ArrayList<SubCategory> subCatList = new ArrayList<SubCategory>(Arrays.asList(subCategoryList));
-				
-		        LinkedHashMap<Integer,SalesReturnQtyReportList> salesReturnQtyReport= new LinkedHashMap<>();
 
-		        for(int i=0;i<salesReturnQtyReportList.size();i++)
-		        {
-		        	salesReturnQtyReport.put(i, salesReturnQtyReportList.get(i));
-		        }
-				
+				LinkedHashMap<Integer, SalesReturnQtyReportList> salesReturnQtyReport = new LinkedHashMap<>();
+
+				for (int i = 0; i < salesReturnQtyReportList.size(); i++) {
+					salesReturnQtyReport.put(i, salesReturnQtyReportList.get(i));
+				}
+
 				model.addObject("salesReturnQtyReport", salesReturnQtyReport);
 				model.addObject("subCatList", subCatList);
-				
+
 				// exportToExcel
 				List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
 
@@ -5253,47 +5248,58 @@ public class SalesReportController {
 				List<String> rowData = new ArrayList<String>();
 				rowData.add("Sr.");
 				rowData.add("Group Name");
-				for(int i=0;i<salesReturnQtyReport.size();i++)
-				{
-					rowData.add(salesReturnQtyReport.get(i).getMonth()+" Gross Sale");
-					rowData.add(salesReturnQtyReport.get(i).getMonth()+" GVN Qty");
-					rowData.add(salesReturnQtyReport.get(i).getMonth()+" GRN Qty");
-					rowData.add(salesReturnQtyReport.get(i).getMonth()+" Total");
+				for (int i = 0; i < salesReturnQtyReport.size(); i++) {
+					rowData.add(salesReturnQtyReport.get(i).getMonth() + " Gross Sale");
+					rowData.add(salesReturnQtyReport.get(i).getMonth() + " GVN Qty");
+					rowData.add(salesReturnQtyReport.get(i).getMonth() + " GRN Qty");
+					rowData.add(salesReturnQtyReport.get(i).getMonth() + " Total");
 				}
 				rowData.add("Total Gross Sale");
 				rowData.add("Total GRN Qty");
 				rowData.add("Total GVN Qty");
-				
+
 				expoExcel.setRowData(rowData);
 				exportToExcelList.add(expoExcel);
-			
+
 				for (int k = 0; k < subCatList.size(); k++) {
-					
-					float billQty=0.0f; float grnQty=0.0f; float gvnQty=0.0f; 
-					
+
+					float billQty = 0.0f;
+					float grnQty = 0.0f;
+					float gvnQty = 0.0f;
+
 					expoExcel = new ExportToExcel();
 					rowData = new ArrayList<String>();
-					rowData.add("" +(k+1));
+					rowData.add("" + (k + 1));
 					rowData.add("" + subCatList.get(k).getSubCatName());
 					for (int i = 0; i < salesReturnQtyReport.size(); i++) {
-					for (int j = 0; j < salesReturnQtyReport.get(i).getSalesReturnQtyDaoList().size(); j++) {
-					
-					if(salesReturnQtyReport.get(i).getSalesReturnQtyDaoList().get(j).getSubCatId()==subCatList.get(k).getSubCatId())
-					{
-						rowData.add(""+roundUp(salesReturnQtyReport.get(i).getSalesReturnQtyDaoList().get(j).getBillQty()));
-						rowData.add(""+roundUp(salesReturnQtyReport.get(i).getSalesReturnQtyDaoList().get(j).getGvnQty()));
-						rowData.add(""+roundUp(salesReturnQtyReport.get(i).getSalesReturnQtyDaoList().get(j).getGrnQty()));
-						rowData.add(""+roundUp(salesReturnQtyReport.get(i).getSalesReturnQtyDaoList().get(j).getBillQty()-(salesReturnQtyReport.get(i).getSalesReturnQtyDaoList().get(j).getGvnQty()+salesReturnQtyReport.get(i).getSalesReturnQtyDaoList().get(j).getGrnQty())));
-						billQty=billQty+salesReturnQtyReport.get(i).getSalesReturnQtyDaoList().get(j).getBillQty();
-						grnQty=grnQty+salesReturnQtyReport.get(i).getSalesReturnQtyDaoList().get(j).getGrnQty();
-						gvnQty=gvnQty+salesReturnQtyReport.get(i).getSalesReturnQtyDaoList().get(j).getGvnQty();
+						for (int j = 0; j < salesReturnQtyReport.get(i).getSalesReturnQtyDaoList().size(); j++) {
+
+							if (salesReturnQtyReport.get(i).getSalesReturnQtyDaoList().get(j)
+									.getSubCatId() == subCatList.get(k).getSubCatId()) {
+								rowData.add("" + roundUp(
+										salesReturnQtyReport.get(i).getSalesReturnQtyDaoList().get(j).getBillQty()));
+								rowData.add("" + roundUp(
+										salesReturnQtyReport.get(i).getSalesReturnQtyDaoList().get(j).getGvnQty()));
+								rowData.add("" + roundUp(
+										salesReturnQtyReport.get(i).getSalesReturnQtyDaoList().get(j).getGrnQty()));
+								rowData.add("" + roundUp(salesReturnQtyReport.get(i).getSalesReturnQtyDaoList().get(j)
+										.getBillQty()
+										- (salesReturnQtyReport.get(i).getSalesReturnQtyDaoList().get(j).getGvnQty()
+												+ salesReturnQtyReport.get(i).getSalesReturnQtyDaoList().get(j)
+														.getGrnQty())));
+								billQty = billQty
+										+ salesReturnQtyReport.get(i).getSalesReturnQtyDaoList().get(j).getBillQty();
+								grnQty = grnQty
+										+ salesReturnQtyReport.get(i).getSalesReturnQtyDaoList().get(j).getGrnQty();
+								gvnQty = gvnQty
+										+ salesReturnQtyReport.get(i).getSalesReturnQtyDaoList().get(j).getGvnQty();
+							}
+
+						}
 					}
-					
-					}
-					}
-					rowData.add(""+roundUp(billQty));
-					rowData.add(""+roundUp(grnQty));
-					rowData.add(""+roundUp(gvnQty));
+					rowData.add("" + roundUp(billQty));
+					rowData.add("" + roundUp(grnQty));
+					rowData.add("" + roundUp(gvnQty));
 
 					expoExcel.setRowData(rowData);
 					exportToExcelList.add(expoExcel);
@@ -5303,66 +5309,195 @@ public class SalesReportController {
 				HttpSession session = request.getSession();
 				session.setAttribute("exportExcelList", exportToExcelList);
 				session.setAttribute("excelName", "MonthlySalesReturnQtyReport");
-				
-				
-				}
-			} catch (Exception e) {
 
-			
 			}
-	//	}
+		} catch (Exception e) {
+
+		}
+		// }
 		return model;
 
 	}
+	// monthwisesalespercentage
+
+	@RequestMapping(value = "/showMonthlySalesPercentageReport", method = RequestMethod.GET)
+	public ModelAndView showMonthlySalesPercentageReport(HttpServletRequest request, HttpServletResponse response) {
+
+		ModelAndView model = null;
+
+		model = new ModelAndView("reports/sales/monthwisesalespercentage");
+		RestTemplate restTemplate = new RestTemplate();
+
+		try {
+			String year = request.getParameter("year");
+
+			if (year != "") {
+				String[] yrs = year.split("-"); // returns an array with the 2 parts
+
+				MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+
+				map.add("fromYear", yrs[0]);
+				map.add("toYear", yrs[1]);
+
+				SalesReturnValueDaoList[] salesReturnValueReportListRes = restTemplate.postForObject(
+						Constants.url + "getSalesReturnValueReport", map, SalesReturnValueDaoList[].class);
+
+				List<SalesReturnValueDaoList> salesReturnValueReportList = new ArrayList<SalesReturnValueDaoList>(
+						Arrays.asList(salesReturnValueReportListRes));
+
+				SubCategory[] subCategoryList = restTemplate.getForObject(Constants.url + "getAllSubCatList",
+						SubCategory[].class);
+
+				ArrayList<SubCategory> subCatList = new ArrayList<SubCategory>(Arrays.asList(subCategoryList));
+
+				LinkedHashMap<Integer, SalesReturnValueDaoList> salesReturnValueReport = new LinkedHashMap<>();
+
+				for (int i = 0; i < salesReturnValueReportList.size(); i++) {
+					salesReturnValueReport.put(i, salesReturnValueReportList.get(i));
+
+				}
+
+				for (int k = 0; k < subCatList.size(); k++) {
+
+					for (int i = 0; i < salesReturnValueReportList.size(); i++) {
+						float oneMonthTotal = 0;
+						for (int j = 0; j < salesReturnValueReportList.get(i).getSalesReturnQtyValueList()
+								.size(); j++) {
+							if (salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j)
+									.getSubCatId() == subCatList.get(k).getSubCatId()) {
+
+								oneMonthTotal = oneMonthTotal + (salesReturnValueReportList.get(i)
+										.getSalesReturnQtyValueList().get(j).getGrandTotal()
+										- (salesReturnValueReportList.get(i).getSalesReturnQtyValueList().get(j)
+												.getGrnQty()
+												+ salesReturnValueReportList.get(i).getSalesReturnQtyValueList().get(j)
+														.getGvnQty()));
+
+							}
+
+						}
+						salesReturnValueReportList.get(i).setMonthTotal(oneMonthTotal);
+						System.out.println(
+								"oneMonthTotaloneMonthTotaloneMonthTotaloneMonthTotaloneMonthTotaloneMonthTotal"
+										+ oneMonthTotal);
+					}
+
+				}
+				System.out.println("LIst===========" + salesReturnValueReportList.toString());
+
+				model.addObject("salesReturnValueReport", salesReturnValueReport);
+				model.addObject("subCatList", subCatList);
+
+				// exportToExcel
+				/*
+				 * List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
+				 * 
+				 * ExportToExcel expoExcel = new ExportToExcel(); List<String> rowData = new
+				 * ArrayList<String>(); rowData.add("Sr."); rowData.add("Group Name"); for (int
+				 * i = 0; i < salesReturnValueReport.size(); i++) {
+				 * 
+				 * rowData.add(salesReturnValueReport.get(i).getMonth() + " Total");
+				 * rowData.add(salesReturnValueReport.get(i).getMonth() + "%"); }
+				 * 
+				 * expoExcel.setRowData(rowData); exportToExcelList.add(expoExcel);
+				 * 
+				 * for (int k = 0; k < subCatList.size(); k++) {
+				 * 
+				 * float grandTotal = 0.0f; float grnQty = 0.0f; float gvnQty = 0.0f;
+				 * 
+				 * expoExcel = new ExportToExcel(); rowData = new ArrayList<String>();
+				 * rowData.add("" + (k + 1)); rowData.add("" +
+				 * subCatList.get(k).getSubCatName()); for (int i = 0; i <
+				 * salesReturnValueReport.size(); i++) { for (int j = 0; j <
+				 * salesReturnValueReport.get(i).getSalesReturnQtyValueList().size(); j++) {
+				 * 
+				 * if (salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j)
+				 * .getSubCatId() == subCatList.get(k).getSubCatId()) {
+				 * 
+				 * 
+				 * 
+				 * rowData.add("" +
+				 * roundUp(salesReturnValueReport.get(i).getSalesReturnQtyValueList()
+				 * .get(j).getGrandTotal() -
+				 * (salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getGvnQty(
+				 * ) + salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j)
+				 * .getGrnQty()))); grandTotal = grandTotal +
+				 * salesReturnValueReport.get(i).getSalesReturnQtyValueList()
+				 * .get(j).getGrandTotal(); grnQty = grnQty +
+				 * salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getGrnQty()
+				 * ; gvnQty = gvnQty +
+				 * salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getGvnQty()
+				 * ; }
+				 * 
+				 * } } rowData.add("" + roundUp(grandTotal)); rowData.add("" + roundUp(grnQty));
+				 * rowData.add("" + roundUp(gvnQty));
+				 * 
+				 * expoExcel.setRowData(rowData); exportToExcelList.add(expoExcel);
+				 * 
+				 * } System.err.println("exportToExcelList" + exportToExcelList.toString());
+				 * HttpSession session = request.getSession();
+				 * session.setAttribute("exportExcelList", exportToExcelList);
+				 * session.setAttribute("excelName", "MonthlySalesReturnValueReport");
+				 */
+
+			}
+		} catch (Exception e) {
+
+		}
+		// }
+		return model;
+
+	}
+
 	@RequestMapping(value = "/showMonthlySalesValueWiseReport", method = RequestMethod.GET)
 	public ModelAndView showMonthlySalesValueWiseReport(HttpServletRequest request, HttpServletResponse response) {
 
 		ModelAndView model = null;
-		/*HttpSession session = request.getSession();
+		/*
+		 * HttpSession session = request.getSession();
+		 * 
+		 * List<ModuleJson> newModuleList = (List<ModuleJson>)
+		 * session.getAttribute("newModuleList"); Info view =
+		 * AccessControll.checkAccess("showSaleReportByDate", "showSaleReportByDate",
+		 * "1", "0", "0", "0", newModuleList); if (view.getError() == true) { model =
+		 * new ModelAndView("accessDenied");
+		 * 
+		 * } else {
+		 */
+		model = new ModelAndView("reports/sales/monthwisesalesreturnvalue");
+		RestTemplate restTemplate = new RestTemplate();
 
-		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
-		Info view = AccessControll.checkAccess("showSaleReportByDate", "showSaleReportByDate", "1", "0", "0", "0",
-				newModuleList);
-		if (view.getError() == true) {
-			model = new ModelAndView("accessDenied");
+		try {
+			String year = request.getParameter("year");
 
-		} else {*/
-			model = new ModelAndView("reports/sales/monthwisesalesreturnvalue");
-			RestTemplate restTemplate = new RestTemplate();
+			if (year != "") {
+				String[] yrs = year.split("-"); // returns an array with the 2 parts
 
-			try {
-				String year=request.getParameter("year");
+				MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 
-				if(year!="") {
-					String[] yrs = year.split("-"); //returns an array with the 2 parts
+				map.add("fromYear", yrs[0]);
+				map.add("toYear", yrs[1]);
 
-				MultiValueMap<String, String> map = new LinkedMultiValueMap<String,String>();
+				SalesReturnValueDaoList[] salesReturnValueReportListRes = restTemplate.postForObject(
+						Constants.url + "getSalesReturnValueReport", map, SalesReturnValueDaoList[].class);
 
-			   map.add("fromYear",yrs[0]);
-			   map.add("toYear", yrs[1]);
-				
-			   SalesReturnValueDaoList[]	salesReturnValueReportListRes = restTemplate.postForObject(Constants.url + "getSalesReturnValueReport",
-						map,  SalesReturnValueDaoList[].class);
+				List<SalesReturnValueDaoList> salesReturnValueReportList = new ArrayList<SalesReturnValueDaoList>(
+						Arrays.asList(salesReturnValueReportListRes));
 
-			    List<SalesReturnValueDaoList> salesReturnValueReportList=new ArrayList<SalesReturnValueDaoList>(Arrays.asList(salesReturnValueReportListRes));
-			
-			    SubCategory[] subCategoryList = restTemplate.getForObject(Constants.url + "getAllSubCatList",
+				SubCategory[] subCategoryList = restTemplate.getForObject(Constants.url + "getAllSubCatList",
 						SubCategory[].class);
 
 				ArrayList<SubCategory> subCatList = new ArrayList<SubCategory>(Arrays.asList(subCategoryList));
-				
-		        LinkedHashMap<Integer,SalesReturnValueDaoList> salesReturnValueReport= new LinkedHashMap<>();
 
-		        for(int i=0;i<salesReturnValueReportList.size();i++)
-		        {
-		        	salesReturnValueReport.put(i, salesReturnValueReportList.get(i));
-		        }
-				
+				LinkedHashMap<Integer, SalesReturnValueDaoList> salesReturnValueReport = new LinkedHashMap<>();
+
+				for (int i = 0; i < salesReturnValueReportList.size(); i++) {
+					salesReturnValueReport.put(i, salesReturnValueReportList.get(i));
+				}
+
 				model.addObject("salesReturnValueReport", salesReturnValueReport);
 				model.addObject("subCatList", subCatList);
-				
-				
-				
+
 				// exportToExcel
 				List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
 
@@ -5370,69 +5505,77 @@ public class SalesReportController {
 				List<String> rowData = new ArrayList<String>();
 				rowData.add("Sr.");
 				rowData.add("Group Name");
-				for(int i=0;i<salesReturnValueReport.size();i++)
-				{
-					rowData.add(salesReturnValueReport.get(i).getMonth()+" Gross Sale");
-					rowData.add(salesReturnValueReport.get(i).getMonth()+" GVN Value");
-					rowData.add(salesReturnValueReport.get(i).getMonth()+" GRN Value");
-					rowData.add(salesReturnValueReport.get(i).getMonth()+" Total");
+				for (int i = 0; i < salesReturnValueReport.size(); i++) {
+					rowData.add(salesReturnValueReport.get(i).getMonth() + " Gross Sale");
+					rowData.add(salesReturnValueReport.get(i).getMonth() + " GVN Value");
+					rowData.add(salesReturnValueReport.get(i).getMonth() + " GRN Value");
+					rowData.add(salesReturnValueReport.get(i).getMonth() + " Total");
 				}
 				rowData.add("Total Gross Sale");
 				rowData.add("Total GRN Value");
 				rowData.add("Total GVN Value");
 				expoExcel.setRowData(rowData);
 				exportToExcelList.add(expoExcel);
-				
+
 				for (int k = 0; k < subCatList.size(); k++) {
-					
-					float grandTotal=0.0f; float grnQty=0.0f; float gvnQty=0.0f; 
-					
+
+					float grandTotal = 0.0f;
+					float grnQty = 0.0f;
+					float gvnQty = 0.0f;
+
 					expoExcel = new ExportToExcel();
 					rowData = new ArrayList<String>();
-					rowData.add("" +(k+1));
+					rowData.add("" + (k + 1));
 					rowData.add("" + subCatList.get(k).getSubCatName());
 					for (int i = 0; i < salesReturnValueReport.size(); i++) {
-					for (int j = 0; j < salesReturnValueReport.get(i).getSalesReturnQtyValueList().size(); j++) {
-					
-					if(salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getSubCatId()==subCatList.get(k).getSubCatId())
-					{
-						rowData.add(""+roundUp(salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getGrandTotal()));
-						rowData.add(""+roundUp(salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getGvnQty()));
-						rowData.add(""+roundUp(salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getGrnQty()));
-						rowData.add(""+roundUp(salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getGrandTotal()-(salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getGvnQty()+salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getGrnQty())));
-						grandTotal=grandTotal+salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getGrandTotal();
-						grnQty=grnQty+salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getGrnQty();
-						gvnQty=gvnQty+salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getGvnQty();
+						for (int j = 0; j < salesReturnValueReport.get(i).getSalesReturnQtyValueList().size(); j++) {
+
+							if (salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j)
+									.getSubCatId() == subCatList.get(k).getSubCatId()) {
+								rowData.add("" + roundUp(salesReturnValueReport.get(i).getSalesReturnQtyValueList()
+										.get(j).getGrandTotal()));
+								rowData.add("" + roundUp(
+										salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getGvnQty()));
+								rowData.add("" + roundUp(
+										salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getGrnQty()));
+								rowData.add("" + roundUp(salesReturnValueReport.get(i).getSalesReturnQtyValueList()
+										.get(j).getGrandTotal()
+										- (salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getGvnQty()
+												+ salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j)
+														.getGrnQty())));
+								grandTotal = grandTotal + salesReturnValueReport.get(i).getSalesReturnQtyValueList()
+										.get(j).getGrandTotal();
+								grnQty = grnQty
+										+ salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getGrnQty();
+								gvnQty = gvnQty
+										+ salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getGvnQty();
+							}
+
+						}
 					}
-					
-					}
-					}
-					rowData.add(""+roundUp(grandTotal));
-					rowData.add(""+roundUp(grnQty));
-					rowData.add(""+roundUp(gvnQty));
+					rowData.add("" + roundUp(grandTotal));
+					rowData.add("" + roundUp(grnQty));
+					rowData.add("" + roundUp(gvnQty));
 
 					expoExcel.setRowData(rowData);
 					exportToExcelList.add(expoExcel);
 
 				}
-				System.err.println("exportToExcelList"+exportToExcelList.toString());
+				System.err.println("exportToExcelList" + exportToExcelList.toString());
 				HttpSession session = request.getSession();
 				session.setAttribute("exportExcelList", exportToExcelList);
 				session.setAttribute("excelName", "MonthlySalesReturnValueReport");
-				
-				}
-			} catch (Exception e) {
 
-			
 			}
-	//	}
+		} catch (Exception e) {
+
+		}
+		// }
 		return model;
 
 	}
-	
-	
-	
-	//---------------------------------------------------------------------------------------------------
+
+	// ---------------------------------------------------------------------------------------------------
 
 	private Dimension format = PD4Constants.A4;
 	private boolean landscapeValue = false;
@@ -5453,8 +5596,7 @@ public class SalesReportController {
 		String url = request.getParameter("url");
 		System.out.println("URL " + url);
 
-		File f = new
-		File("/home/supertom/apache-tomcat-8.5.35/webapps/admin/report.pdf");
+		File f = new File("/home/supertom/apache-tomcat-8.5.35/webapps/admin/report.pdf");
 		// File f = new File("/home/ats-12/Report.pdf");
 
 		try {
@@ -5469,9 +5611,9 @@ public class SalesReportController {
 		// get absolute path of the application
 		ServletContext context = request.getSession().getServletContext();
 		String appPath = context.getRealPath("");
-		//String filePath = "/home/ats-12/Report.pdf";
+		// String filePath = "/home/ats-12/Report.pdf";
 
-		 String filePath = "/home/supertom/apache-tomcat-8.5.35/webapps/admin/report.pdf";
+		String filePath = "/home/supertom/apache-tomcat-8.5.35/webapps/admin/report.pdf";
 
 		// construct the complete absolute path of the file
 		String fullPath = appPath + filePath;
@@ -5564,9 +5706,9 @@ public class SalesReportController {
 		String url = request.getParameter("url");
 		System.out.println("URL " + url);
 
-		 File f = new File("/home/supertom/apache-tomcat-8.5.35/webapps/admin/report.pdf");
+		File f = new File("/home/supertom/apache-tomcat-8.5.35/webapps/admin/report.pdf");
 		// File f = new File("/opt/apache-tomcat-8.5.6/webapps/uploads/report.pdf");
-		 // File f = new File("/home/ats-12/Report.pdf");
+		// File f = new File("/home/ats-12/Report.pdf");
 
 		try {
 			runConverter1(Constants.ReportURL + url, f, request, response);
@@ -5582,7 +5724,7 @@ public class SalesReportController {
 		String appPath = context.getRealPath("");
 		String filePath = "/home/supertom/apache-tomcat-8.5.35/webapps/admin/report.pdf";
 
-		 //   	String filePath = "/home/ats-12/Report.pdf";
+		// String filePath = "/home/ats-12/Report.pdf";
 
 		// construct the complete absolute path of the file
 		String fullPath = appPath + filePath;
