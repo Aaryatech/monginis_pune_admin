@@ -298,7 +298,7 @@ public class ViewProdController {
 					postProdPlanDetailList.add(postProductionPlanDetail);
 				}
 
-				// new Code
+				/*// new Code
 				updateStockDetailList = new ArrayList<>();
 
 				try {
@@ -311,10 +311,7 @@ public class ViewProdController {
 							.postForObject(Constants.url + "getFinGoodStockHeaderByDate", map, FinishedGoodStock.class);
 					DateFormat dfYmd = new SimpleDateFormat("yyyy-MM-dd");
 
-					/*
-					 * FinishedGoodStock stockHeader = restTemplate.postForObject(Constants.url +
-					 * "getFinGoodStockHeader", map, FinishedGoodStock.class);
-					 */
+					
 					System.out.println("stock Header " + stockHeader.toString());
 					if (stockHeader.getFinGoodStockStatus() == 0) {
 
@@ -524,7 +521,7 @@ public class ViewProdController {
 
 					}
 
-				}
+				}*/
 
 				// end of new Code
 				model.addObject("planDetail", prodPlanDetailList);
@@ -1157,15 +1154,14 @@ public class ViewProdController {
 						request.getParameter("act_prod_qty" + postProdPlanDetailList.get(i).getProductionDetailId()));
 				float opTotal = Float.parseFloat(
 						request.getParameter("op_total" + postProdPlanDetailList.get(i).getProductionDetailId()));
-				/*
-				 * float rejQty = Float.parseFloat( request.getParameter("rej_qty" +
-				 * postProdPlanDetailList.get(i).getProductionDetailId()));
-				 */// commented for prod patna
+				
+			float rejQty = Float.parseFloat( request.getParameter("rej_qty"+postProdPlanDetailList.get(i).getProductionDetailId()));
+				 /// commented for prod patna
 				System.out.println("prodQty:" + prodQty);
 
 				postProdPlanDetailList.get(i).setProductionQty(prodQty);
 				postProdPlanDetailList.get(i).setOpeningQty((int) opTotal);
-				postProdPlanDetailList.get(i).setRejectedQty(0);
+				postProdPlanDetailList.get(i).setRejectedQty((int)rejQty);
 
 				postProdPlanDetailList.get(i).setProductionBatch(prodBatch + "-" + serial);
 				serial = serial + 1;

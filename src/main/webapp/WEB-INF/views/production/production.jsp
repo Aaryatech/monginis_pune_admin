@@ -187,7 +187,7 @@
 									<div class="box-content">
 <div id="table-scroll" class="table-scroll">
 							 
-									<div id="faux-table" class="faux-table" aria="hidden">
+									<!-- <div id="faux-table" class="faux-table" aria="hidden">
 									<table id="table2" class="table table-advance" border="1">
 											<thead>
 												<tr class="bgpink">
@@ -199,7 +199,7 @@
 												</thead>
 												</table>
 									
-									</div>
+									</div> -->
 									<div class="table-wrap">
 									
 										<table id="table1" class="table table-advance" border="1">
@@ -208,7 +208,7 @@
 											<th width="60" style="width: 50px">Sr No</th>
 														<th width="100">Item Id</th>
 														<th width="170">Item Name</th> 
-														<th width="100">Current Opening Qty</th>
+													<!-- 	<th width="100">Current Opening Qty</th> -->
 														<th width="100">Order Quantity</th>
 												</tr>
 												</thead>
@@ -505,7 +505,7 @@ $(document).ready(function() {
 							  	tr.append($('<td></td>').html(key+1));			  	
 							  	tr.append($('<td></td>').html(order.itemId));
 								tr.append($('<td></td>').html(order.itemName)); 
-								tr.append($('<td style="text-align:right;"></td>').html(order.curOpeQty));
+							/* 	tr.append($('<td style="text-align:right;"></td>').html(order.curOpeQty)); */
 								
 								tr.append($('<td style="text-align:right;"></td>').html(order.qty));
 								 

@@ -8,6 +8,38 @@ public class SalesReturnValueDaoList {
 	private float monthTotal;
 
 	private List<SalesReturnValueDao> salesReturnQtyValueList;
+	
+	private float totBillAmt;
+	
+	private float totGrnQty;
+	
+	private float totGvnQty;
+	
+	
+
+	public float getTotBillAmt() {
+		return totBillAmt;
+	}
+
+	public void setTotBillAmt(float totBillAmt) {
+		this.totBillAmt = totBillAmt;
+	}
+
+	public float getTotGrnQty() {
+		return totGrnQty;
+	}
+
+	public void setTotGrnQty(float totGrnQty) {
+		this.totGrnQty = totGrnQty;
+	}
+
+	public float getTotGvnQty() {
+		return totGvnQty;
+	}
+
+	public void setTotGvnQty(float totGvnQty) {
+		this.totGvnQty = totGvnQty;
+	}
 
 	public float getMonthTotal() {
 		return monthTotal;
@@ -36,7 +68,10 @@ public class SalesReturnValueDaoList {
 	@Override
 	public String toString() {
 		return "SalesReturnValueDaoList [month=" + month + ", monthTotal=" + monthTotal + ", salesReturnQtyValueList="
-				+ salesReturnQtyValueList + "]";
+				+ salesReturnQtyValueList + ", totBillAmt=" + totBillAmt + ", totGrnQty=" + totGrnQty + ", totGvnQty="
+				+ totGvnQty + "]";
 	}
+
+	
 
 }

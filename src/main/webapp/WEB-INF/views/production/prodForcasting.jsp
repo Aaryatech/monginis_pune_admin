@@ -84,7 +84,7 @@
 					<div class="box">
 						<div class="box-title">
 							<h3>
-								<i class="fa fa-bars"></i> Plan Production for Cakes
+								<i class="fa fa-bars"></i> Add Finished Good Stock
 							</h3>
 							<div class="box-tool">
 								<a href="">Back to List</a> <a data-action="collapse" href="#"><i
@@ -177,7 +177,7 @@
 														</th>
 <!-- 														<th width="30" align="left">Cur Closing</th>
 
- -->														<th width="90" align="left">Cur Opening</th>
+ -->														<!-- <th width="90" align="left">Cur Opening</th> -->
 														
 														<%-- <th width="90" align="left">
 										 					<div>
@@ -407,7 +407,7 @@
 															
 /* 															var curClosing = "<td align=center colspan='2'><input type=text  class=form-control  id= curClos"+ item.id+ " name=curClos"+item.id+" value ="+item.curClosingQty+"></td>"; 
  */
-													var curOpening = "<td align=center colspan='1' padding=0><input type=text  class=form-control  id= curOpe"+ item.id+ " name=curOpe"+item.id+" value ="+item.curOpeQty+" style='font-size:10pt; height: 20px; ' disabled></td>"; 
+												//	var curOpening = "<td align=center colspan='1' padding=0><input type=text  class=form-control  id= curOpe"+ item.id+ " name=curOpe"+item.id+" value ="+item.curOpeQty+" style='font-size:10pt; height: 20px; ' disabled></td>"; 
 
 
 													/* var qty1 = "<td align=center colspan='2'><input type=text  class=form-control  id= qty1"+ item.id+ " name=qty1"+item.id+" value = "+item.qty+ " disabled></td>"; 
@@ -435,8 +435,8 @@
 													$('#table1 tbody')
 													.append(
 															qty5);
-													$('#table1 tbody')
-													.append(curOpening);
+													/* $('#table1 tbody')
+													.append(curOpening); */
 													
 													/* $('#table1 tbody')
 															.append(

@@ -122,7 +122,7 @@
 										<th rowspan="2">Sr.</th>
 										<th rowspan="2">Group Name</th>
 										<c:forEach var="report" items="${salesReturnQtyReport}" varStatus="cnt">
-										<th colspan="4">${report.value.month}</th>
+										<th colspan="4" style="text-align: center;">${report.value.month}</th>
 										</c:forEach>
 										<th colspan="4">Total II HALF</th>
 									</tr>
@@ -193,7 +193,7 @@
 									</tr>
 								</thead>
 								<tbody>
-								
+								  <c:set var="finalBillQty" value="0.0"/><c:set var="finalGrnQty" value="0.0"/><c:set var="finalGvnQty" value="0.0"/>
                                    <c:forEach items="${subCatList}" var="subCatList" varStatus="count">
                                    <c:set var="billQty" value="0.0"/><c:set var="grnQty" value="0.0"/><c:set var="gvnQty" value="0.0"/>
                                    <tr>
@@ -205,10 +205,10 @@
 										
 										<c:choose>
 										<c:when test="${rep.subCatId==subCatList.subCatId}">
-										<td>${rep.billQty}</td>
-										<td>${rep.gvnQty}</td>
-										<td>${rep.grnQty}</td>
-										<td>${rep.billQty-(rep.gvnQty+rep.grnQty)}</td>
+										<td style="text-align: right;">${rep.billQty}</td>
+										<td style="text-align: right;">${rep.gvnQty}</td>
+										<td style="text-align: right;">${rep.grnQty}</td>
+										<td style="text-align: right;">${rep.billQty-(rep.gvnQty+rep.grnQty)}</td>
 										<c:set var="billQty" value="${billQty+rep.billQty}"/>
 										<c:set var="grnQty" value="${rep.grnQty+grnQty}"/>
 										<c:set var="gvnQty" value="${rep.gvnQty+gvnQty}"/>
@@ -220,11 +220,29 @@
 										
 										</c:forEach>
 										</c:forEach>
-										<td>${billQty}</td>
-										<td>${grnQty}</td>
-										<td>${gvnQty}</td>
+										<td style="text-align: right;">${billQty}</td>
+										<td style="text-align: right;">${grnQty}</td>
+										<td style="text-align: right;">${gvnQty}</td>
+										<c:set var="finalBillQty" value="${finalBillQty+billQty}"/>
+										<c:set var="finalGrnQty" value="${grnQty+finalGrnQty}"/>
+										<c:set var="finalGvnQty" value="${gvnQty+finalGvnQty}"/>
 									</tr>
                                    </c:forEach>
+                                   <tr>
+                                        <th rowspan="2"></th>
+										<th rowspan="2">Total</th>
+										<c:forEach var="report" items="${salesReturnQtyReport}" varStatus="cnt">
+										<th style="text-align: right;">${report.value.totBillQty}</th>
+										
+										<th style="text-align: right;">${report.value.totGvnQty}</th>
+										<th style="text-align: right;">${report.value.totGrnQty}</th>
+										<th style="text-align: right;">${report.value.totBillQty-(report.value.totGrnQty+report.value.totGvnQty)}</th>
+													
+										</c:forEach>
+										<th style="text-align: right;">${finalBillQty}</th>
+										<th style="text-align: right;">${finalGrnQty}</th>
+										<th style="text-align: right;">${finalGvnQty}</th>
+									</tr>
 								</tbody>
 							</table>
 						</div>

@@ -23,9 +23,11 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -5236,6 +5238,16 @@ public class SalesReportController {
 
 				for (int i = 0; i < salesReturnQtyReportList.size(); i++) {
 					salesReturnQtyReport.put(i, salesReturnQtyReportList.get(i));
+				    float totBillQty=0;float totGrnQty=0;float totGvnQty=0;
+					for(int k=0;k<salesReturnQtyReportList.get(i).getSalesReturnQtyDaoList().size();k++)
+					{
+						totBillQty=totBillQty+salesReturnQtyReportList.get(i).getSalesReturnQtyDaoList().get(k).getBillQty();
+						totGrnQty=totGrnQty+salesReturnQtyReportList.get(i).getSalesReturnQtyDaoList().get(k).getGrnQty();
+						totGvnQty=totGvnQty+salesReturnQtyReportList.get(i).getSalesReturnQtyDaoList().get(k).getGvnQty();
+					}
+					salesReturnQtyReportList.get(i).setTotBillQty(totBillQty);
+					salesReturnQtyReportList.get(i).setTotGrnQty(totGrnQty);
+					salesReturnQtyReportList.get(i).setTotGvnQty(totGvnQty);
 				}
 
 				model.addObject("salesReturnQtyReport", salesReturnQtyReport);
@@ -5255,12 +5267,14 @@ public class SalesReportController {
 					rowData.add(salesReturnQtyReport.get(i).getMonth() + " Total");
 				}
 				rowData.add("Total Gross Sale");
-				rowData.add("Total GRN Qty");
 				rowData.add("Total GVN Qty");
+				rowData.add("Total GRN Qty");
 
 				expoExcel.setRowData(rowData);
 				exportToExcelList.add(expoExcel);
-
+				float totBillQty = 0.0f;
+				float totGrnQty = 0.0f;
+				float totGvnQty = 0.0f;
 				for (int k = 0; k < subCatList.size(); k++) {
 
 					float billQty = 0.0f;
@@ -5298,14 +5312,32 @@ public class SalesReportController {
 						}
 					}
 					rowData.add("" + roundUp(billQty));
-					rowData.add("" + roundUp(grnQty));
 					rowData.add("" + roundUp(gvnQty));
-
+					rowData.add("" + roundUp(grnQty));
+					totBillQty=totBillQty+billQty;
+					totGrnQty=totGrnQty+grnQty;
+					totGvnQty=totGvnQty+gvnQty;
+					
 					expoExcel.setRowData(rowData);
 					exportToExcelList.add(expoExcel);
 
 				}
-
+				expoExcel = new ExportToExcel();
+				rowData = new ArrayList<String>();
+				rowData.add("");
+				rowData.add("Total");
+				for (int i = 0; i < salesReturnQtyReport.size(); i++) {
+					rowData.add("" + roundUp(salesReturnQtyReport.get(i).getTotBillQty()));
+					rowData.add("" + roundUp(salesReturnQtyReport.get(i).getTotGvnQty()));
+					rowData.add("" + roundUp(salesReturnQtyReport.get(i).getTotGrnQty()));
+					rowData.add(roundUp((salesReturnQtyReport.get(i).getTotBillQty()-(salesReturnQtyReport.get(i).getTotGrnQty()+salesReturnQtyReport.get(i).getTotGrnQty())))+"");
+				}
+				rowData.add(""+totBillQty);
+				rowData.add(""+totGrnQty);
+				rowData.add(""+totGvnQty);
+				expoExcel.setRowData(rowData);
+				exportToExcelList.add(expoExcel);
+				
 				HttpSession session = request.getSession();
 				session.setAttribute("exportExcelList", exportToExcelList);
 				session.setAttribute("excelName", "MonthlySalesReturnQtyReport");
@@ -5354,92 +5386,83 @@ public class SalesReportController {
 
 				for (int i = 0; i < salesReturnValueReportList.size(); i++) {
 					salesReturnValueReport.put(i, salesReturnValueReportList.get(i));
-
-				}
-
-				for (int k = 0; k < subCatList.size(); k++) {
-
-					for (int i = 0; i < salesReturnValueReportList.size(); i++) {
-						float oneMonthTotal = 0;
-						for (int j = 0; j < salesReturnValueReportList.get(i).getSalesReturnQtyValueList()
-								.size(); j++) {
-							if (salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j)
-									.getSubCatId() == subCatList.get(k).getSubCatId()) {
-
-								oneMonthTotal = oneMonthTotal + (salesReturnValueReportList.get(i)
-										.getSalesReturnQtyValueList().get(j).getGrandTotal()
-										- (salesReturnValueReportList.get(i).getSalesReturnQtyValueList().get(j)
-												.getGrnQty()
-												+ salesReturnValueReportList.get(i).getSalesReturnQtyValueList().get(j)
-														.getGvnQty()));
-
-							}
-
-						}
-						salesReturnValueReportList.get(i).setMonthTotal(oneMonthTotal);
-						System.out.println(
-								"oneMonthTotaloneMonthTotaloneMonthTotaloneMonthTotaloneMonthTotaloneMonthTotal"
-										+ oneMonthTotal);
+					float totBillAmt=0;float totGrnValue=0;float totGvnValue=0;
+					for(int k=0;k<salesReturnValueReportList.get(i).getSalesReturnQtyValueList().size();k++)
+					{
+						totBillAmt=totBillAmt+salesReturnValueReportList.get(i).getSalesReturnQtyValueList().get(k).getGrandTotal();
+						totGrnValue=totGrnValue+salesReturnValueReportList.get(i).getSalesReturnQtyValueList().get(k).getGrnQty();
+						totGvnValue=totGvnValue+salesReturnValueReportList.get(i).getSalesReturnQtyValueList().get(k).getGvnQty();
 					}
-
+					salesReturnValueReportList.get(i).setTotBillAmt(totBillAmt);
+					salesReturnValueReportList.get(i).setTotGrnQty(totGrnValue);
+					salesReturnValueReportList.get(i).setTotGvnQty(totGvnValue);
 				}
+				
+		
 				System.out.println("LIst===========" + salesReturnValueReportList.toString());
 
 				model.addObject("salesReturnValueReport", salesReturnValueReport);
 				model.addObject("subCatList", subCatList);
 
 				// exportToExcel
-				/*
-				 * List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
-				 * 
-				 * ExportToExcel expoExcel = new ExportToExcel(); List<String> rowData = new
-				 * ArrayList<String>(); rowData.add("Sr."); rowData.add("Group Name"); for (int
-				 * i = 0; i < salesReturnValueReport.size(); i++) {
-				 * 
-				 * rowData.add(salesReturnValueReport.get(i).getMonth() + " Total");
-				 * rowData.add(salesReturnValueReport.get(i).getMonth() + "%"); }
-				 * 
-				 * expoExcel.setRowData(rowData); exportToExcelList.add(expoExcel);
-				 * 
-				 * for (int k = 0; k < subCatList.size(); k++) {
-				 * 
-				 * float grandTotal = 0.0f; float grnQty = 0.0f; float gvnQty = 0.0f;
-				 * 
-				 * expoExcel = new ExportToExcel(); rowData = new ArrayList<String>();
-				 * rowData.add("" + (k + 1)); rowData.add("" +
-				 * subCatList.get(k).getSubCatName()); for (int i = 0; i <
-				 * salesReturnValueReport.size(); i++) { for (int j = 0; j <
-				 * salesReturnValueReport.get(i).getSalesReturnQtyValueList().size(); j++) {
-				 * 
-				 * if (salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j)
-				 * .getSubCatId() == subCatList.get(k).getSubCatId()) {
-				 * 
-				 * 
-				 * 
-				 * rowData.add("" +
-				 * roundUp(salesReturnValueReport.get(i).getSalesReturnQtyValueList()
-				 * .get(j).getGrandTotal() -
-				 * (salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getGvnQty(
-				 * ) + salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j)
-				 * .getGrnQty()))); grandTotal = grandTotal +
-				 * salesReturnValueReport.get(i).getSalesReturnQtyValueList()
-				 * .get(j).getGrandTotal(); grnQty = grnQty +
-				 * salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getGrnQty()
-				 * ; gvnQty = gvnQty +
-				 * salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getGvnQty()
-				 * ; }
-				 * 
-				 * } } rowData.add("" + roundUp(grandTotal)); rowData.add("" + roundUp(grnQty));
-				 * rowData.add("" + roundUp(gvnQty));
-				 * 
-				 * expoExcel.setRowData(rowData); exportToExcelList.add(expoExcel);
-				 * 
-				 * } System.err.println("exportToExcelList" + exportToExcelList.toString());
-				 * HttpSession session = request.getSession();
-				 * session.setAttribute("exportExcelList", exportToExcelList);
-				 * session.setAttribute("excelName", "MonthlySalesReturnValueReport");
-				 */
-
+				
+				 List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
+				 
+				 ExportToExcel expoExcel = new ExportToExcel();
+				 List<String> rowData = new	 ArrayList<String>(); 
+				 rowData.add("Sr."); 
+				 rowData.add("Group Name"); 
+				 for (int i = 0; i < salesReturnValueReport.size(); i++) {
+				 rowData.add(salesReturnValueReport.get(i).getMonth() + " Total");
+				 rowData.add(salesReturnValueReport.get(i).getMonth() + "%");
+				 }
+				 expoExcel.setRowData(rowData);
+				 exportToExcelList.add(expoExcel);
+				 
+				 for (int k = 0; k < subCatList.size(); k++) {
+				 
+				 expoExcel = new ExportToExcel();
+				 rowData = new ArrayList<String>();
+				 rowData.add("" + (k + 1)); 
+				 rowData.add("" +subCatList.get(k).getSubCatName()); 
+				 for (int i = 0; i <salesReturnValueReport.size(); i++) {
+					 for (int j = 0; j < salesReturnValueReport.get(i).getSalesReturnQtyValueList().size(); j++) {
+				 
+				 if (salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getSubCatId() == subCatList.get(k).getSubCatId()) {
+				 			 
+				 rowData.add("" +roundUp(salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getGrandTotal() -
+				 (salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getGvnQty() + salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j)
+				 .getGrnQty())));
+				 
+				 if(salesReturnValueReport.get(i).getTotBillAmt()>0) {
+				 rowData.add("" +roundUp(((salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getGrandTotal() -
+						 (salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j).getGvnQty() + salesReturnValueReport.get(i).getSalesReturnQtyValueList().get(j)
+								 .getGrnQty()))*100)/salesReturnValueReport.get(i).getTotBillAmt()));
+				 }else
+				 {
+					 rowData.add("0.00");
+				 }
+				 }
+				 }
+				 } 
+				 expoExcel.setRowData(rowData);
+				 exportToExcelList.add(expoExcel);
+				 } 
+				 
+				 expoExcel = new ExportToExcel();
+				 rowData = new ArrayList<String>();
+				 rowData.add(""); 
+				 rowData.add("Total"); 
+				 for (int i = 0; i <salesReturnValueReport.size(); i++) {
+					 rowData.add("" +salesReturnValueReport.get(i).getTotBillAmt());
+					 rowData.add("0.00");
+				 }
+				 
+				 System.err.println("exportToExcelList" + exportToExcelList.toString());
+				 HttpSession session = request.getSession();
+				 session.setAttribute("exportExcelList", exportToExcelList);
+				 session.setAttribute("excelName", "MonthlySalesPerContrReport");
+				
 			}
 		} catch (Exception e) {
 
@@ -5493,6 +5516,16 @@ public class SalesReportController {
 
 				for (int i = 0; i < salesReturnValueReportList.size(); i++) {
 					salesReturnValueReport.put(i, salesReturnValueReportList.get(i));
+					float totBillAmt=0;float totGrnValue=0;float totGvnValue=0;
+					for(int k=0;k<salesReturnValueReportList.get(i).getSalesReturnQtyValueList().size();k++)
+					{
+						totBillAmt=totBillAmt+salesReturnValueReportList.get(i).getSalesReturnQtyValueList().get(k).getGrandTotal();
+						totGrnValue=totGrnValue+salesReturnValueReportList.get(i).getSalesReturnQtyValueList().get(k).getGrnQty();
+						totGvnValue=totGvnValue+salesReturnValueReportList.get(i).getSalesReturnQtyValueList().get(k).getGvnQty();
+					}
+					salesReturnValueReportList.get(i).setTotBillAmt(totBillAmt);
+					salesReturnValueReportList.get(i).setTotGrnQty(totGrnValue);
+					salesReturnValueReportList.get(i).setTotGvnQty(totGvnValue);
 				}
 
 				model.addObject("salesReturnValueReport", salesReturnValueReport);
@@ -5516,7 +5549,9 @@ public class SalesReportController {
 				rowData.add("Total GVN Value");
 				expoExcel.setRowData(rowData);
 				exportToExcelList.add(expoExcel);
-
+				float totBillAmt = 0.0f;
+				float totGrnAmt = 0.0f;
+				float totGvnAmt = 0.0f;
 				for (int k = 0; k < subCatList.size(); k++) {
 
 					float grandTotal = 0.0f;
@@ -5559,8 +5594,27 @@ public class SalesReportController {
 
 					expoExcel.setRowData(rowData);
 					exportToExcelList.add(expoExcel);
-
+					totBillAmt=totBillAmt+grandTotal;
+					totGrnAmt=totGrnAmt+grnQty;
+					totGvnAmt=totGvnAmt+gvnQty;
+					
 				}
+				
+				expoExcel = new ExportToExcel();
+				rowData = new ArrayList<String>();
+				rowData.add("");
+				rowData.add("Total");
+				for (int i = 0; i < salesReturnValueReport.size(); i++) {
+					rowData.add("" + roundUp(salesReturnValueReport.get(i).getTotBillAmt()));
+					rowData.add("" + roundUp(salesReturnValueReport.get(i).getTotGvnQty()));
+					rowData.add("" + roundUp(salesReturnValueReport.get(i).getTotGrnQty()));
+					rowData.add(roundUp((salesReturnValueReport.get(i).getTotBillAmt()-(salesReturnValueReport.get(i).getTotGvnQty()+salesReturnValueReport.get(i).getTotGrnQty())))+"");
+				}
+				rowData.add(""+totBillAmt);
+				rowData.add(""+totGrnAmt);
+				rowData.add(""+totGvnAmt);
+				expoExcel.setRowData(rowData);
+				exportToExcelList.add(expoExcel);
 				System.err.println("exportToExcelList" + exportToExcelList.toString());
 				HttpSession session = request.getSession();
 				session.setAttribute("exportExcelList", exportToExcelList);

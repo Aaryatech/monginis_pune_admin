@@ -126,8 +126,8 @@
 
 									<div class="col-sm-5 col-lg-3 controls">
 										<select data-placeholder="Choose Franchisee"
-											type="text" class="multiselect" multiple="multiple" role="multiselect" tabindex="6"
-											id="selectFr" name="selectFr" onchange="getDate()">
+											type="text"  class="form-control chosen"  multiple="multiple" tabindex="6"
+											id="selectFr" name="selectFr" >
 									<!-- 	<select data-placeholder="Choose Franchisee"
 											class="form-control chosen" multiple="multiple" tabindex="6"
 											id="selectFr" name="selectFr" onchange="getDate()"> -->

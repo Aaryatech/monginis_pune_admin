@@ -1696,4 +1696,89 @@ public class CreditNoteController {
 
 		return model;
 	}
+	
+	@RequestMapping(value = "/showCumulativeCrnReport", method = RequestMethod.GET)
+	public ModelAndView showCumulativeCrnReport(HttpServletRequest request, HttpServletResponse response) {
+
+		ModelAndView model = new ModelAndView("creditNote/crnCumulativeReport");
+
+		try {
+
+			RestTemplate restTemplate = new RestTemplate();
+
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+
+			allFrIdNameList = new AllFrIdNameList();
+			try {
+
+				allFrIdNameList = restTemplate.getForObject(Constants.url + "getAllFrIdName", AllFrIdNameList.class);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			model.addObject("unSelectedFrList", allFrIdNameList.getFrIdNamesList());
+		} catch (Exception e) {
+			System.err.println("Exce in viewving credit note page");
+		}
+
+		return model;
+	}
+	@RequestMapping(value = "/getCumulativeHeaders", method = RequestMethod.GET)
+	public @ResponseBody List<GetCreditNoteHeaders> getCumulativeHeaders(HttpServletRequest request,
+			HttpServletResponse response) {
+
+		ModelAndView model = new ModelAndView("creditNote/crnCumulativeReport");
+
+		boolean isAllFrSelected = false;
+
+		try {
+
+			RestTemplate restTemplate = new RestTemplate();
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			try {
+
+				fromDate = request.getParameter("fromDate");
+				toDate = request.getParameter("toDate");
+
+				String selectedFr = request.getParameter("fr_id_list");
+
+				selectedFr = selectedFr.substring(1, selectedFr.length() - 1);
+				selectedFr = selectedFr.replaceAll("\"", "");
+				crnFr = selectedFr;
+				frList = Arrays.asList(selectedFr);
+
+				map.add("fromDate", fromDate);
+
+				map.add("toDate", toDate);
+				if (frList.contains("-1")) {
+					isAllFrSelected = true;
+				}
+
+				if (isAllFrSelected) {
+					map.add("frIdList", 0);
+
+				} else {
+
+					map.add("frIdList", selectedFr);
+
+				}
+
+				headerResponse = restTemplate.postForObject(Constants.url + "getCumulativeCreditNoteHeaders", map,
+						GetCreditNoteHeadersList.class);
+
+				creditHeaderList = headerResponse.getCreditNoteHeaders();
+
+				System.err.println("CH List " + creditHeaderList.toString());
+
+			} catch (Exception e) {
+				System.out.println("Exception in getAllFrIdName" + e.getMessage());
+				e.printStackTrace();
+			}
+
+		} catch (Exception e) {
+			System.err.println("Exce in viewving credit note page");
+		}
+
+		return creditHeaderList;
+	}
 }

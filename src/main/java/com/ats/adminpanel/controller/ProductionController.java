@@ -606,7 +606,7 @@ public class ProductionController {
 
 			System.out.println("Finished Good Stock Detail " + finGoodDetail.toString());
 
-			// new code
+			/*// new code
 			List<FinishedGoodStockDetail> updateStockDetailList = new ArrayList<>();
 
 			FinishedGoodStockDetail stockDetail = new FinishedGoodStockDetail();
@@ -728,7 +728,7 @@ public class ProductionController {
 					}
 				}
 			}
-
+*/
 			try {
 
 				List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();

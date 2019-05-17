@@ -61,6 +61,7 @@
 								<select id="year" name="year" class="form-control">
 
 									<option value="2019-2020">2019-2020</option>
+								    <option value="2020-2021">2020-2021</option>
 								</select>
 							</div>
 							<input type="submit" id="submit" class="btn btn-primary"
@@ -110,35 +111,6 @@
 								</thead>
 								<tbody>
 
-									<c:set var="finalTotal" value="0.0" />
-									<c:forEach items="${subCatList}" var="subCatList"
-										varStatus="count">
-										<c:forEach var="report" items="${salesReturnValueReport}"
-											varStatus="cnt">
-											<c:forEach var="rep"
-												items="${report.value.salesReturnQtyValueList}"
-												varStatus="cnt1">
-												<c:choose>
-													<c:when test="${rep.subCatId==subCatList.subCatId}">
-														<c:set var="finalTotal"
-															value="${finalTotal+rep.grandTotal}" />
-
-													</c:when>
-												</c:choose>
-											</c:forEach>
-										</c:forEach>
-									</c:forEach>
-									<fmt:formatNumber type="number" maxFractionDigits="2"
-										minFractionDigits="2" groupingUsed="false"
-										value="${finalTotal}" var="parsedFinalTotal" />
-									<c:set var="grandFinalTotal" value="${parsedFinalTotal}" />
-
-
-
-
-
-
-
 									<c:forEach items="${subCatList}" var="subCatList"
 										varStatus="count">
 										<c:set var="grandTotal" value="0.0" />
@@ -158,13 +130,22 @@
 														<c:when test="${rep.subCatId==subCatList.subCatId}">
 
 
-															<td><fmt:formatNumber type="number"
+															<td style="text-align: right;"><fmt:formatNumber type="number"
 																	minFractionDigits="2" maxFractionDigits="2"
-																	value="${rep.grandTotal-(rep.gvnQty+rep.grnQty)}" /></td>
-															<td><fmt:formatNumber type="number"
+																	value="${rep.grandTotal-(rep.gvnQty+rep.grnQty)}" />
+															<td style="text-align: right;">
+															<c:choose>
+															<c:when test="${report.value.totBillAmt>0}">
+															<fmt:formatNumber type="number"
 																	minFractionDigits="2" maxFractionDigits="2"
-																	value="${(rep.grandTotal-(rep.gvnQty+rep.grnQty))*100/grandFinalTotal}" /></td>
-
+																	value="${(rep.grandTotal-(rep.gvnQty+rep.grnQty))*100/report.value.totBillAmt}" />
+															
+															</c:when>
+															<c:otherwise>
+															0.00
+															</c:otherwise>
+															</c:choose>
+															</td>
 														</c:when>
 														<c:otherwise>
 
@@ -176,6 +157,16 @@
 
 										</tr>
 									</c:forEach>
+									 <tr>
+                                        <th rowspan="2"></th>
+										<th rowspan="2">Total</th>
+										<c:forEach var="report" items="${salesReturnValueReport}" varStatus="cnt">
+										<th style="text-align: right;"> <fmt:formatNumber type="number" maxFractionDigits="2" minFractionDigits="2"  groupingUsed="false"  value="${report.value.totBillAmt}" /></th>
+										
+										<th style="text-align: right;"><fmt:formatNumber type="number" maxFractionDigits="2" minFractionDigits="2"  groupingUsed="false"  value="0.00" /></th>
+												
+										</c:forEach>
+									</tr>
 								</tbody>
 							</table>
 						</div>

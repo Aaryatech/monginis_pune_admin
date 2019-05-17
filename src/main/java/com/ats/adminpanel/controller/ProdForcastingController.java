@@ -187,7 +187,8 @@ public class ProdForcastingController {
 		}
 
 		// new Code
-		List<FinishedGoodStockDetail> updateStockDetailList = new ArrayList<>();
+	/*commented on 15 may --Mahesh
+	 * 	List<FinishedGoodStockDetail> updateStockDetailList = new ArrayList<>();
 
 		try {
 
@@ -361,8 +362,8 @@ public class ProdForcastingController {
 			System.out.println("Excein Prod Controller get Current Fin good Stock " + e.getMessage());
 			e.printStackTrace();
 
-		}
-
+		}*/
+/*commented on 15 may --Mahesh
 		for (int i = 0; i < commonConfList.size(); i++) {
 
 			for (int j = 0; j < updateStockDetailList.size(); j++) {
@@ -376,7 +377,7 @@ public class ProdForcastingController {
 				}
 
 			}
-		}
+		}*/
 
 //end of new Codes
 
@@ -621,7 +622,7 @@ public class ProdForcastingController {
 				postProductionHeader.setIsMixing(0);
 				postProductionHeader.setIsPlanned(1);
 				postProductionHeader.setProductionBatch("0");
-				postProductionHeader.setProductionStatus(1);
+				postProductionHeader.setProductionStatus(3);
 				postProductionHeader.setProductionHeaderId(0);
 
 				List<PostProductionPlanDetail> postProductionDetailList = new ArrayList<>();

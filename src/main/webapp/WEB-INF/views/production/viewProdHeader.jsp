@@ -106,7 +106,7 @@
 
 
 								<div class="clearfix"></div>
-<div id="table-scroll" class="table-scroll">
+										<div id="table-scroll" class="table-scroll">
 							 
 									<div id="faux-table" class="faux-table" aria="hidden">
 									<table id="table2"  class="table table-advance" border="1">
@@ -192,7 +192,7 @@
 
 
 													<c:choose>
-														<c:when test="${planHeader.productionStatus==1}">
+														<c:when test="${planHeader.isPlanned==1}">
 															<td align="left"><c:out value="Yes"></c:out></td>
 
 														</c:when>
