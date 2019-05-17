@@ -979,6 +979,7 @@ public class CreditNoteController {
 				toDate = request.getParameter("toDate");
 
 				String selectedFr = request.getParameter("fr_id_list");
+				int isGrn = Integer.parseInt(request.getParameter("isGrn"));
 
 				System.out.println("From Date " + fromDate + "toDate " + toDate + "fr ID List " + selectedFr);
 				selectedFr = selectedFr.substring(1, selectedFr.length() - 1);
@@ -1007,6 +1008,8 @@ public class CreditNoteController {
 					map.add("frIdList", selectedFr);
 
 				}
+
+				map.add("isGrn", isGrn);
 
 				headerResponse = restTemplate.postForObject(Constants.url + "getCreditNoteHeaders", map,
 						GetCreditNoteHeadersList.class);
