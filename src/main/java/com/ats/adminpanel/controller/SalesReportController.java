@@ -288,6 +288,28 @@ public class SalesReportController {
 				ExportToExcel expoExcel = new ExportToExcel();
 				List<String> rowData = new ArrayList<String>();
 
+				expoExcel = new ExportToExcel();
+				rowData = new ArrayList<String>();
+				rowData.add("");
+				rowData.add("");
+				rowData.add("");
+				rowData.add("");
+				rowData.add("From Date"+fromDate);
+				rowData.add("Tax_Repot1");
+				rowData.add("To Date"+toDate);
+				rowData.add("");
+				rowData.add("");
+				rowData.add("");
+				rowData.add("");
+				rowData.add("");
+				rowData.add("");
+				rowData.add("");
+				expoExcel.setRowData(rowData);
+				exportToExcelList.add(expoExcel);
+				
+				
+				expoExcel = new ExportToExcel();
+				rowData = new ArrayList<String>();
 				rowData.add("Sr.No.");
 				rowData.add("Invoice No");
 				rowData.add("Bill No");
@@ -500,12 +522,12 @@ public class SalesReportController {
 			HttpServletResponse response) {
 
 		List<SalesReportBillwise> saleList = new ArrayList<>();
-
+		String fromDate="";String toDate="";
 		try {
 			System.out.println("Inside get Sale Bill Wise");
 			String selectedFr = request.getParameter("fr_id_list");
-			String fromDate = request.getParameter("fromDate");
-			String toDate = request.getParameter("toDate");
+			 fromDate = request.getParameter("fromDate");
+			 toDate = request.getParameter("toDate");
 			String routeId = request.getParameter("route_id");
 
 			String selectedCat = request.getParameter("cat_id_list");
@@ -608,26 +630,37 @@ public class SalesReportController {
 
 		ExportToExcel expoExcel = new ExportToExcel();
 		List<String> rowData = new ArrayList<String>();
-
-		rowData.add("Sr No");
+		
+		rowData.add("Sr");
 		rowData.add("Invoice No");
 		rowData.add("Invoice Date");
 
-		rowData.add("Franchise Name");
-		rowData.add("Franchise City");
-		rowData.add("Franchise GST No");
-		rowData.add("Taxable Amount");
-		rowData.add("CGST Amount");
-		rowData.add("SGST Amount");
+		rowData.add("Franchise");
+		rowData.add("City");
+		rowData.add("GST No");
+		rowData.add("Taxable Amt");
+		rowData.add("CGST Amt");
+		rowData.add("SGST Amt");
 
-		rowData.add("IGST Amount");
-		rowData.add("Total Tax Amount");
+		rowData.add("IGST Amt");
+		rowData.add("Total Tax Amt");
 		rowData.add("Total");
 
 		expoExcel.setRowData(rowData);
 		int srno = 1;
 		exportToExcelList.add(expoExcel);
+		float taxableAmt=0.0f;float cgstSum=0.0f;float sgstSum=0.0f;float igstSum=0.0f;float totalTax=0.0f;float grandTotal=0.0f;
+		
 		for (int i = 0; i < saleList.size(); i++) {
+			
+			taxableAmt=taxableAmt+saleList.get(i).getTaxableAmt();
+			cgstSum=cgstSum+saleList.get(i).getCgstSum();
+			sgstSum=sgstSum+saleList.get(i).getSgstSum();
+			igstSum=igstSum+saleList.get(i).getIgstSum();
+			totalTax=totalTax+saleList.get(i).getTotalTax();
+			grandTotal=grandTotal+saleList.get(i).getGrandTotal();
+			
+			
 			expoExcel = new ExportToExcel();
 			rowData = new ArrayList<String>();
 
@@ -639,23 +672,45 @@ public class SalesReportController {
 
 			rowData.add(saleList.get(i).getFrCity());
 			rowData.add(saleList.get(i).getFrGstNo());
-			rowData.add("" + saleList.get(i).getTaxableAmt());
-			rowData.add("" + saleList.get(i).getCgstSum());
-			rowData.add("" + saleList.get(i).getSgstSum());
+			rowData.add("" + roundUp(saleList.get(i).getTaxableAmt()));
+			rowData.add("" + roundUp(saleList.get(i).getCgstSum()));
+			rowData.add("" + roundUp(saleList.get(i).getSgstSum()));
 
-			rowData.add("" + saleList.get(i).getIgstSum());
-			rowData.add("" + saleList.get(i).getTotalTax());
-			rowData.add("" + saleList.get(i).getGrandTotal());
+			rowData.add("" + roundUp(saleList.get(i).getIgstSum()));
+			rowData.add("" + roundUp(saleList.get(i).getTotalTax()));
+			rowData.add("" +roundUp( saleList.get(i).getGrandTotal()));
 			srno = srno + 1;
 
 			expoExcel.setRowData(rowData);
 			exportToExcelList.add(expoExcel);
 
 		}
+		expoExcel = new ExportToExcel();
+		rowData = new ArrayList<String>();
 
+		rowData.add("");
+		rowData.add("Total");
+		rowData.add("");
+		rowData.add("");
+		rowData.add("");
+		rowData.add("");
+		rowData.add(""+roundUp(taxableAmt));
+		rowData.add(""+roundUp(cgstSum));
+		rowData.add(""+roundUp(sgstSum));
+		rowData.add(""+roundUp(igstSum));
+		rowData.add(""+roundUp(totalTax));
+		rowData.add(""+roundUp(grandTotal));
+		
+		expoExcel.setRowData(rowData);
+		exportToExcelList.add(expoExcel);
+		
 		HttpSession session = request.getSession();
-		session.setAttribute("exportExcelList", exportToExcelList);
-		session.setAttribute("excelName", "SaleBillWiseDate");
+		session.setAttribute("exportExcelListNew", exportToExcelList);
+		session.setAttribute("excelNameNew", "SaleBillWiseDate");
+		session.setAttribute("reportNameNew", "Bill-wise Report");
+		session.setAttribute("searchByNew", "From Date: "+fromDate+"  To Date: "+toDate+" ");
+		session.setAttribute("mergeUpto1", "$A$1:$L$1");
+		session.setAttribute("mergeUpto2", "$A$2:$L$2");
 
 		return saleList;
 	}
@@ -2994,16 +3049,16 @@ public class SalesReportController {
 
 		ExportToExcel expoExcel = new ExportToExcel();
 		List<String> rowData = new ArrayList<String>();
-		rowData.add("Sr No.");
+		rowData.add("Sr.");
 		rowData.add("Bill No");
 		rowData.add("Invoice No");
 		rowData.add("Bill Date");
 
-		rowData.add("Franchisee Name");
-		rowData.add("Franchisee City");
-		rowData.add("Franchisee Gst No");
+		rowData.add("Franchisee");
+		rowData.add("City");
+		rowData.add("Fr Gst No");
 		rowData.add("Item Name");
-		rowData.add("Item Hsn Code");
+		rowData.add("Item Hsn");
 		rowData.add("SGST %");
 		rowData.add("CGST %");
 		rowData.add("IGST %");

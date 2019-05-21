@@ -238,6 +238,7 @@ public class ReportControllerV2 {
 
 		PdfPTable table = new PdfPTable(9);
 		try {
+			table.setHeaderRows(1);
 			System.out.println("Inside PDF Table try");
 			table.setWidthPercentage(100);
 			table.setWidths(new float[] { 0.7f,  3.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f });
@@ -291,7 +292,7 @@ public class ReportControllerV2 {
 			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
 			hcell.setBackgroundColor(BaseColor.PINK);
 			table.addCell(hcell);
-
+			float totalSaleValue=0.0f;float totalGvnValue=0.0f;float totalNetVal1=0.0f;float totalGrnValue=0.0f;float totalNetVal2=0.0f;float totalInLac=0.0f;float totalRetPer=0.0f;
 			int index = 0;
 			for (int j = 0; j < saleReportList.size(); j++) {
 
@@ -303,7 +304,21 @@ public class ReportControllerV2 {
 				cell.setHorizontalAlignment(Element.ALIGN_CENTER);
 				table.addCell(cell);
 
-				
+				float netVal1 = (saleReportList.get(j).getSaleValue()) - (saleReportList.get(j).getGvnValue());
+				float netVal2 = (netVal1) - (saleReportList.get(j).getGrnValue());
+				float inLac = (netVal2) / 100000;
+				float retPer =0.0f;
+				if(saleReportList.get(j).getGrnValue()>0) {
+					retPer=((saleReportList.get(j).getGrnValue()) / (saleReportList.get(j).getSaleValue()/100));
+				}
+
+				totalSaleValue=totalSaleValue+saleReportList.get(j).getSaleValue();
+			  	totalGvnValue=totalGvnValue+saleReportList.get(j).getGvnValue();
+			  	totalNetVal1=totalNetVal1+netVal1;
+			  	totalGrnValue=totalGrnValue+saleReportList.get(j).getGrnValue();
+			  	totalNetVal2=totalNetVal2+netVal2;
+			  	totalInLac=totalInLac+inLac;
+			  	totalRetPer=totalRetPer+retPer;
 
 				cell = new PdfPCell(new Phrase(String.valueOf(saleReportList.get(j).getFrName()), headFont));
 				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -322,14 +337,6 @@ public class ReportControllerV2 {
 				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 				cell.setPaddingRight(8);
 				table.addCell(cell);
-
-				float netVal1 = (saleReportList.get(j).getSaleValue()) - (saleReportList.get(j).getGvnValue());
-				float netVal2 = (netVal1) - (saleReportList.get(j).getGrnValue());
-				float inLac = (netVal2) / 100000;
-				float retPer =0.0f;
-				if(saleReportList.get(j).getGrnValue()>0) {
-					retPer=((saleReportList.get(j).getGrnValue()) / (saleReportList.get(j).getSaleValue()/100));
-				}
 
 				cell = new PdfPCell(new Phrase(String.valueOf(roundUp(netVal1)), headFont));
 				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -362,6 +369,76 @@ public class ReportControllerV2 {
 				table.addCell(cell);
 
 			}
+			
+			PdfPCell cell;
+
+			cell = new PdfPCell(new Phrase("Total", headFont1));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			table.addCell(cell);
+			
+
+			cell = new PdfPCell(new Phrase("", headFont1));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			table.addCell(cell);
+			
+			 double d = Double.parseDouble(""+totalSaleValue);
+			 String strTotalSaleValue = String.format("%f", d);
+			 
+			cell = new PdfPCell(new Phrase(""+strTotalSaleValue, headFont1));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+			table.addCell(cell);
+			
+			 double d1 = Double.parseDouble(""+totalGvnValue);
+			 String strTotalGvnValue= String.format("%f", d1);
+			 
+			cell = new PdfPCell(new Phrase(""+strTotalGvnValue, headFont1));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+			table.addCell(cell);
+			
+			 double d2 = Double.parseDouble(""+totalNetVal1);
+			 String strTotalNetVal1= String.format("%f", d2);
+			 
+			cell = new PdfPCell(new Phrase(""+strTotalNetVal1, headFont1));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+			table.addCell(cell);
+			
+			double d3 = Double.parseDouble(""+totalGrnValue);
+			String strTotalGrnValue= String.format("%f", d3);
+			 
+			cell = new PdfPCell(new Phrase(""+strTotalGrnValue, headFont1));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+			table.addCell(cell);
+			
+			double d4 = Double.parseDouble(""+totalNetVal2);
+			String strTotalNetVal2= String.format("%f", d4);
+			
+			cell = new PdfPCell(new Phrase(""+strTotalNetVal2, headFont1));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+			table.addCell(cell);
+			
+			double d5 = Double.parseDouble(""+totalInLac);
+			String strTotalInLac= String.format("%f", d5);
+			
+			cell = new PdfPCell(new Phrase(""+strTotalInLac, headFont1));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+			table.addCell(cell);
+			
+			double d6 = Double.parseDouble(""+totalRetPer);
+			String strTotalRetPer= String.format("%f", d6);
+			
+			cell = new PdfPCell(new Phrase(""+strTotalRetPer, headFont1));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+			table.addCell(cell);
+		
 			document.open();
 		
 			Paragraph heading = new Paragraph("Sales Report");
