@@ -48,8 +48,10 @@ th {
 </style>
 </head>
 <body onload="myFunction()">
-	<h4 align="center">MONGINIS PUNE</h4>
-	<h6 align="center">Itemwise Dispatch Report Pdf</h6>
+	<h4 style="text-align: center; font-weight: bold; font-size: 18px;">MONGINIS
+		PUNE</h4>
+	<h6 style="text-align: center; font-weight: bold; font-size: 18px;">Itemwise
+		Dispatch Report Pdf</h6>
 
 
 	<div class="box-content">
@@ -65,16 +67,17 @@ th {
 
 						<thead style="background-color: #f3b5db;">
 							<tr>
-								<th>Sr.No.</th>
-								<th>Franchise Name</th>
+								<th
+									style="text-align: center; font-weight: bold; font-size: 18px;">Sr.No.</th>
+								<th
+									style="text-align: center; font-weight: bold; font-size: 18px;">Franchise
+									Name</th>
 								<c:set var="itemCount" value="2"></c:set>
 								<c:forEach items="${Items}" var="Items">
 
-
-									<th>${Items.itemName}</th>
+									<th
+										style="text-align: left; font-weight: bold; font-size: 18px;">${Items.itemName}</th>
 									<c:set var="itemCount" value="${itemCount+1}"></c:set>
-
-
 
 								</c:forEach>
 
@@ -92,13 +95,17 @@ th {
 
 
 								<tr>
-									<td><c:out value="${sr+1}" />
-										<c:set var="sr" value="${sr+1}"></c:set></td>
-									<td align="left"><c:out value="${FrNameList.frName}" /></td>
+									<td
+										style="text-align: left; font-weight: bold; font-size: 20px;"><c:out
+											value="${sr+1}" /> <c:set var="sr" value="${sr+1}"></c:set></td>
+									<td
+										style="text-align: left; font-weight: bold; font-size: 20px;"><c:out
+											value="${FrNameList.frName}" /></td>
 									<c:forEach items="${Items}" var="items">
 										<c:set var="orQty" value="0"></c:set>
 
-										<td style="text-align: right;"><c:forEach
+										<td
+											style="text-align: right; font-weight: bold; font-size: 20px;"><c:forEach
 												items="${dispatchReportList}" var="dispatchReportList">
 
 												<c:choose>

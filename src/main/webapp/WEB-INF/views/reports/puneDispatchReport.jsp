@@ -4,21 +4,22 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <%-- <script src="${pageContext.request.contextPath}/resources/js/main.js"></script>
- --%><!-- <script type="text/javascript"
+ --%>
+<!-- <script type="text/javascript"
 	src="https://www.gstatic.com/charts/loader.js"></script> -->
 
 <jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
 <body onload="routListByAbcType()">
 
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
-<c:url var="routListByAbcType" value="/routListByAbcType"></c:url>
+	<c:url var="routListByAbcType" value="/routListByAbcType"></c:url>
 	<c:url var="getBillList" value="/getPDispatchReportByRoute"></c:url>
-   <c:url var="getMenuListBySectionId" value="/getMenuListBySectionId"></c:url>
-   	<c:url var="getFranchisees" value="/getFranchiseByRoute"></c:url>
-   	
-   	
+	<c:url var="getMenuListBySectionId" value="/getMenuListBySectionId"></c:url>
+	<c:url var="getFranchisees" value="/getFranchiseByRoute"></c:url>
+
+
 	<!-- BEGIN Sidebar -->
-	<div id="sidebar" class="navbar-collapse collapse" >
+	<div id="sidebar" class="navbar-collapse collapse">
 
 		<jsp:include page="/WEB-INF/views/include/navigation.jsp"></jsp:include>
 
@@ -26,7 +27,7 @@
 			<i class="fa fa-angle-double-left"></i>
 		</div>
 		<!-- END Sidebar Collapse Button -->
-	</div> 
+	</div>
 	<!-- END Sidebar -->
 
 
@@ -64,135 +65,150 @@
 
 			</div>
 
-		<form id="submitBillForm"
-					action="${pageContext.request.contextPath}/searchPDispatchItemReportNew"
-					method="get">
-			<div class="box-content">
-				<div class="row">
+			<form id="submitBillForm"
+				action="${pageContext.request.contextPath}/searchPDispatchItemReportNew"
+				method="get">
+				<div class="box-content">
+					<div class="row">
 
 
-					<div class="form-group">
-						<label class="col-sm-3 col-lg-2	 control-label">Delivery Date</label>
-						<div class="col-sm-6 col-lg-4 controls date_select">
-							<input class="form-control date-picker" id="billDate"
-								name="billDate" size="30" type="text" value="${todaysDate}" />
+						<div class="form-group">
+							<label class="col-sm-3 col-lg-2	 control-label">Delivery
+								Date</label>
+							<div class="col-sm-6 col-lg-4 controls date_select">
+								<input class="form-control date-picker" id="billDate"
+									name="billDate" size="30" type="text" value="${todaysDate}" />
+							</div>
+							<label class="col-sm-3 col-lg-2 control-label">Select
+								Station</label>
+							<div class="col-sm-6 col-lg-4 controls">
+								<select data-placeholder="Select Route"
+									class="form-control chosen" name="stanId" id="stanId"
+									multiple="multiple">
+									<option value="-1">All</option>
+									<c:forEach items="${stationList}" var="stationList"
+										varStatus="count">
+										<option value="${stationList}"><c:out
+												value="${stationList}" />
+										</option>
+
+									</c:forEach>
+								</select>
+
+							</div>
 						</div>
-                    <label class="col-sm-3 col-lg-2 control-label">Select
-							Station</label>
-						<div class="col-sm-6 col-lg-4 controls">
-							<select data-placeholder="Select Route"
-								class="form-control chosen" name="stanId" id="stanId" multiple="multiple"  >
-								<option value="-1">All</option>
-								<c:forEach items="${stationList}" var="stationList" varStatus="count">
-									<option value="${stationList}"><c:out value="${stationList}"/> </option>
 
-								</c:forEach>
-							</select>
-
-						</div>
 					</div>
 
-				</div>
+					<br>
+					<div class="row">
 
-				<br>
-				<div class="row">
+						<div class="form-group">
 
-					<div class="form-group">
+							<label class="col-sm-3 col-lg-2 control-label">Select ABC
+								Type</label>
+							<div class="col-sm-3 col-lg-4">
 
-						<label class="col-sm-3 col-lg-2 control-label">Select
-							ABC Type</label>
-						<div class="col-sm-3 col-lg-4">
+								<select data-placeholder="Choose Category"
+									class="form-control chosen" onchange="routListByAbcType()"
+									id="abcType" name="abcType">
 
-							<select data-placeholder="Choose Category"
-								class="form-control chosen"   onchange="routListByAbcType()"
-								id="abcType" name="abcType">
-
-								<option value="0">All</option>
-								<option value="1">A</option>
-								<option value="2">B</option>
-								<option value="3">C</option>
-								<%-- <c:forEach items="${catList}" var="cat" varStatus="count">
+									<option value="0">All</option>
+									<option value="1">A</option>
+									<option value="2">B</option>
+									<option value="3">C</option>
+									<%-- <c:forEach items="${catList}" var="cat" varStatus="count">
 									<option value="${cat.catId}"><c:out value="${cat.catName}"/></option>
 								</c:forEach> --%>
-							</select>
-						</div>
-						
-						<label class="col-sm-3 col-lg-2 control-label">Select
-							Route</label>
-						<div class="col-sm-6 col-lg-4 controls">
-							<select data-placeholder="Select Route"
-								class="form-control chosen" name="selectRoute" id="selectRoute" >
-								 
-							</select>
+								</select>
+							</div>
 
-						</div><br>
- 
+							<label class="col-sm-3 col-lg-2 control-label">Select
+								Route</label>
+							<div class="col-sm-6 col-lg-4 controls">
+								<select data-placeholder="Select Route"
+									class="form-control chosen" name="selectRoute" id="selectRoute">
+
+								</select>
+
+							</div>
+							<br>
+
+						</div>
+
+
+
 					</div>
+					<br>
 
+					<div class="row">
 
+						<div class="form-group">
 
-				</div><br>
-				
-				<div class="row">
+							<label class="col-sm-3 col-lg-2 control-label">Select
+								Section</label>
+							<div class="col-sm-3 col-lg-4">
 
-					<div class="form-group">
-					
-					<label class="col-sm-3 col-lg-2 control-label">Select
-							Section</label>
-						<div class="col-sm-3 col-lg-4">
+								<select data-placeholder="Choose Category"
+									class="form-control chosen" onchange="getMenuListBySectionId()"
+									id="sectionId" name="sectionId">
 
-							<select data-placeholder="Choose Category"
-								class="form-control chosen"   onchange="getMenuListBySectionId()"
-								id="sectionId" name="sectionId" >
+									<option value="" selected>Select Section</option>
 
-								 <option value="" selected>Select Section</option>
-								 
-								  <c:forEach items="${sectionList}" var="sectionList" >
-									<option value="${sectionList.sectionId}"><c:out value="${sectionList.sectionName}"/></option>
-								</c:forEach>  
-							</select>
-						</div>
+									<c:forEach items="${sectionList}" var="sectionList">
+										<option value="${sectionList.sectionId}"><c:out
+												value="${sectionList.sectionName}" /></option>
+									</c:forEach>
+								</select>
+							</div>
 
-						<label class="col-sm-3 col-lg-2 control-label">Select Menu </label>
-						<div class="col-sm-3 col-lg-4">
+							<label class="col-sm-3 col-lg-2 control-label">Select
+								Menu </label>
+							<div class="col-sm-3 col-lg-4">
 
-							<select data-placeholder="Select Menu "
-								class="form-control chosen" 
-								id="menuId" name="menuId" multiple="multiple" required   onchange="onChangeMenu(this.value)">
+								<select data-placeholder="Select Menu "
+									class="form-control chosen" id="menuId" name="menuId"
+									multiple="multiple" required
+									onchange="onChangeMenu(this.value)">
 
-								<%--  <option value="0" selected>All</option>
+									<%--  <option value="0" selected>All</option>
 								<c:forEach items="${menuList}" var="menuList" >
 									<option value="${menuList.menuId}"><c:out value="${menuList.menuTitle}"/> </option>
 
 								</c:forEach> --%>
-							</select>
+								</select>
+							</div>
+
 						</div>
-						 
+
+
+
 					</div>
+					<br>
 
+					<div class="row">
 
+						<div class="form-group" align="center">
 
-				</div><br>
-				
-				<div class="row">
-
-					<div class="form-group" align="center">
- 
-					 <input type="submit" id="submit" class="btn btn-primary" value="Search"  >
-						<!-- <button class="btn btn-info" onclick="searchReport()">Search
+							<input type="submit" id="submit" class="btn btn-primary"
+								value="Search">
+							<!-- <button class="btn btn-info" onclick="searchReport()">Search
 							Report</button> 
 						<button class="btn btn-primary" value="PDF" id="PDFButton"
 							onclick="genPdf()">PDF</button> -->
-							 <input type="button" class="btn btn-primary" value="PDF" id="PDFButton"
-							onclick="genPdf()" value="PDF" /> 
+							<input type="button" class="btn btn-primary" value="PDF"
+								id="PDFButton" onclick="genPdf()" value="PDF" /> <input
+								type="button" class="btn btn-primary" value="PDF FOR DOT MATRIX"
+								id="PDFButton" onclick="genPdfForDotMatrix()"
+								value="PDF FOR DOT MATRIX" />
+						</div>
+
+
+
 					</div>
 
-
-
 				</div>
-				 
-			</div>
-	</form>
+			</form>
 
 			<%-- <div class="box">
 				<div class="box-title">
@@ -262,357 +278,373 @@
 
 
 
-<script type="text/javascript">
-function onChangeMenu(menuId) {
+		<script type="text/javascript">
+			function onChangeMenu(menuId) {
 
-	if(menuId==0){
-	var sectionId = $("#sectionId").val();
-	 if(sectionId=="" || sectionId==null){
-				$('#menuId')
-			    .find('option')
-			    .remove()
-			    .end()
-			    $("#menuId").trigger("chosen:updated");
-		 }else{
-				$.getJSON('${getMenuListBySectionId}', {
-					
-					sectionId : sectionId,
-					ajax : 'true'
-				}, function(data) {
-				 	var html = '<option value="">Select Section</option>';
-				
-					var len = data.length;
-					
-					$('#menuId')
-				    .find('option')
-				    .remove()
-				    .end()
-				    
-				$("#menuId").append(
-                 $("<option ></option>").attr(
-                     "value", 0).text("All") );
-					
-					for ( var i = 0; i < len; i++) {
-			            $("#menuId").append(
-			                    $("<option selected></option>").attr(
-			                        "value", data[i].menuId).text(data[i].menuTitle)
-			                );
+				if (menuId == 0) {
+					var sectionId = $("#sectionId").val();
+					if (sectionId == "" || sectionId == null) {
+						$('#menuId').find('option').remove().end()
+						$("#menuId").trigger("chosen:updated");
+					} else {
+						$
+								.getJSON(
+										'${getMenuListBySectionId}',
+										{
+
+											sectionId : sectionId,
+											ajax : 'true'
+										},
+										function(data) {
+											var html = '<option value="">Select Section</option>';
+
+											var len = data.length;
+
+											$('#menuId').find('option')
+													.remove().end()
+
+											$("#menuId").append(
+													$("<option ></option>")
+															.attr("value", 0)
+															.text("All"));
+
+											for (var i = 0; i < len; i++) {
+												$("#menuId")
+														.append(
+																$(
+																		"<option selected></option>")
+																		.attr(
+																				"value",
+																				data[i].menuId)
+																		.text(
+																				data[i].menuTitle));
+											}
+											$("#menuId").trigger(
+													"chosen:updated");
+										});
 					}
-					   $("#menuId").trigger("chosen:updated");
-				}); 
-		 }
-	}
-}
+				}
+			}
 
+			function getMenuListBySectionId() {
 
-function getMenuListBySectionId() {
-	
-	var sectionId = $("#sectionId").val();
-	
-	 
-		 if(sectionId=="" || sectionId==null){
-			 
-			  
-				$('#menuId')
-			    .find('option')
-			    .remove()
-			    .end()
-			    $("#menuId").trigger("chosen:updated");
-		 }else{
-				$.getJSON('${getMenuListBySectionId}', {
-					
-					sectionId : sectionId,
-					ajax : 'true'
-				}, function(data) {
-				 	var html = '<option value="">Select Section</option>';
-				
-					var len = data.length;
-					
-					$('#menuId')
-				    .find('option')
-				    .remove()
-				    .end()
-				    
-				$("#menuId").append(
-                 $("<option ></option>").attr(
-                     "value", 0).text("All") );
-					
-					for ( var i = 0; i < len; i++) {
-			            $("#menuId").append(
-			                    $("<option></option>").attr(
-			                        "value", data[i].menuId).text(data[i].menuTitle)
-			                );
-					}
-					   $("#menuId").trigger("chosen:updated");
-				}); 
-		 }
-	 
-}
+				var sectionId = $("#sectionId").val();
 
-function routListByAbcType() {
-	
-	var abcType = $("#abcType").val();
-	
-	if(abcType!=0){
-		 
-				$.getJSON('${routListByAbcType}', {
-					
-					abcType : abcType,
-					ajax : 'true'
-				}, function(data) {
-				 	var html = '<option value="">Select Rout</option>';
-				
-					var len = data.length;
-					
-					$('#selectRoute')
-				    .find('option')
-				    .remove()
-				    .end()
-				    
-				$("#selectRoute").append(
-                 $("<option></option>").attr(
-                     "value", 0).text("All") );
-					
-					for ( var i = 0; i < len; i++) {
-			            $("#selectRoute").append(
-			                    $("<option></option>").attr(
-			                        "value", data[i].routeId).text(data[i].routeName)
-			                );
-					}
-					   $("#selectRoute").trigger("chosen:updated");
-				}); 
-	}
-	else{
-		$('#selectRoute')
-	    .find('option')
-	    .remove()
-	    .end()
-		 $("#selectRoute").append(
-                 $("<option></option>").attr(
-                     "value", 0).text("All")
-             );
-		 $("#selectRoute").trigger("chosen:updated");
-	}
-}
+				if (sectionId == "" || sectionId == null) {
+
+					$('#menuId').find('option').remove().end()
+					$("#menuId").trigger("chosen:updated");
+				} else {
+					$.getJSON('${getMenuListBySectionId}', {
+
+						sectionId : sectionId,
+						ajax : 'true'
+					}, function(data) {
+						var html = '<option value="">Select Section</option>';
+
+						var len = data.length;
+
+						$('#menuId').find('option').remove().end()
+
+						$("#menuId").append(
+								$("<option ></option>").attr("value", 0).text(
+										"All"));
+
+						for (var i = 0; i < len; i++) {
+							$("#menuId").append(
+									$("<option></option>").attr("value",
+											data[i].menuId).text(
+											data[i].menuTitle));
+						}
+						$("#menuId").trigger("chosen:updated");
+					});
+				}
+
+			}
+
+			function routListByAbcType() {
+
+				var abcType = $("#abcType").val();
+
+				if (abcType != 0) {
+
+					$.getJSON('${routListByAbcType}', {
+
+						abcType : abcType,
+						ajax : 'true'
+					}, function(data) {
+						var html = '<option value="">Select Rout</option>';
+
+						var len = data.length;
+
+						$('#selectRoute').find('option').remove().end()
+
+						$("#selectRoute").append(
+								$("<option></option>").attr("value", 0).text(
+										"All"));
+
+						for (var i = 0; i < len; i++) {
+							$("#selectRoute").append(
+									$("<option></option>").attr("value",
+											data[i].routeId).text(
+											data[i].routeName));
+						}
+						$("#selectRoute").trigger("chosen:updated");
+					});
+				} else {
+					$('#selectRoute').find('option').remove().end()
+					$("#selectRoute")
+							.append(
+									$("<option></option>").attr("value", 0)
+											.text("All"));
+					$("#selectRoute").trigger("chosen:updated");
+				}
+			}
 
 			function getFranchise(routeId) {
-			
+
 				$.getJSON('${getFranchisees}', {
-					
+
 					routeId : routeId,
 					ajax : 'true'
 				}, function(data) {
-				 	var html = '<option value="">Select Franchisee</option>';
-				
+					var html = '<option value="">Select Franchisee</option>';
+
 					var len = data.length;
-					
-					$('#fraId')
-				    .find('option')
-				    .remove()
-				    .end()
-				    
-				 $("#fraId").append(
-                                $("<option></option>").attr(
-                                    "value", 0).text("Select Franchisee")
-                            );
-					
-					for ( var i = 0; i < len; i++) {
-                        $("#fraId").append(
-                                $("<option></option>").attr(
-                                    "value", data[i].frId).text(data[i].frName)
-                            );
+
+					$('#fraId').find('option').remove().end()
+
+					$("#fraId").append(
+							$("<option></option>").attr("value", 0).text(
+									"Select Franchisee"));
+
+					for (var i = 0; i < len; i++) {
+						$("#fraId").append(
+								$("<option></option>").attr("value",
+										data[i].frId).text(data[i].frName));
 					}
-					   $("#fraId").trigger("chosen:updated");
-				}); 
+					$("#fraId").trigger("chosen:updated");
+				});
 			}
-</script>
+		</script>
 		<script type="text/javascript">
 			function searchReport() {
-					var isValid = validate();
-				if(isValid==true){
-				//document.getElementById('chart').style.display = "block";
-				document.getElementById("PieChart_div").style = "display:none";
-				document.getElementById("chart_div").style = "display:none";
+				var isValid = validate();
+				if (isValid == true) {
+					//document.getElementById('chart').style.display = "block";
+					document.getElementById("PieChart_div").style = "display:none";
+					document.getElementById("chart_div").style = "display:none";
 
-				var routeId = $("#selectRoute").val();
-				
-				var routeName = $("#selectRoute option:selected").text();
-				document.getElementById("routeName").innerText="Route: "+$("#selectRoute option:selected").text();
-				document.getElementById("routeName").style.fontWeight="900";
-				var isGraph = 0;
+					var routeId = $("#selectRoute").val();
 
-				var selectedCat = $("#selectCat").val();
+					var routeName = $("#selectRoute option:selected").text();
+					document.getElementById("routeName").innerText = "Route: "
+							+ $("#selectRoute option:selected").text();
+					document.getElementById("routeName").style.fontWeight = "900";
+					var isGraph = 0;
 
-				var billDate = $("#billDate").val();
-				$('#loader').show();
+					var selectedCat = $("#selectCat").val();
 
-				$
-						.getJSON(
-								'${getBillList}',
+					var billDate = $("#billDate").val();
+					$('#loader').show();
 
-								{
-									bill_date : billDate,
-									route_id : routeId,
-									cat_id_list : JSON.stringify(selectedCat),
-									routeName : routeName,
-									ajax : 'true'
+					$
+							.getJSON(
+									'${getBillList}',
 
-								},
-								function(data) {
-									 document.getElementById("submit").disabled=false;
-									$('#table_grid th').remove();
+									{
+										bill_date : billDate,
+										route_id : routeId,
+										cat_id_list : JSON
+												.stringify(selectedCat),
+										routeName : routeName,
+										ajax : 'true'
 
-									$('#table_grid td').remove();
-									
-									$('#loader').hide();
-                                    var frListLength=data.frList.length;
-									if (data == "") {
-										alert("No records found !!");
-										  document.getElementById("expExcel").disabled=true;
-										  document.getElementById("submit").disabled=true;
-									}
-									
-									 var tr;
-								        tr = document.getElementById('table_grid').tHead.children[0];
-								        tr.insertCell(0).outerHTML = "<th align='left'>Sr.No.</th>"
+									},
+									function(data) {
+										document.getElementById("submit").disabled = false;
+										$('#table_grid th').remove();
 
-								        tr.insertCell(1).outerHTML = "<th style='width=170px'>ItemName</th>"
-								        	var i=0;var j=0;
-								        	 $.each(data.frList, function(key,fr){  
-								        	       i=key+2;
-								                 tr.insertCell(i).outerHTML = "<th style='width=80px'>"+fr.frName+"</th>"
-								         });//franchise for end    
-/* 								         tr.insertCell(i+1).outerHTML = "<th style='font-weight:bold'>Total</th>"
- */								         
-								         $.each(data.subCatList,
-													function(key,subCat) {
-								        		var tr = $('<tr></tr>');
-								        		tr
-												.append($(
-														'<td></td>')
-														.html(" "));
-												tr
-														.append($(
-																'<td style="font-weight:bold"></td>')
-																.html(subCat.subCatName));
-												for(var i=0;i<=frListLength;i++)
-													{
-													tr
-													.append($(
-															'<td></td>')
-															.html(" "));
-													}
-												
-												$(
-												'#table_grid tbody')
-												.append(
-														tr);
-								        	 
-								             	var srNo = 0;
-													$.each(data.itemList,
-																	function(key,item) {
-														if(item.itemGrp2==subCat.subCatId)
-															{
-														srNo = srNo + 1;
-														var tr = $('<tr></tr>');
-														tr
-																.append($(
-																		'<td></td>')
-																		.html(
-																				srNo));
-														tr
-																.append($(
-																		'<td></td>')
-																		.html(
-																				item.itemName));
-														 $.each(data.frList, function(key,franchise){  
-																//alert(franchise.frId)
-																var orderId='o';
-																var orderQty=0;
-																var isBillGenerated=0;
-                                                          $.each(data.dispatchReportList,
-																		function(key,report) {
-                                                        	  if(franchise.frId==report.frId && item.id==report.itemId){
-                                                        		  orderId=report.orderId;
-                                                        		  orderQty=report.orderQty;
-                                                        		  isBillGenerated=report.isBillGenerated;
-															 }
-                                                        	  
-                                                          });
-                                                          if(isBillGenerated==2){
-                                                          tr
-															.append($(
-																	'<td style="color:blue;"></td>')
-																	.html("Qty: "+orderQty+" <input type=number style='text-align:right; width:60px' min=0 class=form-control name=itemQty"+franchise.frId+""+item.id+""+orderId+" id=itemQty"+franchise.frId+""+item.id+""+orderId+" value=0 disabled/>"));
-                                                          }
-                                                          else
-                                                        	  {
-                                                        	 if(orderId=='o'){
-                                                        	  tr
-  															.append($(
-  																	'<td style="color:red;"></td>')
-  																	.html("Qty: "+orderQty+" <input type=number style='text-align:right; width:60px' min=0 class=form-control name=itemQty"+franchise.frId+""+item.id+""+orderId+" id=itemQty"+franchise.frId+""+item.id+""+orderId+" value=0 disabled/>"));
-                                                        	 }
-                                                        	 else{
-                                                        		  tr
-        															.append($(
-        																	'<td style="color:green;"></td>')
-        																	.html("Qty: "+orderQty+" <input type=number style='text-align:right; width:60px' min=0 class=form-control name=itemQty"+franchise.frId+""+item.id+""+orderId+" id=itemQty"+franchise.frId+""+item.id+""+orderId+" value=0 />"));
-                                                              	 
-                                                        	 }
-                                                        	  }
-														 });
-														/*  tr
-															.append($(
-																	'<td></td>')
-																	.html("<input type=text style='text-align:right; width:60px' class=form-control name=total"+key+""+item.id+" id=total"+key+""+item.id+" value=0 disabled/>"));
-												 */		$(
-																'#table_grid tbody')
-																.append(
-																		tr);
-															}//end if
-													});//itemList for end
-								         });//subCatList for end
-													//	var srNo = 0;
-														 $.each(data.dispatchReportList,
-																		function(key,report) {
-                                                                
-													         document.getElementById('itemQty'+report.frId+''+report.itemId+''+report.orderId).value = report.editQty;
+										$('#table_grid td').remove();
 
-															       
+										$('#loader').hide();
+										var frListLength = data.frList.length;
+										if (data == "") {
+											alert("No records found !!");
+											document.getElementById("expExcel").disabled = true;
+											document.getElementById("submit").disabled = true;
+										}
 
-																		});
-														
-														/* $.each(data.itemList,
-																	function(key,item) {
-																 var total=0;
-													     		 $.each(data.frList, function(key,franchise){  	
-													     			 var tot=parseFloat($("#itemQty"+franchise.frId+''+item.id).val());
-													     			
-													     			 total=total+tot;
-													     			 
-														     		
- 
-													     		 });
-													     		  document.getElementById('total'+key+''+item.id).value =total;
-													     	});	 */
-																		 
-																		
-																
-								        	 
+										var tr;
+										tr = document
+												.getElementById('table_grid').tHead.children[0];
+										tr.insertCell(0).outerHTML = "<th align='left'>Sr.No.</th>"
 
-								});
+										tr.insertCell(1).outerHTML = "<th style='width=170px'>ItemName</th>"
+										var i = 0;
+										var j = 0;
+										$
+												.each(
+														data.frList,
+														function(key, fr) {
+															i = key + 2;
+															tr.insertCell(i).outerHTML = "<th style='width=80px'>"
+																	+ fr.frName
+																	+ "</th>"
+														});//franchise for end    
+										/* 								         tr.insertCell(i+1).outerHTML = "<th style='font-weight:bold'>Total</th>"
+										 */
+
+										$
+												.each(
+														data.subCatList,
+														function(key, subCat) {
+															var tr = $('<tr></tr>');
+															tr
+																	.append($(
+																			'<td></td>')
+																			.html(
+																					" "));
+															tr
+																	.append($(
+																			'<td style="font-weight:bold"></td>')
+																			.html(
+																					subCat.subCatName));
+															for (var i = 0; i <= frListLength; i++) {
+																tr
+																		.append($(
+																				'<td></td>')
+																				.html(
+																						" "));
+															}
+
+															$(
+																	'#table_grid tbody')
+																	.append(tr);
+
+															var srNo = 0;
+															$
+																	.each(
+																			data.itemList,
+																			function(
+																					key,
+																					item) {
+																				if (item.itemGrp2 == subCat.subCatId) {
+																					srNo = srNo + 1;
+																					var tr = $('<tr></tr>');
+																					tr
+																							.append($(
+																									'<td></td>')
+																									.html(
+																											srNo));
+																					tr
+																							.append($(
+																									'<td></td>')
+																									.html(
+																											item.itemName));
+																					$
+																							.each(
+																									data.frList,
+																									function(
+																											key,
+																											franchise) {
+																										//alert(franchise.frId)
+																										var orderId = 'o';
+																										var orderQty = 0;
+																										var isBillGenerated = 0;
+																										$
+																												.each(
+																														data.dispatchReportList,
+																														function(
+																																key,
+																																report) {
+																															if (franchise.frId == report.frId
+																																	&& item.id == report.itemId) {
+																																orderId = report.orderId;
+																																orderQty = report.orderQty;
+																																isBillGenerated = report.isBillGenerated;
+																															}
+
+																														});
+																										if (isBillGenerated == 2) {
+																											tr
+																													.append($(
+																															'<td style="color:blue;"></td>')
+																															.html(
+																																	"Qty: "
+																																			+ orderQty
+																																			+ " <input type=number style='text-align:right; width:60px' min=0 class=form-control name=itemQty"+franchise.frId+""+item.id+""+orderId+" id=itemQty"+franchise.frId+""+item.id+""+orderId+" value=0 disabled/>"));
+																										} else {
+																											if (orderId == 'o') {
+																												tr
+																														.append($(
+																																'<td style="color:red;"></td>')
+																																.html(
+																																		"Qty: "
+																																				+ orderQty
+																																				+ " <input type=number style='text-align:right; width:60px' min=0 class=form-control name=itemQty"+franchise.frId+""+item.id+""+orderId+" id=itemQty"+franchise.frId+""+item.id+""+orderId+" value=0 disabled/>"));
+																											} else {
+																												tr
+																														.append($(
+																																'<td style="color:green;"></td>')
+																																.html(
+																																		"Qty: "
+																																				+ orderQty
+																																				+ " <input type=number style='text-align:right; width:60px' min=0 class=form-control name=itemQty"+franchise.frId+""+item.id+""+orderId+" id=itemQty"+franchise.frId+""+item.id+""+orderId+" value=0 />"));
+
+																											}
+																										}
+																									});
+																					/*  tr
+																						.append($(
+																								'<td></td>')
+																								.html("<input type=text style='text-align:right; width:60px' class=form-control name=total"+key+""+item.id+" id=total"+key+""+item.id+" value=0 disabled/>"));
+																					 */$(
+																							'#table_grid tbody')
+																							.append(
+																									tr);
+																				}//end if
+																			});//itemList for end
+														});//subCatList for end
+										//	var srNo = 0;
+										$
+												.each(
+														data.dispatchReportList,
+														function(key, report) {
+
+															document
+																	.getElementById('itemQty'
+																			+ report.frId
+																			+ ''
+																			+ report.itemId
+																			+ ''
+																			+ report.orderId).value = report.editQty;
+
+														});
+
+										/* $.each(data.itemList,
+													function(key,item) {
+												 var total=0;
+										 		 $.each(data.frList, function(key,franchise){  	
+										 			 var tot=parseFloat($("#itemQty"+franchise.frId+''+item.id).val());
+										 			
+										 			 total=total+tot;
+										 			 
+										     		
+										
+										 		 });
+										 		  document.getElementById('total'+key+''+item.id).value =total;
+										 	});	 */
+
+									});
 				}
 
 			}
 		</script>
 
-	
+
 		<script type="text/javascript">
 			function showChart() {
-
-			
-				
 
 				$("#PieChart_div").empty();
 				$("#chart_div").empty();
@@ -648,7 +680,7 @@ function routListByAbcType() {
 								function(data) {
 
 									$('#loader').hide();
-								
+
 									if (data == "") {
 										alert("No records found !!");
 
@@ -818,10 +850,10 @@ function routListByAbcType() {
 				var isValid = true;
 
 				if (selectedRoute == "0" || selectedRoute == null) {
-					
-						alert("Please Select Route");
-						isValid = false;
-					
+
+					alert("Please Select Route");
+					isValid = false;
+
 				} else if (selectCat == "" || selectCat == null) {
 
 					isValid = false;
@@ -881,22 +913,47 @@ function routListByAbcType() {
 
 			}
 		</script>
-	<script type="text/javascript">
+		<script type="text/javascript">
 			function genPdf() {
-				 
-				 var date = $("#billDate").val();
-				 var stationId = $("#stanId").val();
-				 var abcType = $("#abcType").val();
-				 var routId = $("#selectRoute").val();
-				 var menuIds = $("#menuId").val();
-				 
-				window.open('pdfForDisReport?url=pdf/getPDispatchReportNewPdf/'+date+'/'+stationId+'/'+abcType+'/'+routId+'/'+menuIds);
+
+				var date = $("#billDate").val();
+				var stationId = $("#stanId").val();
+				var abcType = $("#abcType").val();
+				var routId = $("#selectRoute").val();
+				var menuIds = $("#menuId").val();
+
+				window.open('pdfForDisReport?url=pdf/getPDispatchReportNewPdf/'
+						+ date + '/' + stationId + '/' + abcType + '/' + routId
+						+ '/' + menuIds);
 
 			}
-	</script>
+		</script>
 
 		<script type="text/javascript">
-		
+			function genPdfForDotMatrix() {
+
+				var date = $("#billDate").val();
+				var stationId = $("#stanId").val();
+				var abcType = $("#abcType").val();
+				var routId = $("#selectRoute").val();
+				var menuIds = $("#menuId").val();
+
+				window
+						.open('${pageContext.request.contextPath}/getPDispatchReportNewPdforDtMatrix/'
+								+ date
+								+ '/'
+								+ stationId
+								+ '/'
+								+ abcType
+								+ '/'
+								+ routId + '/' + menuIds);
+
+			}
+		</script>
+
+
+
+		<script type="text/javascript">
 			/* function genPdf() {
 				var billDate = $("#billDate").val();
 				var routeId = $("#selectRoute").val();
@@ -906,91 +963,94 @@ function routListByAbcType() {
 						+ billDate + '/'+routeId+'/'+selectedCat);
 
 			} */
-			function exportToExcel()
-			{
-				 
+			function exportToExcel() {
+
 				window.open("${pageContext.request.contextPath}/exportToExcel");
-						document.getElementById("expExcel").disabled=true;
+				document.getElementById("expExcel").disabled = true;
 			}
 			function genPdfBill() {
 				var billDate = $("#billDate").val();
 				var routeId = $("#selectRoute").val();
 				var selectedCat = $("#selectCat").val();
 				var frId = $("#fraId").val();
-				
-				window.open('pdfForDisReport?url=pdf/getDispatchPReportPdfForBill/'
-						+ billDate + '/'+routeId+'/'+selectedCat+'/'+frId);
+
+				window
+						.open('pdfForDisReport?url=pdf/getDispatchPReportPdfForBill/'
+								+ billDate
+								+ '/'
+								+ routeId
+								+ '/'
+								+ selectedCat
+								+ '/' + frId);
 
 			}
-			</script>	<script type="text/javascript">
-			function genDispatchPdf()
-			{
+		</script>
+		<script type="text/javascript">
+			function genDispatchPdf() {
 				var billDate = $("#billDate").val();
 				var routeId = $("#selectRoute").val();
 				var selectedCat = $("#selectCat").val();
 				var frId = $("#fraId").val();
-				
-				window.open('pdf/getDispatchPReportPdfForDispatch/'
-						+ billDate + '/'+routeId+'/'+selectedCat+'/'+frId);
 
-				
+				window.open('pdf/getDispatchPReportPdfForDispatch/' + billDate
+						+ '/' + routeId + '/' + selectedCat + '/' + frId);
+
 			}
-	
 		</script>
 		<!--basic scripts-->
 		<script
-		src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-	<script>
-		window.jQuery
-				|| document
-						.write('<script src="${pageContext.request.contextPath}/resources/assets/jquery/jquery-2.0.3.min.js"><\/script>')
-	</script>
-	<script
-		src="${pageContext.request.contextPath}/resources/assets/bootstrap/js/bootstrap.min.js"></script>
-	<script
-		src="${pageContext.request.contextPath}/resources/assets/jquery-slimscroll/jquery.slimscroll.min.js"></script>
-	<script
-		src="${pageContext.request.contextPath}/resources/assets/jquery-cookie/jquery.cookie.js"></script>
+			src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+		<script>
+			window.jQuery
+					|| document
+							.write('<script src="${pageContext.request.contextPath}/resources/assets/jquery/jquery-2.0.3.min.js"><\/script>')
+		</script>
+		<script
+			src="${pageContext.request.contextPath}/resources/assets/bootstrap/js/bootstrap.min.js"></script>
+		<script
+			src="${pageContext.request.contextPath}/resources/assets/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+		<script
+			src="${pageContext.request.contextPath}/resources/assets/jquery-cookie/jquery.cookie.js"></script>
 
-	<!--page specific plugin scripts-->
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/resources/assets/chosen-bootstrap/chosen.jquery.min.js"></script>
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/resources/assets/bootstrap-inputmask/bootstrap-inputmask.min.js"></script>
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/resources/assets/jquery-tags-input/jquery.tagsinput.min.js"></script>
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/resources/assets/jquery-pwstrength/jquery.pwstrength.min.js"></script>
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/resources/assets/bootstrap-fileupload/bootstrap-fileupload.min.js"></script>
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/resources/assets/bootstrap-duallistbox/duallistbox/bootstrap-duallistbox.js"></script>
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/resources/assets/dropzone/downloads/dropzone.min.js"></script>
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/resources/assets/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/resources/assets/clockface/js/clockface.js"></script>
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/resources/assets/bootstrap-colorpicker/js/bootstrap-colorpicker.js"></script>
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/resources/assets/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/resources/assets/bootstrap-daterangepicker/date.js"></script>
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/resources/assets/bootstrap-daterangepicker/daterangepicker.js"></script>
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/resources/assets/bootstrap-switch/static/js/bootstrap-switch.js"></script>
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/resources/assets/bootstrap-wysihtml5/wysihtml5-0.3.0.js"></script>
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/resources/assets/bootstrap-wysihtml5/bootstrap-wysihtml5.js"></script>
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/resources/assets/ckeditor/ckeditor.js"></script>
+		<!--page specific plugin scripts-->
+		<script type="text/javascript"
+			src="${pageContext.request.contextPath}/resources/assets/chosen-bootstrap/chosen.jquery.min.js"></script>
+		<script type="text/javascript"
+			src="${pageContext.request.contextPath}/resources/assets/bootstrap-inputmask/bootstrap-inputmask.min.js"></script>
+		<script type="text/javascript"
+			src="${pageContext.request.contextPath}/resources/assets/jquery-tags-input/jquery.tagsinput.min.js"></script>
+		<script type="text/javascript"
+			src="${pageContext.request.contextPath}/resources/assets/jquery-pwstrength/jquery.pwstrength.min.js"></script>
+		<script type="text/javascript"
+			src="${pageContext.request.contextPath}/resources/assets/bootstrap-fileupload/bootstrap-fileupload.min.js"></script>
+		<script type="text/javascript"
+			src="${pageContext.request.contextPath}/resources/assets/bootstrap-duallistbox/duallistbox/bootstrap-duallistbox.js"></script>
+		<script type="text/javascript"
+			src="${pageContext.request.contextPath}/resources/assets/dropzone/downloads/dropzone.min.js"></script>
+		<script type="text/javascript"
+			src="${pageContext.request.contextPath}/resources/assets/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
+		<script type="text/javascript"
+			src="${pageContext.request.contextPath}/resources/assets/clockface/js/clockface.js"></script>
+		<script type="text/javascript"
+			src="${pageContext.request.contextPath}/resources/assets/bootstrap-colorpicker/js/bootstrap-colorpicker.js"></script>
+		<script type="text/javascript"
+			src="${pageContext.request.contextPath}/resources/assets/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+		<script type="text/javascript"
+			src="${pageContext.request.contextPath}/resources/assets/bootstrap-daterangepicker/date.js"></script>
+		<script type="text/javascript"
+			src="${pageContext.request.contextPath}/resources/assets/bootstrap-daterangepicker/daterangepicker.js"></script>
+		<script type="text/javascript"
+			src="${pageContext.request.contextPath}/resources/assets/bootstrap-switch/static/js/bootstrap-switch.js"></script>
+		<script type="text/javascript"
+			src="${pageContext.request.contextPath}/resources/assets/bootstrap-wysihtml5/wysihtml5-0.3.0.js"></script>
+		<script type="text/javascript"
+			src="${pageContext.request.contextPath}/resources/assets/bootstrap-wysihtml5/bootstrap-wysihtml5.js"></script>
+		<script type="text/javascript"
+			src="${pageContext.request.contextPath}/resources/assets/ckeditor/ckeditor.js"></script>
 
-	<!--flaty scripts-->
-	<script src="${pageContext.request.contextPath}/resources/js/flaty.js"></script>
-	<script
-		src="${pageContext.request.contextPath}/resources/js/flaty-demo-codes.js"></script>
+		<!--flaty scripts-->
+		<script src="${pageContext.request.contextPath}/resources/js/flaty.js"></script>
+		<script
+			src="${pageContext.request.contextPath}/resources/js/flaty-demo-codes.js"></script>
 </body>
 </html>
