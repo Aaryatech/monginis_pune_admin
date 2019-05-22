@@ -116,6 +116,8 @@ public class ReportControllerV2 {
 			throws FileNotFoundException {
 
 		String frIdString = "";
+		String fromDate = "";
+		String toDate = "";
 
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 
@@ -124,8 +126,8 @@ public class ReportControllerV2 {
 		System.out.println("inside getSalesReport ajax call");
 
 		frIdString = request.getParameter("fr_id_list");
-		String fromDate = request.getParameter("fromDate");
-		String toDate = request.getParameter("toDate");
+		fromDate = request.getParameter("fromDate");
+		toDate = request.getParameter("toDate");
 		try {
 
 			frIdString = frIdString.substring(1, frIdString.length() - 1);
@@ -168,6 +170,14 @@ public class ReportControllerV2 {
 			rowData.add("In Lakh");
 			rowData.add("Return %");
 
+			float salesValue = 0;
+			float gvn = 0.0f;
+			float gvnNetValue = 0.0f;
+			float grn = 0.0f;
+			float grnNetValue = 0.0f;
+			float inLaskTotal = 0.0f;
+			float returnTotal = 0.0f;
+
 			expoExcel.setRowData(rowData);
 			exportToExcelList.add(expoExcel);
 			for (int i = 0; i < saleReportList.size(); i++) {
@@ -182,8 +192,8 @@ public class ReportControllerV2 {
 				float netVal2 = (netVal1) - (saleReportList.get(i).getGrnValue());
 				float inLac = (netVal2) / 100000;
 				float retPer = 0.0f;
-				if(saleReportList.get(i).getGrnValue()>0) {
-				retPer=((saleReportList.get(i).getGrnValue()) / (saleReportList.get(i).getSaleValue()/100));
+				if (saleReportList.get(i).getGrnValue() > 0) {
+					retPer = ((saleReportList.get(i).getGrnValue()) / (saleReportList.get(i).getSaleValue() / 100));
 				}
 				rowData.add("" + roundUp(netVal1));
 				rowData.add("" + roundUp(saleReportList.get(i).getGrnValue()));
@@ -191,14 +201,44 @@ public class ReportControllerV2 {
 				rowData.add("" + roundUp(inLac));
 				rowData.add("" + roundUp(retPer));
 
+				salesValue = salesValue + saleReportList.get(i).getSaleValue();
+				gvn = gvn + saleReportList.get(i).getGvnValue();
+				gvnNetValue = gvnNetValue + netVal1;
+				grn = grn + saleReportList.get(i).getGrnValue();
+				grnNetValue = grnNetValue + netVal2;
+				inLaskTotal = inLaskTotal + inLac;
+				returnTotal = returnTotal + retPer;
+
 				expoExcel.setRowData(rowData);
 				exportToExcelList.add(expoExcel);
 
 			}
 
+			expoExcel = new ExportToExcel();
+			rowData = new ArrayList<String>();
+
+			rowData.add("");
+			rowData.add("Total");
+			rowData.add("");
+
+			rowData.add("" + roundUp(salesValue));
+			rowData.add("" + roundUp(gvn));
+			rowData.add("" + roundUp(gvnNetValue));
+			rowData.add("" + roundUp(grn));
+			rowData.add("" + roundUp(grnNetValue));
+			rowData.add("" + roundUp(inLaskTotal));
+			rowData.add("" + roundUp(returnTotal));
+
+			expoExcel.setRowData(rowData);
+			exportToExcelList.add(expoExcel);
+
 			HttpSession session = request.getSession();
-			session.setAttribute("exportExcelList", exportToExcelList);
-			session.setAttribute("excelName", "Sales_Report" + fromDate + "-" + toDate);
+			session.setAttribute("exportExcelListNew", exportToExcelList);
+			session.setAttribute("excelNameNew", "SalesReport");
+			session.setAttribute("reportNameNew", "Sales Report By Franchise");
+			session.setAttribute("searchByNew", "From Date: " + fromDate + "  To Date: " + toDate + " ");
+			session.setAttribute("mergeUpto1", "$A$1:$L$1");
+			session.setAttribute("mergeUpto2", "$A$2:$L$2");
 
 		} catch (Exception e) {
 
@@ -241,7 +281,7 @@ public class ReportControllerV2 {
 			table.setHeaderRows(1);
 			System.out.println("Inside PDF Table try");
 			table.setWidthPercentage(100);
-			table.setWidths(new float[] { 0.7f,  3.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f });
+			table.setWidths(new float[] { 0.7f, 3.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f });
 			Font headFont = new Font(FontFamily.HELVETICA, 10, Font.NORMAL, BaseColor.BLACK);
 			Font headFont1 = new Font(FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.BLACK);
 			Font f = new Font(FontFamily.TIMES_ROMAN, 10.0f, Font.UNDERLINE, BaseColor.BLUE);
@@ -252,7 +292,6 @@ public class ReportControllerV2 {
 			hcell.setBackgroundColor(BaseColor.PINK);
 			table.addCell(hcell);
 
-			
 			hcell = new PdfPCell(new Phrase("Party Name", headFont1));
 			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
 			hcell.setBackgroundColor(BaseColor.PINK);
@@ -292,7 +331,13 @@ public class ReportControllerV2 {
 			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
 			hcell.setBackgroundColor(BaseColor.PINK);
 			table.addCell(hcell);
-			float totalSaleValue=0.0f;float totalGvnValue=0.0f;float totalNetVal1=0.0f;float totalGrnValue=0.0f;float totalNetVal2=0.0f;float totalInLac=0.0f;float totalRetPer=0.0f;
+			float totalSaleValue = 0.0f;
+			float totalGvnValue = 0.0f;
+			float totalNetVal1 = 0.0f;
+			float totalGrnValue = 0.0f;
+			float totalNetVal2 = 0.0f;
+			float totalInLac = 0.0f;
+			float totalRetPer = 0.0f;
 			int index = 0;
 			for (int j = 0; j < saleReportList.size(); j++) {
 
@@ -307,18 +352,18 @@ public class ReportControllerV2 {
 				float netVal1 = (saleReportList.get(j).getSaleValue()) - (saleReportList.get(j).getGvnValue());
 				float netVal2 = (netVal1) - (saleReportList.get(j).getGrnValue());
 				float inLac = (netVal2) / 100000;
-				float retPer =0.0f;
-				if(saleReportList.get(j).getGrnValue()>0) {
-					retPer=((saleReportList.get(j).getGrnValue()) / (saleReportList.get(j).getSaleValue()/100));
+				float retPer = 0.0f;
+				if (saleReportList.get(j).getGrnValue() > 0) {
+					retPer = ((saleReportList.get(j).getGrnValue()) / (saleReportList.get(j).getSaleValue() / 100));
 				}
 
-				totalSaleValue=totalSaleValue+saleReportList.get(j).getSaleValue();
-			  	totalGvnValue=totalGvnValue+saleReportList.get(j).getGvnValue();
-			  	totalNetVal1=totalNetVal1+netVal1;
-			  	totalGrnValue=totalGrnValue+saleReportList.get(j).getGrnValue();
-			  	totalNetVal2=totalNetVal2+netVal2;
-			  	totalInLac=totalInLac+inLac;
-			  	totalRetPer=totalRetPer+retPer;
+				totalSaleValue = totalSaleValue + saleReportList.get(j).getSaleValue();
+				totalGvnValue = totalGvnValue + saleReportList.get(j).getGvnValue();
+				totalNetVal1 = totalNetVal1 + netVal1;
+				totalGrnValue = totalGrnValue + saleReportList.get(j).getGrnValue();
+				totalNetVal2 = totalNetVal2 + netVal2;
+				totalInLac = totalInLac + inLac;
+				totalRetPer = totalRetPer + retPer;
 
 				cell = new PdfPCell(new Phrase(String.valueOf(saleReportList.get(j).getFrName()), headFont));
 				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -326,13 +371,13 @@ public class ReportControllerV2 {
 				cell.setPaddingRight(8);
 				table.addCell(cell);
 
-				cell = new PdfPCell(new Phrase(roundUp(saleReportList.get(j).getSaleValue())+"", headFont));
+				cell = new PdfPCell(new Phrase(roundUp(saleReportList.get(j).getSaleValue()) + "", headFont));
 				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 				cell.setPaddingRight(8);
 				table.addCell(cell);
 
-				cell = new PdfPCell(new Phrase(roundUp(saleReportList.get(j).getGvnValue())+"", headFont));
+				cell = new PdfPCell(new Phrase(roundUp(saleReportList.get(j).getGvnValue()) + "", headFont));
 				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 				cell.setPaddingRight(8);
@@ -343,7 +388,7 @@ public class ReportControllerV2 {
 				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 				cell.setPaddingRight(8);
 				table.addCell(cell);
- 
+
 				cell = new PdfPCell(new Phrase(String.valueOf(roundUp(saleReportList.get(j).getGrnValue())), headFont));
 				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
@@ -369,78 +414,77 @@ public class ReportControllerV2 {
 				table.addCell(cell);
 
 			}
-			
+
 			PdfPCell cell;
 
 			cell = new PdfPCell(new Phrase("Total", headFont1));
 			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
 			table.addCell(cell);
-			
 
 			cell = new PdfPCell(new Phrase("", headFont1));
 			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
 			table.addCell(cell);
-			
-			 double d = Double.parseDouble(""+totalSaleValue);
-			 String strTotalSaleValue = String.format("%f", d);
-			 
-			cell = new PdfPCell(new Phrase(""+strTotalSaleValue, headFont1));
+
+			double d = Double.parseDouble("" + totalSaleValue);
+			String strTotalSaleValue = String.format("%f", d);
+
+			cell = new PdfPCell(new Phrase("" + strTotalSaleValue, headFont1));
 			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 			cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 			table.addCell(cell);
-			
-			 double d1 = Double.parseDouble(""+totalGvnValue);
-			 String strTotalGvnValue= String.format("%f", d1);
-			 
-			cell = new PdfPCell(new Phrase(""+strTotalGvnValue, headFont1));
+
+			double d1 = Double.parseDouble("" + totalGvnValue);
+			String strTotalGvnValue = String.format("%f", d1);
+
+			cell = new PdfPCell(new Phrase("" + strTotalGvnValue, headFont1));
 			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 			cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 			table.addCell(cell);
-			
-			 double d2 = Double.parseDouble(""+totalNetVal1);
-			 String strTotalNetVal1= String.format("%f", d2);
-			 
-			cell = new PdfPCell(new Phrase(""+strTotalNetVal1, headFont1));
+
+			double d2 = Double.parseDouble("" + totalNetVal1);
+			String strTotalNetVal1 = String.format("%f", d2);
+
+			cell = new PdfPCell(new Phrase("" + strTotalNetVal1, headFont1));
 			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 			cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 			table.addCell(cell);
-			
-			double d3 = Double.parseDouble(""+totalGrnValue);
-			String strTotalGrnValue= String.format("%f", d3);
-			 
-			cell = new PdfPCell(new Phrase(""+strTotalGrnValue, headFont1));
+
+			double d3 = Double.parseDouble("" + totalGrnValue);
+			String strTotalGrnValue = String.format("%f", d3);
+
+			cell = new PdfPCell(new Phrase("" + strTotalGrnValue, headFont1));
 			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 			cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 			table.addCell(cell);
-			
-			double d4 = Double.parseDouble(""+totalNetVal2);
-			String strTotalNetVal2= String.format("%f", d4);
-			
-			cell = new PdfPCell(new Phrase(""+strTotalNetVal2, headFont1));
+
+			double d4 = Double.parseDouble("" + totalNetVal2);
+			String strTotalNetVal2 = String.format("%f", d4);
+
+			cell = new PdfPCell(new Phrase("" + strTotalNetVal2, headFont1));
 			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 			cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 			table.addCell(cell);
-			
-			double d5 = Double.parseDouble(""+totalInLac);
-			String strTotalInLac= String.format("%f", d5);
-			
-			cell = new PdfPCell(new Phrase(""+strTotalInLac, headFont1));
+
+			double d5 = Double.parseDouble("" + totalInLac);
+			String strTotalInLac = String.format("%f", d5);
+
+			cell = new PdfPCell(new Phrase("" + strTotalInLac, headFont1));
 			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 			cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 			table.addCell(cell);
-			
-			double d6 = Double.parseDouble(""+totalRetPer);
-			String strTotalRetPer= String.format("%f", d6);
-			
-			cell = new PdfPCell(new Phrase(""+strTotalRetPer, headFont1));
+
+			double d6 = Double.parseDouble("" + totalRetPer);
+			String strTotalRetPer = String.format("%f", d6);
+
+			cell = new PdfPCell(new Phrase("" + strTotalRetPer, headFont1));
 			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 			cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 			table.addCell(cell);
-		
+
 			document.open();
-		
+
 			Paragraph heading = new Paragraph("Sales Report");
 			heading.setAlignment(Element.ALIGN_CENTER);
 			document.add(heading);
@@ -459,7 +503,7 @@ public class ReportControllerV2 {
 				String mimeType = URLConnection.guessContentTypeFromName(file.getName());
 
 				if (mimeType == null) {
- 
+
 					mimeType = "application/pdf";
 
 				}
@@ -522,6 +566,7 @@ public class ReportControllerV2 {
 
 		return model;
 	}
+
 	List<GstRegisterItem> gstRegItemList = new ArrayList<>();
 	// getGstRegister Ajax
 
@@ -531,6 +576,9 @@ public class ReportControllerV2 {
 
 		String frIdString = "";
 
+		String fromDate = "";
+		String toDate = "";
+
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 
 		RestTemplate restTemplate = new RestTemplate();
@@ -538,8 +586,8 @@ public class ReportControllerV2 {
 		System.out.println("inside getSalesReport ajax call");
 
 		frIdString = request.getParameter("fr_id_list");
-		String fromDate = request.getParameter("fromDate");
-		String toDate = request.getParameter("toDate");
+		fromDate = request.getParameter("fromDate");
+		toDate = request.getParameter("toDate");
 		try {
 
 			frIdString = frIdString.substring(1, frIdString.length() - 1);
@@ -593,7 +641,7 @@ public class ReportControllerV2 {
 				}
 
 				if (flag == 0) {
-					
+
 					System.err.println("New hsn code item found ");
 
 					GstRegisterItem regItem = new GstRegisterItem();
@@ -614,7 +662,7 @@ public class ReportControllerV2 {
 					regItem.setTaxableAmt(gstRegSpList.get(j).getTaxableAmt());
 					regItem.setTaxPer(gstRegSpList.get(j).getTaxPer());
 					regItem.setTotalTax(gstRegSpList.get(j).getTotalTax());
-					
+
 					gstRegItemList.add(regItem);
 				}
 			}
@@ -640,19 +688,25 @@ public class ReportControllerV2 {
 			rowData.add("SGST Amt");
 			rowData.add("Total Amt");
 			rowData.add("Bill Amt");
-			
+
+			float billQty = 0.0f;
+			float taxableAmt = 0.0f;
+			float cgstSum = 0.0f;
+			float sgstSum = 0.0f;
+			float grandTotal = 0.0f;
+			float totalFinal = 0.0f;
+
 			expoExcel.setRowData(rowData);
 			exportToExcelList.add(expoExcel);
 			for (int i = 0; i < gstRegItemList.size(); i++) {
-				float totalAmt=0.0f;
-				for (int j = 0; j < gstRegItemList.size();j++) {
-					if(gstRegItemList.get(i).getBillNo()==gstRegItemList.get(j).getBillNo())
-					{
-						totalAmt=totalAmt+roundUp(gstRegItemList.get(j).getGrandTotal());
+				float totalAmt = 0.0f;
+				for (int j = 0; j < gstRegItemList.size(); j++) {
+					if (gstRegItemList.get(i).getBillNo() == gstRegItemList.get(j).getBillNo()) {
+						totalAmt = totalAmt + roundUp(gstRegItemList.get(j).getGrandTotal());
 					}
-					
+
 				}
-				
+
 				expoExcel = new ExportToExcel();
 				rowData = new ArrayList<String>();
 				rowData.add("" + (i + 1));
@@ -668,17 +722,47 @@ public class ReportControllerV2 {
 				rowData.add("" + roundUp(gstRegItemList.get(i).getCgstAmt()));
 				rowData.add("" + gstRegItemList.get(i).getSgstPer());
 				rowData.add("" + roundUp(gstRegItemList.get(i).getSgstAmt()));
-				
+
 				rowData.add("" + roundUp(gstRegItemList.get(i).getGrandTotal()));
-				rowData.add(""+roundUp(totalAmt));
+				rowData.add("" + roundUp(totalAmt));
 				expoExcel.setRowData(rowData);
 				exportToExcelList.add(expoExcel);
 
+				billQty = billQty + gstRegItemList.get(i).getBillQty();
+				taxableAmt = taxableAmt + gstRegItemList.get(i).getTaxableAmt();
+				cgstSum = cgstSum + gstRegItemList.get(i).getCgstAmt();
+				sgstSum = sgstSum + gstRegItemList.get(i).getSgstAmt();
+				grandTotal = grandTotal + gstRegItemList.get(i).getGrandTotal();
+				totalFinal = totalFinal + totalAmt;
+
 			}
 
+			expoExcel = new ExportToExcel();
+			rowData = new ArrayList<String>();
+
+			rowData.add("");
+			rowData.add("Total");
+			rowData.add("");
+			rowData.add("");
+			rowData.add("");
+			rowData.add("");
+			rowData.add("" + roundUp(billQty));
+			rowData.add("" + roundUp(taxableAmt));
+			rowData.add("" + roundUp(cgstSum));
+			rowData.add("" + roundUp(sgstSum));
+			rowData.add("" + roundUp(grandTotal));
+			rowData.add("" + roundUp(totalFinal));
+
+			expoExcel.setRowData(rowData);
+			exportToExcelList.add(expoExcel);
+
 			HttpSession session = request.getSession();
-			session.setAttribute("exportExcelList", exportToExcelList);
-			session.setAttribute("excelName", "Sales_Report" + fromDate + "-" + toDate);
+			session.setAttribute("exportExcelListNew", exportToExcelList);
+			session.setAttribute("excelNameNew", "Sales_Report");
+			session.setAttribute("reportNameNew", "GST Register Report By Franchise");
+			session.setAttribute("searchByNew", "From Date: " + fromDate + "  To Date: " + toDate + " ");
+			session.setAttribute("mergeUpto1", "$A$1:$L$1");
+			session.setAttribute("mergeUpto2", "$A$2:$L$2");
 
 		} catch (Exception e) {
 
@@ -687,794 +771,781 @@ public class ReportControllerV2 {
 		}
 		return gstRegItemList;
 	}
-	
-	
+
 	// getGSt Reg Pdf
-		@RequestMapping(value = "/getGstRegisterPdf/{fromdate}/{todate}", method = RequestMethod.GET)
-		public void getGstRegisterPdf(@PathVariable String fromdate, @PathVariable String todate,HttpServletRequest request, HttpServletResponse response)
-				throws FileNotFoundException {
+	@RequestMapping(value = "/getGstRegisterPdf/{fromdate}/{todate}", method = RequestMethod.GET)
+	public void getGstRegisterPdf(@PathVariable String fromdate, @PathVariable String todate,
+			HttpServletRequest request, HttpServletResponse response) throws FileNotFoundException {
 
-			Document document = new Document(PageSize.A4);
-			// ByteArrayOutputStream out = new ByteArrayOutputStream();
-			document.setPageSize(PageSize.A4.rotate());
-			DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-			Calendar cal = Calendar.getInstance();
+		Document document = new Document(PageSize.A4);
+		// ByteArrayOutputStream out = new ByteArrayOutputStream();
+		document.setPageSize(PageSize.A4.rotate());
+		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+		Calendar cal = Calendar.getInstance();
 
-			System.out.println("time in Gen Bill PDF ==" + dateFormat.format(cal.getTime()));
-			String timeStamp = dateFormat.format(cal.getTime());
-			String FILE_PATH = Constants.REPORT_SAVE;
-			File file = new File(FILE_PATH);
+		System.out.println("time in Gen Bill PDF ==" + dateFormat.format(cal.getTime()));
+		String timeStamp = dateFormat.format(cal.getTime());
+		String FILE_PATH = Constants.REPORT_SAVE;
+		File file = new File(FILE_PATH);
 
-			PdfWriter writer = null;
+		PdfWriter writer = null;
 
-			FileOutputStream out = new FileOutputStream(FILE_PATH);
+		FileOutputStream out = new FileOutputStream(FILE_PATH);
 
-			try {
-				writer = PdfWriter.getInstance(document, out);
-			} catch (DocumentException e) {
+		try {
+			writer = PdfWriter.getInstance(document, out);
+		} catch (DocumentException e) {
 
-				e.printStackTrace();
-			}
-
-			PdfPTable table = new PdfPTable(13);
-			table.setHeaderRows(1);
-			try {
-				System.out.println("Inside PDF Table try");
-				table.setWidthPercentage(100);
-				table.setWidths(new float[] { 0.7f, 1.9f, 1.9f, 3.0f, 2.0f, 1.9f, 1.2f, 1.9f, 1.2f, 1.2f,1.2f, 1.2f, 1.9f });
-				Font headFont = new Font(FontFamily.HELVETICA, 10, Font.NORMAL, BaseColor.BLACK);
-				Font headFont1 = new Font(FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.BLACK);
-				Font f = new Font(FontFamily.TIMES_ROMAN, 10.0f, Font.UNDERLINE, BaseColor.BLUE);
-
-				PdfPCell hcell;
-				hcell = new PdfPCell(new Phrase("Sr.", headFont1));
-				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-				hcell.setBackgroundColor(BaseColor.PINK);
-				table.addCell(hcell);
-
-				hcell = new PdfPCell(new Phrase("Invoice No", headFont1));
-				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-				hcell.setBackgroundColor(BaseColor.PINK);
-				table.addCell(hcell);
-
-				hcell = new PdfPCell(new Phrase("Invoice Date", headFont1));
-				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-				hcell.setBackgroundColor(BaseColor.PINK);
-				table.addCell(hcell);
-
-				hcell = new PdfPCell(new Phrase("Party Name", headFont1));
-				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-				hcell.setBackgroundColor(BaseColor.PINK);
-				table.addCell(hcell);
-
-				hcell = new PdfPCell(new Phrase("GST No", headFont1));
-				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-				hcell.setBackgroundColor(BaseColor.PINK);
-				table.addCell(hcell);
-
-				hcell = new PdfPCell(new Phrase("HSN Code", headFont1));
-				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-				hcell.setBackgroundColor(BaseColor.PINK);
-				table.addCell(hcell);
-
-				hcell = new PdfPCell(new Phrase("Bill Qty", headFont1)); // Varience title replaced with P2 Production
-				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-				hcell.setBackgroundColor(BaseColor.PINK);
-				table.addCell(hcell);
-
-				hcell = new PdfPCell(new Phrase("Taxable Amt", headFont1)); // Varience title replaced with P2 Production
-				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-				hcell.setBackgroundColor(BaseColor.PINK);
-				table.addCell(hcell);
-
-				hcell = new PdfPCell(new Phrase("CGST %", headFont1)); // Varience title replaced with P2 Production
-				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-				hcell.setBackgroundColor(BaseColor.PINK);
-				table.addCell(hcell);
-
-				hcell = new PdfPCell(new Phrase("CGST Amt", headFont1)); // Varience title replaced with P2 Production
-				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-				hcell.setBackgroundColor(BaseColor.PINK);
-				table.addCell(hcell);
-				
-				
-
-				hcell = new PdfPCell(new Phrase("SGST %", headFont1)); // Varience title replaced with P2 Production
-				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-				hcell.setBackgroundColor(BaseColor.PINK);
-				table.addCell(hcell);
-
-				hcell = new PdfPCell(new Phrase("SGST Amt", headFont1)); // Varience title replaced with P2 Production
-				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-				hcell.setBackgroundColor(BaseColor.PINK);
-				table.addCell(hcell);
-				
-				hcell = new PdfPCell(new Phrase("Bill Amt", headFont1)); // Varience title replaced with P2 Production
-				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-				hcell.setBackgroundColor(BaseColor.PINK);
-				table.addCell(hcell);
-
-				int index = 0;
-				for (int j = 0; j < gstRegItemList.size(); j++) {
-
-					index++;
-					PdfPCell cell;
-
-					cell = new PdfPCell(new Phrase(String.valueOf(index), headFont));
-					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-					cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-					table.addCell(cell);
-
-					cell = new PdfPCell(new Phrase(gstRegItemList.get(j).getInvoiceNo(), headFont));
-					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-					cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-					cell.setPaddingRight(8);
-					table.addCell(cell);
-
-					cell = new PdfPCell(new Phrase(String.valueOf(gstRegItemList.get(j).getBillDate()), headFont));
-					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-					cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-					cell.setPaddingRight(8);
-					table.addCell(cell);
-
-					cell = new PdfPCell(new Phrase(String.valueOf(gstRegItemList.get(j).getFrName()), headFont));
-					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-					cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-					cell.setPaddingRight(8);
-					table.addCell(cell);
-
-					cell = new PdfPCell(new Phrase(String.valueOf(gstRegItemList.get(j).getFrGstNo()), headFont));
-					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-					cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-					cell.setPaddingRight(8);
-					table.addCell(cell);
-					
-					cell = new PdfPCell(new Phrase(String.valueOf(gstRegItemList.get(j).getHsnCode()), headFont));
-					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-					cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-					cell.setPaddingRight(8);
-					table.addCell(cell);
-
-
-
-					cell = new PdfPCell(new Phrase(String.valueOf(roundUp(gstRegItemList.get(j).getBillQty())), headFont));
-					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-					cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-					cell.setPaddingRight(8);
-					table.addCell(cell);
-
-					cell = new PdfPCell(new Phrase(String.valueOf(gstRegItemList.get(j).getTaxableAmt()), headFont));
-					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-					cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-					cell.setPaddingRight(8);
-					table.addCell(cell);
-					
-
-					cell = new PdfPCell(new Phrase(String.valueOf(gstRegItemList.get(j).getCgstPer()), headFont));
-					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-					cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-					cell.setPaddingRight(8);
-					table.addCell(cell);
-					
-
-					cell = new PdfPCell(new Phrase(String.valueOf(gstRegItemList.get(j).getCgstAmt()), headFont));
-					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-					cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-					cell.setPaddingRight(8);
-					table.addCell(cell);
-					
-
-					cell = new PdfPCell(new Phrase(String.valueOf(gstRegItemList.get(j).getSgstPer()), headFont));
-					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-					cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-					cell.setPaddingRight(8);
-					table.addCell(cell);
-					
-
-					cell = new PdfPCell(new Phrase(String.valueOf(gstRegItemList.get(j).getSgstAmt()), headFont));
-					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-					cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-					cell.setPaddingRight(8);
-					table.addCell(cell);
-
-
-					cell = new PdfPCell(new Phrase(String.valueOf(roundUp(gstRegItemList.get(j).getGrandTotal())), headFont));
-					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-					cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-					cell.setPaddingRight(8);
-					table.addCell(cell);
-
-				}
-				document.open();
-			
-				Paragraph heading = new Paragraph("GST Register Report  \n From Date:"+ fromdate+"   To Date:"+ todate);
-				heading.setAlignment(Element.ALIGN_CENTER);
-				document.add(heading);
-
-				DateFormat DF = new SimpleDateFormat("dd-MM-yyyy");
-				String reportDate = DF.format(new Date());
-
-				document.add(new Paragraph("\n"));
-
-				document.add(table);
-
-				document.close();
-
-				if (file != null) {
-
-					String mimeType = URLConnection.guessContentTypeFromName(file.getName());
-
-					if (mimeType == null) {
-
-						mimeType = "application/pdf";
-
-					}
-
-					response.setContentType(mimeType);
-
-					response.addHeader("content-disposition", String.format("inline; filename=\"%s\"", file.getName()));
-
-					// response.setHeader("Content-Disposition", String.format("attachment;
-					// filename=\"%s\"", file.getName()));
-
-					response.setContentLength((int) file.length());
-
-					InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
-
-					try {
-						FileCopyUtils.copy(inputStream, response.getOutputStream());
-					} catch (IOException e) {
-						System.out.println("Excep in Opening a Pdf File");
-						e.printStackTrace();
-					}
-
-				}
-
-			} catch (DocumentException ex) {
-
-				System.out.println("Pdf Generation Error: Prod From Orders" + ex.getMessage());
-
-				ex.printStackTrace();
-
-			}
+			e.printStackTrace();
 		}
-		
-		
-		// showCRNoteRegister
 
-		@RequestMapping(value = "/showCRNoteRegister", method = RequestMethod.GET)
-		public ModelAndView showCRNoteRegister(HttpServletRequest request, HttpServletResponse response) {
+		PdfPTable table = new PdfPTable(13);
+		table.setHeaderRows(1);
+		try {
+			System.out.println("Inside PDF Table try");
+			table.setWidthPercentage(100);
+			table.setWidths(
+					new float[] { 0.7f, 1.9f, 1.9f, 3.0f, 2.0f, 1.9f, 1.2f, 1.9f, 1.2f, 1.2f, 1.2f, 1.2f, 1.9f });
+			Font headFont = new Font(FontFamily.HELVETICA, 10, Font.NORMAL, BaseColor.BLACK);
+			Font headFont1 = new Font(FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.BLACK);
+			Font f = new Font(FontFamily.TIMES_ROMAN, 10.0f, Font.UNDERLINE, BaseColor.BLUE);
 
-			ModelAndView model = new ModelAndView("reports/v2/crNote_register");
+			PdfPCell hcell;
+			hcell = new PdfPCell(new Phrase("Sr.", headFont1));
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			table.addCell(hcell);
 
-			try {
+			hcell = new PdfPCell(new Phrase("Invoice No", headFont1));
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			table.addCell(hcell);
 
-				RestTemplate restTemplate = new RestTemplate();
+			hcell = new PdfPCell(new Phrase("Invoice Date", headFont1));
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			table.addCell(hcell);
 
-				ZoneId z = ZoneId.of("Asia/Calcutta");
+			hcell = new PdfPCell(new Phrase("Party Name", headFont1));
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			table.addCell(hcell);
 
-				LocalDate date = LocalDate.now(z);
-				DateTimeFormatter formatters = DateTimeFormatter.ofPattern("d-MM-uuuu");
-				String todaysDate = date.format(formatters);
+			hcell = new PdfPCell(new Phrase("GST No", headFont1));
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			table.addCell(hcell);
 
-				allFrIdNameList = restTemplate.getForObject(Constants.url + "getAllFrIdName", AllFrIdNameList.class);
+			hcell = new PdfPCell(new Phrase("HSN Code", headFont1));
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			table.addCell(hcell);
 
-				model.addObject("todaysDate", todaysDate);
-				model.addObject("allFrIdNameList", allFrIdNameList.getFrIdNamesList());
+			hcell = new PdfPCell(new Phrase("Bill Qty", headFont1)); // Varience title replaced with P2 Production
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			table.addCell(hcell);
 
-			} catch (Exception e) {
-				System.out.println("Exce in showRegCakeSpOrderReport " + e.getMessage());
-				e.printStackTrace();
-			}
+			hcell = new PdfPCell(new Phrase("Taxable Amt", headFont1)); // Varience title replaced with P2 Production
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			table.addCell(hcell);
 
-			return model;
-		}
-		
-		
-		
-		List<CrNoteRegItem> crNoteRegItemList = new ArrayList<>();
-		// getCRNoteRegister Ajax
+			hcell = new PdfPCell(new Phrase("CGST %", headFont1)); // Varience title replaced with P2 Production
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			table.addCell(hcell);
 
-		@RequestMapping(value = "/getCRNoteRegister", method = RequestMethod.GET)
-		public @ResponseBody List<CrNoteRegItem> getCRNoteRegister(HttpServletRequest request, HttpServletResponse response)
-				throws FileNotFoundException {
+			hcell = new PdfPCell(new Phrase("CGST Amt", headFont1)); // Varience title replaced with P2 Production
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			table.addCell(hcell);
 
-			String frIdString = "";
+			hcell = new PdfPCell(new Phrase("SGST %", headFont1)); // Varience title replaced with P2 Production
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			table.addCell(hcell);
 
-			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			hcell = new PdfPCell(new Phrase("SGST Amt", headFont1)); // Varience title replaced with P2 Production
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			table.addCell(hcell);
 
-			RestTemplate restTemplate = new RestTemplate();
+			hcell = new PdfPCell(new Phrase("Bill Amt", headFont1)); // Varience title replaced with P2 Production
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			table.addCell(hcell);
 
-			System.out.println("inside getCRNoteRegister ajax call");
+			int index = 0;
+			for (int j = 0; j < gstRegItemList.size(); j++) {
 
-			String fromDate = request.getParameter("fromDate");
-			String toDate = request.getParameter("toDate");
-			try {
+				index++;
+				PdfPCell cell;
 
-				/*frIdString = frIdString.substring(1, frIdString.length() - 1);
-				frIdString = frIdString.replaceAll("\"", "");
+				cell = new PdfPCell(new Phrase(String.valueOf(index), headFont));
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(cell);
 
-				List<String> franchIds = new ArrayList();
+				cell = new PdfPCell(new Phrase(gstRegItemList.get(j).getInvoiceNo(), headFont));
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+				cell.setPaddingRight(8);
+				table.addCell(cell);
 
-				franchIds = Arrays.asList(frIdString);
-				if (franchIds.contains("-1")) {
-					map.add("frIdList", -1);
+				cell = new PdfPCell(new Phrase(String.valueOf(gstRegItemList.get(j).getBillDate()), headFont));
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+				cell.setPaddingRight(8);
+				table.addCell(cell);
 
-				} else {
+				cell = new PdfPCell(new Phrase(String.valueOf(gstRegItemList.get(j).getFrName()), headFont));
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+				cell.setPaddingRight(8);
+				table.addCell(cell);
 
-					map.add("frIdList", frIdString);
-				}
-				System.err.println("frId string " + frIdString);*/
-				map.add("fromDate", DateConvertor.convertToYMD(fromDate));
+				cell = new PdfPCell(new Phrase(String.valueOf(gstRegItemList.get(j).getFrGstNo()), headFont));
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+				cell.setPaddingRight(8);
+				table.addCell(cell);
 
-				map.add("toDate", DateConvertor.convertToYMD(toDate));
+				cell = new PdfPCell(new Phrase(String.valueOf(gstRegItemList.get(j).getHsnCode()), headFont));
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+				cell.setPaddingRight(8);
+				table.addCell(cell);
 
-				CrNoteRegisterList crnArray = restTemplate.postForObject(Constants.url + "getCrNoteRegister", map,
-						CrNoteRegisterList.class);
+				cell = new PdfPCell(new Phrase(String.valueOf(roundUp(gstRegItemList.get(j).getBillQty())), headFont));
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+				cell.setPaddingRight(8);
+				table.addCell(cell);
 
-				List<CrNoteRegSp> crnRegSpList = new ArrayList<>();
+				cell = new PdfPCell(new Phrase(String.valueOf(gstRegItemList.get(j).getTaxableAmt()), headFont));
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+				cell.setPaddingRight(8);
+				table.addCell(cell);
 
-				crNoteRegItemList = crnArray.getCrNoteRegItemList();
-				crnRegSpList = crnArray.getCrNoteRegSpList();
-				
-				for (int j = 0; j < crnRegSpList.size(); j++) {
-					int flag = 0;
+				cell = new PdfPCell(new Phrase(String.valueOf(gstRegItemList.get(j).getCgstPer()), headFont));
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+				cell.setPaddingRight(8);
+				table.addCell(cell);
 
-					for (int i = 0; i < crNoteRegItemList.size(); i++) {
+				cell = new PdfPCell(new Phrase(String.valueOf(gstRegItemList.get(j).getCgstAmt()), headFont));
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+				cell.setPaddingRight(8);
+				table.addCell(cell);
 
-						if (crNoteRegItemList.get(i).getCrnId() == crnRegSpList.get(j).getCrnId()
-								&& crNoteRegItemList.get(i).getHsnCode().equals(crnRegSpList.get(j).getHsnCode())) {
-							flag = 1;
-							crNoteRegItemList.get(i)
-									.setCrnQty(crNoteRegItemList.get(i).getCrnQty() + crnRegSpList.get(j).getCrnQty());
+				cell = new PdfPCell(new Phrase(String.valueOf(gstRegItemList.get(j).getSgstPer()), headFont));
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+				cell.setPaddingRight(8);
+				table.addCell(cell);
 
-							crNoteRegItemList.get(i).setCrnTaxable(
-									(crNoteRegItemList.get(i).getCrnTaxable() + crnRegSpList.get(j).getCrnTaxable()));
+				cell = new PdfPCell(new Phrase(String.valueOf(gstRegItemList.get(j).getSgstAmt()), headFont));
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+				cell.setPaddingRight(8);
+				table.addCell(cell);
 
-							crNoteRegItemList.get(i)
-									.setCgstAmt((crNoteRegItemList.get(i).getCgstAmt() + crnRegSpList.get(j).getCgstAmt()));
-							crNoteRegItemList.get(i)
-									.setSgstAmt((crNoteRegItemList.get(i).getSgstAmt() + crnRegSpList.get(j).getSgstAmt()));
-							crNoteRegItemList.get(i).setCrnAmt(
-									(crNoteRegItemList.get(i).getCrnAmt() + crnRegSpList.get(j).getCrnAmt()));
-
-						}
-
-					}
-
-					if (flag == 0) {
-						
-						System.err.println("New hsn code item found ");
-
-						CrNoteRegItem regItem = new CrNoteRegItem();
-						
-						regItem.setCrnDate(crnRegSpList.get(j).getCrnDate());
-
-						regItem.setBillDate(crnRegSpList.get(j).getBillDate());
-						regItem.setCrndId(crnRegSpList.get(j).getCrndId());
-						regItem.setCrnId(crnRegSpList.get(j).getCrnId());
-						regItem.setCrnQty(crnRegSpList.get(j).getCrnQty());
-						regItem.setCgstAmt(crnRegSpList.get(j).getCgstAmt());
-						regItem.setCgstPer(crnRegSpList.get(j).getCgstPer());
-						regItem.setFrGstNo(crnRegSpList.get(j).getFrGstNo());
-						regItem.setFrName(crnRegSpList.get(j).getFrName());
-						regItem.setCrnAmt(crnRegSpList.get(j).getCrnAmt());
-						regItem.setHsnCode(crnRegSpList.get(j).getHsnCode());
-						regItem.setInvoiceNo(crnRegSpList.get(j).getInvoiceNo());
-						regItem.setSgstAmt(crnRegSpList.get(j).getSgstAmt());
-						regItem.setSgstPer(crnRegSpList.get(j).getSgstPer());
-						regItem.setCrnTaxable(crnRegSpList.get(j).getCrnTaxable());
-						
-						regItem.setFrCode(crnRegSpList.get(j).getFrCode());
-						
-						crNoteRegItemList.add(regItem);
-					}
-				}
-
-				System.err.println("crNoteRegItemList combined  " + crNoteRegItemList.toString());
-
-				List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
-
-				ExportToExcel expoExcel = new ExportToExcel();
-				List<String> rowData = new ArrayList<String>();
-
-				rowData.add("Sr. No.");
-				rowData.add("CRN No");
-				rowData.add("CRN Date");
-				rowData.add("Invoice No");
-				rowData.add("Invoice Date");
-				rowData.add("Party Name");
-				rowData.add("GST No");
-				rowData.add("HSN Code");
-				rowData.add("CRN Qty");
-				rowData.add("Taxable Amt");
-				rowData.add("CGST %");
-				rowData.add("CGST Amt");
-				rowData.add("SGST %");
-				rowData.add("SGST Amt");
-				rowData.add("Total Amt");
-				rowData.add("CRN Amt");
-
-				expoExcel.setRowData(rowData);
-				exportToExcelList.add(expoExcel);
-				float crnQty=0.0f;float crnTaxable=0.0f;float cgstAmt=0.0f;float sgstAmt=0.0f;float crnAmt=0.0f;
-				
-				for (int i = 0; i < crNoteRegItemList.size(); i++) {
-					
-					
-					float crnTotalAmt=0;
-					for (int k = 0; k < crNoteRegItemList.size(); k++) {
-						
-						if(crNoteRegItemList.get(i).getCrnId()==crNoteRegItemList.get(k).getCrnId())
-						{
-							crnTotalAmt=crnTotalAmt+roundUp(crNoteRegItemList.get(k).getCrnAmt());
-						}
-					}
-					
-					expoExcel = new ExportToExcel();
-					rowData = new ArrayList<String>();
-					rowData.add("" + (i + 1));
-					rowData.add("" + crNoteRegItemList.get(i).getFrCode());
-					rowData.add("" + crNoteRegItemList.get(i).getCrnDate());
-					rowData.add("" + crNoteRegItemList.get(i).getInvoiceNo());
-					rowData.add("" + crNoteRegItemList.get(i).getBillDate());
-					rowData.add("" + crNoteRegItemList.get(i).getFrName());
-					rowData.add("" + crNoteRegItemList.get(i).getFrGstNo());
-
-					rowData.add("" + crNoteRegItemList.get(i).getHsnCode());
-					rowData.add("" + roundUp(crNoteRegItemList.get(i).getCrnQty()));
-					
-					crnQty=crnQty+crNoteRegItemList.get(i).getCrnQty();
-					crnTaxable=crnTaxable+crNoteRegItemList.get(i).getCrnTaxable();
-					cgstAmt=cgstAmt+crNoteRegItemList.get(i).getCgstAmt();
-					sgstAmt=sgstAmt+crNoteRegItemList.get(i).getSgstAmt();
-					crnAmt=crnAmt+crNoteRegItemList.get(i).getCrnAmt();
-					
-					rowData.add("" + roundUp(crNoteRegItemList.get(i).getCrnTaxable()));
-					rowData.add("" + crNoteRegItemList.get(i).getCgstPer());
-					rowData.add("" + roundUp(crNoteRegItemList.get(i).getCgstAmt()));
-					rowData.add("" + crNoteRegItemList.get(i).getSgstPer());
-					rowData.add("" + roundUp(crNoteRegItemList.get(i).getSgstAmt()));
-					
-					rowData.add("" + roundUp(crNoteRegItemList.get(i).getCrnAmt()));
-					rowData.add("" + roundUp(crnTotalAmt));
-					
-					expoExcel.setRowData(rowData);
-					exportToExcelList.add(expoExcel);
-
-				}
-				/*expoExcel = new ExportToExcel();
-				rowData = new ArrayList<String>();
-				rowData.add("");
-				rowData.add("");
-				rowData.add("");
-				rowData.add("");
-				rowData.add("");
-				rowData.add("");
-				rowData.add("");
-				rowData.add("Total");
-				rowData.add(""+roundUp(crnQty));
-				rowData.add(""+roundUp(crnTaxable));
-				rowData.add("");
-				rowData.add(""+roundUp(cgstAmt));
-				rowData.add("");
-				rowData.add(""+roundUp(sgstAmt));
-				rowData.add(""+Math.round(crnAmt));
-				rowData.add("");*/
-				
-				expoExcel.setRowData(rowData);
-				exportToExcelList.add(expoExcel);
-				HttpSession session = request.getSession();
-				session.setAttribute("exportExcelList", exportToExcelList);
-				session.setAttribute("excelName", "CR Note Register" + fromDate + "-" + toDate);
-
-			} catch (Exception e) {
-
-				e.printStackTrace();
+				cell = new PdfPCell(
+						new Phrase(String.valueOf(roundUp(gstRegItemList.get(j).getGrandTotal())), headFont));
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+				cell.setPaddingRight(8);
+				table.addCell(cell);
 
 			}
-			return crNoteRegItemList;
-		}
-		
-		
-		// getCRN Reg Pdf
-			@RequestMapping(value = "/getCRNoteRegisterPdf/{fromdate}/{todate}", method = RequestMethod.GET)
-			public void getCRNoteRegisterPdf(@PathVariable String fromdate, @PathVariable String todate,HttpServletRequest request, HttpServletResponse response)
-					throws FileNotFoundException {
+			document.open();
 
-				Document document = new Document(PageSize.A4);
-				document.setPageSize(PageSize.A4.rotate());
-				// ByteArrayOutputStream out = new ByteArrayOutputStream();
+			Paragraph heading = new Paragraph("GST Register Report  \n From Date:" + fromdate + "   To Date:" + todate);
+			heading.setAlignment(Element.ALIGN_CENTER);
+			document.add(heading);
 
-				DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-				Calendar cal = Calendar.getInstance();
+			DateFormat DF = new SimpleDateFormat("dd-MM-yyyy");
+			String reportDate = DF.format(new Date());
 
-				System.out.println("timegetCRNoteRegisterPdf PDF ==" + dateFormat.format(cal.getTime()));
-				String timeStamp = dateFormat.format(cal.getTime());
-				String FILE_PATH = Constants.REPORT_SAVE;
-				File file = new File(FILE_PATH);
+			document.add(new Paragraph("\n"));
 
-				PdfWriter writer = null;
+			document.add(table);
 
-				FileOutputStream out = new FileOutputStream(FILE_PATH);
+			document.close();
+
+			if (file != null) {
+
+				String mimeType = URLConnection.guessContentTypeFromName(file.getName());
+
+				if (mimeType == null) {
+
+					mimeType = "application/pdf";
+
+				}
+
+				response.setContentType(mimeType);
+
+				response.addHeader("content-disposition", String.format("inline; filename=\"%s\"", file.getName()));
+
+				// response.setHeader("Content-Disposition", String.format("attachment;
+				// filename=\"%s\"", file.getName()));
+
+				response.setContentLength((int) file.length());
+
+				InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
 
 				try {
-					writer = PdfWriter.getInstance(document, out);
-				} catch (DocumentException e) {
-
+					FileCopyUtils.copy(inputStream, response.getOutputStream());
+				} catch (IOException e) {
+					System.out.println("Excep in Opening a Pdf File");
 					e.printStackTrace();
 				}
 
-				PdfPTable table = new PdfPTable(16);
-				table.setHeaderRows(1);
-				try {
-					System.out.println("Inside PDF Table try");
-					table.setWidthPercentage(100);
-					table.setWidths(new float[] { 0.7f, 1.1f, 2.0f,2.1f, 2.3f, 2.0f, 2.2f, 1.2f, 1.2f, 1.2f, 0.9f, 1.2f,1.2f, 0.9f, 1.2f,1.2f });
-					Font headFont = new Font(FontFamily.HELVETICA, 8, Font.NORMAL, BaseColor.BLACK);
-					Font headFont1 = new Font(FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.BLACK);
-					Font f = new Font(FontFamily.TIMES_ROMAN, 10.0f, Font.UNDERLINE, BaseColor.BLUE);
+			}
 
-					PdfPCell hcell;
-					hcell = new PdfPCell(new Phrase("Sr.", headFont1));
-					hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-					hcell.setBackgroundColor(BaseColor.PINK);
-					table.addCell(hcell);
+		} catch (DocumentException ex) {
 
-					
-					hcell = new PdfPCell(new Phrase("CRN No", headFont1));
-					hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-					hcell.setBackgroundColor(BaseColor.PINK);
-					table.addCell(hcell);
+			System.out.println("Pdf Generation Error: Prod From Orders" + ex.getMessage());
 
-					hcell = new PdfPCell(new Phrase("CRN Date", headFont1));
-					hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-					hcell.setBackgroundColor(BaseColor.PINK);
-					table.addCell(hcell);
-					
-					
-					hcell = new PdfPCell(new Phrase("Invoice No", headFont1));
-					hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-					hcell.setBackgroundColor(BaseColor.PINK);
-					table.addCell(hcell);
+			ex.printStackTrace();
 
-					hcell = new PdfPCell(new Phrase("Invoice Date", headFont1));
-					hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-					hcell.setBackgroundColor(BaseColor.PINK);
-					table.addCell(hcell);
+		}
+	}
 
-					hcell = new PdfPCell(new Phrase("Party Name", headFont1));
-					hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-					hcell.setBackgroundColor(BaseColor.PINK);
-					table.addCell(hcell);
+	// showCRNoteRegister
 
-					hcell = new PdfPCell(new Phrase("GST No", headFont1));
-					hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-					hcell.setBackgroundColor(BaseColor.PINK);
-					table.addCell(hcell);
+	@RequestMapping(value = "/showCRNoteRegister", method = RequestMethod.GET)
+	public ModelAndView showCRNoteRegister(HttpServletRequest request, HttpServletResponse response) {
 
-					hcell = new PdfPCell(new Phrase("HSN Code", headFont1));
-					hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-					hcell.setBackgroundColor(BaseColor.PINK);
-					table.addCell(hcell);
+		ModelAndView model = new ModelAndView("reports/v2/crNote_register");
 
-					hcell = new PdfPCell(new Phrase("Bill Qty", headFont1)); // Varience title replaced with P2 Production
-					hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-					hcell.setBackgroundColor(BaseColor.PINK);
-					table.addCell(hcell);
+		try {
 
-					hcell = new PdfPCell(new Phrase("Taxable Amt", headFont1)); // Varience title replaced with P2 Production
-					hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-					hcell.setBackgroundColor(BaseColor.PINK);
-					table.addCell(hcell);
+			RestTemplate restTemplate = new RestTemplate();
 
-					hcell = new PdfPCell(new Phrase("CGST %", headFont1)); // Varience title replaced with P2 Production
-					hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-					hcell.setBackgroundColor(BaseColor.PINK);
-					table.addCell(hcell);
+			ZoneId z = ZoneId.of("Asia/Calcutta");
 
-					hcell = new PdfPCell(new Phrase("CGST Amt", headFont1)); // Varience title replaced with P2 Production
-					hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-					hcell.setBackgroundColor(BaseColor.PINK);
-					table.addCell(hcell);
-					
-					
+			LocalDate date = LocalDate.now(z);
+			DateTimeFormatter formatters = DateTimeFormatter.ofPattern("d-MM-uuuu");
+			String todaysDate = date.format(formatters);
 
-					hcell = new PdfPCell(new Phrase("SGST %", headFont1)); // Varience title replaced with P2 Production
-					hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-					hcell.setBackgroundColor(BaseColor.PINK);
-					table.addCell(hcell);
+			allFrIdNameList = restTemplate.getForObject(Constants.url + "getAllFrIdName", AllFrIdNameList.class);
 
-					hcell = new PdfPCell(new Phrase("SGST Amt", headFont1)); // Varience title replaced with P2 Production
-					hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-					hcell.setBackgroundColor(BaseColor.PINK);
-					table.addCell(hcell);
-					
-					hcell = new PdfPCell(new Phrase("Total Amt", headFont1)); // Varience title replaced with P2 Production
-					hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-					hcell.setBackgroundColor(BaseColor.PINK);
-					table.addCell(hcell);
-					
-					hcell = new PdfPCell(new Phrase("Crn Amt", headFont1)); // Varience title replaced with P2 Production
-					hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-					hcell.setBackgroundColor(BaseColor.PINK);
-					table.addCell(hcell);
+			model.addObject("todaysDate", todaysDate);
+			model.addObject("allFrIdNameList", allFrIdNameList.getFrIdNamesList());
 
-					int index = 0;
-					for (int j = 0; j < crNoteRegItemList.size(); j++) {
+		} catch (Exception e) {
+			System.out.println("Exce in showRegCakeSpOrderReport " + e.getMessage());
+			e.printStackTrace();
+		}
 
-						float crnTotalAmt=0;
-						for (int k = 0; k < crNoteRegItemList.size(); k++) {
-							
-							if(crNoteRegItemList.get(j).getCrnId()==crNoteRegItemList.get(k).getCrnId())
-							{
-								System.err.println("crNoteRegItemList.get(j).getCrnId()"+crNoteRegItemList.get(j).getCrnId()+"crnAmt:"+crNoteRegItemList.get(j).getCrnAmt());
-								crnTotalAmt=crnTotalAmt+roundUp(crNoteRegItemList.get(k).getCrnAmt());
-							}
-						}
-						index++;
-						PdfPCell cell;
+		return model;
+	}
 
-						cell = new PdfPCell(new Phrase(String.valueOf(index), headFont));
-						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-						cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-						table.addCell(cell);
-						
-						
-						cell = new PdfPCell(new Phrase(""+crNoteRegItemList.get(j).getFrCode(), headFont));
-						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-						cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-						cell.setPaddingRight(1);
-						table.addCell(cell);
+	List<CrNoteRegItem> crNoteRegItemList = new ArrayList<>();
+	// getCRNoteRegister Ajax
 
-						cell = new PdfPCell(new Phrase(String.valueOf(crNoteRegItemList.get(j).getCrnDate()), headFont));
-						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-						cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-						cell.setPaddingRight(1);
-						table.addCell(cell);
+	@RequestMapping(value = "/getCRNoteRegister", method = RequestMethod.GET)
+	public @ResponseBody List<CrNoteRegItem> getCRNoteRegister(HttpServletRequest request, HttpServletResponse response)
+			throws FileNotFoundException {
 
+		String frIdString = "";
 
-						cell = new PdfPCell(new Phrase(crNoteRegItemList.get(j).getInvoiceNo(), headFont));
-						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-						cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-						cell.setPaddingRight(1);
-						table.addCell(cell);
+		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 
-						cell = new PdfPCell(new Phrase(String.valueOf(crNoteRegItemList.get(j).getBillDate()), headFont));
-						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-						cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-						cell.setPaddingRight(1);
-						table.addCell(cell);
+		RestTemplate restTemplate = new RestTemplate();
 
-						cell = new PdfPCell(new Phrase(String.valueOf(crNoteRegItemList.get(j).getFrName()), headFont));
-						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-						cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-						cell.setPaddingRight(1);
-						table.addCell(cell);
+		System.out.println("inside getCRNoteRegister ajax call");
 
-						cell = new PdfPCell(new Phrase(String.valueOf(crNoteRegItemList.get(j).getFrGstNo()), headFont));
-						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-						cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-						cell.setPaddingRight(1);
-						table.addCell(cell);
-						
-						cell = new PdfPCell(new Phrase(String.valueOf(crNoteRegItemList.get(j).getHsnCode()), headFont));
-						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-						cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-						cell.setPaddingRight(1);
-						table.addCell(cell);
+		String fromDate = request.getParameter("fromDate");
+		String toDate = request.getParameter("toDate");
+		try {
 
+			/*
+			 * frIdString = frIdString.substring(1, frIdString.length() - 1); frIdString =
+			 * frIdString.replaceAll("\"", "");
+			 * 
+			 * List<String> franchIds = new ArrayList();
+			 * 
+			 * franchIds = Arrays.asList(frIdString); if (franchIds.contains("-1")) {
+			 * map.add("frIdList", -1);
+			 * 
+			 * } else {
+			 * 
+			 * map.add("frIdList", frIdString); } System.err.println("frId string " +
+			 * frIdString);
+			 */
+			map.add("fromDate", DateConvertor.convertToYMD(fromDate));
 
+			map.add("toDate", DateConvertor.convertToYMD(toDate));
 
-						cell = new PdfPCell(new Phrase(String.valueOf(roundUp(crNoteRegItemList.get(j).getCrnQty())), headFont));
-						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-						cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-						cell.setPaddingRight(8);
-						table.addCell(cell);
+			CrNoteRegisterList crnArray = restTemplate.postForObject(Constants.url + "getCrNoteRegister", map,
+					CrNoteRegisterList.class);
 
-						cell = new PdfPCell(new Phrase(String.valueOf(roundUp(crNoteRegItemList.get(j).getCrnTaxable())), headFont));
-						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-						cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-						cell.setPaddingRight(8);
-						table.addCell(cell);
-						
+			List<CrNoteRegSp> crnRegSpList = new ArrayList<>();
 
-						cell = new PdfPCell(new Phrase(String.valueOf(crNoteRegItemList.get(j).getCgstPer()), headFont));
-						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-						cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-						cell.setPaddingRight(8);
-						table.addCell(cell);
-						
+			crNoteRegItemList = crnArray.getCrNoteRegItemList();
+			crnRegSpList = crnArray.getCrNoteRegSpList();
 
-						cell = new PdfPCell(new Phrase(String.valueOf(roundUp(crNoteRegItemList.get(j).getCgstAmt())), headFont));
-						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-						cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-						cell.setPaddingRight(8);
-						table.addCell(cell);
-						
+			for (int j = 0; j < crnRegSpList.size(); j++) {
+				int flag = 0;
 
-						cell = new PdfPCell(new Phrase(String.valueOf(crNoteRegItemList.get(j).getSgstPer()), headFont));
-						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-						cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-						cell.setPaddingRight(8);
-						table.addCell(cell);
-						
+				for (int i = 0; i < crNoteRegItemList.size(); i++) {
 
-						cell = new PdfPCell(new Phrase(String.valueOf(roundUp(crNoteRegItemList.get(j).getSgstAmt())), headFont));
-						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-						cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-						cell.setPaddingRight(8);
-						table.addCell(cell);
+					if (crNoteRegItemList.get(i).getCrnId() == crnRegSpList.get(j).getCrnId()
+							&& crNoteRegItemList.get(i).getHsnCode().equals(crnRegSpList.get(j).getHsnCode())) {
+						flag = 1;
+						crNoteRegItemList.get(i)
+								.setCrnQty(crNoteRegItemList.get(i).getCrnQty() + crnRegSpList.get(j).getCrnQty());
 
+						crNoteRegItemList.get(i).setCrnTaxable(
+								(crNoteRegItemList.get(i).getCrnTaxable() + crnRegSpList.get(j).getCrnTaxable()));
 
-						cell = new PdfPCell(new Phrase(String.valueOf(roundUp(crNoteRegItemList.get(j).getCrnAmt())), headFont));
-						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-						cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-						cell.setPaddingRight(8);
-						table.addCell(cell);
-						
-						cell = new PdfPCell(new Phrase(String.valueOf(roundUp(crnTotalAmt)), headFont));
-						cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-						cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-						cell.setPaddingRight(8);
-						table.addCell(cell);
-
-						
-					}
-					document.open();
-					
-					Paragraph heading = new Paragraph("Credit Note Register Report \n From Date:"+ fromdate+" To Date:"+ todate);
-					heading.setAlignment(Element.ALIGN_CENTER);
-					document.add(heading);
-
-					DateFormat DF = new SimpleDateFormat("dd-MM-yyyy");
-					String reportDate = DF.format(new Date());
-
-					document.add(new Paragraph("\n"));
-
-					document.add(table);
-
-					document.close();
-
-					if (file != null) {
-
-						String mimeType = URLConnection.guessContentTypeFromName(file.getName());
-
-						if (mimeType == null) {
-
-							mimeType = "application/pdf";
-
-						}
-
-						response.setContentType(mimeType);
-
-						response.addHeader("content-disposition", String.format("inline; filename=\"%s\"", file.getName()));
-
-						// response.setHeader("Content-Disposition", String.format("attachment;
-						// filename=\"%s\"", file.getName()));
-
-						response.setContentLength((int) file.length());
-
-						InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
-
-						try {
-							FileCopyUtils.copy(inputStream, response.getOutputStream());
-						} catch (IOException e) {
-							System.out.println("Excep in Opening a Pdf File");
-							e.printStackTrace();
-						}
+						crNoteRegItemList.get(i)
+								.setCgstAmt((crNoteRegItemList.get(i).getCgstAmt() + crnRegSpList.get(j).getCgstAmt()));
+						crNoteRegItemList.get(i)
+								.setSgstAmt((crNoteRegItemList.get(i).getSgstAmt() + crnRegSpList.get(j).getSgstAmt()));
+						crNoteRegItemList.get(i)
+								.setCrnAmt((crNoteRegItemList.get(i).getCrnAmt() + crnRegSpList.get(j).getCrnAmt()));
 
 					}
 
-				} catch (DocumentException ex) {
+				}
 
-					System.out.println("Pdf Generation Error: Prod From Orders" + ex.getMessage());
+				if (flag == 0) {
 
-					ex.printStackTrace();
+					System.err.println("New hsn code item found ");
 
+					CrNoteRegItem regItem = new CrNoteRegItem();
+
+					regItem.setCrnDate(crnRegSpList.get(j).getCrnDate());
+
+					regItem.setBillDate(crnRegSpList.get(j).getBillDate());
+					regItem.setCrndId(crnRegSpList.get(j).getCrndId());
+					regItem.setCrnId(crnRegSpList.get(j).getCrnId());
+					regItem.setCrnQty(crnRegSpList.get(j).getCrnQty());
+					regItem.setCgstAmt(crnRegSpList.get(j).getCgstAmt());
+					regItem.setCgstPer(crnRegSpList.get(j).getCgstPer());
+					regItem.setFrGstNo(crnRegSpList.get(j).getFrGstNo());
+					regItem.setFrName(crnRegSpList.get(j).getFrName());
+					regItem.setCrnAmt(crnRegSpList.get(j).getCrnAmt());
+					regItem.setHsnCode(crnRegSpList.get(j).getHsnCode());
+					regItem.setInvoiceNo(crnRegSpList.get(j).getInvoiceNo());
+					regItem.setSgstAmt(crnRegSpList.get(j).getSgstAmt());
+					regItem.setSgstPer(crnRegSpList.get(j).getSgstPer());
+					regItem.setCrnTaxable(crnRegSpList.get(j).getCrnTaxable());
+
+					regItem.setFrCode(crnRegSpList.get(j).getFrCode());
+
+					crNoteRegItemList.add(regItem);
 				}
 			}
 
+			System.err.println("crNoteRegItemList combined  " + crNoteRegItemList.toString());
 
+			List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
+
+			ExportToExcel expoExcel = new ExportToExcel();
+			List<String> rowData = new ArrayList<String>();
+
+			rowData.add("Sr. No.");
+			rowData.add("CRN No");
+			rowData.add("CRN Date");
+			rowData.add("Invoice No");
+			rowData.add("Invoice Date");
+			rowData.add("Party Name");
+			rowData.add("GST No");
+			rowData.add("HSN Code");
+			rowData.add("CRN Qty");
+			rowData.add("Taxable Amt");
+			rowData.add("CGST %");
+			rowData.add("CGST Amt");
+			rowData.add("SGST %");
+			rowData.add("SGST Amt");
+			rowData.add("Total Amt");
+			rowData.add("CRN Amt");
+
+			expoExcel.setRowData(rowData);
+			exportToExcelList.add(expoExcel);
+			float crnQty = 0.0f;
+			float crnTaxable = 0.0f;
+			float cgstAmt = 0.0f;
+			float sgstAmt = 0.0f;
+			float crnAmt = 0.0f;
+
+			for (int i = 0; i < crNoteRegItemList.size(); i++) {
+
+				float crnTotalAmt = 0;
+				for (int k = 0; k < crNoteRegItemList.size(); k++) {
+
+					if (crNoteRegItemList.get(i).getCrnId() == crNoteRegItemList.get(k).getCrnId()) {
+						crnTotalAmt = crnTotalAmt + roundUp(crNoteRegItemList.get(k).getCrnAmt());
+					}
+				}
+
+				expoExcel = new ExportToExcel();
+				rowData = new ArrayList<String>();
+				rowData.add("" + (i + 1));
+				rowData.add("" + crNoteRegItemList.get(i).getFrCode());
+				rowData.add("" + crNoteRegItemList.get(i).getCrnDate());
+				rowData.add("" + crNoteRegItemList.get(i).getInvoiceNo());
+				rowData.add("" + crNoteRegItemList.get(i).getBillDate());
+				rowData.add("" + crNoteRegItemList.get(i).getFrName());
+				rowData.add("" + crNoteRegItemList.get(i).getFrGstNo());
+
+				rowData.add("" + crNoteRegItemList.get(i).getHsnCode());
+				rowData.add("" + roundUp(crNoteRegItemList.get(i).getCrnQty()));
+
+				crnQty = crnQty + crNoteRegItemList.get(i).getCrnQty();
+				crnTaxable = crnTaxable + crNoteRegItemList.get(i).getCrnTaxable();
+				cgstAmt = cgstAmt + crNoteRegItemList.get(i).getCgstAmt();
+				sgstAmt = sgstAmt + crNoteRegItemList.get(i).getSgstAmt();
+				crnAmt = crnAmt + crNoteRegItemList.get(i).getCrnAmt();
+
+				rowData.add("" + roundUp(crNoteRegItemList.get(i).getCrnTaxable()));
+				rowData.add("" + crNoteRegItemList.get(i).getCgstPer());
+				rowData.add("" + roundUp(crNoteRegItemList.get(i).getCgstAmt()));
+				rowData.add("" + crNoteRegItemList.get(i).getSgstPer());
+				rowData.add("" + roundUp(crNoteRegItemList.get(i).getSgstAmt()));
+
+				rowData.add("" + roundUp(crNoteRegItemList.get(i).getCrnAmt()));
+				rowData.add("" + roundUp(crnTotalAmt));
+
+				expoExcel.setRowData(rowData);
+				exportToExcelList.add(expoExcel);
+
+			}
+
+			expoExcel = new ExportToExcel();
+			rowData = new ArrayList<String>();
+			rowData.add("");
+			rowData.add("");
+			rowData.add("");
+			rowData.add("");
+			rowData.add("");
+			rowData.add("");
+			rowData.add("");
+			rowData.add("Total");
+			rowData.add("" + roundUp(crnQty));
+			rowData.add("" + roundUp(crnTaxable));
+			rowData.add("");
+			rowData.add("" + roundUp(cgstAmt));
+			rowData.add("");
+			rowData.add("" + roundUp(sgstAmt));
+			rowData.add("" + Math.round(crnAmt));
+			rowData.add("");
+
+			expoExcel.setRowData(rowData);
+			exportToExcelList.add(expoExcel);
+
+			HttpSession session = request.getSession();
+			session.setAttribute("exportExcelListNew", exportToExcelList);
+			session.setAttribute("excelNameNew", "CR Note Register");
+			session.setAttribute("reportNameNew", "Credit Note Register Report");
+			session.setAttribute("searchByNew", "From Date: " + fromDate + "  To Date: " + toDate + " ");
+			session.setAttribute("mergeUpto1", "$A$1:$P$1");
+			session.setAttribute("mergeUpto2", "$A$2:$P$2");
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+		}
+		return crNoteRegItemList;
+	}
+
+	// getCRN Reg Pdf
+	@RequestMapping(value = "/getCRNoteRegisterPdf/{fromdate}/{todate}", method = RequestMethod.GET)
+	public void getCRNoteRegisterPdf(@PathVariable String fromdate, @PathVariable String todate,
+			HttpServletRequest request, HttpServletResponse response) throws FileNotFoundException {
+
+		Document document = new Document(PageSize.A4);
+		document.setPageSize(PageSize.A4.rotate());
+		// ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+		Calendar cal = Calendar.getInstance();
+
+		System.out.println("timegetCRNoteRegisterPdf PDF ==" + dateFormat.format(cal.getTime()));
+		String timeStamp = dateFormat.format(cal.getTime());
+		String FILE_PATH = Constants.REPORT_SAVE;
+		File file = new File(FILE_PATH);
+
+		PdfWriter writer = null;
+
+		FileOutputStream out = new FileOutputStream(FILE_PATH);
+
+		try {
+			writer = PdfWriter.getInstance(document, out);
+		} catch (DocumentException e) {
+
+			e.printStackTrace();
+		}
+
+		PdfPTable table = new PdfPTable(16);
+		table.setHeaderRows(1);
+		try {
+			System.out.println("Inside PDF Table try");
+			table.setWidthPercentage(100);
+			table.setWidths(new float[] { 0.7f, 1.1f, 2.0f, 2.1f, 2.3f, 2.0f, 2.2f, 1.2f, 1.2f, 1.2f, 0.9f, 1.2f, 1.2f,
+					0.9f, 1.2f, 1.2f });
+			Font headFont = new Font(FontFamily.HELVETICA, 8, Font.NORMAL, BaseColor.BLACK);
+			Font headFont1 = new Font(FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.BLACK);
+			Font f = new Font(FontFamily.TIMES_ROMAN, 10.0f, Font.UNDERLINE, BaseColor.BLUE);
+
+			PdfPCell hcell;
+			hcell = new PdfPCell(new Phrase("Sr.", headFont1));
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			table.addCell(hcell);
+
+			hcell = new PdfPCell(new Phrase("CRN No", headFont1));
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			table.addCell(hcell);
+
+			hcell = new PdfPCell(new Phrase("CRN Date", headFont1));
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			table.addCell(hcell);
+
+			hcell = new PdfPCell(new Phrase("Invoice No", headFont1));
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			table.addCell(hcell);
+
+			hcell = new PdfPCell(new Phrase("Invoice Date", headFont1));
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			table.addCell(hcell);
+
+			hcell = new PdfPCell(new Phrase("Party Name", headFont1));
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			table.addCell(hcell);
+
+			hcell = new PdfPCell(new Phrase("GST No", headFont1));
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			table.addCell(hcell);
+
+			hcell = new PdfPCell(new Phrase("HSN Code", headFont1));
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			table.addCell(hcell);
+
+			hcell = new PdfPCell(new Phrase("Bill Qty", headFont1)); // Varience title replaced with P2 Production
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			table.addCell(hcell);
+
+			hcell = new PdfPCell(new Phrase("Taxable Amt", headFont1)); // Varience title replaced with P2 Production
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			table.addCell(hcell);
+
+			hcell = new PdfPCell(new Phrase("CGST %", headFont1)); // Varience title replaced with P2 Production
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			table.addCell(hcell);
+
+			hcell = new PdfPCell(new Phrase("CGST Amt", headFont1)); // Varience title replaced with P2 Production
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			table.addCell(hcell);
+
+			hcell = new PdfPCell(new Phrase("SGST %", headFont1)); // Varience title replaced with P2 Production
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			table.addCell(hcell);
+
+			hcell = new PdfPCell(new Phrase("SGST Amt", headFont1)); // Varience title replaced with P2 Production
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			table.addCell(hcell);
+
+			hcell = new PdfPCell(new Phrase("Total Amt", headFont1)); // Varience title replaced with P2 Production
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			table.addCell(hcell);
+
+			hcell = new PdfPCell(new Phrase("Crn Amt", headFont1)); // Varience title replaced with P2 Production
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			table.addCell(hcell);
+
+			int index = 0;
+			for (int j = 0; j < crNoteRegItemList.size(); j++) {
+
+				float crnTotalAmt = 0;
+				for (int k = 0; k < crNoteRegItemList.size(); k++) {
+
+					if (crNoteRegItemList.get(j).getCrnId() == crNoteRegItemList.get(k).getCrnId()) {
+						System.err.println("crNoteRegItemList.get(j).getCrnId()" + crNoteRegItemList.get(j).getCrnId()
+								+ "crnAmt:" + crNoteRegItemList.get(j).getCrnAmt());
+						crnTotalAmt = crnTotalAmt + roundUp(crNoteRegItemList.get(k).getCrnAmt());
+					}
+				}
+				index++;
+				PdfPCell cell;
+
+				cell = new PdfPCell(new Phrase(String.valueOf(index), headFont));
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(cell);
+
+				cell = new PdfPCell(new Phrase("" + crNoteRegItemList.get(j).getFrCode(), headFont));
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+				cell.setPaddingRight(1);
+				table.addCell(cell);
+
+				cell = new PdfPCell(new Phrase(String.valueOf(crNoteRegItemList.get(j).getCrnDate()), headFont));
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+				cell.setPaddingRight(1);
+				table.addCell(cell);
+
+				cell = new PdfPCell(new Phrase(crNoteRegItemList.get(j).getInvoiceNo(), headFont));
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+				cell.setPaddingRight(1);
+				table.addCell(cell);
+
+				cell = new PdfPCell(new Phrase(String.valueOf(crNoteRegItemList.get(j).getBillDate()), headFont));
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+				cell.setPaddingRight(1);
+				table.addCell(cell);
+
+				cell = new PdfPCell(new Phrase(String.valueOf(crNoteRegItemList.get(j).getFrName()), headFont));
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+				cell.setPaddingRight(1);
+				table.addCell(cell);
+
+				cell = new PdfPCell(new Phrase(String.valueOf(crNoteRegItemList.get(j).getFrGstNo()), headFont));
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+				cell.setPaddingRight(1);
+				table.addCell(cell);
+
+				cell = new PdfPCell(new Phrase(String.valueOf(crNoteRegItemList.get(j).getHsnCode()), headFont));
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+				cell.setPaddingRight(1);
+				table.addCell(cell);
+
+				cell = new PdfPCell(
+						new Phrase(String.valueOf(roundUp(crNoteRegItemList.get(j).getCrnQty())), headFont));
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+				cell.setPaddingRight(8);
+				table.addCell(cell);
+
+				cell = new PdfPCell(
+						new Phrase(String.valueOf(roundUp(crNoteRegItemList.get(j).getCrnTaxable())), headFont));
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+				cell.setPaddingRight(8);
+				table.addCell(cell);
+
+				cell = new PdfPCell(new Phrase(String.valueOf(crNoteRegItemList.get(j).getCgstPer()), headFont));
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+				cell.setPaddingRight(8);
+				table.addCell(cell);
+
+				cell = new PdfPCell(
+						new Phrase(String.valueOf(roundUp(crNoteRegItemList.get(j).getCgstAmt())), headFont));
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+				cell.setPaddingRight(8);
+				table.addCell(cell);
+
+				cell = new PdfPCell(new Phrase(String.valueOf(crNoteRegItemList.get(j).getSgstPer()), headFont));
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+				cell.setPaddingRight(8);
+				table.addCell(cell);
+
+				cell = new PdfPCell(
+						new Phrase(String.valueOf(roundUp(crNoteRegItemList.get(j).getSgstAmt())), headFont));
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+				cell.setPaddingRight(8);
+				table.addCell(cell);
+
+				cell = new PdfPCell(
+						new Phrase(String.valueOf(roundUp(crNoteRegItemList.get(j).getCrnAmt())), headFont));
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+				cell.setPaddingRight(8);
+				table.addCell(cell);
+
+				cell = new PdfPCell(new Phrase(String.valueOf(roundUp(crnTotalAmt)), headFont));
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+				cell.setPaddingRight(8);
+				table.addCell(cell);
+
+			}
+			document.open();
+
+			Paragraph heading = new Paragraph(
+					"Credit Note Register Report \n From Date:" + fromdate + " To Date:" + todate);
+			heading.setAlignment(Element.ALIGN_CENTER);
+			document.add(heading);
+
+			DateFormat DF = new SimpleDateFormat("dd-MM-yyyy");
+			String reportDate = DF.format(new Date());
+
+			document.add(new Paragraph("\n"));
+
+			document.add(table);
+
+			document.close();
+
+			if (file != null) {
+
+				String mimeType = URLConnection.guessContentTypeFromName(file.getName());
+
+				if (mimeType == null) {
+
+					mimeType = "application/pdf";
+
+				}
+
+				response.setContentType(mimeType);
+
+				response.addHeader("content-disposition", String.format("inline; filename=\"%s\"", file.getName()));
+
+				// response.setHeader("Content-Disposition", String.format("attachment;
+				// filename=\"%s\"", file.getName()));
+
+				response.setContentLength((int) file.length());
+
+				InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
+
+				try {
+					FileCopyUtils.copy(inputStream, response.getOutputStream());
+				} catch (IOException e) {
+					System.out.println("Excep in Opening a Pdf File");
+					e.printStackTrace();
+				}
+
+			}
+
+		} catch (DocumentException ex) {
+
+			System.out.println("Pdf Generation Error: Prod From Orders" + ex.getMessage());
+
+			ex.printStackTrace();
+
+		}
+	}
 
 }

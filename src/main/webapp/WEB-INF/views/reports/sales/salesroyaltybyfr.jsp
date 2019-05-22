@@ -220,146 +220,128 @@
 		class="fa fa-chevron-up"></i></a>
 
 
-		<script type="text/javascript">
+	<script type="text/javascript">
 		function searchReport() {
-		//	var isValid = validate();
+			//	var isValid = validate();
 
-				var selectedFr = $("#selectFr").val();
-				var routeId=$("#selectRoute").val();
-				
-				var from_date = $("#fromDate").val();
-				var to_date = $("#toDate").val();
+			var selectedFr = $("#selectFr").val();
+			var routeId = $("#selectRoute").val();
 
-				$('#loader').show();
+			var from_date = $("#fromDate").val();
+			var to_date = $("#toDate").val();
 
-				$
-						.getJSON(
-								'${getBillList}',
+			$('#loader').show();
 
-								{
-									fr_id_list : JSON.stringify(selectedFr),
-									fromDate : from_date,
-									toDate : to_date,
-									route_id:routeId,
-									ajax : 'true'
+			$.getJSON('${getBillList}',
 
-								},
-								function(data) {
-									
-								
-									var totalSaleValue = 0;
-									var totalGrnValue = 0;
-									var totalGvnValue = 0;
-									var totalNetValue = 0;
-									var totalRoyAmt=0;
-									
+			{
+				fr_id_list : JSON.stringify(selectedFr),
+				fromDate : from_date,
+				toDate : to_date,
+				route_id : routeId,
+				ajax : 'true'
 
-									$('#table_grid td').remove();
-									$('#loader').hide();
+			}, function(data) {
 
-									if (data == "") {
-										alert("No records found !!");
-										  document.getElementById("expExcel").disabled=true;
+				var totalSaleValue = 0;
+				var totalGrnValue = 0;
+				var totalGvnValue = 0;
+				var totalNetValue = 0;
+				var totalRoyAmt = 0;
 
-									}
+				$('#table_grid td').remove();
+				$('#loader').hide();
 
-									var royPer=${royPer};
-									//alert(royPer);
+				if (data == "") {
+					alert("No records found !!");
+					document.getElementById("expExcel").disabled = true;
 
-									$
-									.each(
-											data,
-											function(key, report) {
-												  document.getElementById("expExcel").disabled=false;
-													document.getElementById('range').style.display = 'block';
-														//alert("Hi");
-														 srNo=key+1;
-														//var index = key + 1;
-														 var tr = $('<tr></tr>');
-														//tr.append($('<td></td>').html(cat.catName));
-														
-															
-													 totalSaleValue=totalSaleValue+report.tBillTaxableAmt;
-													totalGrnValue=totalGrnValue+report.tGrnTaxableAmt;
-													totalGvnValue=totalGvnValue+report.tGvnTaxableAmt; 
-														
-														
-													  	tr.append($('<td></td>').html(srNo));
-													  	tr.append($('<td></td>').html(report.frName));
-													  	tr.append($('<td></td>').html(report.frCity));
-													  	tr.append($('<td style="text-align:right;"></td>').html(report.tBillTaxableAmt.toFixed(2)));
-														tr.append($('<td style="text-align:right;"></td>').html(report.tGrnTaxableAmt.toFixed(2)));
-														
-													  	tr.append($('<td style="text-align:right;"></td>').html(royPer));
-													  	tr.append($('<td style="text-align:right;"></td>').html(report.tGvnTaxableAmt.toFixed(2)));
+				}
 
-														
-													  	
-													  	var netValue=report.tBillTaxableAmt-(report.tGrnTaxableAmt+report.tGvnTaxableAmt);
-														netValue=netValue.toFixed(2);
-														
-														
-														
-														
-													  	tr.append($('<td style="text-align:right;"></td>').html(netValue));
-													  	//alert("netVAlue"+netValue);
-													  	//alert("Per"+royPer);
-													  	rAmt=parseFloat(netValue) * parseFloat(royPer)/100;
-													  //	alert("Amt="+rAmt)
-													  	rAmt=rAmt.toFixed(2);
-													  	
-													  	tr.append($('<td style="text-align:right;"></td>').html(rAmt));
-													  	
-													  totalNetValue=totalNetValue+parseFloat(netValue);
-													 	totalRoyAmt=totalRoyAmt+parseFloat(rAmt); 
-													  	
-														$('#table_grid tbody')
-																.append(
-																		tr);
-														 
-														
-														
-													})
-													
-													var tr = $('<tr></tr>');
+				var royPer = $
+				{
+					royPer
+				}
+				;
+				//alert(royPer);
 
-									tr.append($('<td></td>').html(""));
-									tr.append($('<td></td>').html(""));
+				$.each(data, function(key, report) {
+					document.getElementById("expExcel").disabled = false;
+					document.getElementById('range').style.display = 'block';
+					//alert("Hi");
+					srNo = key + 1;
+					//var index = key + 1;
+					var tr = $('<tr></tr>');
+					//tr.append($('<td></td>').html(cat.catName));
 
-									
-									tr.append($('<td style="font-weight:bold;"></td>')
-											.html("Total"));
-									
-									tr.append($('<td style="text-align:right;"></td>').html(
-											totalSaleValue.toFixed(2)));
-									
-									tr.append($('<td style="text-align:right;"></td>').html(
-											totalGrnValue.toFixed(2)));
-									
-									tr.append($('<td></td>').html(""));
-									
-								
-									tr.append($('<td style="text-align:right;"></td>').html(
-											totalGvnValue.toFixed(2)));
-								
-									tr.append($('<td style="text-align:right;"></td>').html(
-											totalNetValue.toFixed(2)));
-									
-									
-									
-									
-									tr.append($('<td style="text-align:right;"></td>').html(
-											totalRoyAmt.toFixed(2)));
+					totalSaleValue = totalSaleValue + report.tBillTaxableAmt;
+					totalGrnValue = totalGrnValue + report.tGrnTaxableAmt;
+					totalGvnValue = totalGvnValue + report.tGvnTaxableAmt;
 
-									$('#table_grid tbody')
-									.append(
-											tr);
-							 
-											
+					tr.append($('<td></td>').html(srNo));
+					tr.append($('<td></td>').html(report.frName));
+					tr.append($('<td></td>').html(report.frCity));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.tBillTaxableAmt.toFixed(2)));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.tGrnTaxableAmt.toFixed(2)));
 
-								});
+					tr.append($('<td style="text-align:right;"></td>').html(
+							royPer));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.tGvnTaxableAmt.toFixed(2)));
 
-			
+					var netValue = report.tBillTaxableAmt
+							- (report.tGrnTaxableAmt + report.tGvnTaxableAmt);
+					netValue = netValue.toFixed(2);
+
+					tr.append($('<td style="text-align:right;"></td>').html(
+							netValue));
+					//alert("netVAlue"+netValue);
+					//alert("Per"+royPer);
+					rAmt = parseFloat(netValue) * parseFloat(royPer) / 100;
+					//	alert("Amt="+rAmt)
+					rAmt = rAmt.toFixed(2);
+
+					tr.append($('<td style="text-align:right;"></td>').html(
+							rAmt));
+
+					totalNetValue = totalNetValue + parseFloat(netValue);
+					totalRoyAmt = totalRoyAmt + parseFloat(rAmt);
+
+					$('#table_grid tbody').append(tr);
+
+				})
+
+				var tr = $('<tr></tr>');
+
+				tr.append($('<td></td>').html(""));
+				tr.append($('<td></td>').html(""));
+
+				tr.append($('<td style="font-weight:bold;"></td>')
+						.html("Total"));
+
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalSaleValue.toFixed(2)));
+
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalGrnValue.toFixed(2)));
+
+				tr.append($('<td></td>').html(""));
+
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalGvnValue.toFixed(2)));
+
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalNetValue.toFixed(2)));
+
+				tr.append($('<td style="text-align:right;"></td>').html(
+						totalRoyAmt.toFixed(2)));
+
+				$('#table_grid tbody').append(tr);
+
+			});
+
 		}
 	</script>
 	<script type="text/javascript">
@@ -620,7 +602,7 @@
 
 		function exportToExcel() {
 
-			window.open("${pageContext.request.contextPath}/exportToExcel");
+			window.open("${pageContext.request.contextPath}/exportToExcelNew");
 			document.getElementById("expExcel").disabled = true;
 		}
 	</script>

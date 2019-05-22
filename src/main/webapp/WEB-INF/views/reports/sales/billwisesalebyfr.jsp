@@ -178,7 +178,7 @@
 
 
 
-			<div class="box"  style="background-color: white;">
+			<div class="box" style="background-color: white;">
 				<div class="box-title">
 					<h3>
 						<i class="fa fa-list-alt"></i>Bill Report
@@ -204,7 +204,7 @@
 									<th>CGST</th>
 									<th>SGST</th>
 									<th>IGST</th>
-									<th>Round Off</th>
+
 									<th>Total</th>
 								</tr>
 							</thead>
@@ -240,8 +240,7 @@
 
 
 					<div id="chart" style="background-color: white;">
-						<br>
-						<br> <br>
+						<br> <br> <br>
 						<hr>
 
 						<!-- <table class="columns">
@@ -384,8 +383,7 @@
 								.html(report.igstSum.toFixed(2)));
 					}
 					//tr.append($('<td></td>').html(report.igstSum));
-					tr.append($('<td style="text-align:right;"></td>').html(
-							report.roundOff));
+				 
 					var total;
 
 					if (report.isSameState == 1) {
@@ -419,8 +417,7 @@
 						totalSgst.toFixed(2)));
 				tr.append($('<td style="text-align:right;"></td>').html(
 						totalIgst.toFixed(2)));
-				tr.append($('<td style="text-align:right;"></td>').html(
-						totalRoundOff.toFixed(2)));
+			 
 				tr.append($('<td style="text-align:right;"></td>').html(
 						totalFinal.toFixed(2)));
 
@@ -693,7 +690,7 @@
 		}
 		function exportToExcel() {
 
-			window.open("${pageContext.request.contextPath}/exportToExcel");
+			window.open("${pageContext.request.contextPath}/exportToExcelNew");
 			document.getElementById("expExcel").disabled = true;
 		}
 	</script>

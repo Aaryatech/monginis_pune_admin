@@ -100,7 +100,9 @@
 								onchange="disableFr()">
 								<option value="0">Select Route</option>
 								<c:forEach items="${routeList}" var="route" varStatus="count">
-									<option value="${route.routeId}"><c:out value="${route.routeName}"/> </option>
+									<option value="${route.routeId}"><c:out
+											value="${route.routeName}" />
+									</option>
 
 								</c:forEach>
 							</select>
@@ -115,11 +117,11 @@
 								class="form-control chosen" multiple="multiple" tabindex="6"
 								id="selectFr" name="selectFr" onchange="disableRoute()">
 
-								<option value="-1"><c:out value="All"/></option>
+								<option value="-1"><c:out value="All" /></option>
 
 								<c:forEach items="${unSelectedFrList}" var="fr"
 									varStatus="count">
-									<option value="${fr.frId}"><c:out value="${fr.frName}"/></option>
+									<option value="${fr.frId}"><c:out value="${fr.frName}" /></option>
 								</c:forEach>
 							</select>
 
@@ -140,10 +142,11 @@
 								class="form-control chosen" multiple="multiple" tabindex="6"
 								id="selectCat" name="selectCat" onchange="disableRoute()">
 
-								<option value="-1"><c:out value="All"/></option>
+								<option value="-1"><c:out value="All" /></option>
 
 								<c:forEach items="${catList}" var="cat" varStatus="count">
-									<option value="${cat.catId}"><c:out value="${cat.catName}"/></option>
+									<option value="${cat.catId}"><c:out
+											value="${cat.catName}" /></option>
 								</c:forEach>
 							</select>
 						</div>
@@ -215,18 +218,21 @@
 								</table>
 							</div>
 							<div class="form-group" style="display: none;" id="range">
-								 
-											 
-											 
-											<div class="col-sm-3  controls">
-											 <input type="button" id="expExcel" class="btn btn-primary" value="EXPORT TO Excel" onclick="exportToExcel();" disabled="disabled">
-											</div>
-											</div>
+
+
+
+								<div class="col-sm-3  controls">
+									<input type="button" id="expExcel" class="btn btn-primary"
+										value="EXPORT TO Excel" onclick="exportToExcel();"
+										disabled="disabled">
+								</div>
+							</div>
 						</div>
 
 					</div>
 
-					<div id="chart_div" style="width: 100%; height: 700px;background-color: white;"></div>
+					<div id="chart_div"
+						style="width: 100%; height: 700px; background-color: white;"></div>
 					<div id="PieChart_div" style="width: 100%; height: 700px;"></div>
 
 				</form>
@@ -244,235 +250,241 @@
 
 		<script type="text/javascript">
 			function searchReport() {
-					var isValid = validate();
-                   
+				var isValid = validate();
+
 				//document.getElementById('chart').style.display = "block";
 				document.getElementById("PieChart_div").style = "display:none";
 				document.getElementById("chart_div").style = "display:none";
-                if(isValid==true){
-				var selectedFr = $("#selectFr").val();
-				var routeId = $("#selectRoute").val();
-				var isGraph = 0;
+				if (isValid == true) {
+					var selectedFr = $("#selectFr").val();
+					var routeId = $("#selectRoute").val();
+					var isGraph = 0;
 
-				var selectedCat = $("#selectCat").val();
+					var selectedCat = $("#selectCat").val();
 
-				var from_date = $("#fromDate").val();
-				var to_date = $("#toDate").val();
-              // alert(selectedCat);
-				$('#loader').show();
+					var from_date = $("#fromDate").val();
+					var to_date = $("#toDate").val();
+					// alert(selectedCat);
+					$('#loader').show();
 
-				$
-						.getJSON(
-								'${getBillList}',
+					$
+							.getJSON(
+									'${getBillList}',
 
-								{
-									fr_id_list : JSON.stringify(selectedFr),
-									fromDate : from_date,
-									toDate : to_date,
-									route_id : routeId,
-									cat_id_list : JSON.stringify(selectedCat),
-									is_graph : isGraph,
-									ajax : 'true'
+									{
+										fr_id_list : JSON.stringify(selectedFr),
+										fromDate : from_date,
+										toDate : to_date,
+										route_id : routeId,
+										cat_id_list : JSON
+												.stringify(selectedCat),
+										is_graph : isGraph,
+										ajax : 'true'
 
-								},
-								function(data) {
+									},
+									function(data) {
 
-									$('#table_grid td').remove();
-									$('#loader').hide();
-									var royPer = ${royPer};
-									if (data == "") {
-										alert("No records found !!");
-										  document.getElementById("expExcel").disabled=true;
+										$('#table_grid td').remove();
+										$('#loader').hide();
+										var royPer = $
+										{
+											royPer
+										}
+										;
+										if (data == "") {
+											alert("No records found !!");
+											document.getElementById("expExcel").disabled = true;
 
-									}
+										}
 
-									$
-											.each(
-													data.categoryList,
-													function(key, cat) {
-														  document.getElementById("expExcel").disabled=false;
-															document.getElementById('range').style.display = 'block';
+										$
+												.each(
+														data.categoryList,
+														function(key, cat) {
+															document
+																	.getElementById("expExcel").disabled = false;
+															document
+																	.getElementById('range').style.display = 'block';
 
-														var tr = $('<tr></tr>');
-														tr
-																.append($(
-																		'<td></td>')
-																		.html(
-																				cat.catName));
-														//tr.append($('<td></td>').html(key+1));
-														tr
-																.append($(
-																		'<td></td>')
-																		.html(
-																				""));
-														tr
-																.append($(
-																		'<td></td>')
-																		.html(
-																				""));
-														tr
-																.append($(
-																		'<td></td>')
-																		.html(
-																				""));
+															var tr = $('<tr></tr>');
+															tr
+																	.append($(
+																			'<td></td>')
+																			.html(
+																					cat.catName));
+															//tr.append($('<td></td>').html(key+1));
+															tr
+																	.append($(
+																			'<td></td>')
+																			.html(
+																					""));
+															tr
+																	.append($(
+																			'<td></td>')
+																			.html(
+																					""));
+															tr
+																	.append($(
+																			'<td></td>')
+																			.html(
+																					""));
 
-														tr
-																.append($(
-																		'<td></td>')
-																		.html(
-																				""));
-														tr
-																.append($(
-																		'<td></td>')
-																		.html(
-																				""));
-														tr
-																.append($(
-																		'<td></td>')
-																		.html(
-																				""));
-														tr
-																.append($(
-																		'<td></td>')
-																		.html(
-																				""));
-														tr
-																.append($(
-																		'<td></td>')
-																		.html(
-																				""));
-														tr
-																.append($(
-																		'<td></td>')
-																		.html(
-																				""));
-														tr
-														.append($(
-																'<td></td>')
-																.html(
-																		""));
-														tr
-														.append($(
-																'<td></td>')
-																.html(
-																		""));
-														$('#table_grid tbody')
-																.append(tr);
+															tr
+																	.append($(
+																			'<td></td>')
+																			.html(
+																					""));
+															tr
+																	.append($(
+																			'<td></td>')
+																			.html(
+																					""));
+															tr
+																	.append($(
+																			'<td></td>')
+																			.html(
+																					""));
+															tr
+																	.append($(
+																			'<td></td>')
+																			.html(
+																					""));
+															tr
+																	.append($(
+																			'<td></td>')
+																			.html(
+																					""));
+															tr
+																	.append($(
+																			'<td></td>')
+																			.html(
+																					""));
+															tr
+																	.append($(
+																			'<td></td>')
+																			.html(
+																					""));
+															tr
+																	.append($(
+																			'<td></td>')
+																			.html(
+																					""));
+															$(
+																	'#table_grid tbody')
+																	.append(tr);
 
-														var srNo = 0;
-														$
-																.each(
-																		data.salesReportRoyalty,
-																		function(
-																				key,
-																				report) {
+															var srNo = 0;
+															$
+																	.each(
+																			data.salesReportRoyalty,
+																			function(
+																					key,
+																					report) {
 
-																			if (cat.catId == report.catId) {
-																				//alert("Hi");
-																				srNo = srNo + 1;
-																				//var index = key + 1;
-																				var tr = $('<tr></tr>');
-																				//tr.append($('<td></td>').html(cat.catName));
-																				tr
-																						.append($(
-																								'<td></td>')
-																								.html(
-																										srNo));
-																				tr
-																						.append($(
-																								'<td></td>')
-																								.html(
-																										report.item_name));
-																				tr
-																						.append($(
-																								'<td  style="text-align:right;"></td>')
-																								.html(
-																										report.tBillQty));
-																				tr
-																						.append($(
-																								'<td  style="text-align:right;"></td>')
-																								.html(
-																										(report.tBillTaxableAmt).toFixed(2)));
+																				if (cat.catId == report.catId) {
+																					//alert("Hi");
+																					srNo = srNo + 1;
+																					//var index = key + 1;
+																					var tr = $('<tr></tr>');
+																					//tr.append($('<td></td>').html(cat.catName));
+																					tr
+																							.append($(
+																									'<td></td>')
+																									.html(
+																											srNo));
+																					tr
+																							.append($(
+																									'<td></td>')
+																									.html(
+																											report.item_name));
+																					tr
+																							.append($(
+																									'<td  style="text-align:right;"></td>')
+																									.html(
+																											report.tBillQty));
+																					tr
+																							.append($(
+																									'<td  style="text-align:right;"></td>')
+																									.html(
+																											(report.tBillTaxableAmt)
+																													.toFixed(2)));
 
-																				tr
-																						.append($(
-																								'<td  style="text-align:right;"></td>')
-																								.html(
-																										report.tGrnQty));
-																				tr
-																						.append($(
-																								'<td  style="text-align:right;"></td>')
-																								.html(
-																										report.tGrnTaxableAmt));
-																				tr
-																						.append($(
-																								'<td  style="text-align:right;"></td>')
-																								.html(
-																										report.tGvnQty));
-																				tr
-																						.append($(
-																								'<td  style="text-align:right;"></td>')
-																								.html(
-																										report.tGvnTaxableAmt));
+																					tr
+																							.append($(
+																									'<td  style="text-align:right;"></td>')
+																									.html(
+																											report.tGrnQty));
+																					tr
+																							.append($(
+																									'<td  style="text-align:right;"></td>')
+																									.html(
+																											report.tGrnTaxableAmt));
+																					tr
+																							.append($(
+																									'<td  style="text-align:right;"></td>')
+																									.html(
+																											report.tGvnQty));
+																					tr
+																							.append($(
+																									'<td  style="text-align:right;"></td>')
+																									.html(
+																											report.tGvnTaxableAmt));
 
-																				var netQty = report.tBillQty
-																						- (report.tGrnQty + report.tGvnQty);
-																				netQty = netQty
-																						.toFixed(2);
+																					var netQty = report.tBillQty
+																							- (report.tGrnQty + report.tGvnQty);
+																					netQty = netQty
+																							.toFixed(2);
 
-																				var netValue = report.tBillTaxableAmt
-																						- (report.tGrnTaxableAmt + report.tGvnTaxableAmt);
-																				netValue = netValue
-																						.toFixed(2);
+																					var netValue = report.tBillTaxableAmt
+																							- (report.tGrnTaxableAmt + report.tGvnTaxableAmt);
+																					netValue = netValue
+																							.toFixed(2);
 
-																				tr
-																						.append($(
-																								'<td  style="text-align:right;"></td>')
-																								.html(
-																										netQty));
-																				tr
-																						.append($(
-																								'<td  style="text-align:right;"></td>')
-																								.html(
-																										netValue));
-																				tr
-																				.append($(
-																						'<td></td>')
-																						.html(
-																								royPer));
+																					tr
+																							.append($(
+																									'<td  style="text-align:right;"></td>')
+																									.html(
+																											netQty));
+																					tr
+																							.append($(
+																									'<td  style="text-align:right;"></td>')
+																									.html(
+																											netValue));
+																					tr
+																							.append($(
+																									'<td></td>')
+																									.html(
+																											royPer));
 
-																		rAmt = netValue
-																				* royPer
-																				/ 100;
-																		rAmt = rAmt
-																				.toFixed(2);
+																					rAmt = netValue
+																							* royPer
+																							/ 100;
+																					rAmt = rAmt
+																							.toFixed(2);
 
-																		tr
-																				.append($(
-																						'<td></td>')
-																						.html(
-																								rAmt));
-																				$(
-																						'#table_grid tbody')
-																						.append(
-																								tr);
+																					tr
+																							.append($(
+																									'<td></td>')
+																									.html(
+																											rAmt));
+																					$(
+																							'#table_grid tbody')
+																							.append(
+																									tr);
 
-																			}//end of if
+																				}//end of if
 
-																		})
-													})
+																			})
+														})
 
-								});
-                }
+									});
+				}
 			}
 		</script>
 
-	
+
 		<script type="text/javascript">
 			function showChart() {
-
-			
-				
 
 				$("#PieChart_div").empty();
 				$("#chart_div").empty();
@@ -508,7 +520,7 @@
 								function(data) {
 
 									$('#loader').hide();
-								
+
 									if (data == "") {
 										alert("No records found !!");
 
@@ -669,31 +681,31 @@
 		</script>
 
 
-	<script type="text/javascript">
-	function validate() {
+		<script type="text/javascript">
+			function validate() {
 
-		var selectedFr = $("#selectFr").val();
-		var selectedRoute = $("#selectRoute").val();
-		var selectedCat = $("#selectCat").val();
+				var selectedFr = $("#selectFr").val();
+				var selectedRoute = $("#selectRoute").val();
+				var selectedCat = $("#selectCat").val();
 
+				var isValid = true;
 
-		var isValid = true;
-		
-		if ((selectedFr == "" || selectedFr == null ) && (selectedRoute==0)) { 
+				if ((selectedFr == "" || selectedFr == null)
+						&& (selectedRoute == 0)) {
 
-				alert("Please Select Route  Or Franchisee");
-				isValid = false;
-		
-		}else if (selectedCat == "" || selectedCat == null) { 
+					alert("Please Select Route  Or Franchisee");
+					isValid = false;
 
-			alert("Please Select Category");
-			isValid = false;
-	
-	     }
-		return isValid;
+				} else if (selectedCat == "" || selectedCat == null) {
 
-	}
-	</script>
+					alert("Please Select Category");
+					isValid = false;
+
+				}
+				return isValid;
+
+			}
+		</script>
 
 
 		<script type="text/javascript">
@@ -757,15 +769,21 @@
 
 				var selectedCat = $("#selectCat").val();
 
-				window.open('pdfForReport?url=pdf/getSaleReportRoyConsoByCatPdf/'
-						+ from_date + '/' + to_date+'/'+selectedFr+'/'+routeId+'/'+selectedCat);
+				window
+						.open('pdfForReport?url=pdf/getSaleReportRoyConsoByCatPdf/'
+								+ from_date
+								+ '/'
+								+ to_date
+								+ '/'
+								+ selectedFr
+								+ '/' + routeId + '/' + selectedCat);
 
 			}
-			function exportToExcel()
-			{
-				 
-				window.open("${pageContext.request.contextPath}/exportToExcel");
-						document.getElementById("expExcel").disabled=true;
+			function exportToExcel() {
+
+				window
+						.open("${pageContext.request.contextPath}/exportToExcelNew");
+				document.getElementById("expExcel").disabled = true;
 			}
 		</script>
 		<!--basic scripts-->

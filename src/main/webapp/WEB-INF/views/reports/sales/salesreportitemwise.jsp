@@ -454,7 +454,7 @@
 		} //window.open('pdfForReport?url=showSaleBillwiseByFrPdf/'+from_date+'/'+to_date);
 		function exportToExcel() {
 
-			window.open("${pageContext.request.contextPath}/exportToExcel");
+			window.open("${pageContext.request.contextPath}/exportToExcelNew");
 			document.getElementById("expExcel").disabled = true;
 		}
 	</script>

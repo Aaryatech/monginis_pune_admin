@@ -81,31 +81,35 @@
 						</div>
 					</div>
 
-				</div>	<br>
-				<div class="row">
-               <div class="form-group">
-					<label class="col-sm-3 col-lg-2	 control-label">Select Type</label>
-						<div class="col-sm-10 col-lg-4  controls">
-						
-						<select data-placeholder="Select Type"	class="form-control chosen" id="type" name="type"  required>
-                        <option value="">Select Type</option>
-                        <option value="1">Bill wise</option>
-                        <option value="2">Credit Note Wise</option>
-                        <option value="3">Consolidated</option>
-                      </select>
-                      </div>
-               
-			
-			
-				<div class="col-md-4">
-					<button class="btn btn-info" onclick="searchReport()">Search
-						Report</button>
-					<button class="btn btn-primary" value="PDF" id="PDFButton"
-						onclick="genPdf()">PDF</button>
 				</div>
+				<br>
+				<div class="row">
+					<div class="form-group">
+						<label class="col-sm-3 col-lg-2	 control-label">Select
+							Type</label>
+						<div class="col-sm-10 col-lg-4  controls">
 
-				<!-- <div class="col-sm-9 col-lg-5 controls">
- --> </div>
+							<select data-placeholder="Select Type"
+								class="form-control chosen" id="type" name="type" required>
+								<option value="">Select Type</option>
+								<option value="1">Bill wise</option>
+								<option value="2">Credit Note Wise</option>
+								<option value="3">Consolidated</option>
+							</select>
+						</div>
+
+
+
+						<div class="col-md-4">
+							<button class="btn btn-info" onclick="searchReport()">Search
+								Report</button>
+							<button class="btn btn-primary" value="PDF" id="PDFButton"
+								onclick="genPdf()">PDF</button>
+						</div>
+
+						<!-- <div class="col-sm-9 col-lg-5 controls">
+ -->
+					</div>
 				</div>
 				<br>
 
@@ -206,7 +210,7 @@
 
 				fromDate : from_date,
 				toDate : to_date,
-				type:type,
+				type : type,
 				ajax : 'true'
 
 			}, function(data) {
@@ -237,12 +241,16 @@
 
 					tr.append($('<td></td>').html(report.itemHsncd));
 
-					tr.append($('<td></td>').html(report.itemTax1 + report.itemTax2));
+					tr.append($('<td></td>').html(
+							report.itemTax1 + report.itemTax2));
 
-					tr.append($('<td  style="text-align:right;"></td>').html(report.billQty));
+					tr.append($('<td  style="text-align:right;"></td>').html(
+							report.billQty));
 
-					tr.append($('<td  style="text-align:right;"></td>').html(report.grnGvnQty));
-					tr.append($('<td  style="text-align:right;"></td>').html(report.billQty - report.grnGvnQty));
+					tr.append($('<td  style="text-align:right;"></td>').html(
+							report.grnGvnQty));
+					tr.append($('<td  style="text-align:right;"></td>').html(
+							report.billQty - report.grnGvnQty));
 
 					totalTaxableAmt = totalTaxableAmt + report.taxableAmt;
 
@@ -252,12 +260,19 @@
 					totalFinal = totalFinal + report.cgstRs + report.sgstRs
 							+ report.taxableAmt;
 
-					tr.append($('<td style="text-align:right;"></td>').html(report.taxableAmt.toFixed(2)));
-					tr.append($('<td style="text-align:right;"></td>').html(report.itemTax1));
-					tr.append($('<td style="text-align:right;"></td>').html(report.cgstRs.toFixed(2)));
-					tr.append($('<td style="text-align:right;"></td>').html(report.itemTax2));
-					tr.append($('<td style="text-align:right;"></td>').html(report.sgstRs.toFixed(2)));
-					tr.append($('<td style="text-align:right;"></td>').html((report.cgstRs + report.sgstRs + report.taxableAmt).toFixed(2)));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.taxableAmt.toFixed(2)));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.itemTax1));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.cgstRs.toFixed(2)));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.itemTax2));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.sgstRs.toFixed(2)));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							(report.cgstRs + report.sgstRs + report.taxableAmt)
+									.toFixed(2)));
 
 					$('#table_grid tbody').append(tr);
 
@@ -352,9 +367,8 @@
 						.open('${pageContext.request.contextPath}/pdfForReport?url=pdf/showSaleReportByDatePdf/'
 								+ from_date + '/' + to_date);
 			 */
-			window
-					.open("${pageContext.request.contextPath}/getHsnWisePdf/"
-							+ from_date + "/" + to_date);
+			window.open("${pageContext.request.contextPath}/getHsnWisePdf/"
+					+ from_date + "/" + to_date);
 
 		}
 	</script>
@@ -383,7 +397,7 @@
 
 		function exportToExcel() {
 
-			window.open("${pageContext.request.contextPath}/exportToExcel");
+			window.open("${pageContext.request.contextPath}/exportToExcelNew");
 			document.getElementById("expExcel").disabled = true;
 		}
 	</script>

@@ -237,14 +237,13 @@ public class ReportController {
 			float crnAmt = 0.0f;
 
 			for (int i = 0; i < crNoteRegItemList.size(); i++) {
-				float crnTotal=0.0f;
+				float crnTotal = 0.0f;
 				for (int j = 0; j < crNoteRegItemList.size(); j++) {
-					if(crNoteRegItemList.get(i).getCrnId()==crNoteRegItemList.get(j).getCrnId())
-					{
-						crnTotal=crnTotal+roundUp(crNoteRegItemList.get(j).getCrnAmt());
+					if (crNoteRegItemList.get(i).getCrnId() == crNoteRegItemList.get(j).getCrnId()) {
+						crnTotal = crnTotal + roundUp(crNoteRegItemList.get(j).getCrnAmt());
 					}
 				}
-				
+
 				expoExcel = new ExportToExcel();
 				rowData = new ArrayList<String>();
 				rowData.add("" + (i + 1));
@@ -271,12 +270,12 @@ public class ReportController {
 				rowData.add("" + roundUp(crNoteRegItemList.get(i).getSgstAmt()));
 
 				rowData.add("" + roundUp(crNoteRegItemList.get(i).getCrnAmt()));
-				rowData.add(""+roundUp(crnTotal));
+				rowData.add("" + roundUp(crnTotal));
 				expoExcel.setRowData(rowData);
 				exportToExcelList.add(expoExcel);
 
 			}
-		/*	expoExcel = new ExportToExcel();
+			expoExcel = new ExportToExcel();
 			rowData = new ArrayList<String>();
 			rowData.add("");
 			rowData.add("");
@@ -288,17 +287,21 @@ public class ReportController {
 			rowData.add("Total");
 			rowData.add("" + roundUp(crnQty));
 			rowData.add("" + roundUp(crnTaxable));
-
 			rowData.add("" + roundUp(cgstAmt));
-
 			rowData.add("" + roundUp(sgstAmt));
 			rowData.add("" + Math.round(crnAmt));
+			rowData.add("");
 
 			expoExcel.setRowData(rowData);
-			exportToExcelList.add(expoExcel);*/
+			exportToExcelList.add(expoExcel);
+
 			HttpSession session = request.getSession();
-			session.setAttribute("exportExcelList", exportToExcelList);
-			session.setAttribute("excelName", "CR Note Register" + fromDate + "-" + toDate);
+			session.setAttribute("exportExcelListNew", exportToExcelList);
+			session.setAttribute("excelNameNew", "CR Note Register");
+			session.setAttribute("reportNameNew", "Credit Note Register Report");
+			session.setAttribute("searchByNew", "From Date: " + fromDate + "  To Date: " + toDate + " ");
+			session.setAttribute("mergeUpto1", "$A$1:$P$1");
+			session.setAttribute("mergeUpto2", "$A$2:$P$2");
 
 		} catch (Exception e) {
 
@@ -572,8 +575,8 @@ public class ReportController {
 
 		if (view.getError() == true) {
 
-			// model = new ModelAndView("accessDenied");
-			model = new ModelAndView("reports/hsnwiseReport");
+			model = new ModelAndView("accessDenied");
+			// model = new ModelAndView("reports/hsnwiseReport");
 
 		} else {
 			model = new ModelAndView("reports/hsnwiseReport");
@@ -604,48 +607,48 @@ public class ReportController {
 	@RequestMapping(value = "/getReportHSNwise", method = RequestMethod.GET)
 	public @ResponseBody List<HSNWiseReport> getReportHSNwise(HttpServletRequest request,
 			HttpServletResponse response) {
-
+		String fromDate = "";
+		String toDate = "";
 		List<HSNWiseReport> hsnList = null;
-		
+
 		try {
 			System.out.println("Inside get hsnList    ");
 			hsnListBill = new ArrayList<>();
-			 hsnList = new ArrayList<>();
-			String fromDate = request.getParameter("fromDate");
-			String toDate = request.getParameter("toDate");
-			int type =Integer.parseInt(request.getParameter("type"));
+			hsnList = new ArrayList<>();
+			fromDate = request.getParameter("fromDate");
+			toDate = request.getParameter("toDate");
+			int type = Integer.parseInt(request.getParameter("type"));
 
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			RestTemplate restTemplate = new RestTemplate();
 
 			map.add("fromDate", DateConvertor.convertToYMD(fromDate));
 			map.add("toDate", DateConvertor.convertToYMD(toDate));
-               
-			 if(type==1||type==3) {
-			ParameterizedTypeReference<List<HSNWiseReport>> typeRef = new ParameterizedTypeReference<List<HSNWiseReport>>() {
-			};
-			ResponseEntity<List<HSNWiseReport>> responseEntity = restTemplate.exchange(Constants.url + "getHsnBillReport",
-					HttpMethod.POST, new HttpEntity<>(map), typeRef);
 
-			hsnListBill = responseEntity.getBody();
-			 }
-			 if(type==2||type==3) {
-			ParameterizedTypeReference<List<HSNWiseReport>> typeRef1 = new ParameterizedTypeReference<List<HSNWiseReport>>() {
-			};
-			ResponseEntity<List<HSNWiseReport>> responseEntity1 = restTemplate
-					.exchange(Constants.url + "getHsnReport", HttpMethod.POST, new HttpEntity<>(map), typeRef1);
+			if (type == 1 || type == 3) {
+				ParameterizedTypeReference<List<HSNWiseReport>> typeRef = new ParameterizedTypeReference<List<HSNWiseReport>>() {
+				};
+				ResponseEntity<List<HSNWiseReport>> responseEntity = restTemplate
+						.exchange(Constants.url + "getHsnBillReport", HttpMethod.POST, new HttpEntity<>(map), typeRef);
 
-			hsnList = responseEntity1.getBody();
-		
-			System.out.println("hsn List Bill Wise " + hsnList.toString());
-			 }
-			 
+				hsnListBill = responseEntity.getBody();
+			}
+			if (type == 2 || type == 3) {
+				ParameterizedTypeReference<List<HSNWiseReport>> typeRef1 = new ParameterizedTypeReference<List<HSNWiseReport>>() {
+				};
+				ResponseEntity<List<HSNWiseReport>> responseEntity1 = restTemplate
+						.exchange(Constants.url + "getHsnReport", HttpMethod.POST, new HttpEntity<>(map), typeRef1);
+
+				hsnList = responseEntity1.getBody();
+
+				System.out.println("hsn List Bill Wise " + hsnList.toString());
+			}
 
 			for (int i = 0; i < hsnList.size(); i++) {
-				for (int j = 0; j < hsnListBill.size(); j++)
-				{
+				for (int j = 0; j < hsnListBill.size(); j++) {
 					if (hsnList.get(i).getItemHsncd().equals(hsnListBill.get(j).getItemHsncd())) {
-						hsnListBill.get(j).setTaxableAmt(hsnListBill.get(j).getTaxableAmt() - hsnList.get(i).getTaxableAmt());
+						hsnListBill.get(j)
+								.setTaxableAmt(hsnListBill.get(j).getTaxableAmt() - hsnList.get(i).getTaxableAmt());
 						hsnListBill.get(j).setGrnGvnQty(hsnList.get(i).getBillQty());
 
 						hsnListBill.get(j).setCgstRs(hsnListBill.get(j).getCgstRs() - hsnList.get(i).getCgstRs());
@@ -653,13 +656,12 @@ public class ReportController {
 						hsnListBill.get(j).setSgstRs(hsnListBill.get(j).getSgstRs() - hsnList.get(i).getSgstRs());
 
 					}
-					//hsnListBill.get(j).setGrnGvnQty(0);
+					// hsnListBill.get(j).setGrnGvnQty(0);
 				}
 			}
-			if(type==2)
-			 {
-					hsnListBill.addAll(hsnList);
-			 }
+			if (type == 2) {
+				hsnListBill.addAll(hsnList);
+			}
 			System.out.println(hsnListBill.toString());
 			System.out.println(hsnList.toString());
 
@@ -691,6 +693,13 @@ public class ReportController {
 		rowData.add("SGST Amount");
 		rowData.add("Total");
 
+		float taxableAmt = 0.0f;
+		float cgstSum = 0.0f;
+		float sgstSum = 0.0f;
+		float igstSum = 0.0f;
+		float totalTax = 0.0f;
+		float grandTotal = 0.0f;
+
 		expoExcel.setRowData(rowData);
 		int srno = 1;
 		exportToExcelList.add(expoExcel);
@@ -715,6 +724,13 @@ public class ReportController {
 			rowData.add(" " + roundUp(hsnListBill.get(i).getTaxableAmt() + hsnListBill.get(i).getCgstRs()
 					+ hsnListBill.get(i).getSgstRs()));
 
+			totalTax = totalTax + hsnListBill.get(i).getItemTax1() + hsnListBill.get(i).getItemTax2();
+			taxableAmt = taxableAmt + hsnListBill.get(i).getTaxableAmt();
+			cgstSum = cgstSum + hsnListBill.get(i).getCgstRs();
+			sgstSum = sgstSum + hsnListBill.get(i).getSgstRs();
+			grandTotal = grandTotal + hsnListBill.get(i).getTaxableAmt() + hsnListBill.get(i).getCgstRs()
+					+ hsnListBill.get(i).getSgstRs();
+
 			srno = srno + 1;
 
 			expoExcel.setRowData(rowData);
@@ -722,7 +738,36 @@ public class ReportController {
 
 		}
 
+		expoExcel = new ExportToExcel();
+		rowData = new ArrayList<String>();
+
+		rowData.add("");
+		rowData.add("Total");
+		rowData.add("");
+		rowData.add("");
+		rowData.add("");
+		rowData.add("" + roundUp(totalTax));
+		rowData.add("" + roundUp(taxableAmt));
+
+		rowData.add("");
+		rowData.add("" + roundUp(cgstSum));
+
+		rowData.add("");
+		rowData.add("" + roundUp(sgstSum));
+
+		rowData.add("" + roundUp(grandTotal));
+
+		expoExcel.setRowData(rowData);
+		exportToExcelList.add(expoExcel);
+
 		HttpSession session = request.getSession();
+		session.setAttribute("exportExcelListNew", exportToExcelList);
+		session.setAttribute("excelNameNew", "HSNWiseReport");
+		session.setAttribute("reportNameNew", "View HSN Wise Report");
+		session.setAttribute("searchByNew", "From Date: " + fromDate + "  To Date: " + toDate + " ");
+		session.setAttribute("mergeUpto1", "$A$1:$L$1");
+		session.setAttribute("mergeUpto2", "$A$2:$L$2");
+
 		session.setAttribute("exportExcelList", exportToExcelList);
 		session.setAttribute("excelName", "HSNWiseReport");
 

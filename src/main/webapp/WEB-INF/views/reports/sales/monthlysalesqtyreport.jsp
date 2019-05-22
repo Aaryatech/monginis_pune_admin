@@ -41,50 +41,52 @@
 		<!-- END Page Title -->
 
 		<!-- BEGIN Breadcrumb -->
-	
+
 		<!-- END Breadcrumb -->
-<form id="submitBillForm"
-					action="${pageContext.request.contextPath}/showMonthlySalesQtyWiseReport"
-					method="get">
-		<!-- BEGIN Main Content -->
-		<div class="box">
-			<div class="box-title">
-				<h3>
-					<i class="fa fa-bars"></i>Monthly Sales Return Quantity Wise Report
-				</h3>
+		<form id="submitBillForm"
+			action="${pageContext.request.contextPath}/showMonthlySalesQtyWiseReport"
+			method="get">
+			<!-- BEGIN Main Content -->
+			<div class="box">
+				<div class="box-title">
+					<h3>
+						<i class="fa fa-bars"></i>Monthly Sales Return Quantity Wise
+						Report
+					</h3>
 
-			</div>
-	
-			<div class="box-content">
-				<div class="row">
+				</div>
+
+				<div class="box-content">
+					<div class="row">
 
 
-					<div class="form-group">
-						<label class="col-sm-3 col-lg-2	 control-label">Year</label>
-						<div class="col-sm-6 col-lg-2 controls date_select">
-							<select id="year" name="year" class="form-control" >
-							
-                             <option value="2019-2020">2019-2020</option>
-                           </select>
-						</div>
+						<div class="form-group">
+							<label class="col-sm-3 col-lg-2	 control-label">Year</label>
+							<div class="col-sm-6 col-lg-2 controls date_select">
+								<select id="year" name="year" class="form-control">
 
-						<!-- </div>
+									<option value="2019-2020">2019-2020</option>
+								</select>
+							</div>
+
+							<!-- </div>
 
 					<div class="form-group  "> -->
 
-					<!-- 	<label class="col-sm-3 col-lg-2	 control-label">To Date</label>
+							<!-- 	<label class="col-sm-3 col-lg-2	 control-label">To Date</label>
 						<div class="col-sm-6 col-lg-2 controls date_select">
 							<input class="form-control" id="toMonth" name="toMonth"
 								size="30" type="month"  />
 						</div> -->
-					
-               
-					
-						 <input type="submit" id="submit" class="btn btn-primary" value="Search"  >
 
-					
-				</div>
-                     </div>
+
+
+							<input type="submit" id="submit" class="btn btn-primary"
+								value="Search">
+
+
+						</div>
+					</div>
 
 				</div>
 
@@ -100,144 +102,157 @@
 				</div>
 
 			</div>
-		
 
 
-		<div class="box">
-			<div class="box-title">
-				<h3>
-					<i class="fa fa-list-alt"></i>Monthly Sales Return Quantity Wise Report
-				</h3>
 
-			</div>
+			<div class="box">
+				<div class="box-title">
+					<h3>
+						<i class="fa fa-list-alt"></i>Monthly Sales Return Quantity Wise
+						Report
+					</h3>
 
-		
+				</div>
+
+
 				<div class=" box-content">
 					<div class="row">
-						<div class="col-md-12 table-responsive" style="overflow: scroll; overflow: auto;">
+						<div class="col-md-12 table-responsive"
+							style="overflow: scroll; overflow: auto;">
 							<table class="table table-bordered table-striped fill-head "
-								style="width: 100%; overflow: scroll; overflow: auto; " id="table_grid"  >
+								style="width: 100%; overflow: scroll; overflow: auto;"
+								id="table_grid">
 								<thead style="background-color: #f3b5db;">
 									<tr>
 										<th rowspan="2">Sr.</th>
 										<th rowspan="2">Group Name</th>
-										<c:forEach var="report" items="${salesReturnQtyReport}" varStatus="cnt">
-										<th colspan="4" style="text-align: center;">${report.value.month}</th>
+										<c:forEach var="report" items="${salesReturnQtyReport}"
+											varStatus="cnt">
+											<th colspan="4" style="text-align: center;">${report.value.month}</th>
 										</c:forEach>
 										<th colspan="4">Total II HALF</th>
 									</tr>
 									<tr>
-									<th>Gross Sale</th>
-									<th>GVN Qty</th>
-									<th>GRN Qty</th>
-									<th>Total</th>
-									
-									<th>Gross Sale</th>
-									<th>GVN Qty</th>
-									<th>GRN Qty</th>
-									<th>Total</th>
-									
-									<th>Gross Sale</th>
-									<th>GVN Qty</th>
-									<th>GRN Qty</th>
-									<th>Total</th>
-									
-									<th>Gross Sale</th>
-									<th>GVN Qty</th>
-									<th>GRN Qty</th>
-									<th>Total</th>
-									
-									<th>Gross Sale</th>
-									<th>GVN Qty</th>
-									<th>GRN Qty</th>
-									<th>Total</th>
-									
-									<th>Gross Sale</th>
-									<th>GVN Qty</th>
-									<th>GRN Qty</th>
-									<th>Total</th>
-									
-									<th>Gross Sale</th>
-									<th>GVN Qty</th>
-									<th>GRN Qty</th>
-									<th>Total</th>
-									
-									<th>Gross Sale</th>
-									<th>GVN Qty</th>
-									<th>GRN Qty</th>
-									<th>Total</th>
-									
-									<th>Gross Sale</th>
-									<th>GVN Qty</th>
-									<th>GRN Qty</th>
-									<th>Total</th>
-									
-									<th>Gross Sale</th>
-									<th>GVN Qty</th>
-									<th>GRN Qty</th>
-									<th>Total</th>
-									
-									<th>Gross Sale</th>
-									<th>GVN Qty</th>
-									<th>GRN Qty</th>
-									<th>Total</th>
-									
-								    <th>Gross Sale</th>
-									<th>GVN Qty</th>
-									<th>GRN Qty</th>
-									<th>Total</th>
-									
-									<th>Gross Sale</th>
-									<th>GRN Qty</th>
-									<th>GVN Qty</th>
+										<th>Gross Sale</th>
+										<th>GVN Qty</th>
+										<th>GRN Qty</th>
+										<th>Total</th>
+
+										<th>Gross Sale</th>
+										<th>GVN Qty</th>
+										<th>GRN Qty</th>
+										<th>Total</th>
+
+										<th>Gross Sale</th>
+										<th>GVN Qty</th>
+										<th>GRN Qty</th>
+										<th>Total</th>
+
+										<th>Gross Sale</th>
+										<th>GVN Qty</th>
+										<th>GRN Qty</th>
+										<th>Total</th>
+
+										<th>Gross Sale</th>
+										<th>GVN Qty</th>
+										<th>GRN Qty</th>
+										<th>Total</th>
+
+										<th>Gross Sale</th>
+										<th>GVN Qty</th>
+										<th>GRN Qty</th>
+										<th>Total</th>
+
+										<th>Gross Sale</th>
+										<th>GVN Qty</th>
+										<th>GRN Qty</th>
+										<th>Total</th>
+
+										<th>Gross Sale</th>
+										<th>GVN Qty</th>
+										<th>GRN Qty</th>
+										<th>Total</th>
+
+										<th>Gross Sale</th>
+										<th>GVN Qty</th>
+										<th>GRN Qty</th>
+										<th>Total</th>
+
+										<th>Gross Sale</th>
+										<th>GVN Qty</th>
+										<th>GRN Qty</th>
+										<th>Total</th>
+
+										<th>Gross Sale</th>
+										<th>GVN Qty</th>
+										<th>GRN Qty</th>
+										<th>Total</th>
+
+										<th>Gross Sale</th>
+										<th>GVN Qty</th>
+										<th>GRN Qty</th>
+										<th>Total</th>
+
+										<th>Gross Sale</th>
+										<th>GRN Qty</th>
+										<th>GVN Qty</th>
 									</tr>
 								</thead>
 								<tbody>
-								  <c:set var="finalBillQty" value="0.0"/><c:set var="finalGrnQty" value="0.0"/><c:set var="finalGvnQty" value="0.0"/>
-                                   <c:forEach items="${subCatList}" var="subCatList" varStatus="count">
-                                   <c:set var="billQty" value="0.0"/><c:set var="grnQty" value="0.0"/><c:set var="gvnQty" value="0.0"/>
-                                   <tr>
-										<td>${count.index+1}</td>
-										<td>${subCatList.subCatName}</td>
-										<c:forEach var="report" items="${salesReturnQtyReport}" varStatus="cnt">
-										
-										<c:forEach var="rep" items="${report.value.salesReturnQtyDaoList}" varStatus="cnt1">
-										
-										<c:choose>
-										<c:when test="${rep.subCatId==subCatList.subCatId}">
-										<td style="text-align: right;">${rep.billQty}</td>
-										<td style="text-align: right;">${rep.gvnQty}</td>
-										<td style="text-align: right;">${rep.grnQty}</td>
-										<td style="text-align: right;">${rep.billQty-(rep.gvnQty+rep.grnQty)}</td>
-										<c:set var="billQty" value="${billQty+rep.billQty}"/>
-										<c:set var="grnQty" value="${rep.grnQty+grnQty}"/>
-										<c:set var="gvnQty" value="${rep.gvnQty+gvnQty}"/>
-										</c:when>
-										<c:otherwise>
-										
-										</c:otherwise>
-										</c:choose>
-										
-										</c:forEach>
-										</c:forEach>
-										<td style="text-align: right;">${billQty}</td>
-										<td style="text-align: right;">${grnQty}</td>
-										<td style="text-align: right;">${gvnQty}</td>
-										<c:set var="finalBillQty" value="${finalBillQty+billQty}"/>
-										<c:set var="finalGrnQty" value="${grnQty+finalGrnQty}"/>
-										<c:set var="finalGvnQty" value="${gvnQty+finalGvnQty}"/>
-									</tr>
-                                   </c:forEach>
-                                   <tr>
-                                        <th rowspan="2"></th>
+									<c:set var="finalBillQty" value="0.0" />
+									<c:set var="finalGrnQty" value="0.0" />
+									<c:set var="finalGvnQty" value="0.0" />
+									<c:forEach items="${subCatList}" var="subCatList"
+										varStatus="count">
+										<c:set var="billQty" value="0.0" />
+										<c:set var="grnQty" value="0.0" />
+										<c:set var="gvnQty" value="0.0" />
+										<tr>
+											<td>${count.index+1}</td>
+											<td>${subCatList.subCatName}</td>
+											<c:forEach var="report" items="${salesReturnQtyReport}"
+												varStatus="cnt">
+
+												<c:forEach var="rep"
+													items="${report.value.salesReturnQtyDaoList}"
+													varStatus="cnt1">
+
+													<c:choose>
+														<c:when test="${rep.subCatId==subCatList.subCatId}">
+															<td style="text-align: right;">${rep.billQty}</td>
+															<td style="text-align: right;">${rep.gvnQty}</td>
+															<td style="text-align: right;">${rep.grnQty}</td>
+															<td style="text-align: right;">${rep.billQty-(rep.gvnQty+rep.grnQty)}</td>
+															<c:set var="billQty" value="${billQty+rep.billQty}" />
+															<c:set var="grnQty" value="${rep.grnQty+grnQty}" />
+															<c:set var="gvnQty" value="${rep.gvnQty+gvnQty}" />
+														</c:when>
+														<c:otherwise>
+
+														</c:otherwise>
+													</c:choose>
+
+												</c:forEach>
+											</c:forEach>
+											<td style="text-align: right;">${billQty}</td>
+											<td style="text-align: right;">${grnQty}</td>
+											<td style="text-align: right;">${gvnQty}</td>
+											<c:set var="finalBillQty" value="${finalBillQty+billQty}" />
+											<c:set var="finalGrnQty" value="${grnQty+finalGrnQty}" />
+											<c:set var="finalGvnQty" value="${gvnQty+finalGvnQty}" />
+										</tr>
+									</c:forEach>
+									<tr>
+										<th rowspan="2"></th>
 										<th rowspan="2">Total</th>
-										<c:forEach var="report" items="${salesReturnQtyReport}" varStatus="cnt">
-										<th style="text-align: right;">${report.value.totBillQty}</th>
-										
-										<th style="text-align: right;">${report.value.totGvnQty}</th>
-										<th style="text-align: right;">${report.value.totGrnQty}</th>
-										<th style="text-align: right;">${report.value.totBillQty-(report.value.totGrnQty+report.value.totGvnQty)}</th>
-													
+										<c:forEach var="report" items="${salesReturnQtyReport}"
+											varStatus="cnt">
+											<th style="text-align: right;">${report.value.totBillQty}</th>
+
+											<th style="text-align: right;">${report.value.totGvnQty}</th>
+											<th style="text-align: right;">${report.value.totGrnQty}</th>
+											<th style="text-align: right;">${report.value.totBillQty-(report.value.totGrnQty+report.value.totGvnQty)}</th>
+
 										</c:forEach>
 										<th style="text-align: right;">${finalBillQty}</th>
 										<th style="text-align: right;">${finalGrnQty}</th>
@@ -246,20 +261,20 @@
 								</tbody>
 							</table>
 						</div>
-						<div class="form-group"  id="range">
+						<div class="form-group" id="range">
 
 							<div class="col-sm-3  controls">
 								<input type="button" id="expExcel" class="btn btn-primary"
-									value="EXPORT TO Excel" onclick="exportToExcel();"
-									>
+									value="EXPORT TO Excel" onclick="exportToExcel();">
 							</div>
 						</div>
 					</div>
 
 				</div>
-		
-		</div>
-	</form></div>
+
+			</div>
+		</form>
+	</div>
 	<!-- END Main Content -->
 
 	<footer>
@@ -297,14 +312,13 @@
 
 	<script type="text/javascript">
 		function searchReport() {
-              
-              var year=$("#year").val();
+
+			var year = $("#year").val();
 			alert(year);
 
 			$('#loader').show();
 
-			$.getJSON('${getSalesReportList}',
-			{
+			$.getJSON('${getSalesReportList}', {
 				year : year,
 				ajax : 'true'
 
@@ -496,7 +510,7 @@
 	<script type="text/javascript">
 		function exportToExcel() {
 
-			window.open("${pageContext.request.contextPath}/exportToExcel");
+			window.open("${pageContext.request.contextPath}/exportToExcelNew");
 			document.getElementById("expExcel").disabled = true;
 		}
 	</script>
