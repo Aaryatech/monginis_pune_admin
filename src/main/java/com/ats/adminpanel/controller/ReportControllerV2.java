@@ -737,28 +737,21 @@ public class ReportControllerV2 {
 
 			}
 
-			expoExcel = new ExportToExcel();
-			rowData = new ArrayList<String>();
-
-			rowData.add("");
-			rowData.add("Total");
-			rowData.add("");
-			rowData.add("");
-			rowData.add("");
-			rowData.add("");
-			rowData.add("" + roundUp(billQty));
-			rowData.add("" + roundUp(taxableAmt));
-			rowData.add("" + roundUp(cgstSum));
-			rowData.add("" + roundUp(sgstSum));
-			rowData.add("" + roundUp(grandTotal));
-			rowData.add("" + roundUp(totalFinal));
-
-			expoExcel.setRowData(rowData);
-			exportToExcelList.add(expoExcel);
+			/*
+			 * expoExcel = new ExportToExcel(); rowData = new ArrayList<String>();
+			 * 
+			 * rowData.add(""); rowData.add("Total"); rowData.add(""); rowData.add("");
+			 * rowData.add(""); rowData.add(""); rowData.add("" + roundUp(billQty));
+			 * rowData.add("" + roundUp(taxableAmt)); rowData.add("" + roundUp(cgstSum));
+			 * rowData.add("" + roundUp(sgstSum)); rowData.add("" + roundUp(grandTotal));
+			 * rowData.add("" + roundUp(totalFinal));
+			 * 
+			 * expoExcel.setRowData(rowData); exportToExcelList.add(expoExcel);
+			 */
 
 			HttpSession session = request.getSession();
 			session.setAttribute("exportExcelListNew", exportToExcelList);
-			session.setAttribute("excelNameNew", "Sales_Report");
+			session.setAttribute("excelName", "Sales_Report");
 			session.setAttribute("reportNameNew", "GST Register Report By Franchise");
 			session.setAttribute("searchByNew", "From Date: " + fromDate + "  To Date: " + toDate + " ");
 			session.setAttribute("mergeUpto1", "$A$1:$L$1");

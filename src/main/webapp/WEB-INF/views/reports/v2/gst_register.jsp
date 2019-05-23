@@ -188,8 +188,7 @@
 				</div>
 
 				<div id="chart" style="background-color: white;">
-					<br>
-					<br> <br>
+					<br> <br> <br>
 					<hr>
 
 
