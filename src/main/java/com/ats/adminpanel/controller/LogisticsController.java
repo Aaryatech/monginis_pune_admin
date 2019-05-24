@@ -163,6 +163,8 @@ public class LogisticsController {
 			String licNo = request.getParameter("lic_no");
 			String licExpr_Date = request.getParameter("lic_expr_date");
 			System.out.println("driverId" + driverId);
+			String userName = request.getParameter("userName");
+			String password = request.getParameter("password");
 			System.out.println("driverName" + driverName);
 			System.out.println("add1" + add1);
 			System.out.println("add2" + add2);
@@ -189,6 +191,8 @@ public class LogisticsController {
 			insertDriver.setJoiningDate(joining_Date);
 			insertDriver.setLicNo(licNo);
 			insertDriver.setLicExpireDate(licExpr_Date);
+			insertDriver.setString1(userName);
+			insertDriver.setString2(password);
 			System.out.println("insertDriver " + insertDriver);
 			DriverMaster driverMaster = restTemplate.postForObject(Constants.url + "postDriverMaster", insertDriver,
 					DriverMaster.class);

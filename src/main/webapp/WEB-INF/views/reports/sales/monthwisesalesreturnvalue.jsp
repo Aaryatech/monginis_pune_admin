@@ -345,7 +345,7 @@
 	<script type="text/javascript">
 		function exportToExcel() {
 
-			window.open("${pageContext.request.contextPath}/exportToExcelNew");
+			window.open("${pageContext.request.contextPath}/exportToExcel");
 			document.getElementById("expExcel").disabled = true;
 		}
 	</script>
