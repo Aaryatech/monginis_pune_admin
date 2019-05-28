@@ -788,8 +788,8 @@ public class FinishedGoodStockController {
 							cloT2 = t2 - b;
 							cloT3 = t3 - c;
 
-							curClosing = prodQty - rejQty - curIssue;
-							totalClosing = ((t1 + t2 + t3) + (prodQty - rejQty)) - billQty;
+							curClosing = damagedQty + prodQty - rejQty - curIssue;
+							totalClosing = ((t1 + t2 + t3) + (prodQty - rejQty) + damagedQty) - billQty;
 							stockDetail.setCloCurrent(curClosing);
 							stockDetail.setCloT1(cloT1);
 							stockDetail.setCloT2(cloT2);
@@ -905,7 +905,7 @@ public class FinishedGoodStockController {
 			rowData.add("Rej Qty");
 
 			rowData.add("Bill Qty");
-			rowData.add("Dummy Qty");
+			rowData.add("Return Qty");
 			rowData.add("Current Closing ");
 			rowData.add("Close T");
 			rowData.add("Close T1");
@@ -1158,7 +1158,7 @@ public class FinishedGoodStockController {
 
 				finStkDetail.setOpT1(prevDetail.getCloCurrent());
 				finStkDetail.setOpT2(prevDetail.getCloT1());
-				finStkDetail.setOpT3(prevDetail.getCloT2()+prevDetail.getCloT3());
+				finStkDetail.setOpT3(prevDetail.getCloT2() + prevDetail.getCloT3());
 				finStkDetail.setOpTotal(finStkDetail.getOpT1() + finStkDetail.getOpT2() + finStkDetail.getOpT3());
 				finStkDetail.setItemId(prevDetail.getItemId());
 				finStkDetail.setItemName(prevDetail.getItemName());
