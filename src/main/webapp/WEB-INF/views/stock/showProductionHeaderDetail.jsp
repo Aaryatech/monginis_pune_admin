@@ -66,7 +66,7 @@ table {
 								<div class="box">
 									<div class="box-title">
 										<h3>
-											<i class="fa fa-table"></i> Production
+											<i class="fa fa-table"></i> Add Return And Rejection Qty
 
 										</h3>
 										<div class="box-tool">
