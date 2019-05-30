@@ -194,7 +194,22 @@
 															</c:choose>
   
 															<td align="left"><c:out value="${type}"></c:out></td>
-                                                          <fmt:formatNumber type = "number"       maxFractionDigits = "2" minFractionDigits = "2" value = "${crnDetail.taxableAmt/crnDetail.grnGvnQty}" var="grnBaseRate"/>
+															<c:choose>
+															<c:when test="${crnDetail.grnGvnQty==0}">
+															<c:choose>
+															<c:when test="${crnDetail.isGrn==0}">
+																 <fmt:formatNumber type = "number" maxFractionDigits = "2" minFractionDigits = "2" value = "${(crnDetail.baseRate)*0.99}" var="grnBaseRate"/>
+															</c:when>
+															<c:otherwise>
+															 <fmt:formatNumber type = "number" maxFractionDigits = "2" minFractionDigits = "2" value = "${(crnDetail.baseRate)*0.79}" var="grnBaseRate"/>
+															</c:otherwise>
+															</c:choose>
+															</c:when>
+															<c:otherwise>
+															 <fmt:formatNumber type = "number"       maxFractionDigits = "2" minFractionDigits = "2" value = "${crnDetail.taxableAmt/crnDetail.grnGvnQty}" var="grnBaseRate"/>
+															</c:otherwise>
+															</c:choose>
+                                                         
                                                            
                                                             <td align="left">${grnBaseRate}
                                                             <input type="hidden" name="grnBaseRate${crnDetail.crndId}" id="grnBaseRate${crnDetail.crndId}" value="${grnBaseRate}" />

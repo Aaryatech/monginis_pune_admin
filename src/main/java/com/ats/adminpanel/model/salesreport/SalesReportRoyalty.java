@@ -6,11 +6,9 @@ public class SalesReportRoyalty {
 	private int id;
 	
 	private int catId;
-	
+	private int subCatId;
 	private String item_name;
-	
 	private String cat_name;
-	
 	float tBillQty;
 	float tBillTaxableAmt;
 	float tGrnQty;
@@ -18,6 +16,13 @@ public class SalesReportRoyalty {
 	float tGvnQty;
 	float tGvnTaxableAmt;
 	
+	
+	public int getSubCatId() {
+		return subCatId;
+	}
+	public void setSubCatId(int subCatId) {
+		this.subCatId = subCatId;
+	}
 	public int getId() {
 		return id;
 	}
@@ -80,10 +85,11 @@ public class SalesReportRoyalty {
 	}
 	@Override
 	public String toString() {
-		return "SalesReportRoyalty [id=" + id + ", catId=" + catId + ", item_name=" + item_name + ", cat_name="
-				+ cat_name + ", tBillQty=" + tBillQty + ", tBillTaxableAmt=" + tBillTaxableAmt + ", tGrnQty=" + tGrnQty
-				+ ", tGrnTaxableAmt=" + tGrnTaxableAmt + ", tGvnQty=" + tGvnQty + ", tGvnTaxableAmt=" + tGvnTaxableAmt
-				+ "]";
+		return "SalesReportRoyalty [id=" + id + ", catId=" + catId + ", subCatId=" + subCatId + ", item_name="
+				+ item_name + ", cat_name=" + cat_name + ", tBillQty=" + tBillQty + ", tBillTaxableAmt="
+				+ tBillTaxableAmt + ", tGrnQty=" + tGrnQty + ", tGrnTaxableAmt=" + tGrnTaxableAmt + ", tGvnQty="
+				+ tGvnQty + ", tGvnTaxableAmt=" + tGvnTaxableAmt + "]";
 	}
+	
 	
 }

@@ -1,10 +1,11 @@
 package com.ats.adminpanel.controller;
 
-import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -13,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.spi.LocationAwareLogger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
@@ -26,7 +26,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ats.adminpanel.commons.AccessControll;
-import com.ats.adminpanel.commons.Commons;
 import com.ats.adminpanel.commons.Constants;
 import com.ats.adminpanel.model.AllRoutesListResponse;
 import com.ats.adminpanel.model.ExportToExcel;
@@ -36,7 +35,7 @@ import com.ats.adminpanel.model.GetRegSpCakeOrders;
 import com.ats.adminpanel.model.GetSpCakeOrders;
 import com.ats.adminpanel.model.GetSpCkOrder;
 import com.ats.adminpanel.model.Info;
-import com.ats.adminpanel.model.Order;
+import com.ats.adminpanel.model.Orders;
 import com.ats.adminpanel.model.RegularSpCkOrder;
 import com.ats.adminpanel.model.RegularSpCkOrdersResponse;
 import com.ats.adminpanel.model.Route;
@@ -44,6 +43,7 @@ import com.ats.adminpanel.model.SpCakeOrderUpdate;
 import com.ats.adminpanel.model.SpCakeOrders;
 import com.ats.adminpanel.model.SpCakeOrdersBean;
 import com.ats.adminpanel.model.SpCakeOrdersBeanResponse;
+import com.ats.adminpanel.model.SplitOrderData;
 import com.ats.adminpanel.model.accessright.ModuleJson;
 import com.ats.adminpanel.model.franchisee.AllFranchiseeList;
 import com.ats.adminpanel.model.franchisee.AllMenuResponse;
@@ -51,9 +51,7 @@ import com.ats.adminpanel.model.franchisee.FrNameIdByRouteId;
 import com.ats.adminpanel.model.franchisee.FrNameIdByRouteIdResponse;
 import com.ats.adminpanel.model.franchisee.FranchiseeList;
 import com.ats.adminpanel.model.franchisee.Menu;
-import com.fasterxml.jackson.annotation.JsonFormat.Value;
 
-import com.sun.org.apache.bcel.internal.generic.ALOAD;
 
 @Controller
 @Scope("session")
@@ -63,7 +61,7 @@ public class OrderController {
 	public List<FranchiseeList> selectedFrList = new ArrayList<FranchiseeList>();
 	public List<SpCakeOrdersBean> spCakeOrderList = new ArrayList<SpCakeOrdersBean>();
 	List<GetOrder> orderList = null;
-	public List<Menu> menuList;
+	public List<Menu> menuList;String message="";
 	SpCakeOrdersBeanResponse orderListResponse;
 	RegularSpCkOrdersResponse regOrderListResponse;
 
@@ -124,6 +122,93 @@ public class OrderController {
 		}
 		return model;
 
+	}
+	int orderStatus=0;
+	@RequestMapping(value = "/splitOrders")
+	public ModelAndView splitOrders(HttpServletRequest request, HttpServletResponse response) {
+
+		// ModelAndView model=new ModelAndView("orders/orders");
+		ModelAndView model = null;
+		/*HttpSession session = request.getSession();
+
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("splitOrders", "splitOrders", "1", "0", "0", "0", newModuleList);
+
+		if (view.getError() == true) {
+
+			model = new ModelAndView("orders/splitOrders");
+
+		} else {*/
+			model = new ModelAndView("orders/splitOrders");
+			//Constants.mainAct = 4;
+			//Constants.subAct = 27;
+
+			try {
+				RestTemplate restTemplate = new RestTemplate();
+				AllFranchiseeList allFranchiseeList = restTemplate.getForObject(Constants.url + "getAllFranchisee",
+						AllFranchiseeList.class);
+
+				// franchiseeList= new ArrayList<FranchiseeList>();
+				franchiseeList = allFranchiseeList.getFranchiseeList();
+
+				model.addObject("franchiseeList", franchiseeList);
+				model.addObject("allOtherFrList", tempFrList);
+				model.addObject("selectedFrList", selectedFrList);
+				model.addObject("date", new SimpleDateFormat("dd-MM-yyyy").format(new Date()));
+				RestTemplate restTemplate1 = new RestTemplate();
+
+				AllMenuResponse allMenuResponse = restTemplate1.getForObject(Constants.url + "getAllMenu",
+						AllMenuResponse.class);
+
+				menuList = new ArrayList<Menu>();
+				menuList = allMenuResponse.getMenuConfigurationPage();
+
+				System.out.println("MENU LIST= " + menuList.toString());
+				model.addObject("menuList", menuList);
+				System.out.println("menu list is" + menuList.toString());
+
+				AllRoutesListResponse allRouteListResponse = restTemplate.getForObject(Constants.url + "showRouteList",
+						AllRoutesListResponse.class);
+
+				List<Route> routeList = new ArrayList<Route>();
+
+				routeList = allRouteListResponse.getRoute();
+				model.addObject("routeList", routeList);
+				model.addObject("message", message);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		//}
+		return model;
+	}
+	@RequestMapping(value = "/getMenusListByCatId", method = RequestMethod.GET)
+	public @ResponseBody List<Menu> getMenusListByCatId(HttpServletRequest request, HttpServletResponse response) {
+
+		List<Menu> menusList=null;
+		try
+		{
+			int menuId = Integer.parseInt(request.getParameter("menuId"));
+			menusList=new ArrayList<Menu>();
+			int catId=0;
+			for(int i=0;i<menuList.size();i++)
+			{
+				if(menuList.get(i).getMenuId()==menuId)
+				{
+					catId=menuList.get(i).getMainCatId();
+					break;
+				}
+			}
+			for(int i=0;i<menuList.size();i++)
+			{
+				if(menuList.get(i).getMainCatId()==catId)
+				{
+					menusList.add(menuList.get(i));
+				}
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return menusList;
 	}
 
 	@RequestMapping(value = "/searchOrdersProcess", method = RequestMethod.GET) // getOrderListForAllFr new web service
@@ -276,7 +361,7 @@ public class OrderController {
 	public @ResponseBody List<GetOrder> searchOrdersProcessByItem(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView("orders/orders");
 
-		System.out.println("/inside search order process  ");
+	    // System.out.println("/inside search order process  ");
 		// model.addObject("franchiseeList", franchiseeList);
 		try {
 			model.addObject("menuList", menuList);
@@ -421,6 +506,59 @@ public class OrderController {
 			e.printStackTrace();
 		}
 		return orderList;
+	}
+	@RequestMapping(value = "/saveSplitOrders", method = RequestMethod.POST)
+	public String saveSplitOrders(HttpServletRequest request, HttpServletResponse response) throws ParseException {
+		ModelAndView model = new ModelAndView("orders/splitOrders");
+		RestTemplate restTemplate = new RestTemplate();
+	  try {
+		  int splitMenuId = Integer.parseInt(request.getParameter("splitMenuId"));
+		  String prodDate=request.getParameter("split_production_date");
+		  String delDate=request.getParameter("split_delivery_date");
+			SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy");
+		  java.util.Date udate = sdf1.parse(prodDate);
+			java.util.Date udeldate = sdf1.parse(delDate);
+			java.sql.Date sqlPDate = new java.sql.Date(udate.getTime());
+			java.sql.Date deliveryDate = new java.sql.Date(udeldate.getTime());
+			System.err.println("deliveryDate" + deliveryDate + "sqlCurrDate" + sqlPDate);
+		  LinkedHashMap<Integer,Integer> updateLhm=new LinkedHashMap<Integer,Integer>();
+		  List<SplitOrderData> orderJson=new ArrayList<>();
+		  for(int i=0;i<orderList.size();i++)
+		  {
+			 int splitQty=Integer.parseInt(request.getParameter("splitQty"+orderList.get(i).getOrderId()+""+orderList.get(i).getId()));
+			 int updatedQty=Integer.parseInt(request.getParameter("updatedQty"+orderList.get(i).getOrderId()));
+			if(splitQty>0) {
+			 updateLhm.put(orderList.get(i).getOrderId(), updatedQty);
+			 SplitOrderData splitOrderData=new SplitOrderData();
+			 splitOrderData.setOrderId(orderList.get(i).getOrderId());
+			 splitOrderData.setMenuId(splitMenuId);
+			 splitOrderData.setOrderQty(splitQty);
+			 splitOrderData.setDeliveryDate(deliveryDate);
+			 splitOrderData.setProductionDate(sqlPDate);
+			 orderJson.add(splitOrderData);
+			}
+			 
+		  }
+		  List<Orders> orderListSaveResponse = restTemplate.postForObject(Constants.url + "placeSplitedOrder", orderJson,
+					List.class);
+		  
+		  List<Orders> orderListUpdateResponse = restTemplate.postForObject(Constants.url + "updateSplitedOrder", updateLhm,
+					List.class);
+		if(orderListSaveResponse.size()>0 || orderListUpdateResponse.size()>0)
+		{
+			orderStatus=2;
+			message="Orders Splitted Successfully.";
+		}else
+		{
+			orderStatus=1;
+			message="Orders Not Splitted!!";
+		}
+	  
+	  }catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return "redirect:/splitOrders";
 	}
 	// special cake orders
 

@@ -12,7 +12,7 @@
 	<c:url var="excelForCreaditNote" value="/excelForCreaditNote" />
 
 	<c:url var="excelForCreaditNoteReport" value="/exportToExcelReport" />
-
+	<c:url value="/excelForCrnExcel" var="excelForCrnExcel" />
 
 	<div class="container" id="main-container">
 
@@ -65,7 +65,7 @@
 									<label class="col-sm-3 col-lg-2 control-label">From
 										Date</label>
 									<div class="col-sm-5 col-lg-3 controls">
-										<input class="form-control date-picker" id="from_date"
+										<input class="form-control date-picker" id="from_date" autocomplete="off"
 											size="16" type="text" name="from_date" value="${fromDate}"
 											required />
 									</div>
@@ -75,7 +75,7 @@
 								<div class="form-group"> -->
 									<label class="col-sm-3 col-lg-2 control-label">To Date</label>
 									<div class="col-sm-5 col-lg-3 controls">
-										<input class="form-control date-picker" id="to_date" size="16"
+										<input class="form-control date-picker" id="to_date" size="16" autocomplete="off"
 											type="text" value="${toDate}" name="to_date" required />
 									</div>
 
@@ -156,7 +156,7 @@
 											<table width="100%"
 												class="table table-advance table-responsive table-position"
 												id="table1">
-												<thead>
+												<thead  style="background-color:#f3b5db; ">
 													<tr>
 														<th></th>
 														<th>Sr No <input type="checkbox"
@@ -176,7 +176,7 @@
 											</table>
 										</div>
 
-										<div class="form-group">
+									<!-- 	<div class="form-group">
 											<label class="col-sm-3 col-lg-2 control-label"> </label>
 											<div class="col-sm-2 col-lg-2 controls">
 												<input type="button" value="PDF Report "
@@ -201,7 +201,33 @@
 
 											</div>
 
+										</div> -->
+										<div class="form-group">
+											<div class="col-sm-2 col-lg-2 controls">
+												<input type="button" value="PDF Report "
+													onclick="genPdfReport()" class="btn btn-primary">
+											</div>
+
+											<div class="col-sm-5 col-lg-1 controls">
+												<input type="button" id="expExcel" class="btn btn-primary"
+													value="Excel Report" onclick="createExelReport();">
+											</div>
+
+											<label class="col-sm-3 col-lg-1 control-label"></label>
+											<div class="col-sm-2 col-lg-2 controls">
+												<input type="button" value="Generate PDF For Fr"
+													onclick="genPdf()" class="btn btn-primary">
+											</div>
+
+
+											<div class="col-sm-5 col-lg-3 controls">
+												<input type="button" id="expExcel" class="btn btn-primary"
+													value="EXP TO Excel Itemwise(ERP)" onclick="createExel();">
+											</div>
+		<div class="col-sm-2 col-lg-2 controls"> <input type="button" id="expExcel" class="btn btn-primary" value="Excel Hsnwise Summary" onclick="createExelHsnwise();" >
+</div>
 										</div>
+										
 
 
 										<!-- <div class="form-group">
@@ -311,7 +337,6 @@
 			var toDate = $("#to_date").val();
 			var selectedFr = $("#selectFr").val();
 			var isGrn = $("#isGrn").val();
-
 			$
 					.getJSON(
 							'${getHeaders}',
@@ -404,6 +429,45 @@
 					+ crnId;
 			form.submit();
 		}
+	</script>
+	<script>
+	
+	function createExelHsnwise() {
+		 
+	   var select_to_print = document.forms[1];
+		var txt = "";
+		var i;
+		var flag=0;
+		var all=0;
+		 for (i = 0; i < select_to_print.length; i++) {
+			if (select_to_print[i].checked  && select_to_print[i].value!="on") {
+	    		txt = txt + select_to_print[i].value + ",";
+	    		flag=1;
+		}
+		} 
+		 if(flag==1)
+			 {
+		$
+				.getJSON(
+						'${excelForCrnExcel}',
+						{
+							checkboxes : txt ,
+						
+							ajax : 'true'
+						},
+						function(data) {
+							
+						 //alert("Excel Ready");
+							 exportToExcel();
+						 
+						});
+			 }
+		 else
+			 {
+			 alert("Please select minimum 1 CRN Note ");
+			 }
+
+	}
 	</script>
 	<script>
 		function genPdf() {
