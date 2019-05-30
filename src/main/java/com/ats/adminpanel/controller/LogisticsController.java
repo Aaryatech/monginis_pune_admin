@@ -21,6 +21,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.context.annotation.Scope;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -41,6 +45,7 @@ import com.ats.adminpanel.commons.Constants;
 import com.ats.adminpanel.commons.DateConvertor;
 import com.ats.adminpanel.commons.VpsImageUpload;
 import com.ats.adminpanel.model.AllRoutesListResponse;
+import com.ats.adminpanel.model.ExportToExcel;
 import com.ats.adminpanel.model.Info;
 import com.ats.adminpanel.model.Route;
 import com.ats.adminpanel.model.accessright.ModuleJson;
@@ -51,6 +56,7 @@ import com.ats.adminpanel.model.logistics.AlertVeihcleServicing;
 import com.ats.adminpanel.model.logistics.Dealer;
 import com.ats.adminpanel.model.logistics.Document;
 import com.ats.adminpanel.model.logistics.DriverMaster;
+import com.ats.adminpanel.model.logistics.GetServHeader;
 import com.ats.adminpanel.model.logistics.LogisAmc;
 import com.ats.adminpanel.model.logistics.MachineMaster;
 import com.ats.adminpanel.model.logistics.MachineOrVehicle;
@@ -67,6 +73,7 @@ import com.ats.adminpanel.model.logistics.Variant;
 import com.ats.adminpanel.model.logistics.VehicalMaster;
 import com.ats.adminpanel.model.logistics.VehicalType;
 import com.ats.adminpanel.model.logistics.VehicleDcoument;
+import com.ats.adminpanel.model.tray.GetVehicleAvg;
 
 @Controller
 @Scope("session")
@@ -3345,4 +3352,90 @@ public class LogisticsController {
 			pd4ml.render(urlstring, fos);
 		}
 	}
+
+	@RequestMapping(value = "/showLogisticsReportList", method = RequestMethod.GET)
+	public ModelAndView showLogisticsReportList(HttpServletRequest request, HttpServletResponse response) {
+
+		ModelAndView model = new ModelAndView("logistics/logisticReport");
+		return model;
+
+	}
+
+	List<GetServHeader> logisList = null;
+
+	@RequestMapping(value = "/serchLogisticsList", method = RequestMethod.GET)
+	@ResponseBody
+	public List<GetServHeader> serchLogisticsList(HttpServletRequest request, HttpServletResponse response) {
+
+		logisList = new ArrayList<GetServHeader>();
+		try {
+			int typeId = Integer.parseInt(request.getParameter("typeId"));
+			String servType = request.getParameter("servType");
+
+			String fromDate = request.getParameter("fromDate");
+			String toDate = request.getParameter("toDate");
+
+			String selectedVehIds = request.getParameter("vehIdList");
+			List<String> vehIdList = new ArrayList<>();
+			selectedVehIds = selectedVehIds.substring(1, selectedVehIds.length() - 1);
+			selectedVehIds = selectedVehIds.replaceAll("\"", "");
+			vehIdList = Arrays.asList(selectedVehIds);
+			System.err.println("cat Id List " + vehIdList.toString());
+
+			System.out.println("in if mechid 0" + fromDate);
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			map.add("fromDate", DateConvertor.convertToYMD(fromDate));
+			map.add("toDate", DateConvertor.convertToYMD(toDate));
+			map.add("typeId", typeId);
+			System.out.println("vehIdListvehIdListvehIdListvehIdList" + vehIdList.toString());
+
+			if (servType.contains("-1")) {
+				map.add("servType", "1,2");
+
+			} else {
+				map.add("servType", servType);
+			}
+			map.add("vehIdList", vehIdList);
+			logisList = restTemplate.postForObject(Constants.url + "getLogistiocsDataBetDate", map, List.class);
+
+			System.out.println("logisList " + logisList);
+		} catch (Exception e) {
+			System.out.println("errorr  " + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return logisList;
+	}
+
+	@RequestMapping(value = "/showLogisticsReportDetailList/{vehId}/{fromdate}/{todate}", method = RequestMethod.GET)
+	public ModelAndView showLogisticsReportDetailList(@PathVariable int vehId, @PathVariable String fromdate,
+			@PathVariable String todate, HttpServletRequest request, HttpServletResponse response) {
+
+		ModelAndView model = new ModelAndView("logistics/logisticsReportDetail");
+		try {
+
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+			SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			RestTemplate restTemplate = new RestTemplate();
+			map.add("vehIdList", vehId);
+			map.add("fromDate", sdf2.format(sdf.parse(fromdate)));
+			map.add("toDate", sdf2.format(sdf.parse(todate)));
+
+			ParameterizedTypeReference<List<GetServHeader>> typeRef = new ParameterizedTypeReference<List<GetServHeader>>() {
+			};
+			ResponseEntity<List<GetServHeader>> responseEntity = restTemplate.exchange(
+					Constants.url + "/getLogistiocsDetailDataBetDate", HttpMethod.POST, new HttpEntity<>(map), typeRef);
+			logisList = responseEntity.getBody();
+
+			model.addObject("fromDate", fromdate);
+			model.addObject("toDate", todate);
+			model.addObject("logisList", logisList);
+
+		} catch (Exception e) {
+
+		}
+		return model;
+	}
+
 }
