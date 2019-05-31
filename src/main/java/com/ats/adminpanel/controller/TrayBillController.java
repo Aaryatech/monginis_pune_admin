@@ -50,6 +50,7 @@ import com.ats.adminpanel.model.Info;
 import com.ats.adminpanel.model.TrayType;
 import com.ats.adminpanel.model.item.FrItemStockConfigureList;
 import com.ats.adminpanel.model.logistics.GetServHeader;
+import com.ats.adminpanel.model.tray.GetTrayMgtReport;
 import com.ats.adminpanel.model.tray.GetVehicleAvg;
 import com.ats.adminpanel.model.tray.TrayMgtDetail;
 import com.ats.adminpanel.model.tray.TrayMgtDetailBean;
@@ -1756,6 +1757,588 @@ public class TrayBillController {
 				cell.setPaddingRight(2);
 				cell.setPadding(5);
 				table.addCell(cell);
+
+			}
+
+			document.open();
+			document.add(table);
+			document.close();
+
+			if (file != null) {
+
+				String mimeType = URLConnection.guessContentTypeFromName(file.getName());
+
+				if (mimeType == null) {
+
+					mimeType = "application/pdf";
+
+				}
+
+				response.setContentType(mimeType);
+
+				response.addHeader("content-disposition", String.format("inline; filename=\"%s\"", file.getName()));
+
+				response.setContentLength((int) file.length());
+
+				BufferedInputStream inputStream = null;
+				try {
+					inputStream = new BufferedInputStream(new FileInputStream(file));
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+				try {
+					FileCopyUtils.copy(inputStream, response.getOutputStream());
+				} catch (IOException e) {
+					System.out.println("Excep in Opening a Pdf File");
+					e.printStackTrace();
+				}
+			}
+
+		} catch (DocumentException ex) {
+
+			System.out.println("Pdf Generation Error" + ex.getMessage());
+
+			ex.printStackTrace();
+
+		}
+	}
+
+	public AllFrIdNameList allFrIdNameList = new AllFrIdNameList();
+
+	@RequestMapping(value = "/showTrayMgtDetailByFrList", method = RequestMethod.GET)
+	public ModelAndView showTrayMgtDetailByFrList(HttpServletRequest request, HttpServletResponse response) {
+
+		ModelAndView model = new ModelAndView("trayBill/trayFrDetailReport");
+
+		ZoneId z = ZoneId.of("Asia/Calcutta");
+
+		LocalDate date = LocalDate.now(z);
+		DateTimeFormatter formatters = DateTimeFormatter.ofPattern("d-MM-uuuu");
+		todaysDate = date.format(formatters);
+		model.addObject("todaysDate", todaysDate);
+
+		allFrIdNameList = new AllFrIdNameList();
+		try {
+
+			allFrIdNameList = restTemplate.getForObject(Constants.url + "getAllFrIdName", AllFrIdNameList.class);
+
+		} catch (Exception e) {
+			System.out.println("Exception in getAllFrIdName" + e.getMessage());
+			e.printStackTrace();
+
+		}
+
+		model.addObject("unSelectedFrList", allFrIdNameList.getFrIdNamesList());
+
+		return model;
+
+	}
+
+	List<GetTrayMgtReport> traydetailList = null;
+
+	@RequestMapping(value = "/serchTrayDetailReportList", method = RequestMethod.GET)
+	@ResponseBody
+	public List<GetTrayMgtReport> serchTrayDetailReportList(HttpServletRequest request, HttpServletResponse response) {
+
+		traydetailList = new ArrayList<GetTrayMgtReport>();
+		try {
+			int trayType = Integer.parseInt(request.getParameter("trayType"));
+			String fromDate = request.getParameter("fromDate");
+			String toDate = request.getParameter("toDate");
+
+			String selectedVehIds = request.getParameter("frIdList");
+			List<String> frIdList = new ArrayList<>();
+			selectedVehIds = selectedVehIds.substring(1, selectedVehIds.length() - 1);
+			selectedVehIds = selectedVehIds.replaceAll("\"", "");
+			frIdList = Arrays.asList(selectedVehIds);
+
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			map.add("fromDate", DateConvertor.convertToYMD(fromDate));
+			map.add("toDate", DateConvertor.convertToYMD(toDate));
+
+			map.add("frIdList", selectedVehIds);
+
+			System.out.println("frIdListfrIdListfrIdListfrIdListfrIdList" + frIdList);
+
+			ParameterizedTypeReference<List<GetTrayMgtReport>> typeRef = new ParameterizedTypeReference<List<GetTrayMgtReport>>() {
+			};
+			ResponseEntity<List<GetTrayMgtReport>> responseEntity = restTemplate.exchange(
+					Constants.url + "/traymgt/getTrayMangtDetailreport", HttpMethod.POST, new HttpEntity<>(map),
+					typeRef);
+			traydetailList = responseEntity.getBody();
+
+			List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
+
+			ExportToExcel expoExcel = new ExportToExcel();
+			List<String> rowData = new ArrayList<String>();
+
+			rowData.add("Sr.No.");
+			rowData.add("Fr Name");
+			rowData.add("OutTray Small");
+			rowData.add("OutTray Big");
+			rowData.add("OutTray Lead ");
+			rowData.add("InTray Small");
+			rowData.add("InTray Big");
+			rowData.add("InTray Lead ");
+			rowData.add("BalanceTray Small");
+			rowData.add("BalanceTray Big");
+			rowData.add("BalanceTray Lead ");
+
+			expoExcel.setRowData(rowData);
+			exportToExcelList.add(expoExcel);
+			for (int i = 0; i < traydetailList.size(); i++) {
+				expoExcel = new ExportToExcel();
+				rowData = new ArrayList<String>();
+				rowData.add((i + 1) + "");
+
+				rowData.add("" + traydetailList.get(i).getFrName());
+
+				rowData.add("" + traydetailList.get(i).getOuttrayBig());
+				rowData.add("" + traydetailList.get(i).getOuttraySmall());
+				rowData.add("" + traydetailList.get(i).getOuttrayLead());
+
+				rowData.add("" + traydetailList.get(i).getIntrayBig());
+				rowData.add("" + traydetailList.get(i).getIntraySmall());
+				rowData.add("" + traydetailList.get(i).getIntrayLead());
+
+				rowData.add("" + traydetailList.get(i).getBalanceBig());
+				rowData.add("" + traydetailList.get(i).getBalanceSmall());
+				rowData.add("" + traydetailList.get(i).getBalanceLead());
+
+				expoExcel.setRowData(rowData);
+				exportToExcelList.add(expoExcel);
+
+			}
+
+			HttpSession session = request.getSession();
+			session.setAttribute("exportExcelList", exportToExcelList);
+			session.setAttribute("excelName", "Tray Report");
+
+			System.out.println("traydetailList " + traydetailList.toString());
+		} catch (Exception e) {
+			System.out.println("errorr  " + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return traydetailList;
+	}
+
+	@RequestMapping(value = "/getTrayDetailReportPdf/{traveType}", method = RequestMethod.GET)
+	public void getTrayDetailReportPdf(@PathVariable int traveType, HttpServletRequest request,
+			HttpServletResponse response) {
+
+		BufferedOutputStream outStream = null;
+		System.out.println("Inside Pdf ");
+
+		Document document = new Document(PageSize.A4, 20, 20, 150, 30);
+		// ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+		Calendar cal = Calendar.getInstance();
+
+		String timeStamp = dateFormat.format(cal.getTime());
+		String FILE_PATH = Constants.REPORT_SAVE;
+		File file = new File(FILE_PATH);
+
+		PdfWriter writer = null;
+
+		FileOutputStream out = null;
+		try {
+			out = new FileOutputStream(FILE_PATH);
+		} catch (FileNotFoundException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		try {
+
+			String header = Constants.FACTORYNAME + "\n" + Constants.FACTORYADDRESS;
+
+			String title = "Report-For Vehicle Average Details";
+
+			DateFormat DF = new SimpleDateFormat("dd-MM-yyyy");
+			String reportDate = DF.format(new Date());
+
+			writer = PdfWriter.getInstance(document, out);
+
+			ItextPageEvent event = new ItextPageEvent(header, title, reportDate);
+
+			writer.setPageEvent(event);
+
+		} catch (DocumentException e) {
+
+			e.printStackTrace();
+		}
+
+		PdfPTable table = new PdfPTable(11);
+		try {
+			if (traveType == -1) {
+				System.out.println("Inside PDF Table try");
+				table.setWidthPercentage(100);
+				table.setWidths(new float[] { 1.4f, 1.7f, 1.9f, 1.9f, 1.6f, 1.7f, 1.9f, 1.9f, 1.6f, 1.9f, 1.6f });
+				Font headFont = new Font(FontFamily.TIMES_ROMAN, 13, Font.NORMAL, BaseColor.BLACK);
+				Font headFont1 = new Font(FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.BLACK);
+				Font f = new Font(FontFamily.TIMES_ROMAN, 12.0f, Font.UNDERLINE, BaseColor.BLUE);
+
+				PdfPCell hcell = new PdfPCell();
+				hcell.setBackgroundColor(BaseColor.PINK);
+				hcell.setPadding(4);
+
+				hcell = new PdfPCell(new Phrase("Sr.", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+
+				hcell = new PdfPCell(new Phrase("Fr Name", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+
+				hcell = new PdfPCell(new Phrase("OutTray Small", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+
+				hcell = new PdfPCell(new Phrase("OutTray Big", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+
+				hcell = new PdfPCell(new Phrase("OutTray Lead", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+
+				hcell = new PdfPCell(new Phrase("InTray Small", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+
+				hcell = new PdfPCell(new Phrase("InTray Big", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+
+				hcell = new PdfPCell(new Phrase("InTray Lead", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+
+				hcell = new PdfPCell(new Phrase("BalanceTray Small", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+
+				hcell = new PdfPCell(new Phrase("BalanceTray Big", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+
+				hcell = new PdfPCell(new Phrase("BalanceTray Lead", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+
+				int index = 0;
+				for (GetTrayMgtReport vehicleAvg : traydetailList) {
+					index++;
+					PdfPCell cell;
+
+					cell = new PdfPCell(new Phrase(String.valueOf(index), headFont));
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+					cell.setPadding(4);
+					table.addCell(cell);
+
+					cell = new PdfPCell(new Phrase(vehicleAvg.getFrName(), headFont));
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+					cell.setPaddingRight(2);
+					cell.setPadding(4);
+					table.addCell(cell);
+
+					cell = new PdfPCell(new Phrase("" + vehicleAvg.getOuttraySmall(), headFont));
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+					cell.setPaddingRight(2);
+					cell.setPadding(5);
+					table.addCell(cell);
+
+					cell = new PdfPCell(new Phrase("" + vehicleAvg.getOuttrayBig(), headFont));
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+					cell.setPaddingRight(2);
+					cell.setPadding(5);
+					table.addCell(cell);
+
+					cell = new PdfPCell(new Phrase("" + vehicleAvg.getOuttrayLead(), headFont));
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+					cell.setPaddingRight(2);
+					cell.setPadding(5);
+					table.addCell(cell);
+
+					cell = new PdfPCell(new Phrase("" + vehicleAvg.getIntraySmall(), headFont));
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+					cell.setPaddingRight(2);
+					cell.setPadding(5);
+					table.addCell(cell);
+
+					cell = new PdfPCell(new Phrase("" + vehicleAvg.getIntrayBig(), headFont));
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+					cell.setPaddingRight(2);
+					cell.setPadding(5);
+					table.addCell(cell);
+
+					cell = new PdfPCell(new Phrase("" + vehicleAvg.getIntrayLead(), headFont));
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+					cell.setPaddingRight(2);
+					cell.setPadding(5);
+					table.addCell(cell);
+
+					cell = new PdfPCell(new Phrase("" + vehicleAvg.getBalanceSmall(), headFont));
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+					cell.setPaddingRight(2);
+					cell.setPadding(5);
+					table.addCell(cell);
+
+					cell = new PdfPCell(new Phrase("" + vehicleAvg.getBalanceBig(), headFont));
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+					cell.setPaddingRight(2);
+					cell.setPadding(5);
+					table.addCell(cell);
+
+					cell = new PdfPCell(new Phrase("" + vehicleAvg.getBalanceLead(), headFont));
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+					cell.setPaddingRight(2);
+					cell.setPadding(5);
+					table.addCell(cell);
+
+				}
+
+			}
+
+			else if (traveType == 1) {
+				table = new PdfPTable(5);
+				System.out.println("Inside PDF Table try");
+				table.setWidthPercentage(100);
+				table.setWidths(new float[] { 1.4f, 1.7f, 1.9f, 1.9f, 1.6f });
+				Font headFont = new Font(FontFamily.TIMES_ROMAN, 13, Font.NORMAL, BaseColor.BLACK);
+				Font headFont1 = new Font(FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.BLACK);
+				Font f = new Font(FontFamily.TIMES_ROMAN, 12.0f, Font.UNDERLINE, BaseColor.BLUE);
+
+				PdfPCell hcell = new PdfPCell();
+				hcell.setBackgroundColor(BaseColor.PINK);
+				hcell.setPadding(4);
+
+				hcell = new PdfPCell(new Phrase("Sr.", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+
+				hcell = new PdfPCell(new Phrase("Fr Name", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+
+				hcell = new PdfPCell(new Phrase("OutTray Small", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+
+				hcell = new PdfPCell(new Phrase("OutTray Big", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+
+				hcell = new PdfPCell(new Phrase("OutTray Lead", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+
+				int index = 0;
+				for (GetTrayMgtReport vehicleAvg : traydetailList) {
+					index++;
+					PdfPCell cell;
+
+					cell = new PdfPCell(new Phrase(String.valueOf(index), headFont));
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+					cell.setPadding(4);
+					table.addCell(cell);
+
+					cell = new PdfPCell(new Phrase(vehicleAvg.getFrName(), headFont));
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+					cell.setPaddingRight(2);
+					cell.setPadding(4);
+					table.addCell(cell);
+
+					cell = new PdfPCell(new Phrase("" + vehicleAvg.getOuttraySmall(), headFont));
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+					cell.setPaddingRight(2);
+					cell.setPadding(5);
+					table.addCell(cell);
+
+					cell = new PdfPCell(new Phrase("" + vehicleAvg.getOuttrayBig(), headFont));
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+					cell.setPaddingRight(2);
+					cell.setPadding(5);
+					table.addCell(cell);
+
+					cell = new PdfPCell(new Phrase("" + vehicleAvg.getOuttrayLead(), headFont));
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+					cell.setPaddingRight(2);
+					cell.setPadding(5);
+					table.addCell(cell);
+
+				}
+
+			}
+
+			else if (traveType == 2) {
+				table = new PdfPTable(5);
+				System.out.println("Inside PDF Table try");
+				table.setWidthPercentage(100);
+				table.setWidths(new float[] { 1.4f, 1.7f, 1.9f, 1.9f, 1.6f });
+				Font headFont = new Font(FontFamily.TIMES_ROMAN, 13, Font.NORMAL, BaseColor.BLACK);
+				Font headFont1 = new Font(FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.BLACK);
+				Font f = new Font(FontFamily.TIMES_ROMAN, 12.0f, Font.UNDERLINE, BaseColor.BLUE);
+
+				PdfPCell hcell = new PdfPCell();
+				hcell.setBackgroundColor(BaseColor.PINK);
+				hcell.setPadding(4);
+
+				hcell = new PdfPCell(new Phrase("Sr.", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+
+				hcell = new PdfPCell(new Phrase("Fr Name", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+
+				hcell = new PdfPCell(new Phrase("InTray Small", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+
+				hcell = new PdfPCell(new Phrase("InTray Big", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+
+				hcell = new PdfPCell(new Phrase("InTray Lead", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+
+				int index = 0;
+				for (GetTrayMgtReport vehicleAvg : traydetailList) {
+					index++;
+					PdfPCell cell;
+
+					cell = new PdfPCell(new Phrase(String.valueOf(index), headFont));
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+					cell.setPadding(4);
+					table.addCell(cell);
+
+					cell = new PdfPCell(new Phrase(vehicleAvg.getFrName(), headFont));
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+					cell.setPaddingRight(2);
+					cell.setPadding(4);
+					table.addCell(cell);
+
+					cell = new PdfPCell(new Phrase("" + vehicleAvg.getIntraySmall(), headFont));
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+					cell.setPaddingRight(2);
+					cell.setPadding(5);
+					table.addCell(cell);
+
+					cell = new PdfPCell(new Phrase("" + vehicleAvg.getIntrayBig(), headFont));
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+					cell.setPaddingRight(2);
+					cell.setPadding(5);
+					table.addCell(cell);
+
+					cell = new PdfPCell(new Phrase("" + vehicleAvg.getIntrayLead(), headFont));
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+					cell.setPaddingRight(2);
+					cell.setPadding(5);
+					table.addCell(cell);
+
+				}
+
+			}
+
+			else if (traveType == 3) {
+				table = new PdfPTable(5);
+				System.out.println("Inside PDF Table try");
+				table.setWidthPercentage(100);
+				table.setWidths(new float[] { 1.4f, 1.7f, 1.9f, 1.9f, 1.6f });
+				Font headFont = new Font(FontFamily.TIMES_ROMAN, 13, Font.NORMAL, BaseColor.BLACK);
+				Font headFont1 = new Font(FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.BLACK);
+				Font f = new Font(FontFamily.TIMES_ROMAN, 12.0f, Font.UNDERLINE, BaseColor.BLUE);
+
+				PdfPCell hcell = new PdfPCell();
+				hcell.setBackgroundColor(BaseColor.PINK);
+				hcell.setPadding(4);
+
+				hcell = new PdfPCell(new Phrase("Sr.", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+
+				hcell = new PdfPCell(new Phrase("Fr Name", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+
+				hcell = new PdfPCell(new Phrase("BalanceTray Small", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+
+				hcell = new PdfPCell(new Phrase("BalanceTray Big", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+
+				hcell = new PdfPCell(new Phrase("BalanceTray Lead", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+
+				int index = 0;
+				for (GetTrayMgtReport vehicleAvg : traydetailList) {
+					index++;
+					PdfPCell cell;
+
+					cell = new PdfPCell(new Phrase(String.valueOf(index), headFont));
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+					cell.setPadding(4);
+					table.addCell(cell);
+
+					cell = new PdfPCell(new Phrase(vehicleAvg.getFrName(), headFont));
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+					cell.setPaddingRight(2);
+					cell.setPadding(4);
+					table.addCell(cell);
+
+					cell = new PdfPCell(new Phrase("" + vehicleAvg.getBalanceSmall(), headFont));
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+					cell.setPaddingRight(2);
+					cell.setPadding(5);
+					table.addCell(cell);
+
+					cell = new PdfPCell(new Phrase("" + vehicleAvg.getBalanceBig(), headFont));
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+					cell.setPaddingRight(2);
+					cell.setPadding(5);
+					table.addCell(cell);
+
+					cell = new PdfPCell(new Phrase("" + vehicleAvg.getBalanceLead(), headFont));
+					cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+					cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+					cell.setPaddingRight(2);
+					cell.setPadding(5);
+					table.addCell(cell);
+
+				}
 
 			}
 
