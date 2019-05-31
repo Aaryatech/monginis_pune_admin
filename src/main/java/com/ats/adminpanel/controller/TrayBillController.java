@@ -796,6 +796,9 @@ public class TrayBillController {
 
 			List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
 
+			float totalRunningKm = 0;
+			float totalDiesel = 0;
+
 			ExportToExcel expoExcel = new ExportToExcel();
 			List<String> rowData = new ArrayList<String>();
 
@@ -823,10 +826,27 @@ public class TrayBillController {
 					rowData.add(SalesReportController.roundUp(0) + "");
 				}
 
+				totalRunningKm = totalRunningKm + vehicleAvgList.get(i).getVehRunningKm();
+				totalDiesel = totalDiesel + vehicleAvgList.get(i).getDiesel();
+
 				expoExcel.setRowData(rowData);
 				exportToExcelList.add(expoExcel);
 
 			}
+
+			expoExcel.setRowData(rowData);
+			exportToExcelList.add(expoExcel);
+
+			expoExcel = new ExportToExcel();
+			rowData = new ArrayList<String>();
+			rowData.add("");
+			rowData.add("Total");
+			rowData.add("" + totalRunningKm);
+			rowData.add("" + totalDiesel);
+			rowData.add("");
+
+			expoExcel.setRowData(rowData);
+			exportToExcelList.add(expoExcel);
 
 			HttpSession session = request.getSession();
 			session.setAttribute("exportExcelList", exportToExcelList);
@@ -917,6 +937,8 @@ public class TrayBillController {
 			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
 			table.addCell(hcell);
 
+			float totalRunningKm = 0;
+			float totalDiesel = 0;
 			int index = 0;
 			for (GetVehicleAvg vehicleAvg : vehicleAvgList) {
 				index++;
@@ -965,7 +987,45 @@ public class TrayBillController {
 					table.addCell(cell);
 				}
 
+				totalRunningKm = totalRunningKm + vehicleAvg.getVehRunningKm();
+				totalDiesel = totalDiesel + vehicleAvg.getDiesel();
+
 			}
+
+			PdfPCell cell;
+
+			cell = new PdfPCell(new Phrase("", headFont));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+			cell.setPadding(4);
+			table.addCell(cell);
+
+			cell = new PdfPCell(new Phrase("Total", headFont));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+			cell.setPaddingRight(2);
+			cell.setPadding(4);
+			table.addCell(cell);
+
+			cell = new PdfPCell(new Phrase("" + totalRunningKm, headFont));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+			cell.setPaddingRight(2);
+			cell.setPadding(5);
+			table.addCell(cell);
+
+			cell = new PdfPCell(new Phrase("" + totalDiesel, headFont));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+			cell.setPaddingRight(2);
+			cell.setPadding(5);
+			table.addCell(cell);
+
+			cell = new PdfPCell(new Phrase("", headFont));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+			cell.setPadding(4);
+			table.addCell(cell);
 
 			document.open();
 			document.add(table);
@@ -1055,6 +1115,9 @@ public class TrayBillController {
 			rowData.add("Minimum Avg.");
 			rowData.add("Standard Avg.");
 
+			float totalRunningKm = 0;
+			float totalDiesel = 0;
+
 			expoExcel.setRowData(rowData);
 			exportToExcelList.add(expoExcel);
 			for (int i = 0; i < vehicleAvgList.size(); i++) {
@@ -1081,7 +1144,29 @@ public class TrayBillController {
 				expoExcel.setRowData(rowData);
 				exportToExcelList.add(expoExcel);
 
+				totalRunningKm = totalRunningKm + vehicleAvgList.get(i).getVehRunningKm();
+				totalDiesel = totalDiesel + vehicleAvgList.get(i).getDiesel();
+
 			}
+
+			expoExcel.setRowData(rowData);
+			exportToExcelList.add(expoExcel);
+
+			expoExcel = new ExportToExcel();
+			rowData = new ArrayList<String>();
+			rowData.add("");
+
+			rowData.add("Total");
+			rowData.add("");
+			rowData.add("");
+			rowData.add("");
+			rowData.add("");
+			rowData.add("" + totalRunningKm);
+			rowData.add("" + totalDiesel);
+			rowData.add("");
+
+			expoExcel.setRowData(rowData);
+			exportToExcelList.add(expoExcel);
 
 			HttpSession session = request.getSession();
 			session.setAttribute("exportExcelList", exportToExcelList);
@@ -1137,6 +1222,8 @@ public class TrayBillController {
 
 			e.printStackTrace();
 		}
+		float totalRunningKm = 0;
+		float totalDiesel = 0;
 
 		PdfPTable table = new PdfPTable(9);
 		try {
@@ -1263,7 +1350,71 @@ public class TrayBillController {
 				cell.setPadding(5);
 				table.addCell(cell);
 
+				totalRunningKm = totalRunningKm + vehicleAvg.getVehRunningKm();
+				totalDiesel = totalDiesel + vehicleAvg.getDiesel();
+
 			}
+
+			PdfPCell cell;
+
+			cell = new PdfPCell(new Phrase("", headFont));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+			cell.setPadding(4);
+
+			table.addCell(cell);
+
+			cell = new PdfPCell(new Phrase("", headFont));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+			cell.setPadding(4);
+			table.addCell(cell);
+
+			cell = new PdfPCell(new Phrase("", headFont));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+			cell.setPadding(4);
+			table.addCell(cell);
+
+			cell = new PdfPCell(new Phrase("", headFont));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+			cell.setPadding(4);
+			table.addCell(cell);
+
+			cell = new PdfPCell(new Phrase("Total", headFont));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+			cell.setPaddingRight(2);
+			cell.setPadding(4);
+			table.addCell(cell);
+
+			cell = new PdfPCell(new Phrase("" + totalRunningKm, headFont));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+			cell.setPaddingRight(2);
+			cell.setPadding(5);
+			table.addCell(cell);
+
+			cell = new PdfPCell(new Phrase("" + totalDiesel, headFont));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+			cell.setPaddingRight(2);
+			cell.setPadding(5);
+			table.addCell(cell);
+
+			cell = new PdfPCell(new Phrase("", headFont));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+			cell.setPadding(4);
+			table.addCell(cell);
+
+			cell = new PdfPCell(new Phrase("", headFont));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+			cell.setPaddingRight(2);
+			cell.setPadding(5);
+			table.addCell(cell);
 
 			document.open();
 			document.add(table);
@@ -1381,6 +1532,10 @@ public class TrayBillController {
 			rowData.add("Tax Amt");
 			rowData.add("Total ");
 
+			float taxableTotal = 0;
+			float taxTotal = 0;
+			float finalTotal = 0;
+
 			expoExcel.setRowData(rowData);
 			exportToExcelList.add(expoExcel);
 			for (int i = 0; i < logisList.size(); i++) {
@@ -1394,10 +1549,28 @@ public class TrayBillController {
 				rowData.add("" + logisList.get(i).getTaxAmt());
 				rowData.add("" + logisList.get(i).getTotal());
 
+				taxableTotal = taxableTotal + logisList.get(i).getTaxableAmt();
+				taxTotal = taxTotal + logisList.get(i).getTaxAmt();
+				finalTotal = finalTotal + logisList.get(i).getTotal();
+
 				expoExcel.setRowData(rowData);
 				exportToExcelList.add(expoExcel);
 
 			}
+
+			expoExcel.setRowData(rowData);
+			exportToExcelList.add(expoExcel);
+
+			expoExcel = new ExportToExcel();
+			rowData = new ArrayList<String>();
+			rowData.add("");
+			rowData.add("Total");
+			rowData.add("" + taxableTotal);
+			rowData.add("" + taxTotal);
+			rowData.add("" + finalTotal);
+
+			expoExcel.setRowData(rowData);
+			exportToExcelList.add(expoExcel);
 
 			HttpSession session = request.getSession();
 			session.setAttribute("exportExcelList", exportToExcelList);
@@ -1441,7 +1614,9 @@ public class TrayBillController {
 
 			ExportToExcel expoExcel = new ExportToExcel();
 			List<String> rowData = new ArrayList<String>();
-
+			float taxableTotal = 0;
+			float taxTotal = 0;
+			float finalTotal = 0;
 			rowData.add("Sr.No.");
 			rowData.add("Vehicle Name Or Machine Name");
 			rowData.add("Taxable Amt");
@@ -1461,10 +1636,28 @@ public class TrayBillController {
 				rowData.add("" + logisList.get(i).getTaxAmt());
 				rowData.add("" + logisList.get(i).getTotal());
 
+				taxableTotal = taxableTotal + logisList.get(i).getTaxableAmt();
+				taxTotal = taxTotal + logisList.get(i).getTaxAmt();
+				finalTotal = finalTotal + logisList.get(i).getTotal();
+
 				expoExcel.setRowData(rowData);
 				exportToExcelList.add(expoExcel);
 
 			}
+
+			expoExcel.setRowData(rowData);
+			exportToExcelList.add(expoExcel);
+
+			expoExcel = new ExportToExcel();
+			rowData = new ArrayList<String>();
+			rowData.add("");
+			rowData.add("Total");
+			rowData.add("" + taxableTotal);
+			rowData.add("" + taxTotal);
+			rowData.add("" + finalTotal);
+
+			expoExcel.setRowData(rowData);
+			exportToExcelList.add(expoExcel);
 
 			HttpSession session = request.getSession();
 			session.setAttribute("exportExcelList", exportToExcelList);
@@ -1555,6 +1748,10 @@ public class TrayBillController {
 			table.addCell(hcell);
 
 			int index = 0;
+
+			float taxableTotal = 0;
+			float taxTotal = 0;
+			float finalTotal = 0;
 			for (GetServHeader vehicleAvg : logisList) {
 				index++;
 				PdfPCell cell;
@@ -1593,7 +1790,45 @@ public class TrayBillController {
 				cell.setPadding(5);
 				table.addCell(cell);
 
+				taxableTotal = taxableTotal + vehicleAvg.getTaxableAmt();
+				taxTotal = taxTotal + vehicleAvg.getTaxAmt();
+				finalTotal = finalTotal + vehicleAvg.getTotal();
+
 			}
+			PdfPCell cell;
+			cell = new PdfPCell(new Phrase("Total", headFont));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+			cell.setPadding(4);
+			table.addCell(cell);
+
+			cell = new PdfPCell(new Phrase(" ", headFont));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+			cell.setPaddingRight(2);
+			cell.setPadding(4);
+			table.addCell(cell);
+
+			cell = new PdfPCell(new Phrase("" + taxableTotal, headFont));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+			cell.setPaddingRight(2);
+			cell.setPadding(5);
+			table.addCell(cell);
+
+			cell = new PdfPCell(new Phrase("" + taxTotal, headFont));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+			cell.setPaddingRight(2);
+			cell.setPadding(5);
+			table.addCell(cell);
+
+			cell = new PdfPCell(new Phrase("" + finalTotal, headFont));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+			cell.setPaddingRight(2);
+			cell.setPadding(5);
+			table.addCell(cell);
 
 			document.open();
 			document.add(table);
@@ -1720,6 +1955,9 @@ public class TrayBillController {
 			table.addCell(hcell);
 
 			int index = 0;
+			float taxableTotal = 0;
+			float taxTotal = 0;
+			float finalTotal = 0;
 			for (GetServHeader vehicleAvg : logisList) {
 				index++;
 				PdfPCell cell;
@@ -1758,7 +1996,46 @@ public class TrayBillController {
 				cell.setPadding(5);
 				table.addCell(cell);
 
+				taxableTotal = taxableTotal + vehicleAvg.getTaxableAmt();
+				taxTotal = taxTotal + vehicleAvg.getTaxAmt();
+				finalTotal = finalTotal + vehicleAvg.getTotal();
+
 			}
+
+			PdfPCell cell;
+			cell = new PdfPCell(new Phrase("Total", headFont));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+			cell.setPadding(4);
+			table.addCell(cell);
+
+			cell = new PdfPCell(new Phrase(" ", headFont));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+			cell.setPaddingRight(2);
+			cell.setPadding(4);
+			table.addCell(cell);
+
+			cell = new PdfPCell(new Phrase("" + taxableTotal, headFont));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+			cell.setPaddingRight(2);
+			cell.setPadding(5);
+			table.addCell(cell);
+
+			cell = new PdfPCell(new Phrase("" + taxTotal, headFont));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+			cell.setPaddingRight(2);
+			cell.setPadding(5);
+			table.addCell(cell);
+
+			cell = new PdfPCell(new Phrase("" + finalTotal, headFont));
+			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+			cell.setPaddingRight(2);
+			cell.setPadding(5);
+			table.addCell(cell);
 
 			document.open();
 			document.add(table);

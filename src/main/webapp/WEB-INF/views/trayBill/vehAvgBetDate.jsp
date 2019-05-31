@@ -183,6 +183,10 @@
 
 			}, function(data) {
 
+				var taxableTotal = 0;
+				var taxTotal = 0;
+				var finalTotal = 0;
+
 				$('#table_grid td').remove();
 				$('#loader').hide();
 				document.getElementById("PDFButton").disabled = false;
@@ -212,24 +216,46 @@
 
 					tr.append($('<td></td>').html(report.vehNo));
 
-					tr.append($('<td></td>').html(report.vehRunningKm));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.vehRunningKm));
 
-					tr.append($('<td></td>').html(report.diesel));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							report.diesel));
 					if (actualAvg > 0) {
-						tr.append($('<td></td>').html(actualAvg.toFixed(2)));
+						tr.append($('<td style="text-align:right;"></td>')
+								.html(actualAvg.toFixed(2)));
 					} else {
-						tr.append($('<td></td>').html(0));
+						tr.append($('<td style="text-align:right;"></td>')
+								.html(0));
 
 					}
 
-					tr.append($('<td></td>').html(
+					tr.append($('<td  style="text-align:center;"></td>').html(
 							' <a>   <span class="fa fa-list" id="edit'
 									+ report.vehId + '" onClick=detailList('
 									+ report.vehId + ');> </span> </a> '));
 
+					taxableTotal = taxableTotal + report.vehRunningKm;
+					taxTotal = taxTotal + report.diesel;
+
 					$('#table_grid tbody').append(tr);
 
 				})
+
+				var tr = $('<tr></tr>');
+
+				tr.append($('<td></td>').html(""));
+
+				tr.append($('<td style="font-weight:bold;"></td>')
+						.html("Total"));
+				tr.append($('<td style="text-align:right;"></td>').html(
+						taxableTotal.toFixed(2)));
+				tr.append($('<td style="text-align:right;"></td>').html(
+						taxTotal.toFixed(2)));
+
+				tr.append($('<td></td>').html(""));
+
+				$('#table_grid tbody').append(tr);
 
 			});
 

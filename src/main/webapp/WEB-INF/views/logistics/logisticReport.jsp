@@ -367,6 +367,10 @@
 
 			}, function(data) {
 
+				var taxableTotal = 0;
+				var taxTotal = 0;
+				var finalTotal = 0;
+
 				$('#loader').hide();
 				$('#table_grid td').remove();
 
@@ -386,18 +390,42 @@
 						type = "Machine";
 					}
 					var tr = $('<tr></tr>');
-					tr.append($('<td></td>').html(key + 1));
+					tr.append($('<td ></td>').html(key + 1));
 					tr.append($('<td></td>').html(itemList.vehNo));
-					tr.append($('<td></td>').html(itemList.taxableAmt));
-					tr.append($('<td></td>').html(itemList.taxAmt));
-					tr.append($('<td></td>').html(itemList.total));
-					tr.append($('<td></td>').html(
+					tr.append($('<td style="text-align:right;"></td>').html(
+							itemList.taxableAmt));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							itemList.taxAmt));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							itemList.total));
+					tr.append($('<td style="text-align:center;"></td>').html(
 							' <a>   <span class="fa fa-list" id="edit'
 									+ itemList.vehId + '" onClick=detailList('
 									+ itemList.vehId + ');> </span> </a> '));
+
+					taxableTotal = taxableTotal + itemList.taxableAmt;
+					taxTotal = taxTotal + itemList.taxAmt;
+					finalTotal = finalTotal + itemList.total;
+
 					$('#table_grid tbody').append(tr);
 
 				})
+
+				var tr = $('<tr></tr>');
+
+				tr.append($('<td></td>').html(""));
+
+				tr.append($('<td style="font-weight:bold;"></td>')
+						.html("Total"));
+				tr.append($('<td style="text-align:right;"></td>').html(
+						taxableTotal.toFixed(2)));
+				tr.append($('<td style="text-align:right;"></td>').html(
+						taxTotal.toFixed(2)));
+				tr.append($('<td style="text-align:right;"></td>').html(
+						finalTotal.toFixed(2)));
+				tr.append($('<td></td>').html(""));
+
+				$('#table_grid tbody').append(tr);
 
 			});
 

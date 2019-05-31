@@ -232,7 +232,7 @@
 							<table class="w3-table w3-bordered" style="width: 100%"
 								id="table_grid2">
 								<thead>
-									<tr bgcolor=#5ab4da style="color: white;">
+									<tr style="color: white;">
 										<th>Sr.No.</th>
 										<th>Fr Name</th>
 										<th>InTray Small</th>
@@ -264,7 +264,7 @@
 							<table class="w3-table w3-bordered" style="width: 100%"
 								id="table_grid3">
 								<thead>
-									<tr bgcolor=#5ab4da style="color: white;">
+									<tr style="color: white;">
 										<th>Sr.No.</th>
 										<th>Fr Name</th>
 										<th>BalanceTray Small</th>
@@ -325,7 +325,7 @@
 				ajax : 'true'
 
 			}, function(data) {
-				alert(data);
+				//alert(data);
 
 				$('#table_grid td').remove();
 				$('#table_grid1 td').remove();
@@ -342,33 +342,105 @@
 
 				if (trayType == -1) {
 
+					var outTraySmallTotal = 0;
+					var outTrayBigTotal = 0;
+					var outTrayLeadTotal = 0;
+
+					var inTraySmallTotal = 0;
+					var inTrayBigTotal = 0;
+					var inTrayLeadTotal = 0;
+
+					var balTraySmallTotal = 0;
+					var balTrayBigTotal = 0;
+					var balTrayLeadTotal = 0;
+
 					$('#outTrayTable').hide();
 					$('#balanceTrayTable').hide();
 					$('#inTrayTable').hide();
+
 					$.each(data, function(key, report) {
 
 						var index = key + 1;
 						var tr = $('<tr></tr>');
 						tr.append($('<td></td>').html(index));
 
-						tr.append($('<td></td>').html(report.frName));
-						tr.append($('<td></td>').html(report.outtraySmall));
-						tr.append($('<td></td>').html(report.outtrayBig));
-						tr.append($('<td></td>').html(report.outtrayLead));
+						tr.append($('<td ></td>').html(report.frName));
+						tr.append($('<td style="text-align:right;"></td>')
+								.html(report.outtraySmall));
+						tr.append($('<td style="text-align:right;"></td>')
+								.html(report.outtrayBig));
+						tr.append($('<td style="text-align:right;"></td>')
+								.html(report.outtrayLead));
 
-						tr.append($('<td></td>').html(report.intraySmall));
-						tr.append($('<td></td>').html(report.intrayBig));
-						tr.append($('<td></td>').html(report.intrayLead));
+						tr.append($('<td style="text-align:right;"></td>')
+								.html(report.intraySmall));
+						tr.append($('<td style="text-align:right;"></td>')
+								.html(report.intrayBig));
+						tr.append($('<td style="text-align:right;></td>').html(
+								report.intrayLead));
 
-						tr.append($('<td></td>').html(report.balanceSmall));
-						tr.append($('<td></td>').html(report.balanceBig));
-						tr.append($('<td></td>').html(report.balanceLead));
+						tr.append($('<td style="text-align:right;"></td>')
+								.html(report.balanceSmall));
+						tr.append($('<td style="text-align:right;"></td>')
+								.html(report.balanceBig));
+						tr.append($('<td style="text-align:right;"></td>')
+								.html(report.balanceLead));
+
+						outTraySmallTotal = outTraySmallTotal
+								+ report.outtraySmall;
+						outTrayBigTotal = outTrayBigTotal + report.outtrayBig;
+						outTrayLeadTotal = outTrayLeadTotal
+								+ report.outtrayLead;
+
+						inTraySmallTotal = inTraySmallTotal
+								+ report.intraySmall;
+						inTrayBigTotal = inTrayBigTotal + report.intrayBig;
+						inTrayLeadTotal = inTrayLeadTotal + report.intrayLead;
+
+						balTraySmallTotal = balTraySmallTotal
+								+ report.balanceSmall;
+						balTrayBigTotal = balTrayBigTotal + report.balanceBig;
+						balTrayLeadTotal = balTrayLeadTotal
+								+ report.balanceLead;
 
 						$('#table_grid tbody').append(tr);
 
 					})
 
+					var tr = $('<tr></tr>');
+
+					tr.append($('<td></td>').html(""));
+
+					tr.append($('<td style="font-weight:bold;"></td>').html(
+							"Total"));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							outTraySmallTotal.toFixed(2)));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							outTrayBigTotal.toFixed(2)));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							outTrayLeadTotal.toFixed(2)));
+
+					tr.append($('<td style="text-align:right;"></td>').html(
+							inTraySmallTotal.toFixed(2)));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							inTrayBigTotal.toFixed(2)));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							inTrayLeadTotal.toFixed(2)));
+
+					tr.append($('<td style="text-align:right;"></td>').html(
+							balTraySmallTotal.toFixed(2)));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							balTrayBigTotal.toFixed(2)));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							balTrayLeadTotal.toFixed(2)));
+
+					$('#table_grid tbody').append(tr);
+
 				} else if (trayType == 1) {
+
+					var outTraySmallTotal = 0;
+					var outTrayBigTotal = 0;
+					var outTrayLeadTotal = 0;
 
 					$('#outTrayTable').show();
 					$('#balanceTrayTable').hide();
@@ -381,17 +453,46 @@
 						tr.append($('<td></td>').html(index));
 
 						tr.append($('<td></td>').html(report.frName));
-						tr.append($('<td></td>').html(report.outtraySmall));
-						tr.append($('<td></td>').html(report.outtrayBig));
-						tr.append($('<td></td>').html(report.outtrayLead));
+
+						tr.append($('<td style="text-align:right;"></td>')
+								.html(report.outtraySmall));
+						tr.append($('<td style="text-align:right;"></td>')
+								.html(report.outtrayBig));
+						tr.append($('<td style="text-align:right;"></td>')
+								.html(report.outtrayLead));
+
+						outTraySmallTotal = outTraySmallTotal
+								+ report.outtraySmall;
+						outTrayBigTotal = outTrayBigTotal + report.outtrayBig;
+						outTrayLeadTotal = outTrayLeadTotal
+								+ report.outtrayLead;
 
 						$('#table_grid1 tbody').append(tr);
 
 					})
 
+					var tr = $('<tr></tr>');
+
+					tr.append($('<td></td>').html(""));
+
+					tr.append($('<td style="font-weight:bold;"></td>').html(
+							"Total"));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							outTraySmallTotal.toFixed(2)));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							outTrayBigTotal.toFixed(2)));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							outTrayLeadTotal.toFixed(2)));
+
+					$('#table_grid1 tbody').append(tr);
+
 				}
 
 				else if (trayType == 2) {
+
+					var inTraySmallTotal = 0;
+					var inTrayBigTotal = 0;
+					var inTrayLeadTotal = 0;
 
 					$('#outTrayTable').hide();
 					$('#balanceTrayTable').hide();
@@ -405,15 +506,43 @@
 
 						tr.append($('<td></td>').html(report.frName));
 
-						tr.append($('<td></td>').html(report.intraySmall));
-						tr.append($('<td></td>').html(report.intrayBig));
-						tr.append($('<td></td>').html(report.intrayLead));
+						tr.append($('<td style="text-align:right;"></td>')
+								.html(report.intraySmall));
+						tr.append($('<td style="text-align:right;"></td>')
+								.html(report.intrayBig));
+						tr.append($('<td style="text-align:right;></td>').html(
+								report.intrayLead));
+
+						inTraySmallTotal = inTraySmallTotal
+								+ report.intraySmall;
+						inTrayBigTotal = inTrayBigTotal + report.intrayBig;
+						inTrayLeadTotal = inTrayLeadTotal + report.intrayLead;
 
 						$('#table_grid2 tbody').append(tr);
 
 					})
 
+					var tr = $('<tr></tr>');
+
+					tr.append($('<td></td>').html(""));
+
+					tr.append($('<td style="font-weight:bold;"></td>').html(
+							"Total"));
+
+					tr.append($('<td style="text-align:right;"></td>').html(
+							inTraySmallTotal));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							inTrayBigTotal));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							inTrayLeadTotal));
+
+					$('#table_grid2 tbody').append(tr);
+
 				} else if (trayType == 3) {
+
+					var balTraySmallTotal = 0;
+					var balTrayBigTotal = 0;
+					var balTrayLeadTotal = 0;
 
 					$('#outTrayTable').hide();
 					$('#balanceTrayTable').show();
@@ -427,15 +556,38 @@
 
 						tr.append($('<td></td>').html(report.frName));
 
-						tr.append($('<td></td>').html(report.balanceSmall));
+						tr.append($('<td style="text-align:right;"></td>')
+								.html(report.balanceSmall));
+						tr.append($('<td style="text-align:right;"></td>')
+								.html(report.balanceBig));
+						tr.append($('<td style="text-align:right;"></td>')
+								.html(report.balanceLead));
 
-						tr.append($('<td></td>').html(report.balanceBig));
-
-						tr.append($('<td></td>').html(report.balanceLead));
+						balTraySmallTotal = balTraySmallTotal
+								+ report.balanceSmall;
+						balTrayBigTotal = balTrayBigTotal + report.balanceBig;
+						balTrayLeadTotal = balTrayLeadTotal
+								+ report.balanceLead;
 
 						$('#table_grid3 tbody').append(tr);
 
 					})
+
+					var tr = $('<tr></tr>');
+
+					tr.append($('<td></td>').html(""));
+
+					tr.append($('<td style="font-weight:bold;"></td>').html(
+							"Total"));
+
+					tr.append($('<td style="text-align:right;"></td>').html(
+							balTraySmallTotal));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							balTrayBigTotal));
+					tr.append($('<td style="text-align:right;"></td>').html(
+							balTrayLeadTotal));
+
+					$('#table_grid3 tbody').append(tr);
 
 				}
 

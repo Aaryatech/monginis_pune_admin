@@ -114,6 +114,9 @@
 
 								</thead>
 								<tbody>
+									<c:set var="taxableTotal" value="0" />
+									<c:set var="taxTotal" value="0" />
+									<c:set var="finalTotal" value="0" />
 									<%
 										int c = 1;
 									%>
@@ -140,9 +143,33 @@
 											<td align="right"><c:out value="${ServType}" /></td>
 
 
-
+											<c:set var="taxableTotal"
+												value="${taxableTotal+logisList.taxableAmt}" />
+											<c:set var="taxTotal" value="${taxTotal+logisList.taxAmt}" />
+											<c:set var="finalTotal" value="${finalTotal+logisList.total}" />
 										</tr>
 									</c:forEach>
+
+									<tr>
+										<td align="left"></td>
+										<td align="left"></td>
+										<td align="left">Total</td>
+										<td align="right"><fmt:formatNumber type="number"
+												maxFractionDigits="2" minFractionDigits="2"
+												value="${taxableTotal}" /></td>
+										<td align="right"><fmt:formatNumber type="number"
+												maxFractionDigits="2" minFractionDigits="2"
+												value="${taxTotal}" /></td>
+
+										<td align="right"><fmt:formatNumber type="number"
+												maxFractionDigits="2" minFractionDigits="2"
+												value="${finalTotal}" /></td>
+
+										<td align="left"></td>
+
+
+
+									</tr>
 
 								</tbody>
 							</table>

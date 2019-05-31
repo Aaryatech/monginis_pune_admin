@@ -116,6 +116,9 @@
 										int c = 1;
 									%>
 
+									<c:set var="taxableTotal" value="0" />
+									<c:set var="taxTotal" value="0" />
+
 									<c:forEach items="${vehicleAvgList}" var="vehicleAvgList">
 										<c:set var="color" value="" />
 										<c:choose>
@@ -145,9 +148,37 @@
 											<td align="right"><c:out
 													value="${vehicleAvgList.vehStandAvg}" /></td>
 
+											<c:set var="taxableTotal"
+												value="${taxableTotal+vehicleAvgList.vehRunningKm}" />
+											<c:set var="taxTotal"
+												value="${taxTotal+vehicleAvgList.diesel}" />
+
 										</tr>
 
 									</c:forEach>
+
+
+									<tr>
+
+										<td align="left"></td>
+										<td align="left"></td>
+										<td align="left"></td>
+										<td align="left">Total</td>
+										<td align="right"><fmt:formatNumber type="number"
+												maxFractionDigits="2" minFractionDigits="2"
+												value="${taxableTotal}" /></td>
+										<td align="right"><fmt:formatNumber type="number"
+												maxFractionDigits="2" minFractionDigits="2"
+												value="${taxTotal}" /></td>
+
+										<td align="left"></td>
+
+										<td align="left"></td>
+
+
+
+
+									</tr>
 
 								</tbody>
 							</table>
