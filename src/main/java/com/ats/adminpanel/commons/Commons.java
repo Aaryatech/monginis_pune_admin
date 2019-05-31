@@ -15,7 +15,6 @@ import com.ats.adminpanel.model.accessright.SubModuleJson;
 
 public class Commons {
 
-	
 	//public static List<ModuleJson> newModuleList=null;
 	  
 	static HttpServletRequest request;
