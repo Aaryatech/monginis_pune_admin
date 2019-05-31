@@ -158,7 +158,7 @@ public class ProdRejectRetuController {
 
 			postProductionHeader.setTimeSlot(0);
 			postProductionHeader.setItemGrp1(catId);
-			postProductionHeader.setProductionDate(DateConvertor.convertToYMD(fromDate));
+			postProductionHeader.setProductionDate(fromDate);
 			postProductionHeader.setDelStatus(0);
 			postProductionHeader.setIsBom(0);
 			postProductionHeader.setIsMixing(0);
@@ -181,7 +181,7 @@ public class ProdRejectRetuController {
 				if (t1 > 0 || t2 > 0) {
 					postProductionDetail = new PostProductionPlanDetail();
 
-					postProductionDetail.setProductionDate(DateConvertor.convertToYMD(fromDate));
+					postProductionDetail.setProductionDate(fromDate);
 					postProductionDetail.setItemId(itemList.get(i).getId());
 					postProductionDetail.setOpeningQty(0);
 					postProductionDetail.setOrderQty(0);
@@ -199,7 +199,7 @@ public class ProdRejectRetuController {
 			postProductionHeader.setPostProductionPlanDetail(postProductionDetailList);
 			System.out.println("postProductionHeader" + postProductionHeader.toString());
 
-			Info info = restTemplate.postForObject(Constants.url + "postProductionPlan", postProductionHeader,
+			Info info = restTemplate.postForObject(Constants.url + "postProductionPlanForRejRet", postProductionHeader,
 					Info.class);
 			System.out.println(info.toString());
 
