@@ -103,7 +103,7 @@
 							<label class="col-sm-3 col-lg-2	 control-label">Select
 								Type*</label>
 
-							<div class="col-sm-6 col-lg-4 controls">
+							<div class="col-sm-3 col-lg-3 controls">
 								<select name="typeId" id="typeId" class="form-control chosen"
 									tabindex="6" required>
 									<option value="">Select Option</option>
@@ -128,7 +128,8 @@
 								<input type="button" class="btn btn-primary" value="Search"
 									onclick="serchAmc()">
 
-
+								<button class="btn btn-primary" value="PDF" id="PDFButton"
+									onclick="genPdf()" disabled>PDF</button>
 
 								<div align="center" id="loader" style="display: none">
 
@@ -175,6 +176,15 @@
 							</tbody>
 						</table>
 					</div>
+
+
+
+
+					<div class="col-sm-3  controls">
+						<input type="button" id="expExcel" class="btn btn-primary"
+							value="EXPORT TO Excel" onclick="exportToExcel();" disabled>
+					</div>
+
 				</div>
 
 			</div>
@@ -342,7 +352,7 @@
 			alert(fromDate);
 			alert(toDate);
 			alert(vehIdList);
- */
+			 */
 			$('#loader').show();
 			$.getJSON('${serchLogisticsList}',
 
@@ -360,9 +370,12 @@
 				$('#loader').hide();
 				$('#table_grid td').remove();
 
+				document.getElementById("PDFButton").disabled = false;
+				document.getElementById("expExcel").disabled = false;
 				if (data == "") {
-
-					alert("No Record");
+					alert("No records found !!");
+					document.getElementById("expExcel").disabled = true;
+					document.getElementById("PDFButton").disabled = true;
 				}
 				$.each(data, function(key, itemList) {
 
@@ -402,7 +415,19 @@
 		}
 	</script>
 
+	<script>
+		function genPdf() {
+			window
+					.open('${pageContext.request.contextPath}/getLogisticsReportPdf');
+		}
+	</script>
+	<script type="text/javascript">
+		function exportToExcel() {
 
+			window.open("${pageContext.request.contextPath}/exportToExcel");
+			document.getElementById("expExcel").disabled = true;
+		}
+	</script>
 
 
 

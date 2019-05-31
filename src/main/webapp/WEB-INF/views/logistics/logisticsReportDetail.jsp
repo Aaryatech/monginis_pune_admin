@@ -100,11 +100,13 @@
 									<tr bgcolor=#5ab4da style="color: white;">
 										<th>Sr.No.</th>
 										<th>Vehicle Or Machine Name</th>
+										<th>Invoice No.</th>
 
 										<th>Taxable Amt</th>
 										<th>Tax Amt</th>
 										<th>Total</th>
-									 
+										<th>Serv Type</th>
+
 
 
 									</tr>
@@ -122,22 +124,20 @@
 										<tr>
 											<td><%=c++%> <c:out value="${c}" /></td>
 											<td align="left"><c:out value="${logisList.vehNo}" /></td>
-											<td align="right"><c:out
-													value="${logisList.taxableAmt}" /></td>
-											<td align="right"><c:out
-													value="${logisList.taxAmt}" /></td>
-											<td align="right"><c:out
-													value="${logisList.total}" /></td>
-											<%-- <td align="right"><c:out
-													value="${logisList.diesel}" /></td>
-											<td align="right"><fmt:formatNumber type="number"
-													minFractionDigits="2" maxFractionDigits="2"
-													value="${vehicleAvgList.vehRunningKm/vehicleAvgList.diesel}" />
-											</td>
-											<td align="right"><c:out
-													value="${logisList.vehMiniAvg}" /></td>
-											<td align="right"><c:out
-													value="${logisList.vehStandAvg}" /></td> --%>
+											<td align="left"><c:out value="${logisList.billNo}" /></td>
+											<td align="right"><c:out value="${logisList.taxableAmt}" /></td>
+											<td align="right"><c:out value="${logisList.taxAmt}" /></td>
+											<td align="right"><c:out value="${logisList.total}" /></td>
+											<c:set var="ServType"></c:set>
+											<c:choose>
+												<c:when test="${logisList.servType==1}">
+													<c:set var="ServType" value="Regular"></c:set>
+												</c:when>
+												<c:when test="${logisList.servType==2}">
+													<c:set var="ServType" value="Breakdown"></c:set>
+												</c:when>
+											</c:choose>
+											<td align="right"><c:out value="${ServType}" /></td>
 
 
 
@@ -147,16 +147,18 @@
 								</tbody>
 							</table>
 						</div>
-						<div class="form-group" style="display: none;" id="range">
 
 
 
-							<div class="col-sm-3  controls">
-								<input type="button" id="expExcel" class="btn btn-primary"
-									value="EXPORT TO Excel" onclick="exportToExcel();"
-									disabled="disabled">
-							</div>
-						</div>
+					</div>
+
+					<div class="col-sm-3  controls">
+						<input type="button" id="expExcel" class="btn btn-primary"
+							value="EXPORT TO Excel" onclick="exportToExcel();">
+
+						<button class="btn btn-primary" value="PDF" id="PDFButton"
+							onclick="genPdf()">PDF</button>
+
 					</div>
 
 				</div>
@@ -192,7 +194,7 @@
 	<script>
 		function genPdf() {
 			window
-					.open('${pageContext.request.contextPath}/getVehAvgReportPdf');
+					.open('${pageContext.request.contextPath}/getLogisticsDetailReportPdf');
 		}
 	</script>
 	<script type="text/javascript">

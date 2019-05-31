@@ -1,12 +1,19 @@
 package com.ats.adminpanel.controller;
 
 import java.awt.Dimension;
+
 import java.awt.Insets;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URLConnection;
+import java.text.DateFormat;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,6 +33,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -74,6 +82,17 @@ import com.ats.adminpanel.model.logistics.VehicalMaster;
 import com.ats.adminpanel.model.logistics.VehicalType;
 import com.ats.adminpanel.model.logistics.VehicleDcoument;
 import com.ats.adminpanel.model.tray.GetVehicleAvg;
+import com.ats.adminpanel.util.ItextPageEvent;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Font.FontFamily;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 
 @Controller
 @Scope("session")
@@ -3353,89 +3372,5 @@ public class LogisticsController {
 		}
 	}
 
-	@RequestMapping(value = "/showLogisticsReportList", method = RequestMethod.GET)
-	public ModelAndView showLogisticsReportList(HttpServletRequest request, HttpServletResponse response) {
-
-		ModelAndView model = new ModelAndView("logistics/logisticReport");
-		return model;
-
-	}
-
-	List<GetServHeader> logisList = null;
-
-	@RequestMapping(value = "/serchLogisticsList", method = RequestMethod.GET)
-	@ResponseBody
-	public List<GetServHeader> serchLogisticsList(HttpServletRequest request, HttpServletResponse response) {
-
-		logisList = new ArrayList<GetServHeader>();
-		try {
-			int typeId = Integer.parseInt(request.getParameter("typeId"));
-			String servType = request.getParameter("servType");
-
-			String fromDate = request.getParameter("fromDate");
-			String toDate = request.getParameter("toDate");
-
-			String selectedVehIds = request.getParameter("vehIdList");
-			List<String> vehIdList = new ArrayList<>();
-			selectedVehIds = selectedVehIds.substring(1, selectedVehIds.length() - 1);
-			selectedVehIds = selectedVehIds.replaceAll("\"", "");
-			vehIdList = Arrays.asList(selectedVehIds);
-			System.err.println("cat Id List " + vehIdList.toString());
-
-			System.out.println("in if mechid 0" + fromDate);
-			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-			map.add("fromDate", DateConvertor.convertToYMD(fromDate));
-			map.add("toDate", DateConvertor.convertToYMD(toDate));
-			map.add("typeId", typeId);
-			System.out.println("vehIdListvehIdListvehIdListvehIdList" + vehIdList.toString());
-
-			if (servType.contains("-1")) {
-				map.add("servType", "1,2");
-
-			} else {
-				map.add("servType", servType);
-			}
-			map.add("vehIdList", vehIdList);
-			logisList = restTemplate.postForObject(Constants.url + "getLogistiocsDataBetDate", map, List.class);
-
-			System.out.println("logisList " + logisList);
-		} catch (Exception e) {
-			System.out.println("errorr  " + e.getMessage());
-			e.printStackTrace();
-		}
-
-		return logisList;
-	}
-
-	@RequestMapping(value = "/showLogisticsReportDetailList/{vehId}/{fromdate}/{todate}", method = RequestMethod.GET)
-	public ModelAndView showLogisticsReportDetailList(@PathVariable int vehId, @PathVariable String fromdate,
-			@PathVariable String todate, HttpServletRequest request, HttpServletResponse response) {
-
-		ModelAndView model = new ModelAndView("logistics/logisticsReportDetail");
-		try {
-
-			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-			SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
-			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-			RestTemplate restTemplate = new RestTemplate();
-			map.add("vehIdList", vehId);
-			map.add("fromDate", sdf2.format(sdf.parse(fromdate)));
-			map.add("toDate", sdf2.format(sdf.parse(todate)));
-
-			ParameterizedTypeReference<List<GetServHeader>> typeRef = new ParameterizedTypeReference<List<GetServHeader>>() {
-			};
-			ResponseEntity<List<GetServHeader>> responseEntity = restTemplate.exchange(
-					Constants.url + "/getLogistiocsDetailDataBetDate", HttpMethod.POST, new HttpEntity<>(map), typeRef);
-			logisList = responseEntity.getBody();
-
-			model.addObject("fromDate", fromdate);
-			model.addObject("toDate", todate);
-			model.addObject("logisList", logisList);
-
-		} catch (Exception e) {
-
-		}
-		return model;
-	}
-
+	
 }

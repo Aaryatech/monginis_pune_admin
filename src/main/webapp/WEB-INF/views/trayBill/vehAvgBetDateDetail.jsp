@@ -115,11 +115,17 @@
 									<%
 										int c = 1;
 									%>
+
 									<c:forEach items="${vehicleAvgList}" var="vehicleAvgList">
+										<c:set var="color" value="" />
+										<c:choose>
+											<c:when
+												test="${(vehicleAvgList.vehRunningKm/vehicleAvgList.diesel)<vehicleAvgList.vehMiniAvg}">
+												<c:set var="color" value="red" />
+											</c:when>
 
-
-
-										<tr>
+										</c:choose>
+										<tr bgcolor="${color}">
 											<td><%=c++%> <c:out value="${c}" /></td>
 											<td align="left"><c:out value="${vehicleAvgList.vehNo}" /></td>
 											<td align="right"><c:out
@@ -128,7 +134,8 @@
 													value="${vehicleAvgList.vehInkm}" /></td>
 											<td align="right"><c:out
 													value="${vehicleAvgList.vehRunningKm}" /></td>
-											<td align="right"><c:out value="${vehicleAvgList.diesel}" /></td>
+											<td align="right"><c:out
+													value="${vehicleAvgList.diesel}" /></td>
 											<td align="right"><fmt:formatNumber type="number"
 													minFractionDigits="2" maxFractionDigits="2"
 													value="${vehicleAvgList.vehRunningKm/vehicleAvgList.diesel}" />
@@ -138,24 +145,22 @@
 											<td align="right"><c:out
 													value="${vehicleAvgList.vehStandAvg}" /></td>
 
-
-
 										</tr>
+
 									</c:forEach>
 
 								</tbody>
 							</table>
 						</div>
-						<div class="form-group" style="display: none;" id="range">
+						<div class="col-sm-3  controls">
+							<input type="button" id="expExcel" class="btn btn-primary"
+								value="EXPORT TO Excel" onclick="exportToExcel();">
 
+							<button class="btn btn-primary" value="PDF" id="PDFButton"
+								onclick="genPdf()">PDF</button>
 
-
-							<div class="col-sm-3  controls">
-								<input type="button" id="expExcel" class="btn btn-primary"
-									value="EXPORT TO Excel" onclick="exportToExcel();"
-									disabled="disabled">
-							</div>
 						</div>
+
 					</div>
 
 				</div>
@@ -191,7 +196,7 @@
 	<script>
 		function genPdf() {
 			window
-					.open('${pageContext.request.contextPath}/getVehAvgReportPdf');
+					.open('${pageContext.request.contextPath}/getVehAvgDetailBetDateReportPdf');
 		}
 	</script>
 	<script type="text/javascript">
