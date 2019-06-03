@@ -376,8 +376,9 @@
 								.html(report.intraySmall));
 						tr.append($('<td style="text-align:right;"></td>')
 								.html(report.intrayBig));
-						tr.append($('<td style="text-align:right;></td>').html(
-								report.intrayLead));
+
+						tr.append($('<td style="text-align:right;"></td>')
+								.html(report.intrayLead));
 
 						tr.append($('<td style="text-align:right;"></td>')
 								.html(report.balanceSmall));
@@ -510,8 +511,9 @@
 								.html(report.intraySmall));
 						tr.append($('<td style="text-align:right;"></td>')
 								.html(report.intrayBig));
-						tr.append($('<td style="text-align:right;></td>').html(
-								report.intrayLead));
+
+						tr.append($('<td style="text-align:right;"></td>')
+								.html(report.intrayLead));
 
 						inTraySmallTotal = inTraySmallTotal
 								+ report.intraySmall;

@@ -2232,7 +2232,7 @@ public class TrayBillController {
 
 			String header = Constants.FACTORYNAME + "\n" + Constants.FACTORYADDRESS;
 
-			String title = "Report-For Vehicle Average Details";
+			String title = "Report-For Tray ";
 
 			DateFormat DF = new SimpleDateFormat("dd-MM-yyyy");
 			String reportDate = DF.format(new Date());
