@@ -1,6 +1,7 @@
 package com.ats.adminpanel.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ats.adminpanel.commons.AccessControll;
 import com.ats.adminpanel.commons.Constants;
 import com.ats.adminpanel.model.AllEventListResponse;
+import com.ats.adminpanel.model.CustList;
 import com.ats.adminpanel.model.Info;
 import com.ats.adminpanel.model.Route;
 import com.ats.adminpanel.model.SubCategoryRes;
@@ -769,5 +771,45 @@ public class MastersController {
 		}
 
 		return "redirect:/showSubCatList";
+	}
+
+	@RequestMapping(value = "/showCutomerList")
+	public ModelAndView showCutomerList(HttpServletRequest request, HttpServletResponse response) {
+
+		ModelAndView mav = null;
+		HttpSession session = request.getSession();
+
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		/*
+		 * Info view = AccessControll.checkAccess("showCutomerList", "showCutomerList",
+		 * "1", "0", "0", "0", newModuleList);
+		 * 
+		 * if (view.getError() == true) {
+		 * 
+		 * mav = new ModelAndView("masters/custList");
+		 * 
+		 * } else {
+		 */
+
+		mav = new ModelAndView("masters/custList");
+		/*
+		 * Constants.mainAct=1; Constants.subAct=9;
+		 */
+		try {
+
+			RestTemplate restTemplate = new RestTemplate();
+			CustList[] custList1 = restTemplate.getForObject(Constants.url + "getCutslList", CustList[].class);
+			List<CustList> custList = new ArrayList<CustList>(Arrays.asList(custList1));
+
+			System.out.println("custListcustListcustListcustList" + custList.toString());
+
+			mav.addObject("custList", custList);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		}
+		return mav;
+
 	}
 }
