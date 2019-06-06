@@ -296,7 +296,7 @@ public class ExportExcelController {
 	            cell.setCellValue(exportToExcelListNew.get(rowIndex).getRowData().get(j));
 	            
 	          //  if((rowIndex+1)==1)
-	            cell.setCellStyle(createHeaderStyleHeaderFont(wb,242, 242, 242,1));
+	          //  cell.setCellStyle(createHeaderStyleHeaderFont(wb,242, 242, 242,1));
 	            if((rowIndex+2)==2)
 	            cell.setCellStyle(createHeaderStyleNew(wb));  
 	      

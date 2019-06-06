@@ -198,15 +198,15 @@
 															<c:when test="${crnDetail.grnGvnQty==0}">
 															<c:choose>
 															<c:when test="${crnDetail.isGrn==0}">
-																 <fmt:formatNumber type = "number" maxFractionDigits = "2" minFractionDigits = "2" value = "${(crnDetail.baseRate)*0.99}" var="grnBaseRate"/>
+																 <fmt:formatNumber type = "number" maxFractionDigits = "2" minFractionDigits = "2" value = "${(crnDetail.baseRate)*0.99}" var="grnBaseRate"   groupingUsed="false" />
 															</c:when>
 															<c:otherwise>
-															 <fmt:formatNumber type = "number" maxFractionDigits = "2" minFractionDigits = "2" value = "${(crnDetail.baseRate)*0.79}" var="grnBaseRate"/>
+															 <fmt:formatNumber type = "number" maxFractionDigits = "2" minFractionDigits = "2" value = "${(crnDetail.baseRate)*0.79}" var="grnBaseRate"  groupingUsed="false" />
 															</c:otherwise>
 															</c:choose>
 															</c:when>
 															<c:otherwise>
-															 <fmt:formatNumber type = "number"       maxFractionDigits = "2" minFractionDigits = "2" value = "${crnDetail.taxableAmt/crnDetail.grnGvnQty}" var="grnBaseRate"/>
+															 <fmt:formatNumber type = "number"       maxFractionDigits = "2" minFractionDigits = "2" value = "${crnDetail.taxableAmt/crnDetail.grnGvnQty}" var="grnBaseRate"  groupingUsed="false" />
 															</c:otherwise>
 															</c:choose>
                                                          

@@ -714,22 +714,22 @@ public class ReportController {
 			rowData.add(" " + hsnListBill.get(i).getBillQty());
 			rowData.add(" " + hsnListBill.get(i).getGrnGvnQty());
 			rowData.add(" " + (hsnListBill.get(i).getBillQty() - hsnListBill.get(i).getGrnGvnQty()));
-			rowData.add("" + roundUp(hsnListBill.get(i).getTaxableAmt()));
+			rowData.add("" + Long.toString((long) (hsnListBill.get(i).getTaxableAmt())));
 			rowData.add(" " + roundUp(hsnListBill.get(i).getItemTax1()));
 			rowData.add("" + roundUp(hsnListBill.get(i).getCgstRs()));
 			rowData.add(" " + roundUp(hsnListBill.get(i).getItemTax2()));
 
 			rowData.add("" + roundUp(hsnListBill.get(i).getSgstRs()));
 
-			rowData.add(" " + roundUp(hsnListBill.get(i).getTaxableAmt() + hsnListBill.get(i).getCgstRs()
-					+ hsnListBill.get(i).getSgstRs()));
+			rowData.add(" " + Long.toString((long) (hsnListBill.get(i).getTaxableAmt()))+Long.toString((long)(  roundUp(hsnListBill.get(i).getCgstRs())
+					+  roundUp(hsnListBill.get(i).getSgstRs()))));
 
-			totalTax = totalTax + hsnListBill.get(i).getItemTax1() + hsnListBill.get(i).getItemTax2();
-			taxableAmt = taxableAmt + hsnListBill.get(i).getTaxableAmt();
-			cgstSum = cgstSum + hsnListBill.get(i).getCgstRs();
-			sgstSum = sgstSum + hsnListBill.get(i).getSgstRs();
-			grandTotal = grandTotal + hsnListBill.get(i).getTaxableAmt() + hsnListBill.get(i).getCgstRs()
-					+ hsnListBill.get(i).getSgstRs();
+			totalTax = totalTax +  roundUp(hsnListBill.get(i).getItemTax1()) +  roundUp(hsnListBill.get(i).getItemTax2());
+			taxableAmt = taxableAmt +  roundUp(hsnListBill.get(i).getTaxableAmt());
+			cgstSum = cgstSum +  roundUp(hsnListBill.get(i).getCgstRs());
+			sgstSum = sgstSum +  roundUp(hsnListBill.get(i).getSgstRs());
+			grandTotal = grandTotal +  roundUp(hsnListBill.get(i).getTaxableAmt()) +  roundUp(hsnListBill.get(i).getCgstRs())
+					+  roundUp(hsnListBill.get(i).getSgstRs());
 
 			srno = srno + 1;
 
@@ -747,7 +747,7 @@ public class ReportController {
 		rowData.add("");
 		rowData.add("");
 		rowData.add("" + roundUp(totalTax));
-		rowData.add("" + roundUp(taxableAmt));
+		rowData.add("" + Long.toString((long)(taxableAmt)));
 
 		rowData.add("");
 		rowData.add("" + roundUp(cgstSum));
@@ -755,7 +755,7 @@ public class ReportController {
 		rowData.add("");
 		rowData.add("" + roundUp(sgstSum));
 
-		rowData.add("" + roundUp(grandTotal));
+		rowData.add("" + Long.toString((long)(grandTotal)));
 
 		expoExcel.setRowData(rowData);
 		exportToExcelList.add(expoExcel);

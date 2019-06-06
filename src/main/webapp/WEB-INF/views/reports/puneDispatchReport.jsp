@@ -197,7 +197,9 @@
 						<button class="btn btn-primary" value="PDF" id="PDFButton"
 							onclick="genPdf()">PDF</button> -->
 							<input type="button" class="btn btn-primary" value="PDF"
-								id="PDFButton" onclick="genPdf()" value="PDF" /> <input
+								id="PDFButton" onclick="genPdf()" value="PDF" />
+								<input type="button" class="btn btn-primary"
+								id="PDFButtonNew" onclick="genPdfNew()" value="PDF 1" />  <input
 								type="button" class="btn btn-primary" value="PDF FOR DOT MATRIX"
 								id="PDFButton" onclick="genPdfForDotMatrix()"
 								value="PDF FOR DOT MATRIX" />
@@ -923,6 +925,21 @@
 				var menuIds = $("#menuId").val();
 
 				window.open('pdfForDisReport?url=pdf/getPDispatchReportNewPdf/'
+						+ date + '/' + stationId + '/' + abcType + '/' + routId
+						+ '/' + menuIds);
+
+			}
+		</script>
+		<script type="text/javascript">
+			function genPdfNew() {
+
+				var date = $("#billDate").val();
+				var stationId = $("#stanId").val();
+				var abcType = $("#abcType").val();
+				var routId = $("#selectRoute").val();
+				var menuIds = $("#menuId").val();
+
+				window.open('pdfForDisReport?url=pdf/getPDispatchReportNewPdf1/'
 						+ date + '/' + stationId + '/' + abcType + '/' + routId
 						+ '/' + menuIds);
 
