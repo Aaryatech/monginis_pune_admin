@@ -1208,7 +1208,7 @@ public class CreditNoteController {
 
 				postCreditNoteHeaderList.setPostCreditNoteHeader(creditHeaderList);
 				System.err.println("postCreditNoteHeaderList**" + postCreditNoteHeaderList.toString());
-				Info info = restTemplate.postForObject(Constants.url + "postCreditNote", postCreditNoteHeaderList,
+				Info info = restTemplate.postForObject(Constants.url + "postCreditNoteForUpdate", postCreditNoteHeaderList,
 						Info.class);
 			
 
