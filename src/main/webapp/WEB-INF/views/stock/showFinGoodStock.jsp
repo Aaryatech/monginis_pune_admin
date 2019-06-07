@@ -314,6 +314,12 @@ table {
 										</div>
 
 									</div>
+
+									<input type="button" class="btn btn-primary"
+										value="Closing Qty PDF" id="PDFButton"
+										onclick="genClosingQtyPdf()"> <input type="button"
+										class="btn btn-primary" value="Summery PDF" id="PDFButton"
+										onclick="genSummeryPdf()">
 							</form>
 						</div>
 
@@ -591,6 +597,21 @@ table {
 
 							}
 						});
+	</script>
+
+
+	<script type="text/javascript">
+		function genClosingQtyPdf() {
+
+			window.open('${pageContext.request.contextPath}/closingQtyPdf');
+
+		}
+
+		function genSummeryPdf() {
+
+			window.open('${pageContext.request.contextPath}/summeryPdf');
+
+		}
 	</script>
 
 	<script>

@@ -58,6 +58,7 @@ import com.ats.adminpanel.model.item.CategoryListResponse;
 import com.ats.adminpanel.model.item.Item;
 import com.ats.adminpanel.model.item.MCategoryList;
 import com.ats.adminpanel.model.item.StockDetail;
+import com.ats.adminpanel.model.item.SubCategory;
 import com.ats.adminpanel.model.reportv2.SalesReport;
 import com.ats.adminpanel.model.stock.FinGoodBean;
 import com.ats.adminpanel.model.stock.FinishedGoodStock;
@@ -589,10 +590,12 @@ public class FinishedGoodStockController {
 		return model;
 	}
 
+	FinGoodBean bean = new FinGoodBean();
+
 	@RequestMapping(value = "/getFinGoodStock", method = RequestMethod.GET)
 	public @ResponseBody FinGoodBean getFinGoodStock(HttpServletRequest request, HttpServletResponse response) {
 		System.out.println("Inside get Fin good Ajax Call");
-		FinGoodBean bean = new FinGoodBean();
+
 		RestTemplate restTemplate = new RestTemplate();
 
 		int catId = Integer.parseInt(request.getParameter("catId"));
@@ -1869,6 +1872,462 @@ public class FinishedGoodStockController {
 
 			Paragraph heading = new Paragraph(
 					"Opening Stock Adjustment Report \n From Date:" + fromdate + " To Date:" + todate);
+			heading.setAlignment(Element.ALIGN_CENTER);
+			document.add(heading);
+
+			DateFormat DF = new SimpleDateFormat("dd-MM-yyyy");
+			String reportDate = DF.format(new Date());
+
+			document.add(new Paragraph("\n"));
+
+			document.add(table);
+
+			document.close();
+
+			if (file != null) {
+
+				String mimeType = URLConnection.guessContentTypeFromName(file.getName());
+
+				if (mimeType == null) {
+
+					mimeType = "application/pdf";
+
+				}
+
+				response.setContentType(mimeType);
+
+				response.addHeader("content-disposition", String.format("inline; filename=\"%s\"", file.getName()));
+
+				// response.setHeader("Content-Disposition", String.format("attachment;
+				// filename=\"%s\"", file.getName()));
+
+				response.setContentLength((int) file.length());
+
+				InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
+
+				try {
+					FileCopyUtils.copy(inputStream, response.getOutputStream());
+				} catch (IOException e) {
+					System.out.println("Excep in Opening a Pdf File");
+					e.printStackTrace();
+				}
+
+			}
+
+		} catch (DocumentException ex) {
+
+			System.out.println("Pdf Generation Error: Prod From Orders" + ex.getMessage());
+
+			ex.printStackTrace();
+
+		}
+	}
+
+	@RequestMapping(value = "/closingQtyPdf", method = RequestMethod.GET)
+	public void closingQtyPdf(HttpServletRequest request, HttpServletResponse response) throws FileNotFoundException {
+
+		Document document = new Document(PageSize.A4);
+		document.setPageSize(PageSize.A4.rotate());
+		// ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+		Calendar cal = Calendar.getInstance();
+
+		System.out.println("getHsnWisePdf PDF ==" + dateFormat.format(cal.getTime()));
+		String timeStamp = dateFormat.format(cal.getTime());
+		String FILE_PATH = Constants.REPORT_SAVE;
+		File file = new File(FILE_PATH);
+
+		PdfWriter writer = null;
+
+		FileOutputStream out = new FileOutputStream(FILE_PATH);
+
+		try {
+			writer = PdfWriter.getInstance(document, out);
+		} catch (DocumentException e) {
+
+			e.printStackTrace();
+		}
+		RestTemplate restTemplate = new RestTemplate();
+		CategoryListResponse allCategoryResponse = restTemplate.getForObject(Constants.url + "showAllCategory",
+				CategoryListResponse.class);
+
+		List<MCategoryList> catList = allCategoryResponse.getmCategoryList();
+
+		filteredCatList = new ArrayList<MCategoryList>();
+		System.out.println("catList :" + catList.toString());
+
+		for (MCategoryList mCategory : catList) {
+			if (mCategory.getCatId() != 5 && mCategory.getCatId() != 3) {
+				filteredCatList.add(mCategory);
+
+			}
+		}
+
+		allItemsListResponse = restTemplate.getForObject(Constants.url + "getAllItems", AllItemsListResponse.class);
+
+		List<Item> itemsList = new ArrayList<Item>();
+		itemsList = allItemsListResponse.getItems();
+
+		CategoryListResponse categoryListResponse = restTemplate.getForObject(Constants.url + "showAllCategory",
+				CategoryListResponse.class);
+		List<SubCategory> subCatList = new ArrayList<SubCategory>();
+
+		for (int i = 0; i < categoryListResponse.getmCategoryList().size(); i++) {
+			subCatList.addAll(categoryListResponse.getmCategoryList().get(i).getSubCategoryList());
+
+		}
+
+		for (int i = 0; i < itemsList.size(); i++) {
+			for (int j = 0; j < bean.getStockDetail().size(); j++) {
+				if (itemsList.get(i).getId() == bean.getStockDetail().get(j).getItemId()) {
+					bean.getStockDetail().get(j).setSubCatId(itemsList.get(i).getItemGrp2());
+
+				}
+			}
+
+		}
+
+		PdfPTable table = new PdfPTable(3);
+		table.setHeaderRows(1);
+		try {
+			System.out.println("Inside PDF Table try");
+			table.setWidthPercentage(100);
+			table.setWidths(new float[] { 0.7f, 1.1f, 0.9f });
+			Font headFont = new Font(FontFamily.HELVETICA, 8, Font.NORMAL, BaseColor.BLACK);
+			Font headFont1 = new Font(FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.BLACK);
+			Font f = new Font(FontFamily.TIMES_ROMAN, 10.0f, Font.UNDERLINE, BaseColor.BLUE);
+
+			PdfPCell hcell;
+			hcell = new PdfPCell(new Phrase("Sr.", headFont1));
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			table.addCell(hcell);
+
+			hcell = new PdfPCell(new Phrase("Item Name", headFont1));
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			table.addCell(hcell);
+
+			hcell = new PdfPCell(new Phrase("Closing Qty", headFont1));
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			table.addCell(hcell);
+
+			int index = 0;
+			List<MCategoryList> closingQtyCat = new ArrayList<>();
+			if (selectedCat == -1 || selectedCat == 0) {
+				closingQtyCat.addAll(filteredCatList);
+
+			} else {
+				for (int k = 0; k < filteredCatList.size(); k++) {
+
+					if (filteredCatList.get(k).getCatId() == selectedCat) {
+						closingQtyCat.add(filteredCatList.get(k));
+					}
+				}
+			}
+
+			System.out.println("selectedCatselectedCatselectedCatselectedCat" + selectedCat);
+
+			for (int k = 0; k < closingQtyCat.size(); k++) {
+				float totalClCatQty = 0;
+
+				hcell = new PdfPCell();
+				hcell = new PdfPCell(new Phrase("" + closingQtyCat.get(k).getCatName(), headFont));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				hcell.setBackgroundColor(BaseColor.PINK);
+				table.addCell(hcell);
+
+				hcell = new PdfPCell(new Phrase("", headFont));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				hcell.setBackgroundColor(BaseColor.PINK);
+				table.addCell(hcell);
+
+				hcell = new PdfPCell(new Phrase("", headFont));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				hcell.setBackgroundColor(BaseColor.PINK);
+				table.addCell(hcell);
+
+				for (int l = 0; l < subCatList.size(); l++) {
+					float totalClSubCatQty = 0.0f;
+					if (closingQtyCat.get(k).getCatId() == subCatList.get(l).getCatId()) {
+
+						hcell = new PdfPCell();
+						hcell = new PdfPCell(new Phrase("" + subCatList.get(l).getSubCatName(), headFont));
+						hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+						hcell.setBackgroundColor(BaseColor.PINK);
+						table.addCell(hcell);
+
+						hcell = new PdfPCell(new Phrase("", headFont));
+						hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+						hcell.setBackgroundColor(BaseColor.PINK);
+						table.addCell(hcell);
+
+						hcell = new PdfPCell(new Phrase("", headFont));
+						hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+						hcell.setBackgroundColor(BaseColor.PINK);
+						table.addCell(hcell);
+
+						for (int j = 0; j < bean.getStockDetail().size(); j++) {
+
+							if (bean.getStockDetail().get(j).getSubCatId() == subCatList.get(l).getSubCatId()) {
+
+								/* if (bean.getStockDetail().get(j).getTotalCloStk() > 0) { */
+
+								index++;
+								PdfPCell cell;
+
+								cell = new PdfPCell(new Phrase(String.valueOf(index), headFont));
+								cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+								cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+								table.addCell(cell);
+
+								cell = new PdfPCell(
+										new Phrase("" + bean.getStockDetail().get(j).getItemName(), headFont));
+								cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+								cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+								cell.setPaddingRight(1);
+								table.addCell(cell);
+
+								cell = new PdfPCell(
+										new Phrase("" + bean.getStockDetail().get(j).getTotalCloStk(), headFont));
+								cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+								cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+								cell.setPaddingRight(1);
+								table.addCell(cell);
+
+								totalClSubCatQty = totalClSubCatQty + bean.getStockDetail().get(j).getTotalCloStk();
+								totalClCatQty = totalClCatQty + totalClSubCatQty;
+
+								System.out
+										.println("totalClSubCatQtytotalClSubCatQtytotalClSubCatQty" + totalClSubCatQty);
+								System.out.println("totalClCatQtytotalClCatQtytotalClCatQtytotalClCatQtytotalClCatQty"
+										+ totalClCatQty);
+								/* } */
+							}
+
+						}
+
+					}
+
+				}
+
+			}
+
+			/*
+			 * PdfPCell cell;
+			 * 
+			 * cell = new PdfPCell(new Phrase(String.valueOf(index), headFont));
+			 * cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			 * cell.setHorizontalAlignment(Element.ALIGN_CENTER); table.addCell(cell);
+			 * 
+			 * cell = new PdfPCell(new Phrase("Total", headFont));
+			 * cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			 * cell.setHorizontalAlignment(Element.ALIGN_LEFT); cell.setPaddingRight(1);
+			 * table.addCell(cell);
+			 * 
+			 * cell = new PdfPCell(new Phrase("" + totalNewQty, headFont));
+			 * cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			 * cell.setHorizontalAlignment(Element.ALIGN_RIGHT); cell.setPaddingRight(1);
+			 * table.addCell(cell);
+			 * 
+			 * cell = new PdfPCell(new Phrase("" + totalOldQty, headFont));
+			 * cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			 * cell.setHorizontalAlignment(Element.ALIGN_RIGHT); cell.setPaddingRight(1);
+			 * table.addCell(cell);
+			 * 
+			 * cell = new PdfPCell(new Phrase("", headFont));
+			 * cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			 * cell.setHorizontalAlignment(Element.ALIGN_RIGHT); cell.setPaddingRight(1);
+			 * table.addCell(cell);
+			 */
+			document.open();
+
+			Paragraph heading = new Paragraph("Closing  Qty Report");
+			heading.setAlignment(Element.ALIGN_CENTER);
+			document.add(heading);
+
+			DateFormat DF = new SimpleDateFormat("dd-MM-yyyy");
+			String reportDate = DF.format(new Date());
+
+			document.add(new Paragraph("\n"));
+
+			document.add(table);
+
+			document.close();
+
+			if (file != null) {
+
+				String mimeType = URLConnection.guessContentTypeFromName(file.getName());
+
+				if (mimeType == null) {
+
+					mimeType = "application/pdf";
+
+				}
+
+				response.setContentType(mimeType);
+
+				response.addHeader("content-disposition", String.format("inline; filename=\"%s\"", file.getName()));
+
+				// response.setHeader("Content-Disposition", String.format("attachment;
+				// filename=\"%s\"", file.getName()));
+
+				response.setContentLength((int) file.length());
+
+				InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
+
+				try {
+					FileCopyUtils.copy(inputStream, response.getOutputStream());
+				} catch (IOException e) {
+					System.out.println("Excep in Opening a Pdf File");
+					e.printStackTrace();
+				}
+
+			}
+
+		} catch (DocumentException ex) {
+
+			System.out.println("Pdf Generation Error: Prod From Orders" + ex.getMessage());
+
+			ex.printStackTrace();
+
+		}
+	}
+
+	@RequestMapping(value = "/summeryPdf", method = RequestMethod.GET)
+	public void summeryPdf(HttpServletRequest request, HttpServletResponse response) throws FileNotFoundException {
+
+		Document document = new Document(PageSize.A4);
+		document.setPageSize(PageSize.A4.rotate());
+		// ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+		Calendar cal = Calendar.getInstance();
+
+		System.out.println("getHsnWisePdf PDF ==" + dateFormat.format(cal.getTime()));
+		String timeStamp = dateFormat.format(cal.getTime());
+		String FILE_PATH = Constants.REPORT_SAVE;
+		File file = new File(FILE_PATH);
+
+		PdfWriter writer = null;
+
+		FileOutputStream out = new FileOutputStream(FILE_PATH);
+
+		try {
+			writer = PdfWriter.getInstance(document, out);
+		} catch (DocumentException e) {
+
+			e.printStackTrace();
+		}
+		RestTemplate restTemplate = new RestTemplate();
+		CategoryListResponse allCategoryResponse = restTemplate.getForObject(Constants.url + "showAllCategory",
+				CategoryListResponse.class);
+
+		List<MCategoryList> catList = allCategoryResponse.getmCategoryList();
+
+		filteredCatList = new ArrayList<MCategoryList>();
+		System.out.println("catList :" + catList.toString());
+
+		for (MCategoryList mCategory : catList) {
+			if (mCategory.getCatId() != 5 && mCategory.getCatId() != 3) {
+				filteredCatList.add(mCategory);
+
+			}
+		}
+
+		allItemsListResponse = restTemplate.getForObject(Constants.url + "getAllItems", AllItemsListResponse.class);
+
+		List<Item> itemsList = new ArrayList<Item>();
+		itemsList = allItemsListResponse.getItems();
+
+		CategoryListResponse categoryListResponse = restTemplate.getForObject(Constants.url + "showAllCategory",
+				CategoryListResponse.class);
+		List<SubCategory> subCatList = new ArrayList<SubCategory>();
+
+		for (int i = 0; i < categoryListResponse.getmCategoryList().size(); i++) {
+			subCatList.addAll(categoryListResponse.getmCategoryList().get(i).getSubCategoryList());
+
+		}
+
+		PdfPTable table = new PdfPTable(2);
+		table.setHeaderRows(1);
+		try {
+			System.out.println("Inside PDF Table try");
+			table.setWidthPercentage(100);
+			table.setWidths(new float[] { 0.7f, 1.1f });
+			Font headFont = new Font(FontFamily.HELVETICA, 8, Font.NORMAL, BaseColor.BLACK);
+			Font headFont1 = new Font(FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.BLACK);
+			Font f = new Font(FontFamily.TIMES_ROMAN, 10.0f, Font.UNDERLINE, BaseColor.BLUE);
+
+			PdfPCell hcell;
+
+			int index = 0;
+			List<MCategoryList> closingQtyCat = new ArrayList<>();
+			if (selectedCat == -1 || selectedCat == 0) {
+				closingQtyCat.addAll(filteredCatList);
+
+			} else {
+				for (int k = 0; k < filteredCatList.size(); k++) {
+
+					if (filteredCatList.get(k).getCatId() == selectedCat) {
+						closingQtyCat.add(filteredCatList.get(k));
+					}
+				}
+			}
+
+			System.out.println("selectedCatselectedCatselectedCatselectedCat" + selectedCat);
+
+			for (int k = 0; k < closingQtyCat.size(); k++) {
+				System.out.println(" closingQtyCat.size()" + closingQtyCat.size());
+				float totalClCatQty = 0;
+
+				hcell = new PdfPCell();
+				hcell = new PdfPCell(new Phrase("" + closingQtyCat.get(k).getCatName(), headFont));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				hcell.setBackgroundColor(BaseColor.PINK);
+				table.addCell(hcell);
+
+				hcell = new PdfPCell(new Phrase("Total", headFont));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				hcell.setBackgroundColor(BaseColor.PINK);
+				table.addCell(hcell);
+
+				for (int j = 0; j < bean.getStockDetail().size(); j++) {
+					if (closingQtyCat.get(k).getCatId() == bean.getStockDetail().get(j).getCatId()) {
+
+						/* if (bean.getStockDetail().get(j).getTotalCloStk() > 0) { */
+
+						totalClCatQty = totalClCatQty + bean.getStockDetail().get(j).getTotalCloStk();
+
+						System.out.println(
+								"totalClCatQtytotalClCatQtytotalClCatQtytotalClCatQtytotalClCatQty" + totalClCatQty);
+						/* } */
+
+					}
+
+				}
+
+				PdfPCell cell;
+
+				cell = new PdfPCell(new Phrase("", headFont));
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+				cell.setPaddingRight(1);
+				table.addCell(cell);
+
+				cell = new PdfPCell(new Phrase("" + totalClCatQty, headFont));
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+				cell.setPaddingRight(1);
+				table.addCell(cell);
+
+			}
+
+			document.open();
+
+			Paragraph heading = new Paragraph("Summery Report");
 			heading.setAlignment(Element.ALIGN_CENTER);
 			document.add(heading);
 
