@@ -1167,7 +1167,7 @@ public class FinishedGoodStockController {
 			}
 
 			session.setAttribute("exportExcelList2", exportToExcelList2);
-			session.setAttribute("excelName2", "GetWeighing");
+			session.setAttribute("excelName2", "ClosingQtyReport");
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2227,7 +2227,7 @@ public class FinishedGoodStockController {
 				float totalClCatQty = 0;
 
 				hcell = new PdfPCell();
-				hcell = new PdfPCell(new Phrase("" + closingQtyCat.get(k).getCatName(), headFont));
+				hcell = new PdfPCell(new Phrase("" + closingQtyCat.get(k).getCatName(), headFont1));
 				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
 				hcell.setBackgroundColor(BaseColor.PINK);
 				table.addCell(hcell);
@@ -2273,7 +2273,7 @@ public class FinishedGoodStockController {
 
 									cell = new PdfPCell(new Phrase(String.valueOf(index), headFont));
 									cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-									cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+									cell.setHorizontalAlignment(Element.ALIGN_LEFT);
 									table.addCell(cell);
 
 									cell = new PdfPCell(
