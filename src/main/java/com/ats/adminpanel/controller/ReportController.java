@@ -646,7 +646,7 @@ public class ReportController {
 
 			for (int i = 0; i < hsnList.size(); i++) {
 				for (int j = 0; j < hsnListBill.size(); j++) {
-					if (hsnList.get(i).getItemHsncd().equals(hsnListBill.get(j).getItemHsncd())) {
+					if (hsnList.get(i).getId().equals(hsnListBill.get(j).getId())) {
 						hsnListBill.get(j)
 								.setTaxableAmt(hsnListBill.get(j).getTaxableAmt() - hsnList.get(i).getTaxableAmt());
 						hsnListBill.get(j).setGrnGvnQty(hsnList.get(i).getBillQty());
