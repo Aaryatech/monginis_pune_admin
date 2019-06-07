@@ -1139,7 +1139,7 @@ public class FinishedGoodStockController {
 						expoExcel2 = new ExportToExcel();
 						rowData2 = new ArrayList<String>();
 
-						rowData2.add("Total");
+						rowData2.add("Total " + subCatList.get(l).getSubCatName());
 
 						rowData2.add("");
 						rowData2.add("" + totalClSubCatQty);
@@ -1156,7 +1156,7 @@ public class FinishedGoodStockController {
 				expoExcel2 = new ExportToExcel();
 				rowData2 = new ArrayList<String>();
 
-				rowData2.add("Total");
+				rowData2.add("Total " + closingQtyCat.get(k).getCatName());
 
 				rowData2.add("");
 				rowData2.add("" + totalClCatQty);
