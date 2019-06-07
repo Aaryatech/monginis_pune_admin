@@ -38,13 +38,14 @@ public class FinishedGoodStockDetail {
 	float cloCurrent;
 
 	float totalCloStk;
-	
+
 	int delStatus;
-	
-	int catId;//new Field //27 Jan 18
-	
-	
-	int isDayEndEnable; //new Field /27 Jan temp var to enable/disable a Day End Button
+
+	int catId;// new Field //27 Jan 18
+
+	int subCatId;
+
+	int isDayEndEnable; // new Field /27 Jan temp var to enable/disable a Day End Button
 
 	public int getCatId() {
 		return catId;
@@ -214,6 +215,14 @@ public class FinishedGoodStockDetail {
 		this.isDayEndEnable = isDayEndEnable;
 	}
 
+	public int getSubCatId() {
+		return subCatId;
+	}
+
+	public void setSubCatId(int subCatId) {
+		this.subCatId = subCatId;
+	}
+
 	@Override
 	public String toString() {
 		return "FinishedGoodStockDetail [finStockDetailId=" + finStockDetailId + ", finStockId=" + finStockId
@@ -221,8 +230,8 @@ public class FinishedGoodStockDetail {
 				+ ", opT2=" + opT2 + ", opT3=" + opT3 + ", opTotal=" + opTotal + ", prodQty=" + prodQty + ", rejQty="
 				+ rejQty + ", frSaleQty=" + frSaleQty + ", gateSaleQty=" + gateSaleQty + ", cloT1=" + cloT1 + ", cloT2="
 				+ cloT2 + ", cloT3=" + cloT3 + ", cloCurrent=" + cloCurrent + ", totalCloStk=" + totalCloStk
-				+ ", delStatus=" + delStatus + ", catId=" + catId + ", isDayEndEnable=" + isDayEndEnable + "]";
+				+ ", delStatus=" + delStatus + ", catId=" + catId + ", subCatId=" + subCatId + ", isDayEndEnable="
+				+ isDayEndEnable + "]";
 	}
 
-	
 }

@@ -314,6 +314,18 @@ table {
 										</div>
 
 									</div>
+
+									<input type="button" class="btn btn-primary"
+										value="Closing Qty PDF" id="PDFButtonClosing"
+										onclick="genClosingQtyPdf()" disabled> <input
+										type="button" id="expExcelClosing" class="btn btn-primary"
+										value="EXPORT TO Excel For Closing Qty"
+										onclick="exportToExcel2();" disabled> <input
+										type="button" class="btn btn-primary" value="Summery PDF"
+										id="PDFButtonSummery" onclick="genSummeryPdf()" disabled>
+									<input type="button" id="expExcelSummery"
+										class="btn btn-primary" value="EXPORT TO Excel Summery"
+										onclick="exportToExcel1();" disabled>
 							</form>
 						</div>
 
@@ -461,6 +473,16 @@ table {
 
 													document
 															.getElementById("expExcel").disabled = false;
+													document
+															.getElementById("expExcelSummery").disabled = false;
+													document
+															.getElementById("expExcelClosing").disabled = false;
+
+													document
+															.getElementById("PDFButtonSummery").disabled = false;
+
+													document
+															.getElementById("PDFButtonClosing").disabled = false;
 													var index = key + 1;
 
 													var tr = "<tr>";
@@ -591,6 +613,33 @@ table {
 
 							}
 						});
+	</script>
+
+
+	<script type="text/javascript">
+		function genClosingQtyPdf() {
+
+			window.open('${pageContext.request.contextPath}/closingQtyPdf');
+
+		}
+
+		function genSummeryPdf() {
+
+			window.open('${pageContext.request.contextPath}/summeryPdf');
+
+		}
+
+		function exportToExcel1() {
+
+			window.open("${pageContext.request.contextPath}/exportToExcel1");
+			document.getElementById("expExcelSummery").disabled = true;
+		}
+
+		function exportToExcel2() {
+
+			window.open("${pageContext.request.contextPath}/exportToExcel2");
+			document.getElementById("expExcelClosing").disabled = true;
+		}
 	</script>
 
 	<script>
