@@ -44,7 +44,7 @@
 					<div class="box">
 						<div class="box-title">
 							<h3>
-								<i class="fa fa-bars"></i> Add Route
+								<i class="fa fa-bars"></i> Add Route Tray Management
 							</h3>
 							<div class="box-tool">
 								<a href=""></a> <a data-action="collapse" href="#"><i
@@ -88,7 +88,7 @@
 
 									<label class="col-sm-3 col-lg-2 control-label">Delivery
 										Type</label>
-									<div class="col-sm-3 col-lg-3 controls">
+									<div class="col-sm-6 col-lg-4 controls">
 										<select class="form-control chosen" name="isSameDay"
 											id="isSameDay">
 
@@ -143,7 +143,7 @@
 							<div class="box">
 								<div class="box-title">
 									<h3>
-										<i class="fa fa-table"></i> Route List
+										<i class="fa fa-table"></i> Route Tray Management List
 									</h3>
 									<div class="box-tool">
 										<a data-action="collapse" href="#"><i
