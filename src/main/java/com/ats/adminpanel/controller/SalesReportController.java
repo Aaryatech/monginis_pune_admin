@@ -5423,6 +5423,7 @@ public class SalesReportController {
 		expoExcel.setRowData(rowData);
 		exportToExcelList.add(expoExcel);
 
+		System.out.println("exportToExcelList" + exportToExcelList);
 		HttpSession session = request.getSession();
 		session.setAttribute("exportExcelListNew", exportToExcelList);
 		session.setAttribute("excelNameNew", "RoyaltyConsolidatedCatList");
