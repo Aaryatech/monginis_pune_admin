@@ -972,6 +972,7 @@
 				window.open("${pageContext.request.contextPath}/exportToExcelNew");
 						document.getElementById("expExcel").disabled=true;
 			}
+			
 		</script>
 		<!--basic scripts-->
 		<script
