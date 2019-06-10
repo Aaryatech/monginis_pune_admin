@@ -1111,15 +1111,15 @@ public class FinishedGoodStockController {
 						exportToExcelList2.add(expoExcel2);
 
 						for (int j = 0; j < bean.getStockDetail().size(); j++) {
-
+                            int count=0;
 							if (bean.getStockDetail().get(j).getSubCatId() == subCatList.get(l).getSubCatId()) {
-
+							
 								if (bean.getStockDetail().get(j).getTotalCloStk() > 0) {
-
+									count=count+1;
 									expoExcel2 = new ExportToExcel();
 									rowData2 = new ArrayList<String>();
 									cnt3 = cnt3 + j;
-									rowData2.add("" + (j + 1));
+									rowData2.add("" + (count));
 
 									rowData2.add("" + bean.getStockDetail().get(j).getItemName());
 									rowData2.add("" + bean.getStockDetail().get(j).getTotalCloStk());
