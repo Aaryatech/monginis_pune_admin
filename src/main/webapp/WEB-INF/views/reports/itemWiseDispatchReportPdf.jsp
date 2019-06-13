@@ -60,6 +60,9 @@ th {
 			<div class="col-md-12 table-responsive">
 				<div style="">
 
+					<div align="left">
+						<h5>&nbsp; Delivery Date : ${billDate}&nbsp;</h5>
+					</div>
 					<table class="table table-bordered" style="width: 100%"
 						id="table_grid" border="1">
 
@@ -74,31 +77,28 @@ th {
 									<th>${Items.itemName}</th>
 									<c:set var="itemCount" value="${itemCount+1}"></c:set>
 
-
-
 								</c:forEach>
-
 
 							</tr>
 						</thead>
 						<tbody>
 
 							<c:set var="sr" value="0"></c:set>
+
 							<c:forEach items="${FrNameList}" var="FrNameList"
 								varStatus="count">
-
-
-
-
-
 								<tr>
-									<td><c:out value="${sr+1}" />
-										<c:set var="sr" value="${sr+1}"></c:set></td>
+									<td><c:out value="${sr+1}" /> <c:set var="sr"
+											value="${sr+1}"></c:set></td>
 									<td align="left"><c:out value="${FrNameList.frName}" /></td>
-									<c:forEach items="${Items}" var="items">
-										<c:set var="orQty" value="0"></c:set>
 
-										<td style="text-align: right;"><c:forEach
+
+									<c:forEach items="${Items}" var="items">
+										<c:set var="orQty" value=" "></c:set>
+
+
+
+										<td style="text-align: center;"><c:forEach
 												items="${dispatchReportList}" var="dispatchReportList">
 
 												<c:choose>
@@ -107,17 +107,70 @@ th {
 															<c:when test="${dispatchReportList.itemId==items.id}">
 																<c:set var="orQty"
 																	value="${dispatchReportList.orderQty}"></c:set>
+
+																<c:set var="totalOrdQty"
+																	value="${totalOrdQty+dispatchReportList.orderQty}"></c:set>
+
+
+
 															</c:when>
 														</c:choose>
 													</c:when>
 												</c:choose>
 
 											</c:forEach> ${orQty}</td>
+
+
 									</c:forEach>
 								</tr>
+
 							</c:forEach>
 
 
+							<tr>
+								<td></td>
+								<td align="left">Total</td>
+
+
+								<c:forEach items="${Items}" var="items">
+									<c:set var="totalOrderQty" value="0"></c:set>
+
+									<td style="text-align: center;"><c:forEach
+											items="${dispatchReportList}" var="dispatchReportList">
+
+
+											<c:choose>
+												<c:when test="${dispatchReportList.itemId==items.id}">
+
+
+													<c:set var="totalOrderQty"
+														value="${totalOrderQty+dispatchReportList.orderQty}"></c:set>
+
+
+
+												</c:when>
+											</c:choose>
+
+										</c:forEach> ${totalOrderQty}</td>
+
+
+								</c:forEach>
+							</tr>
+
+
+							<%-- <tr>
+								<td></td>
+								<td>Total</td>
+								<c:set var="itemCount" value="2"></c:set>
+								<c:forEach items="${Items}" var="Items">
+
+									<td align="right"><c:out value="${totalOrdQty}" /></td>
+
+									<c:set var="itemCount" value="${itemCount+1}"></c:set>
+
+								</c:forEach>
+
+							</tr> --%>
 						</tbody>
 					</table>
 				</div>
