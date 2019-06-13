@@ -125,15 +125,19 @@
 									<label class="col-sm-3 col-lg-2 control-label">Franchisee</label>
 									<div class="col-sm-9 col-lg-3 controls">
 										<select name="fr_id" id="fr_id" class="form-control"
-											placeholder="Select Franchise" data-rule-required="true" onchange="onFrIdChange(this.value)">
+											placeholder="Select Franchise" data-rule-required="true"
+											onchange="onFrIdChange(this.value)">
 											<option value="">Select Franchise</option>
 											<c:forEach items="${franchiseeList}" var="franchiseeList">
 												<c:choose>
-													<c:when test="${franchiseeList.frId==frSup.frId || franchiseeList.frId==frIdForSupp}">
-														<option value="${franchiseeList.frId}" selected><c:out value="${franchiseeList.frName}"></c:out></option>
+													<c:when
+														test="${franchiseeList.frId==frSup.frId || franchiseeList.frId==frIdForSupp}">
+														<option value="${franchiseeList.frId}" selected><c:out
+																value="${franchiseeList.frName}"></c:out></option>
 													</c:when>
 													<c:otherwise>
-														<option value="${franchiseeList.frId}"><c:out value="${franchiseeList.frName}"></c:out></option>
+														<option value="${franchiseeList.frId}"><c:out
+																value="${franchiseeList.frName}"></c:out></option>
 													</c:otherwise>
 												</c:choose>
 											</c:forEach>
@@ -212,7 +216,8 @@
 									<div class="col-sm-9 col-lg-3 controls">
 										<input type="text" name="frequency" id="frequency"
 											placeholder="Frequency" class="form-control"
-											data-rule-required="true" value="1" readonly /><%-- ${frSup.frequency} --%>
+											data-rule-required="true" value="1" readonly />
+										<%-- ${frSup.frequency} --%>
 									</div>
 								</div>
 								<div class="form-group">
@@ -224,6 +229,52 @@
 											data-rule-required="true" value="${frSup.noInRoute}" />
 									</div>
 								</div>
+
+								<div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">Applicable
+										to Dispatch </label>
+									<div class="col-sm-9 col-lg-10 controls">
+										<c:choose>
+											<c:when test="${frSup.pass5==0}">
+
+												<label class="radio-inline"> <input type="radio"
+													name="fr_status" id="optionsRadios1" value="1" /> Yes
+												</label>
+
+												<label class="radio-inline"> <input type="radio"
+													name="fr_status" id="optionsRadios1" value="0" checked />
+													No
+												</label>
+
+											</c:when>
+											<c:when test="${frSup.pass5==1}">
+
+												<label class="radio-inline"> <input type="radio"
+													name="fr_status" id="optionsRadios1" value="1" checked />
+													Yes
+												</label>
+												<label class="radio-inline"> <input type="radio"
+													name="fr_status" id="optionsRadios1" value="0" /> No
+												</label>
+											</c:when>
+											<c:otherwise>
+
+												<label class="radio-inline"> <input type="radio"
+													name="fr_status" id="optionsRadios1" value="1" checked />
+													Yes
+												</label>
+
+												<label class="radio-inline"> <input type="radio"
+													name="fr_status" id="optionsRadios1" value="0" /> No
+												</label>
+											</c:otherwise>
+
+										</c:choose>
+
+									</div>
+								</div>
+
+
 								<%-- <div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Remainder Date</label>
 									<div class="col-sm-9 col-lg-3 controls">
@@ -235,14 +286,14 @@
 							  </div> --%>
 								<div class="form-group">
 									<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-5">
-									<c:choose>
-										<c:when test="${isAdd==1}">
-											<input type="submit" class="btn btn-primary" value="Submit">
-										</c:when>
-										<c:otherwise>
-											<input type="submit" disabled="disabled"
-												class="btn btn-primary" value="Submit">
-										</c:otherwise>
+										<c:choose>
+											<c:when test="${isAdd==1}">
+												<input type="submit" class="btn btn-primary" value="Submit">
+											</c:when>
+											<c:otherwise>
+												<input type="submit" disabled="disabled"
+													class="btn btn-primary" value="Submit">
+											</c:otherwise>
 										</c:choose>
 									</div>
 								</div>
@@ -267,7 +318,7 @@
 									<div id="table-scroll" class="table-scroll">
 
 										<div id="faux-table" class="faux-table" aria="hidden">
-											<table id="table2" class="table table-advance"border="1" >
+											<table id="table2" class="table table-advance" border="1">
 												<thead>
 													<tr class="bgpink">
 														<!-- <th width="45" style="width: 18px">Sr.No.</th>

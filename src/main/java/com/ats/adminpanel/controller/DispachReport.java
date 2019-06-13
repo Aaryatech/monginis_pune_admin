@@ -136,8 +136,8 @@ public class DispachReport {
 			RestTemplate restTemplate = new RestTemplate();
 
 			// FranchiseForDispatch[] frNameId
-			FranchiseForDispatch[] frNameId = restTemplate
-					.postForObject(Constants.url + "getFranchiseForDispatchRouteID", map, FranchiseForDispatch[].class);
+			FranchiseForDispatch[] frNameId = restTemplate.postForObject(
+					Constants.url + "getFranchiseForDispatchRouteIDByPass5", map, FranchiseForDispatch[].class);
 
 			frNameIdByRouteIdList = new ArrayList<>(Arrays.asList(frNameId));
 
