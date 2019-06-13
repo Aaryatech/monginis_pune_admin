@@ -134,7 +134,7 @@
 
 						<label class="col-sm-3 col-lg-2 control-label">Select
 							Category</label>
-						<div class="col-sm-3 col-lg-4">
+						<div class="col-sm-3 col-lg-2">
 
 							<select data-placeholder="Choose Category"
 								class="form-control chosen" multiple="multiple" tabindex="6"
@@ -156,6 +156,17 @@
 
 								<option value="1" selected>Taxable Amt</option>
 								<option value="2">Grand Total</option>
+							</select>
+						</div>
+						<label class="col-sm-3 col-lg-1 control-label">GRN/CRN</label>
+						<div class="col-sm-3 col-lg-2">
+
+							<select data-placeholder="GRN/CRN"
+								class="form-control chosen"  tabindex="6"
+								id="type" name="type" >
+
+								<option value="1" >GRN</option>
+								<option value="2">CRN</option>
 							</select>
 						</div>
 						<button class="btn btn-info" onclick="searchReport()">Search
@@ -291,6 +302,7 @@
 
 				var selectedCat = $("#selectCat").val();
 				var getBy= $("#getBy").val();
+				var type= $("#type").val();
 				var from_date = $("#fromDate").val();
 				var to_date = $("#toDate").val();
               // alert(selectedCat);
@@ -308,6 +320,7 @@
 									cat_id_list : JSON.stringify(selectedCat),
 									is_graph : isGraph,
 									getBy:getBy,
+									type:type,
 									ajax : 'true'
 
 								},

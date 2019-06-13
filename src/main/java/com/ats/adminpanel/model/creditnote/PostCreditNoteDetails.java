@@ -72,8 +72,14 @@ public class PostCreditNoteDetails {
 		//new column 23 FEB
 		private int grnGvnHeaderId;
 		
-	
-	
+		private String hsnCode;//new on 4june19
+		
+	   public String getHsnCode() {
+			return hsnCode;
+		}
+		public void setHsnCode(String hsnCode) {
+			this.hsnCode = hsnCode;
+		}
 	public int getBillNo() {
 		return billNo;
 	}
@@ -291,7 +297,6 @@ public class PostCreditNoteDetails {
 	public void setGrnGvnHeaderId(int grnGvnHeaderId) {
 		this.grnGvnHeaderId = grnGvnHeaderId;
 	}
-
 	@Override
 	public String toString() {
 		return "PostCreditNoteDetails [crndId=" + crndId + ", crnId=" + crnId + ", itemId=" + itemId + ", grnGvnId="
@@ -301,8 +306,7 @@ public class PostCreditNoteDetails {
 				+ ", sgstRs=" + sgstRs + ", igstRs=" + igstRs + ", cessRs=" + cessRs + ", delStatus=" + delStatus
 				+ ", billNo=" + billNo + ", billDate=" + billDate + ", catId=" + catId + ", baseRate=" + baseRate
 				+ ", cessPer=" + cessPer + ", refInvoiceNo=" + refInvoiceNo + ", grngvnSrno=" + grngvnSrno
-				+ ", grnGvnHeaderId=" + grnGvnHeaderId + "]";
+				+ ", grnGvnHeaderId=" + grnGvnHeaderId + ", hsnCode=" + hsnCode + "]";
 	}
-
-
+    
 }

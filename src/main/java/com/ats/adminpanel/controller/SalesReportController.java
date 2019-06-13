@@ -5079,6 +5079,7 @@ public class SalesReportController {
 			toDate = request.getParameter("toDate");
 			String routeId = request.getParameter("route_id");
 			int getBy = Integer.parseInt(request.getParameter("getBy"));
+			int type= Integer.parseInt(request.getParameter("type"));
 			int isGraph = Integer.parseInt(request.getParameter("is_graph"));
 
 			String selectedCat = request.getParameter("cat_id_list");
@@ -5149,6 +5150,7 @@ public class SalesReportController {
 				map.add("fromDate", fromDate);
 				map.add("toDate", toDate);
 				map.add("getBy", getBy);
+				map.add("type", type);
 				if (isGraph == 0) {
 					ParameterizedTypeReference<List<SalesReportRoyalty>> typeRef = new ParameterizedTypeReference<List<SalesReportRoyalty>>() {
 					};
@@ -5193,7 +5195,7 @@ public class SalesReportController {
 
 				map.add("frIdList", selectedFr);
 				map.add("getBy", getBy);
-
+				map.add("type", type);
 				if (isGraph == 0) {
 					ParameterizedTypeReference<List<SalesReportRoyalty>> typeRef = new ParameterizedTypeReference<List<SalesReportRoyalty>>() {
 					};

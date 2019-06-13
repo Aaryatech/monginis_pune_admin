@@ -583,7 +583,7 @@ public class ManualOrderController {
 						billDetail.setGrandTotal(grandTotal);
 						billDetail.setDelStatus(0);
 						billDetail.setIsGrngvnApplied(0);
-
+						billDetail.setHsnCode(gBill.getHsnCode());// newly added
 						billDetail.setGrnType(gBill.getGrnType());// newly added
 
 						header.setSgstSum(header.getSgstSum() + billDetail.getSgstRs());

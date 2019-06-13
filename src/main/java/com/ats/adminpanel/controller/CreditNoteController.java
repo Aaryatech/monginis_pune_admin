@@ -267,7 +267,7 @@ public class CreditNoteController {
 			crnExcelList = restTemplate.postForObject(Constants.url + "/getCrnHsnwiseExcelReport", map,
 					CrnHsnwiseExcelReport[].class);
 			crnExcelListRes = new ArrayList<CrnHsnwiseExcelReport>(Arrays.asList(crnExcelList));
-			System.out.println("crnExcelList " + crnExcelListRes.toString());
+			System.out.println(crnExcelListRes.size()+"crnExcelList " + crnExcelListRes.toString());
 			List<Integer> crnIds = Stream.of(checkboxes.split(",")).map(Integer::parseInt)
 					.collect(Collectors.toList());
 			try {
@@ -479,7 +479,7 @@ public class CreditNoteController {
 
 						creditNoteDetail.setIsGrn(creditNote.getIsGrn());
 						creditNoteDetail.setItemId(creditNote.getItemId());
-
+						creditNoteDetail.setHsnCode(creditNote.getHsnCode());//new on 4june19
 						creditNoteDetail.setTaxableAmt(roundUp(creditNote.getAprTaxableAmt()));
 						creditNoteDetail.setTotalTax(roundUp(creditNote.getAprTotalTax()));
 
@@ -616,7 +616,7 @@ public class CreditNoteController {
 					creditNoteDetail.setItemId(creditNote.getItemId());
 					creditNoteDetail.setTaxableAmt(roundUp(creditNote.getAprTaxableAmt()));
 					creditNoteDetail.setTotalTax(roundUp(creditNote.getAprTotalTax()));
-
+					creditNoteDetail.setHsnCode(creditNote.getHsnCode());//new on 4june19
 					// newly added
 
 					creditNoteDetail.setRefInvoiceNo(creditNote.getInvoiceNo());
@@ -1177,7 +1177,7 @@ public class CreditNoteController {
 			    creditNoteDetail.setRefInvoiceNo(crnDetailListMap.get(i).getRefInvoiceNo());
 			    creditNoteDetail.setGrngvnSrno(crnDetailListMap.get(i).getGrngvnSrno());
 			    creditNoteDetail.setGrnGvnHeaderId(crnDetailListMap.get(i).getGrnGvnHeaderId());
-			    
+			    creditNoteDetail.setHsnCode(crnDetailListMap.get(i).getItemHsncd());//new on 4june19
 				postCreditNoteDetailsList.add(creditNoteDetail);
 			}
 			totalRoundUpAmt=Math.round(totGrandAmt)-roundUp(totGrandAmt);

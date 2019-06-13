@@ -56,7 +56,17 @@ public class GenerateBill {
 	
 	private String  partyAddress;//new
 	
+	private String  hsnCode;//new
 	
+	
+
+	public String getHsnCode() {
+		return hsnCode;
+	}
+
+	public void setHsnCode(String hsnCode) {
+		this.hsnCode = hsnCode;
+	}
 
 	public String getPartyName() {
 		return partyName;
@@ -269,8 +279,8 @@ public class GenerateBill {
 				+ catId + ", frCode=" + frCode + ", rateType=" + rateType + ", subCatId=" + subCatId + ", itemTax1="
 				+ itemTax1 + ", itemTax2=" + itemTax2 + ", itemTax3=" + itemTax3 + ", grnType=" + grnType
 				+ ", itemShelfLife=" + itemShelfLife + ", isSameState=" + isSameState + ", deliveryDate=" + deliveryDate
-				+ ", partyName=" + partyName + ", partyGstin=" + partyGstin + ", partyAddress=" + partyAddress + "]";
+				+ ", partyName=" + partyName + ", partyGstin=" + partyGstin + ", partyAddress=" + partyAddress
+				+ ", hsnCode=" + hsnCode + "]";
 	}
-
-	
+    
 }

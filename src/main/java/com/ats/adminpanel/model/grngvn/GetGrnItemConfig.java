@@ -33,7 +33,18 @@ public class GetGrnItemConfig {
     
     private float discPer;
 
+    private String hsnCode;
     
+    
+    
+	public String getHsnCode() {
+		return hsnCode;
+	}
+
+	public void setHsnCode(String hsnCode) {
+		this.hsnCode = hsnCode;
+	}
+
 	public float getDiscPer() {
 		return discPer;
 	}
@@ -203,8 +214,7 @@ public class GetGrnItemConfig {
 				+ mrp + ", billQty=" + billQty + ", billDate=" + billDate + ", sgstPer=" + sgstPer + ", cgstPer="
 				+ cgstPer + ", igstPer=" + igstPer + ", catId=" + catId + ", menuId=" + menuId + ", invoiceNo="
 				+ invoiceNo + ", autoGrnQty=" + autoGrnQty + ", billDateTime=" + billDateTime + ", discPer=" + discPer
-				+ "]";
+				+ ", hsnCode=" + hsnCode + "]";
 	}
 
-	
 }

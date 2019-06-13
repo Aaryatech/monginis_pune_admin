@@ -62,6 +62,7 @@ public class PostBillHeader {
 	
 	private String partyAddress;//new for m order
 	
+	
 	List<PostBillDetail> postBillDetailsList;
 		
 	
@@ -147,10 +148,6 @@ public class PostBillHeader {
 	public void setFrCode(String frCode) {
 		this.frCode = frCode;
 	}
-
-	
-
-	
 
 	public String getTime() {
 		return time;
@@ -254,15 +251,12 @@ public class PostBillHeader {
 	public String toString() {
 		return "PostBillHeader [billNo=" + billNo + ", taxApplicable=" + taxApplicable + ", invoiceNo=" + invoiceNo
 				+ ", billDate=" + billDate + ", frId=" + frId + ", frCode=" + frCode + ", grandTotal=" + grandTotal
-				+ ", taxableAmt=" + taxableAmt + ", totalTax=" + totalTax + ", status=" + status + ", DelStatus="
-				+ DelStatus + ", remark=" + remark + ", time=" + time + ", sgstSum=" + sgstSum + ", cgstSum=" + cgstSum
-				+ ", igstSum=" + igstSum + ", postBillDetailsList=" + postBillDetailsList + "]";
+				+ ", taxableAmt=" + taxableAmt + ", discAmt=" + discAmt + ", totalTax=" + totalTax + ", status="
+				+ status + ", DelStatus=" + DelStatus + ", remark=" + remark + ", time=" + time + ", sgstSum=" + sgstSum
+				+ ", cgstSum=" + cgstSum + ", igstSum=" + igstSum + ", billDateTime=" + billDateTime + ", partyName="
+				+ partyName + ", partyGstin=" + partyGstin + ", partyAddress=" + partyAddress + ", postBillDetailsList="
+				+ postBillDetailsList + "]";
 	}
 
-	
-	
 
-	
-	
-	
 }

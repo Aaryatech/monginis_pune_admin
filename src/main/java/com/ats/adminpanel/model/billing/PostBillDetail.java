@@ -82,8 +82,17 @@ public class PostBillDetail {
 	    
 	private float discPer;
   
-	    
+	private String hsnCode;//new for hsn
+
 	
+	
+	
+	public String getHsnCode() {
+		return hsnCode;
+	}
+	public void setHsnCode(String hsnCode) {
+		this.hsnCode = hsnCode;
+	}
 	public float getDiscPer() {
 		return discPer;
 	}
@@ -357,8 +366,6 @@ public class PostBillDetail {
 	public void setOrderId(int orderId) {
 		this.orderId = orderId;
 	}
-
-
 	@Override
 	public String toString() {
 		return "PostBillDetail [billDetailNo=" + billDetailNo + ", billNo=" + billNo + ", menuId=" + menuId + ", catId="
@@ -367,9 +374,9 @@ public class PostBillDetail {
 				+ ", sgstPer=" + sgstPer + ", sgstRs=" + sgstRs + ", cgstPer=" + cgstPer + ", cgstRs=" + cgstRs
 				+ ", igstPer=" + igstPer + ", igstRs=" + igstRs + ", taxableAmt=" + taxableAmt + ", remark=" + remark
 				+ ", delStatus=" + delStatus + ", baseRate=" + baseRate + ", totalTax=" + totalTax + ", grnType="
-				+ grnType + ", expiryDate=" + expiryDate + "]";
+				+ grnType + ", expiryDate=" + expiryDate + ", isGrngvnApplied=" + isGrngvnApplied + ", discPer="
+				+ discPer + ", hsnCode=" + hsnCode + "]";
 	}
-
 
 
 	
