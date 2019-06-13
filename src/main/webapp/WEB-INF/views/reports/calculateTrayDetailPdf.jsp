@@ -147,7 +147,7 @@ th {
 
 		<c:when test="${submit2==2}">
 			<table class="table table-bordered  " style="width: 100%"
-				id="table_grid">
+				id="table_grid" border="1">
 				<thead style="background-color: #f3b5db;">
 					<tr>
 						<th>Sr.No.</th>
@@ -221,7 +221,7 @@ th {
 		<c:when test="${submit3==3}">
 
 			<table class="table table-bordered  " style="width: 100%"
-				id="table_grid">
+				id="table_grid" border="1">
 				<thead style="background-color: #f3b5db;">
 					<tr>
 						<th>Sr.No.</th>
@@ -308,7 +308,7 @@ th {
 			<c:set var="totalRouteTrayQtyFinal" value="0"></c:set>
 
 			<table class="table table-bordered  " style="width: 100%"
-				id="table_grid">
+				id="table_grid" border="1">
 				<thead style="background-color: #f3b5db;">
 					<tr>
 						<th>Sr.No.</th>
@@ -376,7 +376,7 @@ th {
 				</tbody>
 			</table>
 			<table class="table table-bordered  " style="width: 100%"
-				id="table_grid">
+				id="table_grid" border="1">
 				<thead style="background-color: #f3b5db;">
 				</thead>
 				<tbody>

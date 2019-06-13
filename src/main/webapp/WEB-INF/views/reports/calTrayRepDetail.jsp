@@ -94,7 +94,7 @@
 												</div>
 											</div>
 											<table class="table table-bordered  " style="width: 100%"
-												id="table_grid" border="1">
+												id="table_gridFR" border="1">
 												<thead style="background-color: #f3b5db;">
 													<tr>
 														<th>Sr.No.</th>
@@ -110,32 +110,58 @@
 													<c:set var="totalOrderQty" value="0"></c:set>
 													<c:set var="totalTrayQty" value="0"></c:set>
 
-													<c:forEach items="${calListForFr}" var="calListForFr"
-														varStatus="count">
+													<c:set var="totalOrderFRQty" value="0"></c:set>
+													<c:set var="totalTrayFRQty" value="0"></c:set>
 
-														<c:choose>
-															<c:when
-																test="${calListForFr.frRouteId==routeList.routeTrayId}">
-																<c:set var="totalOrderQty"
-																	value="${totalOrderQty+(calListForFr.orderQty)}"></c:set>
+													<c:forEach items="${frNameIdByRouteIdList}"
+														var="frNameIdByRouteIdList" varStatus="c1">
 
-																<c:set var="totalTrayQty"
-																	value="${totalTrayQty+(calListForFr.trayQty)}"></c:set>
-																<tr>
-																	<td style="text-align: center">${count.index+1}</td>
-																	<td align="left"><c:out
-																			value="${calListForFr.frName}" /></td>
-																	<td align="left"><c:out
-																			value="${calListForFr.subCatName}" /></td>
+														<c:forEach items="${calListForFr}" var="calListForFr"
+															varStatus="count">
 
-																	<td align="right"><c:out
-																			value="${calListForFr.orderQty}" /></td>
-																	<td align="right"><c:out
-																			value="${calListForFr.trayQty}" /></td>
-																</tr>
-															</c:when>
-														</c:choose>
+															<c:choose>
+																<c:when
+																	test="${frNameIdByRouteIdList.frId==calListForFr.frId}">
+
+																	<c:choose>
+																		<c:when
+																			test="${calListForFr.frRouteId==routeList.routeTrayId}">
+
+
+
+																			<c:set var="totalOrderQty"
+																				value="${totalOrderQty+(calListForFr.orderQty)}"></c:set>
+
+																			<c:set var="totalTrayQty"
+																				value="${totalTrayQty+(calListForFr.trayQty)}"></c:set>
+
+
+
+																			<tr>
+																				<td style="text-align: center">${count.index+1}</td>
+																				<td align="left"><c:out
+																						value="${calListForFr.frName}" /></td>
+																				<td align="left"><c:out
+																						value="${calListForFr.subCatName}" /></td>
+
+																				<td align="right"><c:out
+																						value="${calListForFr.orderQty}" /></td>
+																				<td align="right"><c:out
+																						value="${calListForFr.trayQty}" /></td>
+																			</tr>
+																		</c:when>
+																	</c:choose>
+																</c:when>
+															</c:choose>
+
+														</c:forEach>
+
+
 													</c:forEach>
+
+
+
+
 													<c:set var="totalRouteOrderQty"
 														value="${totalRouteOrderQty+totalOrderQty}"></c:set>
 													<c:set var="totalRouteTrayQty"
@@ -152,7 +178,7 @@
 											</table>
 										</c:forEach>
 										<table class="table table-bordered  " style="width: 100%"
-											id="table_grid" border="1">
+											id="table_grid12">
 											<thead style="background-color: #f3b5db;">
 											</thead>
 											<tbody>
@@ -174,11 +200,15 @@
 											type="hidden">
 										<input id="menuIds" name="menuIds" value="${menuIds}"
 											type="hidden">
+
+										<input type="button"
+											onclick="tableToExcel('table_gridFR', 'name', 'CalculateTray.xls')"
+											value="Export to Excel">
 									</c:when>
 
 									<c:when test="${submit2==2}">
 										<table class="table table-bordered  " style="width: 100%"
-											id="table_grid" border="1">
+											id="table_gridFR2" border="1">
 											<thead style="background-color: #f3b5db;">
 												<tr>
 													<th>Sr.No.</th>
@@ -257,13 +287,17 @@
 											type="hidden">
 										<input id="menuIds" name="menuIds" value="${menuIds}"
 											type="hidden">
+
+										<input type="button"
+											onclick="tableToExcel('table_gridFR2', 'name', 'CalculateTray.xls')"
+											value="Export to Excel">
 									</c:when>
 
 
 									<c:when test="${submit3==3}">
 
 										<table class="table table-bordered  " style="width: 100%"
-											id="table_grid" border="1">
+											id="table_gridFR3" border="1">
 											<thead style="background-color: #f3b5db;">
 												<tr>
 													<th>Sr.No.</th>
@@ -352,6 +386,10 @@
 											type="hidden">
 										<input id="menuIds" name="menuIds" value="${menuIds}"
 											type="hidden">
+
+										<input type="button"
+											onclick="tableToExcel('table_gridFR3', 'name', 'CalculateTray.xls')"
+											value="Export to Excel">
 									</c:when>
 
 									<c:when test="${submit4==4}">
@@ -360,7 +398,7 @@
 										<c:set var="totalRouteTrayQtyFinal" value="0"></c:set>
 
 										<table class="table table-bordered  " style="width: 100%"
-											id="table_grid" border="1">
+											id="table_gridFR4" border="1">
 											<thead style="background-color: #f3b5db;">
 												<tr>
 													<th>Sr.No.</th>
@@ -455,6 +493,9 @@
 										<input id="menuIds" name="menuIds" value="${menuIds}"
 											type="hidden">
 
+										<input type="button"
+											onclick="tableToExcel('table_gridFR4', 'name', 'CalculateTray.xls')"
+											value="Export to Excel">
 
 									</c:when>
 
@@ -732,5 +773,32 @@
 		<script src="${pageContext.request.contextPath}/resources/js/flaty.js"></script>
 		<script
 			src="${pageContext.request.contextPath}/resources/js/flaty-demo-codes.js"></script>
+
+
+		<script type="text/javascript">
+			function tableToExcel(table, name, filename) {
+				let uri = 'data:application/vnd.ms-excel;base64,', template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><title></title><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--><meta http-equiv="content-type" content="text/plain; charset=UTF-8"/></head><body><table>{table}</table></body></html>', base64 = function(
+						s) {
+					return window
+							.btoa(decodeURIComponent(encodeURIComponent(s)))
+				}, format = function(s, c) {
+					return s.replace(/{(\w+)}/g, function(m, p) {
+						return c[p];
+					})
+				}
+
+				if (!table.nodeType)
+					table = document.getElementById(table)
+				var ctx = {
+					worksheet : name || 'Worksheet',
+					table : table.innerHTML
+				}
+
+				var link = document.createElement('a');
+				link.download = filename;
+				link.href = uri + base64(format(template, ctx));
+				link.click();
+			}
+		</script>
 </body>
 </html>
