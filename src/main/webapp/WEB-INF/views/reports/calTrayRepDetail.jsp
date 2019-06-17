@@ -82,6 +82,7 @@
 
 										<c:set var="totalRouteOrderQty" value="0"></c:set>
 										<c:set var="totalRouteTrayQty" value="0"></c:set>
+										<c:set var="frSubCount" value="0"></c:set>
 										<c:forEach items="${routeListForFr}" var="routeList"
 											varStatus="count">
 											<div class="row">
@@ -119,6 +120,12 @@
 														<c:forEach items="${calListForFr}" var="calListForFr"
 															varStatus="count">
 
+															<c:set var="totalOrderFRQty"
+																value="${totalTrayFRQty+totalOrderQty}"></c:set>
+
+															<c:set var="totalTrayFRQty"
+																value="${totalTrayFRQty+totalOrderQty}"></c:set>
+
 															<c:choose>
 																<c:when
 																	test="${frNameIdByRouteIdList.frId==calListForFr.frId}">
@@ -135,10 +142,10 @@
 																			<c:set var="totalTrayQty"
 																				value="${totalTrayQty+(calListForFr.trayQty)}"></c:set>
 
-
+																			<c:set var="frSubCount" value="${frSubCount+1}"></c:set>
 
 																			<tr>
-																				<td style="text-align: center">${count.index+1}</td>
+																				<td style="text-align: center">${frSubCount}</td>
 																				<td align="left"><c:out
 																						value="${calListForFr.frName}" /></td>
 																				<td align="left"><c:out
@@ -149,6 +156,8 @@
 																				<td align="right"><c:out
 																						value="${calListForFr.trayQty}" /></td>
 																			</tr>
+
+
 																		</c:when>
 																	</c:choose>
 																</c:when>
@@ -157,7 +166,11 @@
 														</c:forEach>
 
 
+
+
+
 													</c:forEach>
+
 
 
 
@@ -207,79 +220,104 @@
 									</c:when>
 
 									<c:when test="${submit2==2}">
-										<table class="table table-bordered  " style="width: 100%"
-											id="table_gridFR2" border="1">
-											<thead style="background-color: #f3b5db;">
-												<tr>
-													<th>Sr.No.</th>
-													<th>Franchisee Name</th>
-													<th>Qty</th>
-													<th>Tray Qty</th>
-												</tr>
-											</thead>
-											<tbody>
-												<c:set var="totalFRFinalOrderQty" value="0" />
-												<c:set var="totalFRFinalTrayQty" value="0" />
-												<c:forEach items="${frNameIdByRouteIdList}"
-													var="frNameIdByRouteIdList" varStatus="count">
-													<c:set var="totalFROrderQty" value="0" />
-													<c:set var="totalFRTrayQty" value="0" />
 
-													<c:forEach items="${calListForFr}" var="calListForFr"
-														varStatus="cnt">
+										<c:forEach items="${routeListForFr}" var="routeList"
+											varStatus="count">
+											<div class="row">
+												<div class="form-group">
+													<label class="col-sm-3 col-lg-2	 control-label">Route
+														Name : </label>
+													<div class="col-sm-6 col-lg-4 controls date_select">
+														${routeList.routeName}</div>
+
+												</div>
+											</div>
+											<table class="table table-bordered  " style="width: 100%"
+												id="table_gridFR2" border="1">
+												<thead style="background-color: #f3b5db;">
+													<tr>
+														<th width="10%">Sr.No.</th>
+														<th width="70%">Franchisee Name</th>
+														<th width="10%">Qty</th>
+														<th width="10%">Tray Qty</th>
+													</tr>
+												</thead>
+												<tbody>
+													<c:set var="totalFRFinalOrderQty" value="0" />
+													<c:set var="totalFRFinalTrayQty" value="0" />
+													<c:set var="frCount" value="0"></c:set>
+
+
+													<c:forEach items="${frNameIdByRouteIdList}"
+														var="frNameIdByRouteIdList" varStatus="count">
+														<c:set var="totalFROrderQty" value="0" />
+														<c:set var="totalFRTrayQty" value="0" />
 
 														<c:choose>
 															<c:when
-																test="${calListForFr.frId==frNameIdByRouteIdList.frId}">
+																test="${routeList.routeTrayId==frNameIdByRouteIdList.frRouteId}">
 
-																<c:set var="totalFROrderQty"
-																	value="${totalFROrderQty+calListForFr.orderQty}" />
+																<c:forEach items="${calListForFr}" var="calListForFr"
+																	varStatus="cnt">
 
-																<c:set var="totalFRTrayQty"
-																	value="${totalFRTrayQty+calListForFr.trayQty}" />
+																	<c:choose>
+																		<c:when
+																			test="${calListForFr.frId==frNameIdByRouteIdList.frId}">
+
+																			<c:set var="totalFROrderQty"
+																				value="${totalFROrderQty+calListForFr.orderQty}" />
+
+																			<c:set var="totalFRTrayQty"
+																				value="${totalFRTrayQty+calListForFr.trayQty}" />
+																		</c:when>
+																	</c:choose>
+
+																</c:forEach>
+																<c:set var="frCount" value="${frCount+1}"></c:set>
+
+																<c:set var="totalFRFinalOrderQty"
+																	value="${totalFROrderQty+totalFRFinalOrderQty}" />
+
+																<c:set var="totalFRFinalTrayQty"
+																	value="${totalFRTrayQty+totalFRFinalTrayQty}" />
+
+
+
+																<tr>
+																	<td style="text-align: center">${frCount}</td>
+																	<td align="left"><c:out
+																			value="${frNameIdByRouteIdList.frName}" /></td>
+
+
+
+																	<td align="right"><c:out
+																			value="${totalFROrderQty}" /></td>
+																	<td align="right"><c:out value="${totalFRTrayQty}" /></td>
+
+
+																</tr>
 															</c:when>
 														</c:choose>
-
 													</c:forEach>
 
-													<c:set var="totalFRFinalOrderQty"
-														value="${totalFROrderQty+totalFRFinalOrderQty}" />
-
-													<c:set var="totalFRFinalTrayQty"
-														value="${totalFRTrayQty+totalFRFinalTrayQty}" />
-
-
-
 													<tr>
-														<td style="text-align: center">${count.index+1}</td>
-														<td align="left"><c:out
-																value="${frNameIdByRouteIdList.frName}" /></td>
+														<td></td>
+														<td>Total</td>
 
-														<td align="right"><c:out value="${totalFROrderQty}" /></td>
-														<td align="right"><c:out value="${totalFRTrayQty}" /></td>
+														<td align="right"><c:out
+																value="${totalFRFinalOrderQty}" /></td>
+														<td align="right"><c:out
+																value="${totalFRFinalTrayQty}" /></td>
 
 
 													</tr>
-												</c:forEach>
-
-												<tr>
-													<td></td>
-													<td>Total</td>
-
-													<td align="right"><c:out
-															value="${totalFRFinalOrderQty}" /></td>
-													<td align="right"><c:out
-															value="${totalFRFinalTrayQty}" /></td>
-
-
-												</tr>
 
 
 
 
-											</tbody>
-										</table>
-
+												</tbody>
+											</table>
+										</c:forEach>
 										<button class="btn btn-primary" value="2" id="submit2"
 											name="submit2" onclick="genPdf2()">PDF</button>
 										<input id="date" name="date" value="${date}" type="hidden">
@@ -313,18 +351,18 @@
 												<c:set var="FinalTotalTrayQty" value="0" />
 
 
-											
+
 												<c:forEach items="${routeListForFr}" var="routeList"
 													varStatus="count">
-												<c:set var="totalROrderQty" value="0" />
-												<c:set var="totalRTrayQty" value="0" />
+													<c:set var="totalROrderQty" value="0" />
+													<c:set var="totalRTrayQty" value="0" />
 													<c:forEach items="${calListForFr}" var="calListForFr"
 														varStatus="cnt">
 
 														<c:choose>
 															<c:when
 																test="${calListForFr.frRouteId==routeList.routeTrayId}">
-                                                                    
+
 																<c:set var="totalROrderQty"
 																	value="${totalROrderQty+calListForFr.orderQty}" />
 
@@ -412,39 +450,46 @@
 											</thead>
 											<tbody>
 
+												<c:set var="SubOrderQty" value="0"></c:set>
+												<c:set var="SubTrayQty" value="0"></c:set>
+
 												<c:forEach items="${routeListForFr}" var="routeList"
 													varStatus="count">
 
 													<c:forEach items="${subCatAList}" var="subCatAList"
 														varStatus="c1">
 
+
+
 														<c:set var="totalSubOrderQty" value="0"></c:set>
 														<c:set var="totalSubTrayQty" value="0"></c:set>
 
 														<c:forEach items="${calListForFr}" var="calListForFr"
 															varStatus="cnt">
-<c:choose>
-<c:when test="${routeList.routeTrayId==calListForFr.frRouteId}">
-				<c:choose>
-								<c:when test="${subCatAList.subCatId==calListForFr.subCatId}">
-										<c:set var="totalSubOrderQty" value="${totalSubOrderQty+calListForFr.orderQty}" />
+															<c:choose>
+																<c:when
+																	test="${routeList.routeTrayId==calListForFr.frRouteId}">
+																	<c:choose>
+																		<c:when
+																			test="${subCatAList.subCatId==calListForFr.subCatId}">
+																			<c:set var="totalSubOrderQty"
+																				value="${totalSubOrderQty+calListForFr.orderQty}" />
 
-										<c:set var="totalSubTrayQty" value="${totalSubTrayQty+calListForFr.trayQty}" />
-								</c:when>
-				</c:choose>
-</c:when>
-</c:choose>
+																			<c:set var="totalSubTrayQty"
+																				value="${totalSubTrayQty+calListForFr.trayQty}" />
+																		</c:when>
+																	</c:choose>
+																</c:when>
+															</c:choose>
 
 
 														</c:forEach>
 
-														<c:set var="totalSubOrderQtyFinal"
-															value="${totalSubOrderQtyFinal+totalSubOrderQty}" />
 
-														<c:set var="totalRouteTrayQtyFinal"
-															value="${totalRouteTrayQtyFinal+totalSubTrayQty}" />
-														
-																<tr>
+
+														<tr>
+															<c:choose>
+																<c:when test="${totalSubOrderQty>0}">
 
 
 																	<td width="5%" style="text-align: center">${c1.index+1}</td>
@@ -458,9 +503,38 @@
 																	<td width="10%" align="right"><c:out
 																			value="${totalSubTrayQty}" /></td>
 
-																</tr>
-														
+																	<c:set var="SubOrderQty"
+																		value="${totalSubOrderQty+SubOrderQty}" />
+
+																	<c:set var="SubTrayQty"
+																		value="${totalSubTrayQty+SubTrayQty}" />
+																</c:when>
+															</c:choose>
+
+														</tr>
 													</c:forEach>
+
+													<c:set var="totalSubOrderQtyFinal"
+														value="${totalSubOrderQtyFinal+SubOrderQty}" />
+
+													<c:set var="totalRouteTrayQtyFinal"
+														value="${totalRouteTrayQtyFinal+SubTrayQty}" />
+
+													<tr>
+
+
+
+														<td width="5%" style="text-align: center"></td>
+														<td width="50%" align="left"></td>
+														<td width="25%" align="left">Total</td>
+
+														<td width="10%" align="right"><c:out
+																value="${SubOrderQty}" /></td>
+														<td width="10%" align="right"><c:out
+																value="${SubTrayQty}" /></td>
+
+													</tr>
+
 												</c:forEach>
 											</tbody>
 										</table>
