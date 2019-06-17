@@ -38,9 +38,16 @@ public class GetBillDetail {
     private int isGrngvnApplied;
     
     private float discPer;//new
+    private String hsnCode;//new on 14 june
     
     
     
+	public String getHsnCode() {
+		return hsnCode;
+	}
+	public void setHsnCode(String hsnCode) {
+		this.hsnCode = hsnCode;
+	}
 	public float getDiscPer() {
 		return discPer;
 	}
@@ -233,14 +240,8 @@ public class GetBillDetail {
 				+ ", igstPer=" + igstPer + ", igstRs=" + igstRs + ", taxableAmt=" + taxableAmt + ", remark=" + remark
 				+ ", delStatus=" + delStatus + ", itemName=" + itemName + ", catName=" + catName + ", billDate="
 				+ billDate + ", baseRate=" + baseRate + ", totalTax=" + totalTax + ", grnType=" + grnType
-				+ ", expiryDate=" + expiryDate + ", isGrngvnApplied=" + isGrngvnApplied + "]";
+				+ ", expiryDate=" + expiryDate + ", isGrngvnApplied=" + isGrngvnApplied + ", discPer=" + discPer
+				+ ", hsnCode=" + hsnCode + "]";
 	}
 	
-	
-	
-    
-	
-    
-
-  
 }

@@ -2187,30 +2187,40 @@ public class GvnController {
 			accHeader.setAprIgstRs(0);
 			accHeader.setAprROff(0);
 			accHeader.setApporvedAmt(0);
-
+			float apporvedAmt=0.0f;
+            float aprTaxableAmt=0.0f;
+            float aprTotalTax=0.0f;
+            float aprGrandTotal=0.0f;
+            float aprCgstRs=0.0f;
+            float aprSgstRs=0.0f;
+            float aprIgstRs=0.0f;
+            float aprROff=0.0f;
 			for (int i = 0; i < gvnAccDetailList.size(); i++) {
 
 				if (gvnAccDetailList.get(i).getGrnGvnStatus() == 6) {
 
-					System.out
-							.println("Status 6 found  and its total :::" + gvnAccDetailList.get(i).getAprGrandTotal());
+					apporvedAmt=apporvedAmt + gvnAccDetailList.get(i).getAprGrandTotal();
 
-					accHeader.setApporvedAmt(accHeader.getApporvedAmt() + gvnAccDetailList.get(i).getAprGrandTotal());
-
-					accHeader.setAprTaxableAmt(
-							accHeader.getAprTaxableAmt() + gvnAccDetailList.get(i).getAprTaxableAmt());
-					accHeader.setAprTotalTax(accHeader.getAprTotalTax() + gvnAccDetailList.get(i).getAprTotalTax());
-					accHeader.setAprGrandTotal(
-							accHeader.getAprGrandTotal() + gvnAccDetailList.get(i).getAprGrandTotal());
-					accHeader.setAprCgstRs(accHeader.getAprCgstRs() + gvnAccDetailList.get(i).getAprCgstRs());
-					accHeader.setAprSgstRs(accHeader.getAprSgstRs() + gvnAccDetailList.get(i).getAprSgstRs());
-					accHeader.setAprIgstRs(accHeader.getAprIgstRs() + gvnAccDetailList.get(i).getAprIgstRs());
-					accHeader.setAprROff(accHeader.getAprROff() + gvnAccDetailList.get(i).getAprROff());
+					aprTaxableAmt=aprTaxableAmt+ gvnAccDetailList.get(i).getAprTaxableAmt();
+					aprTotalTax=aprTotalTax+ gvnAccDetailList.get(i).getAprTotalTax();
+					aprGrandTotal=aprGrandTotal + gvnAccDetailList.get(i).getAprGrandTotal();
+					aprCgstRs=aprCgstRs + gvnAccDetailList.get(i).getAprCgstRs();
+					aprSgstRs=aprSgstRs + gvnAccDetailList.get(i).getAprSgstRs();
+					aprIgstRs=aprIgstRs + gvnAccDetailList.get(i).getAprIgstRs();
+					aprROff=aprROff + gvnAccDetailList.get(i).getAprROff();
 
 					// accHeader.setApporvedAmt(0);
 
 				}
 			}
+			accHeader.setApporvedAmt(roundUp(apporvedAmt));
+			accHeader.setAprTaxableAmt(roundUp(aprTaxableAmt));	
+			accHeader.setAprTotalTax(roundUp(aprTotalTax));
+			accHeader.setAprGrandTotal(roundUp(aprGrandTotal));	
+			accHeader.setAprCgstRs(roundUp(aprCgstRs));
+			accHeader.setAprSgstRs(roundUp(aprSgstRs));
+			accHeader.setAprIgstRs(roundUp(aprIgstRs));	
+			accHeader.setAprROff(roundUp(aprROff));
 
 			accHeader.setApprovedDatetime(dateFormat.format(cal.getTime()));
 
@@ -2509,28 +2519,41 @@ public class GvnController {
 			accHeader.setAprIgstRs(0);
 			accHeader.setAprROff(0);
 			accHeader.setApporvedAmt(0);
-
+			
+			float apporvedAmt=0.0f;
+            float aprTaxableAmt=0.0f;
+            float aprTotalTax=0.0f;
+            float aprGrandTotal=0.0f;
+            float aprCgstRs=0.0f;
+            float aprSgstRs=0.0f;
+            float aprIgstRs=0.0f;
+            float aprROff=0.0f;
+            
 			for (int i = 0; i < gvnAccDetailList.size(); i++) {
 
 				if (gvnAccDetailList.get(i).getGrnGvnStatus() == 6) {
 
-					System.out
-							.println("Status 6 found  and its total :::" + gvnAccDetailList.get(i).getAprGrandTotal());
+				
+					apporvedAmt=apporvedAmt + gvnAccDetailList.get(i).getAprGrandTotal();
 
-					accHeader.setApporvedAmt(accHeader.getApporvedAmt() + gvnAccDetailList.get(i).getAprGrandTotal());
-
-					accHeader.setAprTaxableAmt(
-							accHeader.getAprTaxableAmt() + gvnAccDetailList.get(i).getAprTaxableAmt());
-					accHeader.setAprTotalTax(accHeader.getAprTotalTax() + gvnAccDetailList.get(i).getAprTotalTax());
-					accHeader.setAprGrandTotal(
-							accHeader.getAprGrandTotal() + gvnAccDetailList.get(i).getAprGrandTotal());
-					accHeader.setAprCgstRs(accHeader.getAprCgstRs() + gvnAccDetailList.get(i).getAprCgstRs());
-					accHeader.setAprSgstRs(accHeader.getAprSgstRs() + gvnAccDetailList.get(i).getAprSgstRs());
-					accHeader.setAprIgstRs(accHeader.getAprIgstRs() + gvnAccDetailList.get(i).getAprIgstRs());
-					accHeader.setAprROff(accHeader.getAprROff() + gvnAccDetailList.get(i).getAprROff());
+					aprTaxableAmt=aprTaxableAmt + gvnAccDetailList.get(i).getAprTaxableAmt();
+					aprTotalTax=aprTotalTax + gvnAccDetailList.get(i).getAprTotalTax();
+					aprGrandTotal=aprGrandTotal+ gvnAccDetailList.get(i).getAprGrandTotal();
+					aprCgstRs=aprCgstRs+ gvnAccDetailList.get(i).getAprCgstRs();
+					aprSgstRs=aprSgstRs + gvnAccDetailList.get(i).getAprSgstRs();
+					aprIgstRs=aprIgstRs + gvnAccDetailList.get(i).getAprIgstRs();
+					aprROff=aprROff + gvnAccDetailList.get(i).getAprROff();
 
 				}
 			}
+			accHeader.setApporvedAmt(roundUp(apporvedAmt));
+			accHeader.setAprTaxableAmt(roundUp(aprTaxableAmt));	
+			accHeader.setAprTotalTax(roundUp(aprTotalTax));
+			accHeader.setAprGrandTotal(roundUp(aprGrandTotal));	
+			accHeader.setAprCgstRs(roundUp(aprCgstRs));
+			accHeader.setAprSgstRs(roundUp(aprSgstRs));
+			accHeader.setAprIgstRs(roundUp(aprIgstRs));	
+			accHeader.setAprROff(roundUp(aprROff));
 			accHeader.setApprovedDatetime(dateFormat.format(cal.getTime()));
 
 			accHeader = restTemplate.postForObject(Constants.url + "updateGrnGvnHeader", accHeader, GrnGvnHeader.class);
@@ -2846,27 +2869,40 @@ public class GvnController {
 			accHeader.setAprROff(0);
 			accHeader.setApporvedAmt(0);
 
+			float apporvedAmt=0.0f;
+            float aprTaxableAmt=0.0f;
+            float aprTotalTax=0.0f;
+            float aprGrandTotal=0.0f;
+            float aprCgstRs=0.0f;
+            float aprSgstRs=0.0f;
+            float aprIgstRs=0.0f;
+            float aprROff=0.0f;
 			for (int i = 0; i < gvnAccDetailList.size(); i++) {
 
 				if (gvnAccDetailList.get(i).getGrnGvnStatus() == 6) {
 
-					System.out
-							.println("Status 6 found  and its total :::" + gvnAccDetailList.get(i).getAprGrandTotal());
+					
+					apporvedAmt=apporvedAmt + gvnAccDetailList.get(i).getAprGrandTotal();
 
-					accHeader.setApporvedAmt(accHeader.getAprGrandTotal() + gvnAccDetailList.get(i).getAprGrandTotal());
-
-					accHeader.setAprTaxableAmt(
-							accHeader.getAprTaxableAmt() + gvnAccDetailList.get(i).getAprTaxableAmt());
-					accHeader.setAprTotalTax(accHeader.getAprTotalTax() + gvnAccDetailList.get(i).getAprTotalTax());
-					accHeader.setAprGrandTotal(
-							accHeader.getAprGrandTotal() + gvnAccDetailList.get(i).getAprGrandTotal());
-					accHeader.setAprCgstRs(accHeader.getAprCgstRs() + gvnAccDetailList.get(i).getAprCgstRs());
-					accHeader.setAprSgstRs(accHeader.getAprSgstRs() + gvnAccDetailList.get(i).getAprSgstRs());
-					accHeader.setAprIgstRs(accHeader.getAprIgstRs() + gvnAccDetailList.get(i).getAprIgstRs());
-					accHeader.setAprROff(accHeader.getAprROff() + gvnAccDetailList.get(i).getAprROff());
+					aprTaxableAmt=aprTaxableAmt + gvnAccDetailList.get(i).getAprTaxableAmt();
+					aprTotalTax=aprTotalTax + gvnAccDetailList.get(i).getAprTotalTax();
+					aprGrandTotal=aprGrandTotal + gvnAccDetailList.get(i).getAprGrandTotal();
+					aprCgstRs=aprCgstRs + gvnAccDetailList.get(i).getAprCgstRs();
+					aprSgstRs=aprSgstRs + gvnAccDetailList.get(i).getAprSgstRs();
+					aprIgstRs=aprIgstRs + gvnAccDetailList.get(i).getAprIgstRs();
+					aprROff=aprROff+ gvnAccDetailList.get(i).getAprROff();
 
 				}
 			}
+			accHeader.setApporvedAmt(roundUp(apporvedAmt));
+			accHeader.setAprTaxableAmt(roundUp(aprTaxableAmt));	
+			accHeader.setAprTotalTax(roundUp(aprTotalTax));
+			accHeader.setAprGrandTotal(roundUp(aprGrandTotal));	
+			accHeader.setAprCgstRs(roundUp(aprCgstRs));
+			accHeader.setAprSgstRs(roundUp(aprSgstRs));
+			accHeader.setAprIgstRs(roundUp(aprIgstRs));	
+			accHeader.setAprROff(roundUp(aprROff));
+			
 			accHeader.setApprovedDatetime(dateFormat.format(cal.getTime()));
 
 			System.out.println("Approved Grand Total setted " + accHeader.getAprGrandTotal());

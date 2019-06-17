@@ -397,7 +397,7 @@ public class ManualGrnController {
 					postGrnGvn.setTaxableAmt(roundUp(taxableAmt));
 					postGrnGvn.setTotalTax(roundUp(totalTax));
 					postGrnGvn.setFinalAmt(roundUp(finalAmt));
-					postGrnGvn.setRoundUpAmt(roundUpAmt);
+					postGrnGvn.setRoundUpAmt(roundUp(roundUpAmt));
 
 					postGrnGvn.setIsCreditNote(0);
 
@@ -412,16 +412,16 @@ public class ManualGrnController {
 					postGrnGvn.setAprQtyGate(grnQty);
 					postGrnGvn.setAprQtyStore(grnQty);
 					postGrnGvn.setAprQtyAcc(grnQty);
-					postGrnGvn.setAprTaxableAmt(taxableAmt);
-					postGrnGvn.setAprTotalTax(totalTax);
+					postGrnGvn.setAprTaxableAmt(roundUp(taxableAmt));
+					postGrnGvn.setAprTotalTax(roundUp(totalTax));
 
 					if (frList.getIsSameState() == 1) {
 
-						postGrnGvn.setAprSgstRs((totalTax / 2));
-						postGrnGvn.setAprCgstRs((totalTax / 2));
+						postGrnGvn.setAprSgstRs(roundUp((totalTax / 2)));
+						postGrnGvn.setAprCgstRs(roundUp((totalTax / 2)));
 
 					} else {
-						postGrnGvn.setAprIgstRs(totalTax);
+						postGrnGvn.setAprIgstRs(roundUp(totalTax));
 
 					}
 
@@ -444,7 +444,7 @@ public class ManualGrnController {
 			grnHeader.setGrnGvn(postGrnGvnList);
 
 			grnHeader.setFrId(Integer.parseInt(frId));
-			grnHeader.setApporvedAmt(sumTotalAmt);
+			grnHeader.setApporvedAmt(roundUp(sumTotalAmt));
 			grnHeader.setApprovedDatetime(curDateTime);
 			grnHeader.setCreditNoteId("");
 			grnHeader.setGrngvnDate(new SimpleDateFormat("dd-MM-yyyy").format(grnGvnDate));
@@ -452,22 +452,22 @@ public class ManualGrnController {
 			grnHeader.setGrngvnStatus(6);
 			grnHeader.setIsCreditNote(0);
 			grnHeader.setIsGrn(1);
-			grnHeader.setAprGrandTotal(sumTotalAmt);
+			grnHeader.setAprGrandTotal(roundUp(sumTotalAmt));
 
-			grnHeader.setTaxableAmt(sumTaxableAmt);
-			grnHeader.setTaxAmt(sumTaxAmt);
-			grnHeader.setTotalAmt(sumTotalAmt);
+			grnHeader.setTaxableAmt(roundUp(sumTaxableAmt));
+			grnHeader.setTaxAmt(roundUp(sumTaxAmt));
+			grnHeader.setTotalAmt(roundUp(sumTotalAmt));
 			grnHeader.setGrnGvn(postGrnGvnList);
-			grnHeader.setAprTaxableAmt(sumTaxableAmt);
+			grnHeader.setAprTaxableAmt(roundUp(sumTaxableAmt));
 
-			grnHeader.setAprTotalTax(sumTaxAmt);
+			grnHeader.setAprTotalTax(roundUp(sumTaxAmt));
 			if (frList.getIsSameState() == 1) {
 
-				grnHeader.setAprCgstRs((sumTaxAmt / 2));
-				grnHeader.setAprSgstRs((sumTaxAmt / 2));
+				grnHeader.setAprCgstRs(roundUp((sumTaxAmt / 2)));
+				grnHeader.setAprSgstRs(roundUp((sumTaxAmt / 2)));
 
 			} else {
-				grnHeader.setAprIgstRs((sumTaxAmt));
+				grnHeader.setAprIgstRs(roundUp((sumTaxAmt)));
 
 			}
 

@@ -384,10 +384,10 @@ public class BillController {
 						billDetail.setMrp((float) gBill.getOrderMrp());
 						billDetail.setRateType(gBill.getRateType());
 						billDetail.setRate((float) gBill.getOrderRate());
-						billDetail.setBaseRate(baseRate);
-						billDetail.setTaxableAmt(taxableAmt);
+						billDetail.setBaseRate(roundUp(baseRate));
+						billDetail.setTaxableAmt(roundUp(taxableAmt));
 						billDetail.setDiscPer(discPer);// new
-						billDetail.setRemark("" + discAmt);// new
+						billDetail.setRemark("" + roundUp(discAmt));// new
 						billDetail.setSgstPer(tax1);
 						billDetail.setSgstRs(sgstRs);
 						billDetail.setCgstPer(tax2);
@@ -453,7 +453,7 @@ public class BillController {
 				// header.setIgstSum(sumT3);
 				header.setTaxableAmt(sumTaxableAmt);
 				header.setGrandTotal(Math.round(sumGrandTotal));
-				header.setDiscAmt(sumDiscAmt);// new
+				header.setDiscAmt(roundUp(sumDiscAmt));// new
 
 				System.err.println("sumof grand total beofre " + sumGrandTotal);
 
@@ -2276,7 +2276,7 @@ public class BillController {
 				postBillDetail.setRate(newBillRate);
 				postBillDetail.setBillQty(newBillQty);
 				float newBaserate = Float.valueOf(df.format((newBillRate * 100) / (100 + newSgstPer + newCgstPer)));
-				postBillDetail.setBaseRate(newBaserate);
+				postBillDetail.setBaseRate(roundUp(newBaserate));
 				postBillDetail.setCatId(getBillDetail.getCatId());
 				postBillDetail.setSgstPer(newSgstPer);
 				postBillDetail.setCgstPer(newCgstPer);
@@ -2287,7 +2287,7 @@ public class BillController {
 				postBillDetail.setMrp(getBillDetail.getMrp());
 				postBillDetail.setOrderId(getBillDetail.getOrderId());
 				postBillDetail.setOrderQty(getBillDetail.getOrderQty());
-
+				postBillDetail.setHsnCode(getBillDetail.getHsnCode());//new on 14june
 				postBillDetail.setRateType(getBillDetail.getRateType());
 				postBillDetail.setRemark(getBillDetail.getRemark());
 				postBillDetail.setGrnType(getBillDetail.getGrnType());
@@ -2378,7 +2378,7 @@ public class BillController {
 					postBillHeader.setRemark(billHeadersList.get(j).getRemark());
 					postBillHeader.setSgstSum(sumTotalSgst);
 					postBillHeader.setCgstSum(sumTotalCgst);
-					postBillHeader.setDiscAmt(sumDiscAmt);// new
+					postBillHeader.setDiscAmt(roundUp(sumDiscAmt));// new
 					postBillHeader.setTime(billHeadersList.get(j).getTime());
 					break;
 				} // end of if

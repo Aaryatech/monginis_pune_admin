@@ -569,10 +569,10 @@ public class ManualOrderController {
 						billDetail.setMrp((float) gBill.getOrderMrp());
 						billDetail.setRateType(gBill.getRateType());
 						billDetail.setRate((float) gBill.getOrderRate());
-						billDetail.setBaseRate(baseRate);
-						billDetail.setTaxableAmt(taxableAmt);
+						billDetail.setBaseRate(roundUp(baseRate));
+						billDetail.setTaxableAmt(roundUp(taxableAmt));
 						billDetail.setDiscPer(discPer);// new
-						billDetail.setRemark("" + discAmt);// new
+						billDetail.setRemark("" + roundUp(discAmt));// new
 						billDetail.setSgstPer(tax1);
 						billDetail.setSgstRs(sgstRs);
 						billDetail.setCgstPer(tax2);
@@ -622,9 +622,9 @@ public class ManualOrderController {
 
 					}
 					header.setBillDate(new Date());// hardcoded curr Date
-					header.setTaxableAmt(sumTaxableAmt);
-					header.setGrandTotal(Math.round(sumGrandTotal));
-					header.setDiscAmt(sumDiscAmt);// new
+					header.setTaxableAmt(roundUp(sumTaxableAmt));
+					header.setGrandTotal(roundUp(sumGrandTotal));
+					header.setDiscAmt(roundUp(sumDiscAmt));// new
 
 					System.err.println("sumof grand total beofre " + sumGrandTotal);
 

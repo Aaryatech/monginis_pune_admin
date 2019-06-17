@@ -187,7 +187,8 @@ public class CalculateTrayRepCon {
 			CalCulateTray[] calCulateTray = restTemplate.postForObject(Constants.url + "/getAllCalTrayReport", map,
 					CalCulateTray[].class);
 			List<CalCulateTray> calListForFr = new ArrayList<CalCulateTray>(Arrays.asList(calCulateTray));
-
+			System.out.println("calListForFr" + calListForFr.toString());
+			
 			model.addObject("calListForFr", calListForFr);
 			model.addObject("routeListForFr", routeListForFr);
 			model.addObject("frIds", frIds);

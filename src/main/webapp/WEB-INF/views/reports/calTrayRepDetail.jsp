@@ -313,18 +313,18 @@
 												<c:set var="FinalTotalTrayQty" value="0" />
 
 
-												<c:set var="totalROrderQty" value="0" />
-												<c:set var="totalRTrayQty" value="0" />
+											
 												<c:forEach items="${routeListForFr}" var="routeList"
 													varStatus="count">
-
+												<c:set var="totalROrderQty" value="0" />
+												<c:set var="totalRTrayQty" value="0" />
 													<c:forEach items="${calListForFr}" var="calListForFr"
 														varStatus="cnt">
 
 														<c:choose>
 															<c:when
 																test="${calListForFr.frRouteId==routeList.routeTrayId}">
-
+                                                                    
 																<c:set var="totalROrderQty"
 																	value="${totalROrderQty+calListForFr.orderQty}" />
 
@@ -423,18 +423,17 @@
 
 														<c:forEach items="${calListForFr}" var="calListForFr"
 															varStatus="cnt">
+<c:choose>
+<c:when test="${routeList.routeTrayId==calListForFr.frRouteId}">
+				<c:choose>
+								<c:when test="${subCatAList.subCatId==calListForFr.subCatId}">
+										<c:set var="totalSubOrderQty" value="${totalSubOrderQty+calListForFr.orderQty}" />
 
-															<c:choose>
-																<c:when
-																	test="${subCatAList.subCatId==calListForFr.subCatId}">
-																	<c:set var="totalSubOrderQty"
-																		value="${totalSubOrderQty+calListForFr.orderQty}" />
-
-																	<c:set var="totalSubTrayQty"
-																		value="${totalSubTrayQty+calListForFr.trayQty}" />
-																</c:when>
-															</c:choose>
-
+										<c:set var="totalSubTrayQty" value="${totalSubTrayQty+calListForFr.trayQty}" />
+								</c:when>
+				</c:choose>
+</c:when>
+</c:choose>
 
 
 														</c:forEach>
@@ -444,8 +443,7 @@
 
 														<c:set var="totalRouteTrayQtyFinal"
 															value="${totalRouteTrayQtyFinal+totalSubTrayQty}" />
-														<c:choose>
-															<c:when test="${totalSubOrderQty>0}">
+														
 																<tr>
 
 
@@ -461,8 +459,7 @@
 																			value="${totalSubTrayQty}" /></td>
 
 																</tr>
-															</c:when>
-														</c:choose>
+														
 													</c:forEach>
 												</c:forEach>
 											</tbody>

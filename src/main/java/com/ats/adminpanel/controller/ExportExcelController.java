@@ -126,6 +126,7 @@ public class ExportExcelController {
 			for (int j = 0; j < exportToExcelList.get(rowIndex).getRowData().size(); j++) {
 
 				XSSFCell cell = row.createCell(j);
+				  cell.setCellValue(exportToExcelList.get(rowIndex).getRowData().get(j));
 				try 
 		        { 
 		            // checking valid integer using parseInt() method 
@@ -139,10 +140,10 @@ public class ExportExcelController {
 		        		 XSSFCellStyle cellStyle = wb.createCellStyle();
 		        		 XSSFDataFormat xssfDataFormat = wb.createDataFormat(); 
 		                 // checking valid float using parseInt() method 
-		                float value=Float.parseFloat(exportToExcelList.get(rowIndex).getRowData().get(j)); 
+		                double value=Double.parseDouble(exportToExcelList.get(rowIndex).getRowData().get(j)); 
 		                cellStyle.setDataFormat(xssfDataFormat.getFormat("#,##0.00"));
 		                cell.setCellStyle(cellStyle);
-		                cell.setCellValue(roundUp(value));
+		                cell.setCellValue(value);
 		             }  
 		             catch (NumberFormatException e1) 
 		             { 
@@ -185,10 +186,10 @@ public class ExportExcelController {
 		        		 XSSFCellStyle cellStyle = wb.createCellStyle();
 		        		 XSSFDataFormat xssfDataFormat = wb.createDataFormat(); 
 		                 // checking valid float using parseInt() method 
-		                float value=Float.parseFloat(exportToExcelListDummy.get(rowIndex).getRowData().get(j)); 
+		                double value=Double.parseDouble(exportToExcelListDummy.get(rowIndex).getRowData().get(j)); 
 		                cellStyle.setDataFormat(xssfDataFormat.getFormat("#,##0.00"));
 		                cell.setCellStyle(cellStyle);
-		                cell.setCellValue(roundUp(value));
+		                cell.setCellValue(value);
 		             }  
 		             catch (NumberFormatException e1) 
 		             { 
@@ -230,10 +231,10 @@ public class ExportExcelController {
 		        		 XSSFCellStyle cellStyle = wb.createCellStyle();
 		        		 XSSFDataFormat xssfDataFormat = wb.createDataFormat(); 
 		                 // checking valid float using parseInt() method 
-		                float value=Float.parseFloat(exportToExcelList1.get(rowIndex).getRowData().get(j)); 
+		                double value=Double.parseDouble(exportToExcelList1.get(rowIndex).getRowData().get(j)); 
 		                cellStyle.setDataFormat(xssfDataFormat.getFormat("#,##0.00"));
 		                cell.setCellStyle(cellStyle);
-		                cell.setCellValue(roundUp(value));
+		                cell.setCellValue(value);
 		             }  
 		             catch (NumberFormatException e1) 
 		             { 
@@ -394,11 +395,11 @@ public class ExportExcelController {
 		        		 XSSFCellStyle cellStyle = wb.createCellStyle();
 		        		 XSSFDataFormat xssfDataFormat = wb.createDataFormat(); 
 
-		                float value=Float.parseFloat(exportToExcelListNew.get(rowIndex).getRowData().get(j)); 
+		                double value=Double.parseDouble(exportToExcelListNew.get(rowIndex).getRowData().get(j)); 
 		                
 		                cellStyle.setDataFormat(xssfDataFormat.getFormat("#,##0.00"));
 		                cell.setCellStyle(cellStyle);
-		                cell.setCellValue(roundUp(value));
+		                cell.setCellValue(value);
 		                
 		             }  
 		             catch (NumberFormatException e1) 
@@ -568,10 +569,10 @@ public class ExportExcelController {
 		        		 XSSFDataFormat xssfDataFormat = wb.createDataFormat(); 
 
 		                 // checking valid float using parseInt() method 
-		                float value=Float.parseFloat(exportToExcelList2.get(rowIndex).getRowData().get(j)); 
+		                double value=Double.parseDouble(exportToExcelList2.get(rowIndex).getRowData().get(j)); 
 		                cellStyle.setDataFormat(xssfDataFormat.getFormat("#,##0.00"));
 		                cell.setCellStyle(cellStyle);
-		                cell.setCellValue(roundUp(value));
+		                cell.setCellValue(value);
 		             }  
 		             catch (NumberFormatException e1) 
 		             { 
