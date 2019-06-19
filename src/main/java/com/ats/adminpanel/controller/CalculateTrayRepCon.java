@@ -124,7 +124,18 @@ public class CalculateTrayRepCon {
 			String date = request.getParameter("billDate");
 
 			String[] routeIdList = request.getParameterValues("selectRoute");
+			// -------------------------------------------------------------------------------
+			int sectionId = Integer.parseInt(request.getParameter("sectionId"));
 
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+			map.add("sectionId", sectionId);
+			RestTemplate restTemplate = new RestTemplate();
+
+			SectionMaster routeMasters = restTemplate.postForObject(Constants.url + "/getSectionById", map,
+					SectionMaster.class);
+
+			menuList = routeMasters.getMenuList();
+			// -------------------------------------------------------------------------------
 			System.out.println("routeIdListrouteIdListrouteIdListrouteIdList" + routeIdList);
 
 			StringBuilder sb = new StringBuilder();
@@ -160,9 +171,9 @@ public class CalculateTrayRepCon {
 				menuIds = menuIds.substring(1, menuIds.length());
 			}
 
-			RestTemplate restTemplate = new RestTemplate();
+			// RestTemplate restTemplate = new RestTemplate();
 
-			MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+			map = new LinkedMultiValueMap<>();// change
 			map.add("routeIdList", routeIds);
 
 			RouteMgmt[] routeMaster = restTemplate.postForObject(Constants.url + "/getFranByMultipleRouteTrayId", map,
@@ -188,7 +199,7 @@ public class CalculateTrayRepCon {
 					CalCulateTray[].class);
 			List<CalCulateTray> calListForFr = new ArrayList<CalCulateTray>(Arrays.asList(calCulateTray));
 			System.out.println("calListForFr" + calListForFr.toString());
-			
+
 			model.addObject("calListForFr", calListForFr);
 			model.addObject("routeListForFr", routeListForFr);
 			model.addObject("frIds", frIds);

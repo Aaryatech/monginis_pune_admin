@@ -97,7 +97,6 @@
 								<select data-placeholder="Choose Category"
 									class="form-control chosen" onchange="routListByAbcType()"
 									id="abcType" name="abcType">
-
 									<option value="0">All</option>
 									<option value="1">First Delivery</option>
 									<option value="2">Second Delivery</option>
@@ -347,7 +346,7 @@
 						delType : abcType,
 						ajax : 'true'
 					}, function(data) {
-						var html = '<option value="">Select Rout</option>';
+						var html = '<option value="">Select Route</option>';
 
 						var len = data.length;
 

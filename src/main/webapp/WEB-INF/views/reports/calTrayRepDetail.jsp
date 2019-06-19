@@ -83,6 +83,7 @@
 										<c:set var="totalRouteOrderQty" value="0"></c:set>
 										<c:set var="totalRouteTrayQty" value="0"></c:set>
 										<c:set var="frSubCount" value="0"></c:set>
+
 										<c:forEach items="${routeListForFr}" var="routeList"
 											varStatus="count">
 											<div class="row">
@@ -214,9 +215,9 @@
 										<input id="menuIds" name="menuIds" value="${menuIds}"
 											type="hidden">
 
-										<input type="button"
+										<!-- 	<input type="button"
 											onclick="tableToExcel('table_gridFR', 'name', 'CalculateTray.xls')"
-											value="Export to Excel">
+											value="Export to Excel"> -->
 									</c:when>
 
 									<c:when test="${submit2==2}">
@@ -326,9 +327,9 @@
 										<input id="menuIds" name="menuIds" value="${menuIds}"
 											type="hidden">
 
-										<input type="button"
+										<!-- <input type="button"
 											onclick="tableToExcel('table_gridFR2', 'name', 'CalculateTray.xls')"
-											value="Export to Excel">
+											value="Export to Excel"> -->
 									</c:when>
 
 
@@ -425,9 +426,9 @@
 										<input id="menuIds" name="menuIds" value="${menuIds}"
 											type="hidden">
 
-										<input type="button"
+										<!-- <input type="button"
 											onclick="tableToExcel('table_gridFR3', 'name', 'CalculateTray.xls')"
-											value="Export to Excel">
+											value="Export to Excel"> -->
 									</c:when>
 
 									<c:when test="${submit4==4}">
@@ -450,12 +451,13 @@
 											</thead>
 											<tbody>
 
-												<c:set var="SubOrderQty" value="0"></c:set>
-												<c:set var="SubTrayQty" value="0"></c:set>
+
 
 												<c:forEach items="${routeListForFr}" var="routeList"
 													varStatus="count">
-
+													<c:set var="SubOrderQty" value="0"></c:set>
+													<c:set var="SubTrayQty" value="0"></c:set>
+													<c:set var="srNo" value="0"></c:set>
 													<c:forEach items="${subCatAList}" var="subCatAList"
 														varStatus="c1">
 
@@ -490,11 +492,18 @@
 														<tr>
 															<c:choose>
 																<c:when test="${totalSubOrderQty>0}">
+																	<c:set var="srNo" value="${srNo+1}"></c:set>
 
 
-																	<td width="5%" style="text-align: center">${c1.index+1}</td>
-																	<td width="50%" align="left"><c:out
-																			value="${routeList.routeName}" /></td>
+																	<td width="5%" style="text-align: center">${srNo}</td>
+																	<td width="50%" align="left"><c:choose>
+																			<c:when test="${srNo==1}">
+																				<c:out value="${routeList.routeName}" />
+																			</c:when>
+																			<c:otherwise>
+
+																			</c:otherwise>
+																		</c:choose></td>
 																	<td width="25%" align="left"><c:out
 																			value="${subCatAList.subCatName}" /></td>
 
@@ -519,21 +528,24 @@
 
 													<c:set var="totalRouteTrayQtyFinal"
 														value="${totalRouteTrayQtyFinal+SubTrayQty}" />
+													<c:choose>
+														<c:when test="${SubOrderQty>0}">
+															<tr>
 
-													<tr>
 
 
+																<td width="5%" style="text-align: center"></td>
+																<td width="50%" align="left"></td>
+																<td width="25%" align="left"><b>Total</b></td>
 
-														<td width="5%" style="text-align: center"></td>
-														<td width="50%" align="left"></td>
-														<td width="25%" align="left">Total</td>
+																<td width="10%" align="right"><b><c:out
+																			value="${SubOrderQty}" /></b></td>
+																<td width="10%" align="right"><b><c:out
+																			value="${SubTrayQty}" /></b></td>
 
-														<td width="10%" align="right"><c:out
-																value="${SubOrderQty}" /></td>
-														<td width="10%" align="right"><c:out
-																value="${SubTrayQty}" /></td>
-
-													</tr>
+															</tr>
+														</c:when>
+													</c:choose>
 
 												</c:forEach>
 											</tbody>
@@ -545,11 +557,11 @@
 											<tbody>
 												<tr>
 
-													<td width="80%">Total</td>
-													<td width="10%" align="right"><c:out
-															value="${totalSubOrderQtyFinal}" /></td>
-													<td width="10%" align="right"><c:out
-															value="${totalRouteTrayQtyFinal}" /></td>
+													<td width="80%"><b>Total</b></td>
+													<td width="10%" align="right"><b><c:out
+																value="${totalSubOrderQtyFinal}" /></b></td>
+													<td width="10%" align="right"><b><c:out
+																value="${totalRouteTrayQtyFinal}" /></b></td>
 
 												</tr>
 
@@ -564,9 +576,9 @@
 										<input id="menuIds" name="menuIds" value="${menuIds}"
 											type="hidden">
 
-										<input type="button"
+										<!-- 	<input type="button"
 											onclick="tableToExcel('table_gridFR4', 'name', 'CalculateTray.xls')"
-											value="Export to Excel">
+											value="Export to Excel"> -->
 
 									</c:when>
 
