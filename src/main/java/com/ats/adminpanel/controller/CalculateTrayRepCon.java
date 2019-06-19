@@ -180,6 +180,7 @@ public class CalculateTrayRepCon {
 					RouteMgmt[].class);
 			List<RouteMgmt> routeListForFr = new ArrayList<RouteMgmt>(Arrays.asList(routeMaster));
 			System.out.println("RouteListRouteListRouteListRouteListRouteList" + routeListForFr.toString());
+
 			String frIds = new String();
 
 			for (int i = 0; i < routeListForFr.size(); i++) {
@@ -242,6 +243,16 @@ public class CalculateTrayRepCon {
 			model.addObject("date", date);
 			model.addObject("routeIds", routeIds);
 			model.addObject("menuIds", menuIds);
+
+			map = new LinkedMultiValueMap<>();// change
+			map.add("routeIdList", routeIds);
+
+			GetRouteMgmt[] routeMaster1 = restTemplate.postForObject(Constants.url + "/getFranByMultipleRouteTrayIdNew",
+					map, GetRouteMgmt[].class);
+			List<GetRouteMgmt> routeListForFr1 = new ArrayList<GetRouteMgmt>(Arrays.asList(routeMaster1));
+			System.out.println("RouteListRouteListRouteListRouteListRouteList" + routeListForFr1.toString());
+
+			model.addObject("routeListForFr1", routeListForFr1);
 
 		} catch (Exception e) {
 
@@ -361,6 +372,16 @@ public class CalculateTrayRepCon {
 			model.addObject("date", date);
 			model.addObject("routeIds", routeIds);
 			model.addObject("menuIds", menuIds);
+
+			map = new LinkedMultiValueMap<>();// change
+			map.add("routeIdList", routeIds);
+
+			GetRouteMgmt[] routeMaster1 = restTemplate.postForObject(Constants.url + "/getFranByMultipleRouteTrayIdNew",
+					map, GetRouteMgmt[].class);
+			List<GetRouteMgmt> routeListForFr1 = new ArrayList<GetRouteMgmt>(Arrays.asList(routeMaster1));
+			System.out.println("RouteListRouteListRouteListRouteListRouteList" + routeListForFr1.toString());
+
+			model.addObject("routeListForFr1", routeListForFr1);
 
 		} catch (
 

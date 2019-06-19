@@ -1,5 +1,7 @@
 package com.ats.adminpanel.model;
 
+import java.util.List;
+
 public class GetRouteMgmt {
 
 	private int routeTrayId;
@@ -27,6 +29,8 @@ public class GetRouteMgmt {
 	private String exVar2;
 
 	private String frName;
+
+	private List<GetFranchiseeList> getFranchiseeList;
 
 	public int getRouteTrayId() {
 		return routeTrayId;
@@ -132,12 +136,20 @@ public class GetRouteMgmt {
 		this.frName = frName;
 	}
 
+	public List<GetFranchiseeList> getGetFranchiseeList() {
+		return getFranchiseeList;
+	}
+
+	public void setGetFranchiseeList(List<GetFranchiseeList> getFranchiseeList) {
+		this.getFranchiseeList = getFranchiseeList;
+	}
+
 	@Override
 	public String toString() {
 		return "GetRouteMgmt [routeTrayId=" + routeTrayId + ", routeName=" + routeName + ", routeType=" + routeType
 				+ ", frIds=" + frIds + ", srNo=" + srNo + ", isSameDay=" + isSameDay + ", delStatus=" + delStatus
 				+ ", isActive=" + isActive + ", exInt1=" + exInt1 + ", exInt2=" + exInt2 + ", exVar1=" + exVar1
-				+ ", exVar2=" + exVar2 + ", frName=" + frName + "]";
+				+ ", exVar2=" + exVar2 + ", frName=" + frName + ", getFranchiseeList=" + getFranchiseeList + "]";
 	}
 
 }

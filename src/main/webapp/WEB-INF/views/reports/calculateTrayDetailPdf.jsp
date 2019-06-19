@@ -175,7 +175,7 @@ th {
 
 		<c:when test="${submit2==2}">
 
-			<c:forEach items="${routeListForFr}" var="routeList"
+			<c:forEach items="${routeListForFr1}" var="routeList"
 				varStatus="count">
 				<div class="row">
 					<div class="form-group">
@@ -202,55 +202,49 @@ th {
 						<c:set var="frCount" value="0"></c:set>
 
 
-						<c:forEach items="${frNameIdByRouteIdList}"
+						<c:forEach items="${routeList.getFranchiseeList}"
 							var="frNameIdByRouteIdList" varStatus="count">
 							<c:set var="totalFROrderQty" value="0" />
 							<c:set var="totalFRTrayQty" value="0" />
 
-							<c:choose>
-								<c:when
-									test="${routeList.routeTrayId==frNameIdByRouteIdList.frRouteId}">
 
-									<c:forEach items="${calListForFr}" var="calListForFr"
-										varStatus="cnt">
+							<c:forEach items="${calListForFr}" var="calListForFr"
+								varStatus="cnt">
 
-										<c:choose>
-											<c:when
-												test="${calListForFr.frId==frNameIdByRouteIdList.frId}">
+								<c:choose>
+									<c:when test="${calListForFr.frId==frNameIdByRouteIdList.frId}">
 
-												<c:set var="totalFROrderQty"
-													value="${totalFROrderQty+calListForFr.orderQty}" />
+										<c:set var="totalFROrderQty"
+											value="${totalFROrderQty+calListForFr.orderQty}" />
 
-												<c:set var="totalFRTrayQty"
-													value="${totalFRTrayQty+calListForFr.trayQty}" />
-											</c:when>
-										</c:choose>
+										<c:set var="totalFRTrayQty"
+											value="${totalFRTrayQty+calListForFr.trayQty}" />
+									</c:when>
+								</c:choose>
 
-									</c:forEach>
-									<c:set var="frCount" value="${frCount+1}"></c:set>
+							</c:forEach>
+							<c:set var="frCount" value="${frCount+1}"></c:set>
 
-									<c:set var="totalFRFinalOrderQty"
-										value="${totalFROrderQty+totalFRFinalOrderQty}" />
+							<c:set var="totalFRFinalOrderQty"
+								value="${totalFROrderQty+totalFRFinalOrderQty}" />
 
-									<c:set var="totalFRFinalTrayQty"
-										value="${totalFRTrayQty+totalFRFinalTrayQty}" />
+							<c:set var="totalFRFinalTrayQty"
+								value="${totalFRTrayQty+totalFRFinalTrayQty}" />
 
 
 
-									<tr>
-										<td style="text-align: center">${frCount}</td>
-										<td align="left"><c:out
-												value="${frNameIdByRouteIdList.frName}" /></td>
+							<tr>
+								<td style="text-align: center">${frCount}</td>
+								<td align="left"><c:out
+										value="${frNameIdByRouteIdList.frName}" /></td>
 
 
 
-										<td align="right"><c:out value="${totalFROrderQty}" /></td>
-										<td align="right"><c:out value="${totalFRTrayQty}" /></td>
+								<td align="right"><c:out value="${totalFROrderQty}" /></td>
+								<td align="right"><c:out value="${totalFRTrayQty}" /></td>
 
 
-									</tr>
-								</c:when>
-							</c:choose>
+							</tr>
 						</c:forEach>
 
 						<tr>
@@ -269,17 +263,17 @@ th {
 					</tbody>
 				</table>
 			</c:forEach>
-			<button class="btn btn-primary" value="2" id="submit2" name="submit2"
+			<%-- <button class="btn btn-primary" value="2" id="submit2" name="submit2"
 				onclick="genPdf2()">PDF</button>
 			<input id="date" name="date" value="${date}" type="hidden">
 			<input id="routeIds" name="routeIds" value="${routeIds}"
 				type="hidden">
-			<input id="menuIds" name="menuIds" value="${menuIds}" type="hidden">
+			<input id="menuIds" name="menuIds" value="${menuIds}" type="hidden"> --%>
 
-			<input type="button"
-				onclick="tableToExcel('table_gridFR2', 'name', 'CalculateTray.xls')"
-				value="Export to Excel">
+
 		</c:when>
+
+
 
 
 		<c:when test="${submit3==3}">
