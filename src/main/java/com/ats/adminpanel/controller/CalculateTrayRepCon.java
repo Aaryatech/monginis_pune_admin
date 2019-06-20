@@ -195,6 +195,7 @@ public class CalculateTrayRepCon {
 			map.add("deliveryDate", DateConvertor.convertToYMD(date));
 			map.add("frIdList", frIds);
 			map.add("menuIdList", menuIds);
+			map.add("routeIdList", routeIds);
 
 			CalCulateTray[] calCulateTray = restTemplate.postForObject(Constants.url + "/getAllCalTrayReport", map,
 					CalCulateTray[].class);
@@ -327,6 +328,7 @@ public class CalculateTrayRepCon {
 			map.add("deliveryDate", DateConvertor.convertToYMD(date));
 			map.add("frIdList", frIds);
 			map.add("menuIdList", menuIds);
+			map.add("routeIdList", routeIds);
 
 			CalCulateTray[] calCulateTray = restTemplate.postForObject(Constants.url + "/getAllCalTrayReport", map,
 					CalCulateTray[].class);

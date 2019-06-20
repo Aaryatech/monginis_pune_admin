@@ -84,7 +84,7 @@
 										<c:set var="totalRouteTrayQty" value="0"></c:set>
 										<c:set var="frSubCount" value="0"></c:set>
 
-										<c:forEach items="${routeListForFr}" var="routeList"
+										<c:forEach items="${routeListForFr1}" var="routeList"
 											varStatus="count">
 											<div class="row">
 												<div class="form-group">
@@ -115,7 +115,7 @@
 													<c:set var="totalOrderFRQty" value="0"></c:set>
 													<c:set var="totalTrayFRQty" value="0"></c:set>
 
-													<c:forEach items="${frNameIdByRouteIdList}"
+													<c:forEach items="${routeList.getFranchiseeList}"
 														var="frNameIdByRouteIdList" varStatus="c1">
 
 														<c:forEach items="${calListForFr}" var="calListForFr"
