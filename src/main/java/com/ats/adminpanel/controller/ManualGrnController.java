@@ -357,7 +357,7 @@ public class ManualGrnController {
 					postGrnGvn.setBillDetailNo((selectedGrn.get(i).getBillDetailNo()));// 15 Feb added
 
 					curDateTime = dateFormat.format(cal.getTime());
-
+					postGrnGvn.setHsnCode(selectedGrn.get(i).getHsnCode());//new on 18 june 19
 					postGrnGvn.setBillNo(selectedGrn.get(i).getBillNo());
 					postGrnGvn.setFrId(Integer.parseInt(frId));
 					postGrnGvn.setItemId(selectedGrn.get(i).getItemId());

@@ -8,7 +8,7 @@
 
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 
-	<c:url var="getHeaders" value="/getHeaders" />
+	<c:url var="getCumulativeCrn" value="/getCumulativeCrn" />
 	<c:url var="excelForCreaditNote" value="/excelForCreaditNote" />
 
 	<c:url var="excelForCreaditNoteReport" value="/exportToExcelReport" />
@@ -34,7 +34,7 @@
 			<div class="page-title">
 				<div>
 					<h1>
-						<i class="fa fa-file-o"></i>Credit Note Header
+						<i class="fa fa-file-o"></i>Cumulative Crn List
 					</h1>
 
 				</div>
@@ -47,7 +47,7 @@
 					<div class="box">
 						<div class="box-title">
 							<h3>
-								<i class="fa fa-bars"></i>Search Credit Note Header
+								<i class="fa fa-bars"></i>Cumulative Crn List
 							</h3>
 							<div class="box-tool">
 								<a href="">Back to List</a> <a data-action="collapse" href="#"><i
@@ -94,8 +94,8 @@
 
 										<select data-placeholder="Choose Franchisee"
 											class="form-control chosen" multiple="multiple" tabindex="6"
-											id="selectFr" name="selectFr" onchange="getDate()">
-											<option value="-1"><c:out value="All" /></option>
+											id="selectFr" name="selectFr" >
+											<option value="${allFr}"><c:out value="All" /></option>
 
 											<c:forEach items="${unSelectedFrList}" var="fr"
 												varStatus="count2">
@@ -106,21 +106,6 @@
 										</select>
 									</div>
 
-									<label class="col-sm-3 col-lg-2 control-label">Is
-										Grn/Gvn</label>
-
-									<div class="col-sm-5 col-lg-3 controls">
-
-										<select data-placeholder="Choose Franchisee"
-											class="form-control chosen" tabindex="6" id="isGrn"
-											name="isGrn">
-											<option value="-1">All</option>
-											<option value="1">Is GRN</option>
-											<option value="0">IS GVN</option>
-
-
-										</select>
-									</div>
 
 									<div
 										class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-0">
@@ -140,7 +125,7 @@
 								<div class="box">
 									<div class="box-title">
 										<h3>
-											<i class="fa fa-table"></i> Crn List
+											<i class="fa fa-table"></i>Cumulative Crn List
 										</h3>
 										<div class="box-tool">
 											<a data-action="collapse" href="#"><i
@@ -158,15 +143,13 @@
 												id="table1">
 												<thead  style="background-color:#f3b5db; ">
 													<tr>
-														<th></th>
-														<th>Sr No <input type="checkbox"
-															onClick="selectBillNo(this)" /></th>
+														<th>Sr No <!-- <input type="checkbox"
+															onClick="selectBillNo(this)" /> --></th>
 														<th class="col-md-1">Date</th>
-														<th class="col-md-2">Crn Id</th>
 														<th class="col-md-2">Franchise Name</th>
 														<th class="col-md-2">Taxable Amt</th>
 														<th class="col-md-2">Tax Amt</th>
-														<th class="col-md-2">Amount</th>
+														<th class="col-md-2">Grand Amount</th>
 														<th class="col-md-2">Action</th>
 
 													</tr>
@@ -175,33 +158,7 @@
 												<tbody>
 											</table>
 										</div>
-
-									<!-- 	<div class="form-group">
-											<label class="col-sm-3 col-lg-2 control-label"> </label>
-											<div class="col-sm-2 col-lg-2 controls">
-												<input type="button" value="PDF Report "
-													onclick="genPdfReport()" class="btn btn-primary">
-											</div>
-
-											<div class="col-sm-5 col-lg-1 controls">
-												<input type="button" id="expExcel" class="btn btn-primary"
-													value="Excel Report" onclick="createExelReport();">
-											</div>
-
-											<label class="col-sm-3 col-lg-2 control-label"></label>
-											<div class="col-sm-2 col-lg-3 controls">
-												<input type="button" value="Generate PDF For Franchise"
-													onclick="genPdf()" class="btn btn-primary">
-											</div>
-
-
-											<div class="col-sm-5 col-lg-1 controls">
-												<input type="button" id="expExcel" class="btn btn-primary"
-													value="EXPORT TO Excel For ERP" onclick="createExel();">
-
-											</div>
-
-										</div> -->
+<!-- 
 										<div class="form-group">
 											<div class="col-sm-2 col-lg-2 controls">
 												<input type="button" value="PDF Report "
@@ -224,31 +181,11 @@
 												<input type="button" id="expExcel" class="btn btn-primary"
 													value="EXP TO Excel Itemwise(ERP)" onclick="createExel();">
 											</div>
-		<div class="col-sm-2 col-lg-2 controls"> <input type="button" id="expExcel" class="btn btn-primary" value="Excel Hsnwise Summary" onclick="createExelHsnwise();" >
-</div>
+		                              <div class="col-sm-2 col-lg-2 controls">
+		                               <input type="button" id="expExcel" class="btn btn-primary" value="Excel Hsnwise Summary" onclick="createExelHsnwise();" >
+                                     </div> -->
 										</div>
 										
-
-
-										<!-- <div class="form-group">
-										
-										<div
-											class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-5">
-											<input type="button" value="Generate PDF Franchise" onclick="genPdf()"
-												class="btn btn-primary">
-												<input type="button" id="expExcel" class="btn btn-primary" value="EXPORT TO Excel Franchise" onclick="createExel();" >
-										</div>
-										
-										
-										<div
-											class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-5">
-											<input type="button" value="Generate Report PDF" onclick="genPdfReport()"
-												class="btn btn-primary">
-												<input type="button" id="expExcel" class="btn btn-primary" value="EXPORT TO Excel Report" onclick="createExelReport();" >
-										</div>
-										</div> -->
-
-										<!-- </form> -->
 									</div>
 								</div>
 							</form>
@@ -334,19 +271,18 @@
 			var fromDate = $("#from_date").val();
 			var toDate = $("#to_date").val();
 			var selectedFr = $("#selectFr").val();
-			var isGrn = $("#isGrn").val();
 			$
 					.getJSON(
-							'${getHeaders}',
+							'${getCumulativeCrn}',
 							{
 								fromDate : fromDate,
 								toDate : toDate,
 								fr_id_list : JSON.stringify(selectedFr),
-								isGrn :isGrn,
 								ajax : 'true',
 
 							},
 							function(data) {
+								//alert(data);
 								var len = data.length;
 
 								$('#table1 td').remove();
@@ -361,21 +297,16 @@
 													tr.append($('<td></td>')
 															.html(key + 1));
 
-													tr
+												/* 	tr
 															.append($('<td><input type=checkbox name="select_to_agree" id="select_to_agree'+key+'"  value='+headers.crnId+'></td>'));
-
+ */
 													tr
 															.append($(
 																	'<td></td>')
 																	.html(
 																			headers.crnDate));
 
-													tr
-															.append($(
-																	'<td></td>')
-																	.html(
-																			headers.crnNo));
-
+												
 													tr
 															.append($(
 																	'<td></td>')
@@ -399,11 +330,11 @@
 																	'<td></td>')
 																	.html(
 																			headers.crnGrandTotal));
-
+                                                  var crnId=headers.crnNo+"";
 													tr
-															.append($('<td ><a href="#" class="action_btn" onclick="getCrnDetail('
-																	+ headers.crnId
-																	+ ')"><abbr title="Detail"><i class="fa fa-list"></i></abbr></a></td>'));
+															.append($('<td ><a href="#" class="action_btn" onclick="genPdf('
+																	+ crnId
+																	+ ')">PDF</a></td>'));
 
 													$('#table1 tbody').append(
 															tr);
@@ -467,39 +398,9 @@
 	}
 	</script>
 	<script>
-		function genPdf() {
-			//alert("Inside Gen Pdf ");
-			checkboxes = document.getElementsByName('select_to_agree');
-
-			var selArray;
-
-			for (var x = 0; x < checkboxes.length; x++) {
-				if (document.getElementById("select_to_agree" + x).checked == true) {
-					if (x == 0) {
-						selArray = document.getElementById("select_to_agree"
-								+ x).value;
-					} else {
-						selArray = selArray
-								+ ","
-								+ document
-										.getElementById("select_to_agree" + x).value;
-					}
-				}
-
-			}
-
-			//var check = document.getElementById("select_to_agree").value;
-
-			/*  var str =selArray;
-
-			 str = str.replace(/^,|,$|,(?=,)/g, '');
-			 alert(str); */
-			window
-					.open('${pageContext.request.contextPath}/pdf?url=pdf/getCrnCheckedHeaders/'
-							+ selArray);
-
-			// window.open('${pageContext.request.contextPath}/getGrnPdf/'+fromDate+'/'+'/'+toDate+'/'+headerId+'/'+1);
-
+		function genPdf(selArray) {
+			
+			window.open('${pageContext.request.contextPath}/pdf?url=pdf/getCrnCumulativeHeaders/'+ selArray);
 		}
 
 		function genPdfReport() {
