@@ -139,6 +139,8 @@
 								<thead style="background-color: #f3b5db;">
 									<tr>
 										<th>Sr.No.</th>
+										<th>Date</th>
+
 										<th>Item Name</th>
 
 										<th>New Qty</th>
@@ -255,6 +257,8 @@
 
 					tr.append($('<td></td>').html(key + 1));
 
+					tr.append($('<td></td>').html(report.date));
+
 					tr.append($('<td></td>').html(report.itemName));
 
 					tr.append($('<td style="text-align:right;"></td>').html(
@@ -271,6 +275,7 @@
 
 				var tr = $('<tr></tr>');
 
+				tr.append($('<td></td>').html(""));
 				tr.append($('<td></td>').html(""));
 
 				tr.append($('<td style="font-weight:bold;"></td>')

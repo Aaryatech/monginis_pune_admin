@@ -515,10 +515,10 @@ public class FinishedGoodStockController {
 
 				finGoodStockList.add(detail);
 				System.out.println(showStockHeader.getFinGoodStockDate());
-				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+				SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
 				String convertedDate = format.format(showStockHeader.getFinGoodStockDate());
 
-				System.out.println(convertedDate);
+				System.out.println("convertedDateconvertedDateconvertedDateconvertedDate" + convertedDate);
 
 				if (t1 != prevT1 || t2 != prevT2 || t3 != prevT3) {
 
@@ -529,7 +529,7 @@ public class FinishedGoodStockController {
 					opStockUpdate.setNewQty(t1 + t2 + t3);
 					opStockUpdate.setOldQty(prevT1 + prevT2 + prevT3);
 					opStockUpdate.setReason(reason);
-					opStockUpdate.setDate(showStockHeader.getFinGoodStockDate());
+					opStockUpdate.setDate(convertedDate);
 					opStockUpdate.setItemId(detail.getItemId());
 					opStockUpdate.setSubCatId(detail.getCatId());
 
@@ -1111,11 +1111,11 @@ public class FinishedGoodStockController {
 						exportToExcelList2.add(expoExcel2);
 
 						for (int j = 0; j < bean.getStockDetail().size(); j++) {
-                            int count=0;
+							int count = 0;
 							if (bean.getStockDetail().get(j).getSubCatId() == subCatList.get(l).getSubCatId()) {
-							
+
 								if (bean.getStockDetail().get(j).getTotalCloStk() > 0) {
-									count=count+1;
+									count = count + 1;
 									expoExcel2 = new ExportToExcel();
 									rowData2 = new ArrayList<String>();
 									cnt3 = cnt3 + j;
@@ -1869,6 +1869,7 @@ public class FinishedGoodStockController {
 			List<String> rowData = new ArrayList<String>();
 
 			rowData.add("Sr. No.");
+			rowData.add("Date");
 			rowData.add("Item Name");
 			rowData.add("New Qty");
 			rowData.add("Old Qty");
@@ -1883,6 +1884,7 @@ public class FinishedGoodStockController {
 				expoExcel = new ExportToExcel();
 				rowData = new ArrayList<String>();
 				rowData.add("" + (i + 1));
+				rowData.add("" + opStockUpdateList.get(i).getDate());
 				rowData.add("" + opStockUpdateList.get(i).getItemName());
 				rowData.add("" + opStockUpdateList.get(i).getNewQty());
 
@@ -1900,6 +1902,7 @@ public class FinishedGoodStockController {
 			expoExcel = new ExportToExcel();
 			rowData = new ArrayList<String>();
 
+			rowData.add("");
 			rowData.add("");
 			rowData.add("Total");
 
@@ -1953,18 +1956,23 @@ public class FinishedGoodStockController {
 			e.printStackTrace();
 		}
 
-		PdfPTable table = new PdfPTable(5);
+		PdfPTable table = new PdfPTable(6);
 		table.setHeaderRows(1);
 		try {
 			System.out.println("Inside PDF Table try");
 			table.setWidthPercentage(100);
-			table.setWidths(new float[] { 0.7f, 1.1f, 0.9f, 1.2f, 1.2f });
+			table.setWidths(new float[] { 0.7f, 1.1f, 0.9f, 1.2f, 1.2f, 1.2f });
 			Font headFont = new Font(FontFamily.HELVETICA, 8, Font.NORMAL, BaseColor.BLACK);
 			Font headFont1 = new Font(FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.BLACK);
 			Font f = new Font(FontFamily.TIMES_ROMAN, 10.0f, Font.UNDERLINE, BaseColor.BLUE);
 
 			PdfPCell hcell;
 			hcell = new PdfPCell(new Phrase("Sr.", headFont1));
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			table.addCell(hcell);
+
+			hcell = new PdfPCell(new Phrase("Date", headFont1));
 			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
 			hcell.setBackgroundColor(BaseColor.PINK);
 			table.addCell(hcell);
@@ -2001,6 +2009,12 @@ public class FinishedGoodStockController {
 				cell = new PdfPCell(new Phrase(String.valueOf(index), headFont));
 				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 				cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(cell);
+
+				cell = new PdfPCell(new Phrase("" + opStockUpdateList.get(j).getDate(), headFont));
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+				cell.setPaddingRight(1);
 				table.addCell(cell);
 
 				cell = new PdfPCell(new Phrase("" + opStockUpdateList.get(j).getItemName(), headFont));
