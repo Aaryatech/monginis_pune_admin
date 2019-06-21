@@ -56,6 +56,7 @@ import com.ats.adminpanel.model.creditnote.CreditNoteHeaderPrint;
 import com.ats.adminpanel.model.creditnote.CreditNoteHeaderPrintList;
 import com.ats.adminpanel.model.creditnote.CreditPrintBean;
 import com.ats.adminpanel.model.creditnote.CrnDetailsSummary;
+import com.ats.adminpanel.model.creditnote.CrnDetailsTaxSummary;
 import com.ats.adminpanel.model.creditnote.CrnSrNoDateBean;
 import com.ats.adminpanel.model.creditnote.GetCreditNoteHeaders;
 import com.ats.adminpanel.model.creditnote.GetCreditNoteHeadersList;
@@ -1865,7 +1866,7 @@ public class CreditNoteController {
 		ModelAndView model = new ModelAndView("creditNote/pdf/crncumulativepdf");
 
 		try {
-			LinkedHashMap<String, CrnDetailsSummary> totalSummaryList=new LinkedHashMap<String, CrnDetailsSummary>(); 
+			LinkedHashMap<String, CrnDetailsTaxSummary> totalSummaryList=new LinkedHashMap<String, CrnDetailsTaxSummary>(); 
 
 			RestTemplate restTemplate = new RestTemplate();
 
@@ -1917,7 +1918,11 @@ public class CreditNoteController {
 					if(totalSummaryList.isEmpty())
 					{
 						for(CrnDetailsSummary crnDetailsSummary:crnSummaryListRes) {
-						  totalSummaryList.put(crnDetailsSummary.getItemHsncd(), crnDetailsSummary);
+							CrnDetailsTaxSummary crnDetailsTaxSummary=new CrnDetailsTaxSummary(crnDetailsSummary.getItemHsncd()+""+creditHeaderList.get(i).getCrnId(),crnDetailsSummary.getItemHsncd(),
+									crnDetailsSummary.getItemHsncdesc(),crnDetailsSummary.getGrnGvnQty(),crnDetailsSummary.getTaxableAmt(),
+									crnDetailsSummary.getCgstPer(),crnDetailsSummary.getCgstRs(),crnDetailsSummary.getSgstPer(),crnDetailsSummary.getSgstRs(),
+									crnDetailsSummary.getIgstPer(),crnDetailsSummary.getIgstRs());
+						  totalSummaryList.put(crnDetailsSummary.getItemHsncd(), crnDetailsTaxSummary);
 						}
 					}else
 					{
@@ -1926,7 +1931,7 @@ public class CreditNoteController {
 						for(CrnDetailsSummary crnDetailsSummary:crnSummaryListRes)
 						{
 						  int flag=0;
-						  for(Map.Entry<String,CrnDetailsSummary> entry:totalSummaryList.entrySet()){  
+						  for(Map.Entry<String,CrnDetailsTaxSummary> entry:totalSummaryList.entrySet()){  
 							
 								if(crnDetailsSummary.getItemHsncd().equalsIgnoreCase(entry.getKey()))
 								{
@@ -1940,7 +1945,11 @@ public class CreditNoteController {
 							}
 						  if(flag==0)
 						  {
-							  totalSummaryList.put(crnDetailsSummary.getItemHsncd(), crnDetailsSummary);  
+							  CrnDetailsTaxSummary crnDetailsTaxSummary=new CrnDetailsTaxSummary(crnDetailsSummary.getItemHsncd()+""+creditHeaderList.get(i).getCrnId(),crnDetailsSummary.getItemHsncd(),
+										crnDetailsSummary.getItemHsncdesc(),crnDetailsSummary.getGrnGvnQty(),crnDetailsSummary.getTaxableAmt(),
+										crnDetailsSummary.getCgstPer(),crnDetailsSummary.getCgstRs(),crnDetailsSummary.getSgstPer(),crnDetailsSummary.getSgstRs(),
+										crnDetailsSummary.getIgstPer(),crnDetailsSummary.getIgstRs());
+							  totalSummaryList.put(crnDetailsTaxSummary.getItemHsncd(), crnDetailsTaxSummary);  
 						  }
 						
 						}

@@ -332,9 +332,9 @@
 																			headers.crnGrandTotal));
                                                   var crnId=headers.crnNo+"";
 													tr
-															.append($('<td ><a href="#" class="action_btn" onclick="genPdf('
+															.append($('<td ><a href="#" class="action_btn" onclick="genPdf(['
 																	+ crnId
-																	+ ')">PDF</a></td>'));
+																	+ '])">PDF</a></td>'));
 
 													$('#table1 tbody').append(
 															tr);
