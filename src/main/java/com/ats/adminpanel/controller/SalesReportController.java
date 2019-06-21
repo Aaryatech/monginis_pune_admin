@@ -291,21 +291,20 @@ public class SalesReportController {
 				expoExcel = new ExportToExcel();
 				rowData = new ArrayList<String>();
 				rowData.add("Sr.No.");
+				rowData.add("GSTIN/UIN of Recipient");
+				rowData.add("Receiver Name");
 				rowData.add("Invoice No");
-				rowData.add("Bill No");
-				rowData.add("Bill Date");
-				rowData.add("Franchisee Name");
-				rowData.add("Franchisee Gst No");
+				rowData.add("Invoice date");
+				rowData.add("Invoice Value");
+				rowData.add("Place of Supply");
+				rowData.add("Reverse Charge");
 
-				rowData.add("cgst %");
-				rowData.add("sgst %");
-
-				rowData.add("cgst Amt");
-				rowData.add("sgst Amt");
-				rowData.add("Taxable Amt");
-				rowData.add("Total Tax");
-				rowData.add("Total");
-				rowData.add("Bill Total");
+				rowData.add("Applicable % of Tax Rate");
+				rowData.add("Invoice Type");
+				rowData.add("E Commerce GSTIN");
+				rowData.add("Rate");
+				rowData.add("Taxable Value");
+				rowData.add("Cess Amount");
 
 				expoExcel.setRowData(rowData);
 				exportToExcelList.add(expoExcel);
@@ -338,22 +337,23 @@ public class SalesReportController {
 					expoExcel = new ExportToExcel();
 					rowData = new ArrayList<String>();
 					rowData.add((i + 1) + "");
+					rowData.add("" + taxReportList.get(i).getFrGstNo());
+					rowData.add("" + taxReportList.get(i).getFrName());
 					rowData.add("" + taxReportList.get(i).getInvoiceNo());
-					rowData.add("" + taxReportList.get(i).getBillNo());
 					rowData.add("" + taxReportList.get(i).getBillDate());
 
-					rowData.add("" + taxReportList.get(i).getFrName());
-					rowData.add("" + taxReportList.get(i).getFrGstNo());
-
-					rowData.add("" + taxReportList.get(i).getCgstPer());
-					rowData.add("" + taxReportList.get(i).getSgstPer());
-					rowData.add("" + taxReportList.get(i).getCgstAmt());
-					rowData.add("" + taxReportList.get(i).getSgstAmt());
-					rowData.add("" + taxReportList.get(i).getTaxableAmt());
-					rowData.add("" + taxReportList.get(i).getTotalTax());
-					rowData.add("" + taxReportList.get(i).getGrandTotal());
-
 					rowData.add("" + finalTotal);
+					rowData.add("27-Maharashtra");
+					rowData.add("N");
+					rowData.add(" ");
+
+					rowData.add("Regular");
+					rowData.add(" ");
+
+					rowData.add("" + (taxReportList.get(i).getCgstPer() + taxReportList.get(i).getSgstPer()));
+					rowData.add("" + taxReportList.get(i).getTaxableAmt());
+					rowData.add("0");
+
 					expoExcel.setRowData(rowData);
 					exportToExcelList.add(expoExcel);
 
@@ -362,21 +362,20 @@ public class SalesReportController {
 				expoExcel = new ExportToExcel();
 				rowData = new ArrayList<String>();
 
-				rowData.add("");
 				rowData.add("Total");
 				rowData.add("");
 				rowData.add("");
 				rowData.add("");
 				rowData.add("");
-				rowData.add("");
-				rowData.add("");
-				rowData.add("" + roundUp(cgstSum));
-				rowData.add("" + roundUp(sgstSum));
-				rowData.add("" + roundUp(taxableAmt));
-
-				rowData.add("" + roundUp(totalTax));
-				rowData.add("" + roundUp(grandTotal));
 				rowData.add("" + roundUp(totalFinal));
+				rowData.add("");
+				rowData.add("");
+				rowData.add("");
+				rowData.add("");
+				rowData.add("");
+				rowData.add("");
+				rowData.add("");
+				rowData.add("");
 
 				expoExcel.setRowData(rowData);
 				exportToExcelList.add(expoExcel);
@@ -385,8 +384,8 @@ public class SalesReportController {
 				session.setAttribute("excelNameNew", "Tax1Report");
 				session.setAttribute("reportNameNew", "Tax_Repot1");
 				session.setAttribute("searchByNew", "From Date: " + fromDate + "  To Date: " + toDate + " ");
-				session.setAttribute("mergeUpto1", "$A$1:$L$1");
-				session.setAttribute("mergeUpto2", "$A$2:$L$2");
+				session.setAttribute("mergeUpto1", "$A$1:$N$1");
+				session.setAttribute("mergeUpto2", "$A$2:$N$2");
 
 			} catch (Exception e) {
 				System.out.println("Exc in Tax Report" + e.getMessage());
@@ -5079,7 +5078,7 @@ public class SalesReportController {
 			toDate = request.getParameter("toDate");
 			String routeId = request.getParameter("route_id");
 			int getBy = Integer.parseInt(request.getParameter("getBy"));
-			int type= Integer.parseInt(request.getParameter("type"));
+			int type = Integer.parseInt(request.getParameter("type"));
 			int isGraph = Integer.parseInt(request.getParameter("is_graph"));
 
 			String selectedCat = request.getParameter("cat_id_list");
