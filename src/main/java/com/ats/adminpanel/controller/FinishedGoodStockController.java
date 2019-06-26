@@ -1045,8 +1045,8 @@ public class FinishedGoodStockController {
 				rowData1.add("" + totalOpQty);
 				rowData1.add("" + totalProQty);
 				rowData1.add("" + totalRejQty);
-				rowData1.add("" + totalProQty);
 				rowData1.add("" + totalReturnQty);
+				rowData1.add("" + totalBillQty);
 				rowData1.add("" + totalClSubCatQty);
 
 				expoExcel1.setRowData(rowData1);
