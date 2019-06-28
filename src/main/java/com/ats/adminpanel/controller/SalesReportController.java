@@ -4210,7 +4210,7 @@ public class SalesReportController {
 	}
 
 	@RequestMapping(value = "pdf/getDispatchReportPdf/{billDate}/{routeId}/{selectedCat}", method = RequestMethod.GET)
-	public ModelAndView getSaleReportRoyConsoByCat(@PathVariable String billDate, @PathVariable String routeId,
+	public ModelAndView getDispatchReportPdf(@PathVariable String billDate, @PathVariable String routeId,
 			@PathVariable String selectedCat, HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView("reports/sales/dispatchReportPdf");
 		RestTemplate restTemplate = new RestTemplate();
