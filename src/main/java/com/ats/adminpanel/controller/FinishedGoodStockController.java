@@ -65,6 +65,7 @@ import com.ats.adminpanel.model.stock.FinishedGoodStock;
 import com.ats.adminpanel.model.stock.FinishedGoodStockDetail;
 import com.ats.adminpanel.model.stock.GetCurProdAndBillQty;
 import com.ats.adminpanel.model.stock.GetCurProdAndBillQtyList;
+import com.ats.adminpanel.model.stock.SpCakeCount;
 import com.ats.adminpanel.model.stock.TempFinGoodStockDetail;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
@@ -714,8 +715,6 @@ public class FinishedGoodStockController {
 					finGoodDetail = new ArrayList<>();
 					finGoodDetail = responseEntity.getBody();
 
-					System.out.println("Detail IS for All Cat " + finGoodDetail.toString());
-
 				} else {
 
 					map = new LinkedMultiValueMap<String, Object>();
@@ -735,6 +734,19 @@ public class FinishedGoodStockController {
 					bean.setIsDayEndEnable(0);
 
 				}
+
+				map = new LinkedMultiValueMap<String, Object>();
+				map.add("fromDate", stkDate);
+				map.add("toDate", stkDate);
+
+				SpCakeCount spCakeCount = restTemplate.postForObject(Constants.url + "getSpCakeContBetDate", map,
+						SpCakeCount.class);
+
+				bean.setSpCakeCount(spCakeCount.getCount());
+
+				System.out.println("spCakeCountspCakeCountspCakeCountspCakeCount" + spCakeCount.toString());
+
+				System.out.println("Detail IS for All Cat " + finGoodDetail.toString());
 				// new code
 
 				FinishedGoodStockDetail stockDetail = new FinishedGoodStockDetail();
@@ -906,6 +918,17 @@ public class FinishedGoodStockController {
 					updateStockDetailList = responseEntity.getBody();
 
 				}
+
+				map = new LinkedMultiValueMap<String, Object>();
+				map.add("fromDate", fromDate);
+				map.add("toDate", toDate);
+
+				SpCakeCount spCakeCount = restTemplate.postForObject(Constants.url + "getSpCakeContBetDate", map,
+						SpCakeCount.class);
+
+				bean.setSpCakeCount(spCakeCount.getCount());
+
+				System.out.println("spCakeCountspCakeCountspCakeCountspCakeCount" + spCakeCount.toString());
 			}
 
 			System.out.println("View Finish good Stock List " + updateStockDetailList.toString());

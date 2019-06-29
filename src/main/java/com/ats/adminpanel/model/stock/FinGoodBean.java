@@ -3,12 +3,22 @@ package com.ats.adminpanel.model.stock;
 import java.util.List;
 
 public class FinGoodBean {
-	
-	 List<FinishedGoodStockDetail> stockDetail;
-	 
+
+	List<FinishedGoodStockDetail> stockDetail;
+
 	int isDayEndEnable;
-	
+
 	String stockDate;
+
+	private int spCakeCount;
+
+	public int getSpCakeCount() {
+		return spCakeCount;
+	}
+
+	public void setSpCakeCount(int spCakeCount) {
+		this.spCakeCount = spCakeCount;
+	}
 
 	public List<FinishedGoodStockDetail> getStockDetail() {
 		return stockDetail;
@@ -37,8 +47,7 @@ public class FinGoodBean {
 	@Override
 	public String toString() {
 		return "FinGoodBean [stockDetail=" + stockDetail + ", isDayEndEnable=" + isDayEndEnable + ", stockDate="
-				+ stockDate + "]";
+				+ stockDate + ", spCakeCount=" + spCakeCount + "]";
 	}
-
 
 }

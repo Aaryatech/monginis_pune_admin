@@ -298,6 +298,18 @@ table {
 											</div>
 										</div>
 
+										<div class="form-group">
+											<label class="col-sm-3 col-lg-2 control-label">Special
+												Cake Count </label>
+											<div class="col-sm-9 col-lg-10 controls">
+												<input type="text" name="spCakeCount" readonly
+													value="${bean.spCakeCount}" id="spCakeCount"
+													placeholder="Special Cake Count" class="form-control"
+													data-rule-required="true" />
+											</div>
+										</div>
+
+
 
 									</div>
 
@@ -483,6 +495,9 @@ table {
 
 													document
 															.getElementById("PDFButtonClosing").disabled = false;
+
+													document
+															.getElementById("spCakeCount").value = data.spCakeCount;
 													var index = key + 1;
 
 													var tr = "<tr>";
