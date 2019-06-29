@@ -10,6 +10,7 @@
 
 	<c:url var="getBillList" value="/getSaleBillwise"></c:url>
 	<c:url var="getAllCatByAjax" value="/getAllCatByAjax"></c:url>
+	<c:url var="getGroup2ByCatId" value="/getSubCateListByCatId" />
 
 
 
@@ -58,7 +59,7 @@
 					<div class="row">
 						<div class="form-group">
 							<label class="col-sm-3 col-lg-2	 control-label">Year</label>
-							<div class="col-sm-6 col-lg-2 controls date_select">
+							<div class="col-sm-2 col-lg-2 controls date_select">
 								<select id="year" name="year" class="form-control">
 
 									<option value="2019-2020">2019-2020</option>
@@ -79,6 +80,30 @@
 									<c:forEach items="${catList}" var="cat" varStatus="count">
 										<option value="${cat.catId}"><c:out
 												value="${cat.catName}" /></option>
+									</c:forEach>
+								</select>
+							</div>
+
+							<label class="col-sm-2 col-lg-2 control-label">Sub
+								Category</label>
+							<div class="col-sm-3 col-lg-2 controls">
+								<select data-placeholder="Select Sub Category"
+									class="form-control chosen-select" name="item_grp2"
+									id="item_grp2" tabindex="-1" data-rule-required="true">
+
+									<c:forEach items="${subCatList}" var="subCatList"
+										varStatus="count">
+										<c:choose>
+											<c:when test="${subCatList.subCatId==subCatId}">
+												<option selected value="${subCatList.subCatId}"><c:out
+														value="${subCatList.subCatName}" /></option>
+											</c:when>
+											<c:otherwise>
+												<option value="${subCatList.subCatId}"><c:out
+														value="${subCatList.subCatName}" /></option>
+											</c:otherwise>
+										</c:choose>
+
 									</c:forEach>
 								</select>
 							</div>
@@ -223,9 +248,10 @@
 																	maxFractionDigits="2" value="${rep.grnQty}" /></td>
 															<td style="text-align: right;"><fmt:formatNumber
 																	type="number" minFractionDigits="2"
-																	maxFractionDigits="2" value="${rep.grandTotal-(rep.gvnQty+rep.grnQty)}" /></td>
-															 	<c:set var="grandTotal"
-																value="${grandTotal+rep.grandTotal}" /> 
+																	maxFractionDigits="2"
+																	value="${rep.grandTotal-(rep.gvnQty+rep.grnQty)}" /></td>
+															<c:set var="grandTotal"
+																value="${grandTotal+rep.grandTotal}" />
 															<c:set var="grnQty" value="${rep.grnQty+grnQty}" />
 															<c:set var="gvnQty" value="${rep.gvnQty+gvnQty}" />
 														</c:when>
@@ -306,7 +332,45 @@
 	<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
 		class="fa fa-chevron-up"></i></a>
 
+	<script type="text/javascript">
+		$(document)
+				.ready(
+						function() {
+							$('#selectCat')
+									.change(
+											function() {
+												$
+														.getJSON(
+																'${getGroup2ByCatId}',
+																{
+																	catId : $(
+																			this)
+																			.val(),
+																	ajax : 'true'
+																},
+																function(data) {
+																	var html = '<option value="" selected >Select Group 2</option>';
 
+																	var len = data.length;
+																	for (var i = 0; i < len; i++) {
+																		html += '<option value="' + data[i].subCatId + '">'
+																				+ data[i].subCatName
+																				+ '</option>';
+																	}
+																	html += '</option>';
+																	$(
+																			'#item_grp2')
+																			.html(
+																					html);
+																	$(
+																			'#item_grp2')
+																			.formcontrol(
+																					'refresh');
+
+																});
+											});
+						});
+	</script>
 
 
 

@@ -60,17 +60,25 @@ public class SaleItemReportController {
 			model.addObject("catList", categoryList);
 			String year = request.getParameter("year");
 			String catId = request.getParameter("selectCat");
+			String subCatId = request.getParameter("item_grp2");
 
 			System.out.println("catIdcatId" + catId);
 
 			if (year != "") {
+				List<SubCategory> subCatList = new ArrayList<SubCategory>();
+
+				MultiValueMap<String, Object> map1 = new LinkedMultiValueMap<String, Object>();
+
+				map1.add("catId", catId);
+				subCatList = restTemplate.postForObject(Constants.url + "getSubCateListByCatId", map1, List.class);
 				String[] yrs = year.split("-"); // returns an array with the 2 parts
 
 				MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 
 				map.add("fromYear", yrs[0]);
 				map.add("toYear", yrs[1]);
-				map.add("catId", catId);
+
+				map.add("subCatId", subCatId);
 
 				SalesReturnItemDaoList[] salesReturnValueReportListRes = restTemplate.postForObject(
 						Constants.url + "getSalesReturnValueItemReport", map, SalesReturnItemDaoList[].class);
@@ -80,14 +88,14 @@ public class SaleItemReportController {
 
 				map = new LinkedMultiValueMap<String, String>();
 
-				map.add("catId", catId);
+				map.add("subCatId", subCatId);
 
-				allItemsListResponse = restTemplate.postForObject(Constants.url + "getItemByCategoryId", map,
+				allItemsListResponse = restTemplate.postForObject(Constants.url + "getItemBySubCatId", map,
 						GetItemByCatIdList.class);
- 
+
 				List<GetItemByCatId> itemsList = new ArrayList<GetItemByCatId>();
 				itemsList = allItemsListResponse.getGetItemByCatId();
-                System.err.println("salesReturnValueReportList"+salesReturnValueReportList.toString());
+				System.err.println("salesReturnValueReportList" + salesReturnValueReportList.toString());
 				LinkedHashMap<Integer, SalesReturnItemDaoList> salesReturnValueReport = new LinkedHashMap<>();
 
 				for (int i = 0; i < salesReturnValueReportList.size(); i++) {
@@ -110,6 +118,8 @@ public class SaleItemReportController {
 
 				model.addObject("salesReturnValueReport", salesReturnValueReport);
 				model.addObject("itemsList", itemsList);
+				model.addObject("subCatList", subCatList);
+				model.addObject("subCatId", subCatId);
 
 				// exportToExcel
 				List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
