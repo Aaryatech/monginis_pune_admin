@@ -6068,7 +6068,59 @@ public class SalesReportController {
 		return model;
 
 	}
+    //-----------------------------------------KG-Wise Report---------------------------------------------
+	@RequestMapping(value = "/showKgWiseReport", method = RequestMethod.GET)
+	public ModelAndView showKgWiseReport(HttpServletRequest request, HttpServletResponse response) {
 
+		ModelAndView model = null;
+		/*HttpSession session = request.getSession();
+
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("showSaleRoyaltyByFr", "showSaleRoyaltyByFr", "1", "0", "0", "0",
+				newModuleList);
+
+		if (view.getError() == true) {
+
+			model = new ModelAndView("accessDenied");
+
+		} else {*/
+			model = new ModelAndView("reports/kgWiseReport");
+
+			// Constants.mainAct =2;
+			// Constants.subAct =20;
+
+			try {
+				ZoneId z = ZoneId.of("Asia/Calcutta");
+				LocalDate date = LocalDate.now(z);
+				DateTimeFormatter formatters = DateTimeFormatter.ofPattern("d-MM-uuuu");
+				todaysDate = date.format(formatters);
+
+				RestTemplate restTemplate = new RestTemplate();
+
+				allFrIdNameList = new AllFrIdNameList();
+				try {
+
+					allFrIdNameList = restTemplate.getForObject(Constants.url + "getAllFrIdName",
+							AllFrIdNameList.class);
+
+				} catch (Exception e) {
+					System.out.println("Exception in getAllFrIdName" + e.getMessage());
+					e.printStackTrace();
+
+				}
+				model.addObject("todaysDate", todaysDate);
+				model.addObject("unSelectedFrList", allFrIdNameList.getFrIdNamesList());
+
+
+			} catch (Exception e) {
+
+				System.out.println("Exc in KG wise Report" + e.getMessage());
+				e.printStackTrace();
+			}
+		//}
+		return model;
+
+	}
 	// ---------------------------------------------------------------------------------------------------
 
 	private Dimension format = PD4Constants.A4;

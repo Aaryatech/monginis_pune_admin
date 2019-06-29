@@ -223,9 +223,9 @@
 																	maxFractionDigits="2" value="${rep.grnQty}" /></td>
 															<td style="text-align: right;"><fmt:formatNumber
 																	type="number" minFractionDigits="2"
-																	maxFractionDigits="2" value="0" /></td>
-															<%-- ${rep.grandTotal-(rep.gvnQty+rep.grnQty)}	<c:set var="grandTotal"
-																value="${grandTotal+rep.grandTotal}" /> --%>
+																	maxFractionDigits="2" value="${rep.grandTotal-(rep.gvnQty+rep.grnQty)}" /></td>
+															 	<c:set var="grandTotal"
+																value="${grandTotal+rep.grandTotal}" /> 
 															<c:set var="grnQty" value="${rep.grnQty+grnQty}" />
 															<c:set var="gvnQty" value="${rep.gvnQty+gvnQty}" />
 														</c:when>

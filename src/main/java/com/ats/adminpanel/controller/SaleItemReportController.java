@@ -84,10 +84,10 @@ public class SaleItemReportController {
 
 				allItemsListResponse = restTemplate.postForObject(Constants.url + "getItemByCategoryId", map,
 						GetItemByCatIdList.class);
-
+ 
 				List<GetItemByCatId> itemsList = new ArrayList<GetItemByCatId>();
 				itemsList = allItemsListResponse.getGetItemByCatId();
-
+                System.err.println("salesReturnValueReportList"+salesReturnValueReportList.toString());
 				LinkedHashMap<Integer, SalesReturnItemDaoList> salesReturnValueReport = new LinkedHashMap<>();
 
 				for (int i = 0; i < salesReturnValueReportList.size(); i++) {
@@ -117,7 +117,7 @@ public class SaleItemReportController {
 				ExportToExcel expoExcel = new ExportToExcel();
 				List<String> rowData = new ArrayList<String>();
 				rowData.add("Sr.");
-				rowData.add("Group Name");
+				rowData.add("Item Name");
 				for (int i = 0; i < salesReturnValueReport.size(); i++) {
 					rowData.add(salesReturnValueReport.get(i).getMonth() + " Gross Sale");
 					rowData.add(salesReturnValueReport.get(i).getMonth() + " GVN Value");
@@ -201,7 +201,7 @@ public class SaleItemReportController {
 				System.err.println("exportToExcelList" + exportToExcelList.toString());
 				HttpSession session = request.getSession();
 				session.setAttribute("exportExcelList", exportToExcelList);
-				session.setAttribute("excelName", "MonthlySalesReturnValueReport");
+				session.setAttribute("excelName", "MonthlySalesReturnItemValueReport");
 
 			}
 
