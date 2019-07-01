@@ -26,7 +26,9 @@ import com.ats.adminpanel.model.GetRouteMgmt;
 import com.ats.adminpanel.model.Info;
 import com.ats.adminpanel.model.RouteMaster;
 import com.ats.adminpanel.model.RouteMgmt;
+import com.ats.adminpanel.model.RouteTime;
 import com.ats.adminpanel.model.accessright.ModuleJson;
+import com.ats.adminpanel.model.logistics.VehicalMaster;
 
 @Controller
 public class RouteMgmtCotroller {
@@ -52,6 +54,20 @@ public class RouteMgmtCotroller {
 
 			model.addObject("routeList", routeList);
 			model.addObject("unSelectedFrList", allFrIdNameList.getFrIdNamesList());
+
+			RouteTime[] routeTimeArray = restTemplate.getForObject(Constants.url + "/getAllRouteMgmtTimeList",
+					RouteTime[].class);
+
+			List<RouteTime> timeList = new ArrayList<RouteTime>(Arrays.asList(routeTimeArray));
+
+			model.addObject("timeList", timeList);
+
+			VehicalMaster[] vehicalMasterArray = restTemplate.getForObject(Constants.url + "/getAllVehicalList",
+					VehicalMaster[].class);
+
+			List<VehicalMaster> vehicleList = new ArrayList<VehicalMaster>(Arrays.asList(vehicalMasterArray));
+
+			model.addObject("vehicleList", vehicleList);
 		} catch (Exception e) {
 			System.out.println("Error in route list display" + e.getMessage());
 			e.printStackTrace();
@@ -69,6 +85,8 @@ public class RouteMgmtCotroller {
 		String acbType = request.getParameter("acbType");
 		int seqNo = Integer.parseInt(request.getParameter("seqNo"));
 		int isSameDay = Integer.parseInt(request.getParameter("isSameDay"));
+		int vehId = Integer.parseInt(request.getParameter("vehId"));
+		int timeRouteId = Integer.parseInt(request.getParameter("timeRouteId"));
 
 		StringBuilder sb = new StringBuilder();
 
@@ -88,6 +106,29 @@ public class RouteMgmtCotroller {
 		save.setRouteName(routeName);
 		save.setSrNo(seqNo);
 		save.setFrIds(frIdList);
+		save.setExInt1(vehId);
+		save.setExInt2(timeRouteId);
+
+		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		map.add("timeRouteId", timeRouteId);
+		RestTemplate restTemplate = new RestTemplate();
+
+		RouteTime time = restTemplate.postForObject("" + Constants.url + "getRouteTimeByTimeRouteId", map,
+				RouteTime.class);
+
+		map = new LinkedMultiValueMap<String, Object>();
+		map.add("vehicalId", vehId);
+
+		VehicalMaster vehicleMaster = restTemplate.postForObject("" + Constants.url + "getVehicalById", map,
+				VehicalMaster.class);
+
+		System.out.println("timeRouteId" + timeRouteId);
+		System.out.println("vehId" + vehId);
+		System.out.println("timetimetimetimetime" + time.toString());
+		System.out.println("vehicleMastervehicleMastervehicleMastervehicleMaster" + vehicleMaster.toString());
+
+		save.setExVar1(vehicleMaster.getVehNo());
+		save.setExVar2(time.getName());
 
 		RouteMgmt routeResponse = rest.postForObject(Constants.url + "/saveRouteManagement", save, RouteMgmt.class);
 		System.out.println(routeResponse.toString());
@@ -141,6 +182,20 @@ public class RouteMgmtCotroller {
 			model.addObject("unSelectedFrList", allFrIdNameList.getFrIdNamesList());
 			model.addObject("route", route);
 
+			RouteTime[] routeTimeArray = restTemplate.getForObject(Constants.url + "/getAllRouteMgmtTimeList",
+					RouteTime[].class);
+
+			List<RouteTime> timeList = new ArrayList<RouteTime>(Arrays.asList(routeTimeArray));
+
+			model.addObject("timeList", timeList);
+
+			VehicalMaster[] vehicalMasterArray = restTemplate.getForObject(Constants.url + "/getAllVehicalList",
+					VehicalMaster[].class);
+
+			List<VehicalMaster> vehicleList = new ArrayList<VehicalMaster>(Arrays.asList(vehicalMasterArray));
+
+			model.addObject("vehicleList", vehicleList);
+
 			List<Integer> frIdList = Stream.of(route.getFrIds().split(",")).map(Integer::parseInt)
 					.collect(Collectors.toList());
 
@@ -163,6 +218,8 @@ public class RouteMgmtCotroller {
 		String acbType = request.getParameter("acbType");
 		int seqNo = Integer.parseInt(request.getParameter("seqNo"));
 		int isSameDay = Integer.parseInt(request.getParameter("isSameDay"));
+		int vehId = Integer.parseInt(request.getParameter("vehId"));
+		int timeRouteId = Integer.parseInt(request.getParameter("timeRouteId"));
 
 		StringBuilder sb = new StringBuilder();
 
@@ -181,6 +238,29 @@ public class RouteMgmtCotroller {
 		route.setRouteName(routeName);
 		route.setSrNo(seqNo);
 		route.setFrIds(frIdList);
+		route.setExInt1(vehId);
+		route.setExInt2(timeRouteId);
+
+		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		map.add("timeRouteId", timeRouteId);
+		RestTemplate restTemplate = new RestTemplate();
+
+		RouteTime time = restTemplate.postForObject("" + Constants.url + "getRouteTimeByTimeRouteId", map,
+				RouteTime.class);
+
+		map = new LinkedMultiValueMap<String, Object>();
+		map.add("vehicalId", vehId);
+
+		VehicalMaster vehicleMaster = restTemplate.postForObject("" + Constants.url + "getVehicalById", map,
+				VehicalMaster.class);
+
+		System.out.println("timeRouteId" + timeRouteId);
+		System.out.println("vehId" + vehId);
+		System.out.println("timetimetimetimetime" + time.toString());
+		System.out.println("vehicleMastervehicleMastervehicleMastervehicleMaster" + vehicleMaster.toString());
+
+		route.setExVar2(time.getName());
+		route.setExVar1(vehicleMaster.getVehNo());
 
 		RouteMgmt routeResponse = rest.postForObject(Constants.url + "/saveRouteManagement", route, RouteMgmt.class);
 		System.out.println(routeResponse.toString());

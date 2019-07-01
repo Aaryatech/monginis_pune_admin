@@ -128,6 +128,48 @@
 									</div>
 								</div>
 
+
+
+								<div class="form-group">
+									<label class="col-sm-3 col-lg-2 control-label">Select
+										Vehicle</label>
+									<div class="col-sm-3 col-lg-3">
+
+										<select data-placeholder="SELECT Vehicle"
+											class="form-control chosen" tabindex="6" id="vehId"
+											name="vehId">
+
+											<option value="-1"></option>
+
+											<c:forEach items="${vehicleList}" var="vehicle"
+												varStatus="count">
+												<option value="${vehicle.vehId}"><c:out
+														value="${vehicle.vehNo}" /></option>
+											</c:forEach>
+										</select>
+
+									</div>
+
+									<label class="col-sm-3 col-lg-2 control-label">Select
+										Time</label>
+									<div class="col-sm-6 col-lg-4">
+
+										<select data-placeholder="SELECT Time"
+											class="form-control chosen" tabindex="6" id="timeRouteId"
+											name="timeRouteId">
+
+											<option value="-1"></option>
+
+											<c:forEach items="${timeList}" var="time" varStatus="count">
+												<option value="${time.timeRouteId}"><c:out
+														value="${time.name}" /></option>
+											</c:forEach>
+										</select>
+
+									</div>
+								</div>
+
+
 								<div class="form-group">
 									<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2">
 										<button type="submit" class="btn btn-primary"
