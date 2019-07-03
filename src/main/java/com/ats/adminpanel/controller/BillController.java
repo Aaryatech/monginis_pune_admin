@@ -62,15 +62,18 @@ import com.ats.adminpanel.commons.Constants;
 import com.ats.adminpanel.commons.DateConvertor;
 import com.ats.adminpanel.model.AllFrIdName;
 import com.ats.adminpanel.model.AllFrIdNameList;
+import com.ats.adminpanel.model.AllMenus;
 import com.ats.adminpanel.model.AllRoutesListResponse;
 import com.ats.adminpanel.model.ExportToExcel;
 import com.ats.adminpanel.model.GenerateBill;
 import com.ats.adminpanel.model.GenerateBillList;
+import com.ats.adminpanel.model.GetFranchiseeList;
 import com.ats.adminpanel.model.GetSellBillDetail;
 import com.ats.adminpanel.model.GetSellBillHeader;
 import com.ats.adminpanel.model.HsnwiseBillExcelSummary;
 import com.ats.adminpanel.model.Info;
 import com.ats.adminpanel.model.Route;
+import com.ats.adminpanel.model.RouteMgmt;
 import com.ats.adminpanel.model.SalesVoucherList;
 import com.ats.adminpanel.model.SectionMaster;
 import com.ats.adminpanel.model.RawMaterial.GetItemSfHeader;
@@ -188,6 +191,10 @@ public class BillController {
 
 		int settingValue = 0;
 		String invoiceNo = null;
+		//-----------------------Added on 1 July----------------------------------
+		String vehNo=request.getParameter("vehNo");
+		String billTime=request.getParameter("time");
+		//------------------------------------------------------------------------
 
 		RestTemplate restTemplate = new RestTemplate();
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
@@ -227,6 +234,10 @@ public class BillController {
 			for (int i = 0; i < frIdList.size(); i++) {
 
 				PostBillHeader header = new PostBillHeader();
+				header.setVehNo(vehNo);
+				header.setBillTime(billTime);
+				header.setExVarchar1("-");
+				header.setExVarchar2("-");
 				// System.out.println("Invoice No= " + invoiceNo);
 				int frId = frIdList.get(i);
 
@@ -658,7 +669,7 @@ public class BillController {
 
 			// route-wise billing
 
-			if (!routeId.equalsIgnoreCase("0")) {
+		/* commented on 2july19	if (!routeId.equalsIgnoreCase("0")) {
 
 				MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 
@@ -684,7 +695,7 @@ public class BillController {
 				selectedFr = strFrIdRouteWise.substring(0, strFrIdRouteWise.length() - 1);
 				System.out.println("fr Id Route WISE = " + selectedFr);
 
-			} // end of if
+			} */// end of if
 
 			// end of route wise billing
 
@@ -1989,6 +2000,12 @@ public class BillController {
 						billPrint.setPartyName(billHeadersListForPrint.get(i).getPartyName());// new
 						billPrint.setPartyAddress(billHeadersListForPrint.get(i).getPartyAddress());// new
 						billPrint.setPartyGstin(billHeadersListForPrint.get(i).getPartyGstin());// new
+						
+						billPrint.setBillTime(billHeadersListForPrint.get(i).getBillTime());// new on 2july
+						billPrint.setVehNo(billHeadersListForPrint.get(i).getVehNo());// new on 2july
+						billPrint.setExVarchar1(billHeadersListForPrint.get(i).getExVarchar1());// new on 2july
+						billPrint.setExVarchar2(billHeadersListForPrint.get(i).getExVarchar2());// new on 2july
+						
 						billPrint.setCompany(billHeadersListForPrint.get(i).getCompany());
 						billDetails.add(billDetailsListForPrint.get(j));
 
@@ -2364,6 +2381,10 @@ public class BillController {
 					postBillHeader.setPartyName(billHeadersList.get(j).getPartyName());
 					postBillHeader.setPartyGstin(billHeadersList.get(j).getPartyGstin());
 					postBillHeader.setPartyAddress(billHeadersList.get(j).getPartyAddress());
+					postBillHeader.setVehNo(billHeadersList.get(j).getVehNo());//ex on 2 july
+					postBillHeader.setBillTime(billHeadersList.get(j).getBillTime());//ex on 2 july
+					postBillHeader.setExVarchar1(billHeadersList.get(j).getExVarchar1());//ex on 2 july
+					postBillHeader.setExVarchar2(billHeadersList.get(j).getExVarchar2());//ex on 2 july
 					postBillHeader.setBillNo(billHeadersList.get(j).getBillNo());
 					postBillHeader.setDelStatus(0);
 					postBillHeader.setFrCode(billHeadersList.get(j).getFrCode());
@@ -2535,7 +2556,75 @@ public class BillController {
 
 		return model;
 	}
+	@RequestMapping(value = "/getRouteListByDelType", method = RequestMethod.GET)
+	@ResponseBody
+	public List<RouteMgmt> getRouteListByDelType(HttpServletRequest request, HttpServletResponse response) {
 
+		List<RouteMgmt> routeList=new ArrayList<>();
+
+		try {
+			int delType = Integer.parseInt(request.getParameter("delType"));
+			
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+			map.add("isSameDay", delType);
+			RestTemplate restTemplate = new RestTemplate();
+
+			routeList= restTemplate.postForObject(Constants.url + "/getAllRouteMgmtListByDelType", map,
+					List.class);
+			System.out.println("menuList" + menuList.toString());
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+
+		return routeList;
+
+	}
+	
+	
+	@RequestMapping(value = "/getFrListByRouteId", method = RequestMethod.GET)
+	@ResponseBody
+	public List<GetFranchiseeList> getFrListByRouteId(HttpServletRequest request, HttpServletResponse response) {
+
+		List<GetFranchiseeList> frList=new ArrayList<>();
+		try {
+			int routeId = Integer.parseInt(request.getParameter("routeId"));
+			
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+			map.add("routeId", routeId);
+			RestTemplate restTemplate = new RestTemplate();
+
+			frList= restTemplate.postForObject(Constants.url + "/getFranByRouteTrayId", map,
+					List.class);
+			System.out.println("frList" + frList.toString());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return frList;
+	}
+	@RequestMapping(value = "/getRouteMgmtByRouteId", method = RequestMethod.GET)
+	@ResponseBody
+	public RouteMgmt getRouteMgmtByRouteId(HttpServletRequest request, HttpServletResponse response) {
+
+		RouteMgmt routeResponse=new RouteMgmt();
+		try {
+			int routeId = Integer.parseInt(request.getParameter("routeId"));
+			
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+			map.add("routeTrayId", routeId);
+			
+			RestTemplate restTemplate = new RestTemplate();
+			routeResponse = restTemplate.postForObject("" + Constants.url + "getRouteByRouteDetailId", map, RouteMgmt.class);
+			System.out.println("RouteResponse" + routeResponse.toString());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return routeResponse;
+	}
+	
 	/*
 	 * @RequestMapping(value = "/showBillPdf", method = RequestMethod.GET) public
 	 * ModelAndView showBillPdf(HttpServletRequest request, HttpServletResponse

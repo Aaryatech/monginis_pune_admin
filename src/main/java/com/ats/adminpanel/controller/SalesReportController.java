@@ -28,6 +28,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -58,6 +59,7 @@ import org.zefer.pd4ml.PD4PageMark;
 
 import com.ats.adminpanel.commons.AccessControll;
 import com.ats.adminpanel.commons.Constants;
+import com.ats.adminpanel.commons.DateConvertor;
 import com.ats.adminpanel.model.AllFrIdName;
 import com.ats.adminpanel.model.AllFrIdNameList;
 import com.ats.adminpanel.model.AllRoutesListResponse;
@@ -70,6 +72,8 @@ import com.ats.adminpanel.model.PDispatchReport;
 import com.ats.adminpanel.model.PDispatchReportList;
 import com.ats.adminpanel.model.POrder;
 import com.ats.adminpanel.model.Route;
+import com.ats.adminpanel.model.SpKgSummaryDao;
+import com.ats.adminpanel.model.SpKgSummaryDaoResponse;
 import com.ats.adminpanel.model.Tax1Report;
 import com.ats.adminpanel.model.Tax2Report;
 import com.ats.adminpanel.model.accessright.ModuleJson;
@@ -6108,9 +6112,19 @@ public class SalesReportController {
 					e.printStackTrace();
 
 				}
+				StringBuilder sbFrId = new StringBuilder();
+				for (int i = 0; i < allFrIdNameList.getFrIdNamesList().size(); i++) {
+
+					sbFrId = sbFrId.append(allFrIdNameList.getFrIdNamesList().get(i).getFrId() + ",");
+
+				}
+
+				String strFrId = sbFrId.toString();
+				strFrId = strFrId.substring(0, strFrId.length() - 1);
+				System.out.println("fr Id  = " + strFrId);
 				model.addObject("todaysDate", todaysDate);
 				model.addObject("unSelectedFrList", allFrIdNameList.getFrIdNamesList());
-
+                model.addObject("frId", strFrId);
 
 			} catch (Exception e) {
 
@@ -6120,6 +6134,45 @@ public class SalesReportController {
 		//}
 		return model;
 
+	}
+	//getSpKgWiseList
+	@RequestMapping(value = "/getSpKgWiseList", method = RequestMethod.GET)
+	public @ResponseBody SpKgSummaryDaoResponse getSpKgWiseList(HttpServletRequest request,
+			HttpServletResponse response) {
+		
+		String fromDate = "";
+		String toDate = "";
+		SpKgSummaryDaoResponse spKgSummaryDaoResponse=new SpKgSummaryDaoResponse();
+		List<SpKgSummaryDao> spKgSummaryDaoList=null;
+		try {
+			String selectedFr = request.getParameter("fr_id_list");
+			fromDate = request.getParameter("fromDate");
+			toDate = request.getParameter("toDate");
+			selectedFr = selectedFr.substring(1, selectedFr.length() - 1);
+			selectedFr = selectedFr.replaceAll("\"", "");
+
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			RestTemplate restTemplate = new RestTemplate();
+			map.add("frId", selectedFr);
+			map.add("fromDate",DateConvertor.convertToYMD(fromDate));
+			map.add("toDate", DateConvertor.convertToYMD(toDate));
+			
+			SpKgSummaryDao[] spKgSummaryDaoRes = restTemplate.postForObject(
+					Constants.url + "getSpKgSummaryReport", map, SpKgSummaryDao[].class);
+
+			 spKgSummaryDaoList = new ArrayList<SpKgSummaryDao>(Arrays.asList(spKgSummaryDaoRes));
+			 TreeSet<Float> kgList= new TreeSet<Float>(); 
+			 for(SpKgSummaryDao spKgSummaryDao:spKgSummaryDaoList)
+			 {
+				 kgList.add(spKgSummaryDao.getSpSelectedWeight());
+			 }
+			 spKgSummaryDaoResponse.setKgList(kgList);
+			 spKgSummaryDaoResponse.setSummaryDaoList(spKgSummaryDaoList);
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		}
+		return spKgSummaryDaoResponse;
 	}
 	// ---------------------------------------------------------------------------------------------------
 

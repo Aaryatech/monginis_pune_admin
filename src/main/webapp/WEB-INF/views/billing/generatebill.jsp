@@ -11,6 +11,10 @@
 
 
 <c:url var="getMenuListBySectionId" value="/getMenuListBySectionId"></c:url>
+<c:url var="getRouteListByDelType" value="/getRouteListByDelType"></c:url>
+<c:url var="getFrListByRouteId" value="/getFrListByRouteId"></c:url>
+<c:url var="getRouteMgmtByRouteId" value="/getRouteMgmtByRouteId"></c:url>
+
 	<c:url var="getBillList" value="/generateNewBill"></c:url>
 
 	<!-- BEGIN Sidebar -->
@@ -147,24 +151,41 @@
  -->
 				<div class="row">
 					<div class="form-group">
-						<label class="col-sm-3 col-lg-2 control-label">Route
+					<label class="col-sm-3 col-lg-2 control-label">Delivery
 							</label>
-						<div class="col-sm-6 col-lg-4 controls">
-							<select data-placeholder="Select Route"
-								class="form-control chosen" name="selectRoute" id="selectRoute"
-								onchange="disableFr()">
-								<option value="0">Select Route</option>
-								<c:forEach items="${routeList}" var="route" varStatus="count">
-									<option value="${route.routeId}"><c:out value="${route.routeName}"/> </option>
-
-								</c:forEach>
+						<div class="col-sm-6 col-lg-2 controls">
+							<select data-placeholder="Select Delivery"
+								class="form-control chosen" name="delType" id="delType"
+								onchange="onDeliveryChange(this.value)">
+								<option value="">Select Delivery</option>
+								<option value="1"><c:out value="First Delivery"/> </option>
+								<option value="2"><c:out value="Second Delivery"/> </option>
 							</select>
 							
 						</div>
+						<label class="col-sm-3 col-lg-1 control-label">Route
+							</label>
+						<div class="col-sm-6 col-lg-3 controls">
+							<select data-placeholder="Select Route"
+								class="form-control chosen" name="selectRoute" id="selectRoute"
+								onchange="onRouteChange(this.value)"><!-- disableFr() -->
+								<option value="0">Select Route</option>
+								<%-- <c:forEach items="${routeList}" var="route" varStatus="count">
+									<option value="${route.routeId}"><c:out value="${route.routeName}"/> </option>
 
-						<label class="col-sm-3 col-lg-1 control-label"><b>OR</b> 
+								</c:forEach> --%>
+							</select>
+							
+						</div>
+						
+						
+						</div>
+						</div><br><br>
+	<div class="row">
+					<div class="form-group">
+						<label class="col-sm-3 col-lg-2 control-label">Franchisee
 							 </label>
-						<div class="col-sm-6 col-lg-4">
+						<div class="col-sm-6 col-lg-8">
 
 							<select data-placeholder="Choose Franchisee"
 								class="form-control chosen" multiple="multiple" tabindex="6"
@@ -172,10 +193,10 @@
 
 								<option value="-1"><c:out value="All"/></option>
 
-								<c:forEach items="${unSelectedFrList}" var="fr"
+							<%-- 	<c:forEach items="${unSelectedFrList}" var="fr"
 									varStatus="count">
 									<option value="${fr.frId}"><c:out value="${fr.frName}"/></option>
-								</c:forEach>
+								</c:forEach> --%>
 							</select>
 
 						</div>
@@ -272,7 +293,17 @@
 
 
 					<div class="row">
-						<div class="col-md-offset-6 col-md-6">
+					<label class="col-sm-3 col-lg-1 control-label">Veh-No:
+							</label>
+						<div class="col-sm-6 col-lg-2 controls">
+						<input type="text" name="vehNo" class="form-control" id="vehNo"/>
+						</div>
+						<label class="col-sm-3 col-lg-1 control-label">Time
+							</label>
+						<div class="col-sm-6 col-lg-2 controls">
+						<input type="text" name="time" id="time" class="form-control" />
+						</div>
+						<div class="col-md-offset-3 col-md-1">
 <!-- 							<button class="btn btn-info pull-right">Submit & PDF</button>
  -->
 							<%-- <a href="${pageContext.request.contextPath}/pdf?url=showBillPdf"
@@ -289,7 +320,7 @@
 	<!-- END Main Content -->
 
 	<footer>
-	<p>2018 © Monginis.</p>
+	<p>2019 © Monginis.</p>
 	</footer>
 
 	<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
@@ -726,6 +757,60 @@ function disableRoute(){
 }
 
 </script>
+<script type="text/javascript">
+function onDeliveryChange(delType)
+{
+	$.getJSON('${getRouteListByDelType}', {
+		
+		delType : delType,
+		ajax : 'true'
+	}, function(data) {
+
+		var len = data.length;
+		
+		$('#selectRoute')
+	    .find('option')
+	    .remove()
+	    .end()
+	    $("#selectRoute").append($("<option value='0'>Select Route</option>"));
+		for ( var i = 0; i < len; i++) {
+            $("#selectRoute").append($("<option></option>").attr("value", data[i].routeTrayId).text(data[i].routeName));
+		}
+		   $("#selectRoute").trigger("chosen:updated");
+	});
+	
+}
+function onRouteChange(routeId)
+{
+	$.getJSON('${getRouteMgmtByRouteId}', {
+		routeId : routeId,
+		ajax : 'true'
+	}, function(data) {
+		document.getElementById("vehNo").value=data.exVar1;
+		document.getElementById("time").value=data.exVar2;
+		
+	});
+$.getJSON('${getFrListByRouteId}', {
+		
+	    routeId : routeId,
+		ajax : 'true'
+	}, function(data) {
+
+		var len = data.length;
+		
+		$('#selectFr')
+	    .find('option')
+	    .remove()
+	    .end()
+	    $("#selectFr").append($("<option value='0'>Select Franchisee</option>"));
+		for ( var i = 0; i < len; i++) {
+            $("#selectFr").append($("<option ></option>").attr("value", data[i].frId).text(data[i].frName));
+		}
+		   $("#selectFr").trigger("chosen:updated");
+	});
+	
+}
+</script>
 
 	<!--basic scripts-->
 	<script
@@ -782,5 +867,7 @@ function disableRoute(){
 	<script src="${pageContext.request.contextPath}/resources/js/flaty.js"></script>
 	<script
 		src="${pageContext.request.contextPath}/resources/js/flaty-demo-codes.js"></script>
+		
+
 </body>
 </html>

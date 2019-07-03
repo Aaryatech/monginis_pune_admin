@@ -651,6 +651,11 @@ public class ManualOrderController {
 					header.setPartyName(partyName);
 					header.setPartyGstin(partyGstin);
 					header.setPartyAddress(partyAddress);
+					
+					header.setBillTime("-");
+					header.setVehNo("-");
+					header.setExVarchar1("-");
+					header.setExVarchar2("-");
 					postBillHeaderList.add(header);
 					postBillDataCommon.setPostBillHeadersList(postBillHeaderList);
 

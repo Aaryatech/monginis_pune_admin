@@ -62,6 +62,14 @@ public class PostBillHeader {
 	
 	private String partyAddress;//new for m order
 	
+	private String vehNo;//new on 2 july
+	
+	private String billTime;//new on 2 july
+	
+	private String exVarchar1;//new on 2 july
+	
+	private String exVarchar2;//new on 2 july
+	
 	
 	List<PostBillDetail> postBillDetailsList;
 		
@@ -246,6 +254,39 @@ public class PostBillHeader {
 	public void setIgstSum(float igstSum) {
 		this.igstSum = igstSum;
 	}
+    
+	
+	public String getVehNo() {
+		return vehNo;
+	}
+
+	public void setVehNo(String vehNo) {
+		this.vehNo = vehNo;
+	}
+
+	public String getBillTime() {
+		return billTime;
+	}
+
+	public void setBillTime(String billTime) {
+		this.billTime = billTime;
+	}
+
+	public String getExVarchar1() {
+		return exVarchar1;
+	}
+
+	public void setExVarchar1(String exVarchar1) {
+		this.exVarchar1 = exVarchar1;
+	}
+
+	public String getExVarchar2() {
+		return exVarchar2;
+	}
+
+	public void setExVarchar2(String exVarchar2) {
+		this.exVarchar2 = exVarchar2;
+	}
 
 	@Override
 	public String toString() {
@@ -254,9 +295,9 @@ public class PostBillHeader {
 				+ ", taxableAmt=" + taxableAmt + ", discAmt=" + discAmt + ", totalTax=" + totalTax + ", status="
 				+ status + ", DelStatus=" + DelStatus + ", remark=" + remark + ", time=" + time + ", sgstSum=" + sgstSum
 				+ ", cgstSum=" + cgstSum + ", igstSum=" + igstSum + ", billDateTime=" + billDateTime + ", partyName="
-				+ partyName + ", partyGstin=" + partyGstin + ", partyAddress=" + partyAddress + ", postBillDetailsList="
-				+ postBillDetailsList + "]";
+				+ partyName + ", partyGstin=" + partyGstin + ", partyAddress=" + partyAddress + ", vehNo=" + vehNo
+				+ ", billTime=" + billTime + ", exVarchar1=" + exVarchar1 + ", exVarchar2=" + exVarchar2
+				+ ", postBillDetailsList=" + postBillDetailsList + "]";
 	}
-
-
+    
 }
