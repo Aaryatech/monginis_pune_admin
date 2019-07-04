@@ -47,6 +47,7 @@ import com.ats.adminpanel.model.AllFrIdName;
 import com.ats.adminpanel.model.AllFrIdNameList;
 import com.ats.adminpanel.model.ExportToExcel;
 import com.ats.adminpanel.model.Info;
+import com.ats.adminpanel.model.RouteMgmt;
 import com.ats.adminpanel.model.TrayType;
 import com.ats.adminpanel.model.item.FrItemStockConfigureList;
 import com.ats.adminpanel.model.logistics.GetServHeader;
@@ -2083,6 +2084,7 @@ public class TrayBillController {
 	}
 
 	public AllFrIdNameList allFrIdNameList = new AllFrIdNameList();
+	List<RouteMgmt> routeMgmtList = new ArrayList<>();
 
 	@RequestMapping(value = "/showTrayMgtDetailByFrList", method = RequestMethod.GET)
 	public ModelAndView showTrayMgtDetailByFrList(HttpServletRequest request, HttpServletResponse response) {
@@ -2096,6 +2098,15 @@ public class TrayBillController {
 		todaysDate = date.format(formatters);
 		model.addObject("todaysDate", todaysDate);
 
+		MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+		map.add("isSameDay", 1);
+		RestTemplate restTemplate = new RestTemplate();
+
+		RouteMgmt[] routeMaster = restTemplate.postForObject(Constants.url + "/getAllRouteMgmtListByDelType", map,
+				RouteMgmt[].class);
+		routeMgmtList = new ArrayList<RouteMgmt>(Arrays.asList(routeMaster));
+		System.out.println("routeMgmtListrouteMgmtListrouteMgmtListrouteMgmtList" + routeMgmtList.toString());
+
 		allFrIdNameList = new AllFrIdNameList();
 		try {
 
@@ -2108,6 +2119,7 @@ public class TrayBillController {
 		}
 
 		model.addObject("unSelectedFrList", allFrIdNameList.getFrIdNamesList());
+		model.addObject("routeMgmtList", routeMgmtList);
 
 		return model;
 

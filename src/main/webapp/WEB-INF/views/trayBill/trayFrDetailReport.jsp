@@ -7,6 +7,7 @@
 <body>
 
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
+	<c:url var="getFrListByRouteId" value="/getFrListByRouteId"></c:url>
 
 	<c:url var="serchTrayDetailReportList"
 		value="/serchTrayDetailReportList"></c:url>
@@ -62,20 +63,37 @@
 					<div class="row">
 
 
-						<label class="col-sm-3 col-lg-2 control-label"><b>Select
+						<label class="col-sm-1 col-lg-2 control-label"><b>Select
+								Route</b> </label>
+						<div class="col-sm- col-lg-2">
+
+							<select data-placeholder="Choose Route"
+								class="form-control chosen" tabindex="6" id="routeId"
+								onchange="onRouteChange(this.value)" name="routeId">
+								<c:forEach items="${routeMgmtList}" var="route"
+									varStatus="count">
+									<option value="${route.routeTrayId}"><c:out
+											value="${route.routeName}" /></option>
+								</c:forEach>
+							</select>
+
+						</div>
+
+
+						<label class="col-sm-1 col-lg-2 control-label"><b>Select
 								Franchisee</b> </label>
-						<div class="col-sm- col-lg-4">
+						<div class="col-sm- col-lg-2">
 
 							<select data-placeholder="Choose Franchisee"
 								class="form-control chosen" multiple="multiple" tabindex="6"
 								id="frIdList" name="frIdList">
 
-								<option value="-1"><c:out value="All" /></option>
 
-								<c:forEach items="${unSelectedFrList}" var="fr"
+
+								<%-- <c:forEach items="${unSelectedFrList}" var="fr"
 									varStatus="count">
 									<option value="${fr.frId}"><c:out value="${fr.frName}" /></option>
-								</c:forEach>
+								</c:forEach> --%>
 							</select>
 
 						</div>
@@ -162,16 +180,16 @@
 									<tr bgcolor=#5ab4da style="color: white;">
 										<th>Sr.No.</th>
 										<th>Fr Name</th>
-										<th>OutTray Small</th>
-										<th>OutTray Big</th>
-										<th>OutTray Lead</th>
+										<th>Out Tray</th>
+										<th>Out Boxes</th>
+										<th>Out Lead</th>
 
-										<th>InTray Small</th>
-										<th>InTray Big</th>
-										<th>InTray Lead</th>
+										<th>In Tray</th>
+										<th>In Boxes</th>
+										<th>In Lead</th>
 
-										<th>Balance Small</th>
-										<th>Balance Big</th>
+										<th>Balance Tray</th>
+										<th>Balance Boxes</th>
 										<th>Balance Lead</th>
 
 									</tr>
@@ -203,9 +221,9 @@
 									<tr bgcolor=#5ab4da style="color: white;">
 										<th>Sr.No.</th>
 										<th>Fr Name</th>
-										<th>OutTray Small</th>
-										<th>OutTray Big</th>
-										<th>OutTray Lead</th>
+										<th>Out Tray</th>
+										<th>Out Boxes</th>
+										<th>Out Lead</th>
 
 									</tr>
 								</thead>
@@ -235,10 +253,9 @@
 									<tr style="color: white;">
 										<th>Sr.No.</th>
 										<th>Fr Name</th>
-										<th>InTray Small</th>
-										<th>InTray Big</th>
-										<th>InTray Lead</th>
-
+										<th>In Tray</th>
+										<th>In Boxes</th>
+										<th>In Lead</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -267,9 +284,9 @@
 									<tr style="color: white;">
 										<th>Sr.No.</th>
 										<th>Fr Name</th>
-										<th>BalanceTray Small</th>
-										<th>BalanceTray Big</th>
-										<th>BalanceTray Lead</th>
+										<th>Balance Tray</th>
+										<th>Balance Boxes</th>
+										<th>Balance Lead</th>
 
 									</tr>
 								</thead>
@@ -641,6 +658,33 @@
 	</script>
 
 
+
+
+
+
+	<script type="text/javascript">
+		function onRouteChange(routeId) {
+
+			$.getJSON('${getFrListByRouteId}', {
+
+				routeId : routeId,
+				ajax : 'true'
+			}, function(data) {
+
+				var len = data.length;
+
+				$('#frIdList').find('option').remove().end()
+				$("#frIdList").append($("<option value='-1'> </option>"));
+				for (var i = 0; i < len; i++) {
+					$("#frIdList").append(
+							$("<option ></option>").attr("value", data[i].frId)
+									.text(data[i].frName));
+				}
+				$("#frIdList").trigger("chosen:updated");
+			});
+
+		}
+	</script>
 	<script type="text/javascript">
 		function tableToExcel(table, name, filename) {
 			let uri = 'data:application/vnd.ms-excel;base64,', template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><title></title><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--><meta http-equiv="content-type" content="text/plain; charset=UTF-8"/></head><body><table>{table}</table></body></html>', base64 = function(
