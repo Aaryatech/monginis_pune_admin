@@ -70,6 +70,7 @@
 							<select data-placeholder="Choose Route"
 								class="form-control chosen" tabindex="6" id="routeId"
 								onchange="onRouteChange(this.value)" name="routeId">
+									<option value="">Select Route</option>
 								<c:forEach items="${routeMgmtList}" var="route"
 									varStatus="count">
 									<option value="${route.routeTrayId}"><c:out
