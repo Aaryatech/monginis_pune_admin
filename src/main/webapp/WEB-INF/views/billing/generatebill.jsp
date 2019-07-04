@@ -189,7 +189,7 @@
 
 							<select data-placeholder="Choose Franchisee"
 								class="form-control chosen" multiple="multiple" tabindex="6"
-								id="selectFr" name="selectFr" onchange="disableRoute()">
+								id="selectFr" name="selectFr" onchange="setAllFrSelected(this.value)">
 
 								<option value="-1"><c:out value="All"/></option>
 
@@ -802,13 +802,40 @@ $.getJSON('${getFrListByRouteId}', {
 	    .find('option')
 	    .remove()
 	    .end()
-	    $("#selectFr").append($("<option value='0'>Select Franchisee</option>"));
+	    $("#selectFr").append($("<option value='-1'>All</option>"));
 		for ( var i = 0; i < len; i++) {
             $("#selectFr").append($("<option ></option>").attr("value", data[i].frId).text(data[i].frName));
 		}
 		   $("#selectFr").trigger("chosen:updated");
 	});
 	
+}
+</script>
+<script>
+function setAllFrSelected(frId)
+{
+	if(frId==-1){
+	var routeId = $("#selectRoute").val();
+	$.getJSON('${getFrListByRouteId}', {
+		
+	    routeId : routeId,
+		ajax : 'true'
+	}, function(data) {
+
+		var len = data.length;
+		
+		$('#selectFr')
+	    .find('option')
+	    .remove()
+	    .end()
+	    $("#selectFr").append($("<option value='-1'>All</option>"));
+		for ( var i = 0; i < len; i++) {
+            $("#selectFr").append($("<option selected ></option>").attr("value", data[i].frId).text(data[i].frName));
+		}
+		   $("#selectFr").trigger("chosen:updated");
+	});
+	
+	}
 }
 </script>
 
