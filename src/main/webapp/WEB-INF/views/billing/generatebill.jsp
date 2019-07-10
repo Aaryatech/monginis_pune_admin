@@ -2,19 +2,20 @@
 	pageEncoding="UTF-8"%><%@ taglib
 	uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-	 
 
-	<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
-	<body>
-	
+
+<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
+<body>
+
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 
 
-<c:url var="getMenuListBySectionId" value="/getMenuListBySectionId"></c:url>
-<c:url var="getRouteListByDelType" value="/getRouteListByDelType"></c:url>
-<c:url var="getFrListByRouteId" value="/getFrListByRouteId"></c:url>
-<c:url var="getRouteMgmtByRouteId" value="/getRouteMgmtByRouteId"></c:url>
+	<c:url var="getMenuListBySectionId" value="/getMenuListBySectionId"></c:url>
+	<c:url var="getRouteListByDelType" value="/getRouteListByDelType"></c:url>
+	<c:url var="getFrListByRouteId" value="/getFrListByRouteId"></c:url>
+	<c:url var="getRouteMgmtByRouteId" value="/getRouteMgmtByRouteId"></c:url>
 
+	<c:url var="getFrListofAllFr" value="/getFrListofAllFr"></c:url>
 	<c:url var="getBillList" value="/generateNewBill"></c:url>
 
 	<!-- BEGIN Sidebar -->
@@ -103,27 +104,29 @@
 
 
 				<br>
-				
+
 				<div class="row">
 
 
 					<div class="form-group">
-						<label class="col-sm-3 col-lg-2	 control-label">Select Section</label>
+						<label class="col-sm-3 col-lg-2	 control-label">Select
+							Section</label>
 						<div class="col-sm-6 col-lg-4 controls date_select">
 							<select data-placeholder="Choose Menu"
-								class="form-control chosen"  
-								id="sectionId" name="sectionId" onchange="getMenuListBySectionId()">
+								class="form-control chosen" id="sectionId" name="sectionId"
+								onchange="getMenuListBySectionId()">
 
 								<option value="">Select Section</option>
 
-								<c:forEach items="${sectionList}" var="sectionList" >
-									<option value="${sectionList.sectionId}"><c:out value="${sectionList.sectionName}"/></option>
+								<c:forEach items="${sectionList}" var="sectionList">
+									<option value="${sectionList.sectionId}"><c:out
+											value="${sectionList.sectionName}" /></option>
 								</c:forEach>
 
 
 							</select>
 						</div>
- 
+
 						<label class="col-sm-3 col-lg-2	 control-label">Select
 							Menu</label>
 						<div class="col-sm-6 col-lg-4 controls">
@@ -143,7 +146,7 @@
 						</div>
 					</div>
 
-				</div> 
+				</div>
 
 				<br>
 
@@ -151,60 +154,64 @@
  -->
 				<div class="row">
 					<div class="form-group">
-					<label class="col-sm-3 col-lg-2 control-label">Delivery
-							</label>
+						<label class="col-sm-3 col-lg-2 control-label">Delivery </label>
 						<div class="col-sm-6 col-lg-2 controls">
 							<select data-placeholder="Select Delivery"
 								class="form-control chosen" name="delType" id="delType"
 								onchange="onDeliveryChange(this.value)">
 								<option value="">Select Delivery</option>
-								<option value="1"><c:out value="First Delivery"/> </option>
-								<option value="2"><c:out value="Second Delivery"/> </option>
+								<option value="1"><c:out value="First Delivery" />
+								</option>
+								<option value="2"><c:out value="Second Delivery" />
+								</option>
 							</select>
-							
+
 						</div>
-						<label class="col-sm-3 col-lg-1 control-label">Route
-							</label>
+						<label class="col-sm-3 col-lg-1 control-label">Route </label>
 						<div class="col-sm-6 col-lg-3 controls">
 							<select data-placeholder="Select Route"
 								class="form-control chosen" name="selectRoute" id="selectRoute"
-								onchange="onRouteChange(this.value)"><!-- disableFr() -->
+								onchange="onRouteChange(this.value)">
+								<!-- disableFr() -->
 								<option value="0">Select Route</option>
 								<%-- <c:forEach items="${routeList}" var="route" varStatus="count">
 									<option value="${route.routeId}"><c:out value="${route.routeName}"/> </option>
 
 								</c:forEach> --%>
 							</select>
-							
+
 						</div>
-						
-						
-						</div>
-						</div><br><br>
-	<div class="row">
+
+
+					</div>
+				</div>
+				<br>
+				<br>
+				<div class="row">
 					<div class="form-group">
 						<label class="col-sm-3 col-lg-2 control-label">Franchisee
-							 </label>
+						</label>
 						<div class="col-sm-6 col-lg-8">
 
 							<select data-placeholder="Choose Franchisee"
 								class="form-control chosen" multiple="multiple" tabindex="6"
-								id="selectFr" name="selectFr" onchange="setAllFrSelected(this.value)">
+								id="selectFr" name="selectFr"
+								onchange="setAllFrSelected(this.value)">
 
-								<option value="-1"><c:out value="All"/></option>
+								<option value="-2"><c:out value="All" /></option>
 
-							<%-- 	<c:forEach items="${unSelectedFrList}" var="fr"
+								<c:forEach items="${unSelectedFrList}" var="fr"
 									varStatus="count">
-									<option value="${fr.frId}"><c:out value="${fr.frName}"/></option>
-								</c:forEach> --%>
+									<option value="${fr.frId}"><c:out value="${fr.frName}" /></option>
+								</c:forEach>
 							</select>
 
 						</div>
-				<!--	</div>
+						<!--	</div>
 				 </div> -->
 
 
-				<%-- <div class="form-group col-md-9">
+						<%-- <div class="form-group col-md-9">
 					<label class=" col-md-2">Select
 						Franchise </label>
 					<div class=" col-md-7">
@@ -222,111 +229,110 @@
 
 				</div> --%>
 
-<!-- 
+						<!-- 
 				<br>
 				<div class="row"> -->
-					<div class="col-md-1" >
-						<button class="btn btn-info" onclick="generateNewBill()">Search</button>
+						<div class="col-md-1">
+							<button class="btn btn-info" onclick="generateNewBill()">Search</button>
 
 
+						</div>
 					</div>
+
+
+					<div align="center" id="loader" style="display: none">
+
+						<span>
+							<h4>
+								<font color="#343690">Loading</font>
+							</h4>
+						</span> <span class="l-1"></span> <span class="l-2"></span> <span
+							class="l-3"></span> <span class="l-4"></span> <span class="l-5"></span>
+						<span class="l-6"></span>
+					</div>
+
 				</div>
-
-
-				<div align="center" id="loader" style="display: none">
-
-					<span>
-						<h4>
-							<font color="#343690">Loading</font>
-						</h4>
-					</span> <span class="l-1"></span> <span class="l-2"></span> <span
-						class="l-3"></span> <span class="l-4"></span> <span class="l-5"></span>
-					<span class="l-6"></span>
-				</div>
-
 			</div>
-		</div>
 
 
-		<div class="box">
-			<!-- <div class="box-title">
+			<div class="box">
+				<!-- <div class="box-title">
 				<h3>
 					<i class="fa fa-list-alt"></i>Bill
 				</h3>
 
 			</div>
  -->
-			<form id="submitBillForm"
-				action="${pageContext.request.contextPath}/submitNewBill"
-				method="post" onsubmit="submitBill.disabled = true; return confirm('Do you want to Generate Bill ?');">
-				<div class=" box-content">
-					<div class="row">
-						<div class="col-md-12 table-responsive">
-							<table class="table table-bordered table-striped fill-head "  border="1"
-								style="width: 100%" id="table_grid" >
-								<thead style="background-color: #f3b5db; ">
-									<tr>
-										<th>Sr</th>
-										<th>Franchise</th>
-										<th>Menu</th>
-										<th>Item</th>
-										<th>Order Qty</th>
-										<th>Bill Qty</th>
-										<th>Base Rate</th>
-										<th>Disc %</th>
-										<th>Disc</th>
-										<th>Taxable</th>
-										<th>Tax %</th>
-										<th>SGST Rs</th>
-										<th>CGST Rs</th>
-										<!-- <th>IGST Rs</th> -->
-										<th>Total</th>
-									</tr>
-								</thead>
-								<tbody>
+				<form id="submitBillForm"
+					action="${pageContext.request.contextPath}/submitNewBill"
+					method="post"
+					onsubmit="submitBill.disabled = true; return confirm('Do you want to Generate Bill ?');">
+					<div class=" box-content">
+						<div class="row">
+							<div class="col-md-12 table-responsive">
+								<table class="table table-bordered table-striped fill-head "
+									border="1" style="width: 100%" id="table_grid">
+									<thead style="background-color: #f3b5db;">
+										<tr>
+											<th>Sr</th>
+											<th>Franchise</th>
+											<th>Menu</th>
+											<th>Item</th>
+											<th>Order Qty</th>
+											<th>Bill Qty</th>
+											<th>Base Rate</th>
+											<th>Disc %</th>
+											<th>Disc</th>
+											<th>Taxable</th>
+											<th>Tax %</th>
+											<th>SGST Rs</th>
+											<th>CGST Rs</th>
+											<!-- <th>IGST Rs</th> -->
+											<th>Total</th>
+										</tr>
+									</thead>
+									<tbody>
 
-								</tbody>
-							</table>
+									</tbody>
+								</table>
+							</div>
 						</div>
-					</div>
 
 
 
-					<div class="row">
-					<label class="col-sm-3 col-lg-1 control-label">Veh-No:
-							</label>
-						<div class="col-sm-6 col-lg-2 controls">
-						<input type="text" name="vehNo" class="form-control" id="vehNo"/>
-						</div>
-						<label class="col-sm-3 col-lg-1 control-label">Time
-							</label>
-						<div class="col-sm-6 col-lg-2 controls">
-						<input type="text" name="time" id="time" class="form-control" />
-						</div>
-						<div class="col-md-offset-3 col-md-1">
-<!-- 							<button class="btn btn-info pull-right">Submit & PDF</button>
+						<div class="row">
+							<label class="col-sm-3 col-lg-1 control-label">Veh-No: </label>
+							<div class="col-sm-6 col-lg-2 controls">
+								<input type="text" name="vehNo" class="form-control" id="vehNo" />
+							</div>
+							<label class="col-sm-3 col-lg-1 control-label">Time </label>
+							<div class="col-sm-6 col-lg-2 controls">
+								<input type="text" name="time" id="time" class="form-control" />
+							</div>
+							<div class="col-md-offset-3 col-md-1">
+								<!-- 							<button class="btn btn-info pull-right">Submit & PDF</button>
  -->
-							<%-- <a href="${pageContext.request.contextPath}/pdf?url=showBillPdf"
+								<%-- <a href="${pageContext.request.contextPath}/pdf?url=showBillPdf"
 								target="_blank">PDF</a> --%>
-							<button class="btn btn-info pull-right"
-								style="margin-right: 5px;"  id="submitBill" name="submitBill" disabled="disabled">Submit
-								Bill</button>
+								<button class="btn btn-info pull-right"
+									style="margin-right: 5px;" id="submitBill" name="submitBill"
+									disabled="disabled">Submit Bill</button>
+							</div>
 						</div>
 					</div>
-				</div>
-			</form>
+				</form>
+			</div>
 		</div>
-	</div>
-	<!-- END Main Content -->
+		<!-- END Main Content -->
 
-	<footer>
-	<p>2019 © Monginis.</p>
-	</footer>
+		<footer>
+			<p>2019 © Monginis.</p>
+		</footer>
 
-	<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
-		class="fa fa-chevron-up"></i></a>
+		<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
+			class="fa fa-chevron-up"></i></a>
 
-	<script type="text/javascript">
+		<script type="text/javascript">
 			function submitBill() {
 
 				//submitBillForm.submit();
@@ -337,7 +343,7 @@
 		</script>
 
 
-	<script type="text/javascript">
+		<script type="text/javascript">
 	
 	function getMenuListBySectionId() {
 		
@@ -643,7 +649,7 @@
 		}
 	</script>
 
-	<script type="text/javascript">
+		<script type="text/javascript">
 	function validate() {
 
 		var selectedFr = $("#selectFr").val();
@@ -669,7 +675,7 @@
 	}
 	</script>
 
-	<script type="text/javascript">
+		<script type="text/javascript">
 		function updateTotal(orderId, rate) {
 			
 			var qty= parseFloat($("#billQty" + orderId).val());//alert(qty+"qty");
@@ -717,7 +723,7 @@
 		}
 	</script>
 
-	<script>
+		<script>
 $('.datepicker').datepicker({
     format: {
         /*
@@ -733,7 +739,7 @@ $('.datepicker').datepicker({
 
 </script>
 
-	<script type="text/javascript">
+		<script type="text/javascript">
 
 function disableFr(){
 
@@ -757,7 +763,7 @@ function disableRoute(){
 }
 
 </script>
-<script type="text/javascript">
+		<script type="text/javascript">
 function onDeliveryChange(delType)
 {
 	$.getJSON('${getRouteListByDelType}', {
@@ -811,7 +817,7 @@ $.getJSON('${getFrListByRouteId}', {
 	
 }
 </script>
-<script>
+		<script>
 function setAllFrSelected(frId)
 {
 	if(frId==-1){
@@ -836,65 +842,84 @@ function setAllFrSelected(frId)
 	});
 	
 	}
+	else if(frId==-2){
+		$.getJSON('${getFrListofAllFr}', {
+			 
+			ajax : 'true'
+		}, function(data) {
+
+			var len = data.length;
+			
+			//alert(len);
+			
+			$('#selectFr')
+		    .find('option')
+		    .remove()
+		    .end()
+		    $("#selectFr").append($("<option value='-1'>All</option>"));
+			for ( var i = 0; i < len; i++) {
+	            $("#selectFr").append($("<option selected ></option>").attr("value", data[i].frId).text(data[i].frName));
+			}
+			   $("#selectFr").trigger("chosen:updated");
+		});
+	}
 }
 </script>
 
-	<!--basic scripts-->
-	<script
-		src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-	<script>
+		<!--basic scripts-->
+		<script
+			src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+		<script>
 		window.jQuery
 				|| document
 						.write('<script src="${pageContext.request.contextPath}/resources/assets/jquery/jquery-2.0.3.min.js"><\/script>')
 	</script>
-	<script
-		src="${pageContext.request.contextPath}/resources/assets/bootstrap/js/bootstrap.min.js"></script>
-	<script
-		src="${pageContext.request.contextPath}/resources/assets/jquery-slimscroll/jquery.slimscroll.min.js"></script>
-	<script
-		src="${pageContext.request.contextPath}/resources/assets/jquery-cookie/jquery.cookie.js"></script>
+		<script
+			src="${pageContext.request.contextPath}/resources/assets/bootstrap/js/bootstrap.min.js"></script>
+		<script
+			src="${pageContext.request.contextPath}/resources/assets/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+		<script
+			src="${pageContext.request.contextPath}/resources/assets/jquery-cookie/jquery.cookie.js"></script>
 
-	<!--page specific plugin scripts-->
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/resources/assets/chosen-bootstrap/chosen.jquery.min.js"></script>
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/resources/assets/bootstrap-inputmask/bootstrap-inputmask.min.js"></script>
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/resources/assets/jquery-tags-input/jquery.tagsinput.min.js"></script>
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/resources/assets/jquery-pwstrength/jquery.pwstrength.min.js"></script>
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/resources/assets/bootstrap-fileupload/bootstrap-fileupload.min.js"></script>
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/resources/assets/bootstrap-duallistbox/duallistbox/bootstrap-duallistbox.js"></script>
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/resources/assets/dropzone/downloads/dropzone.min.js"></script>
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/resources/assets/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/resources/assets/clockface/js/clockface.js"></script>
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/resources/assets/bootstrap-colorpicker/js/bootstrap-colorpicker.js"></script>
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/resources/assets/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/resources/assets/bootstrap-daterangepicker/date.js"></script>
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/resources/assets/bootstrap-daterangepicker/daterangepicker.js"></script>
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/resources/assets/bootstrap-switch/static/js/bootstrap-switch.js"></script>
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/resources/assets/bootstrap-wysihtml5/wysihtml5-0.3.0.js"></script>
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/resources/assets/bootstrap-wysihtml5/bootstrap-wysihtml5.js"></script>
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/resources/assets/ckeditor/ckeditor.js"></script>
+		<!--page specific plugin scripts-->
+		<script type="text/javascript"
+			src="${pageContext.request.contextPath}/resources/assets/chosen-bootstrap/chosen.jquery.min.js"></script>
+		<script type="text/javascript"
+			src="${pageContext.request.contextPath}/resources/assets/bootstrap-inputmask/bootstrap-inputmask.min.js"></script>
+		<script type="text/javascript"
+			src="${pageContext.request.contextPath}/resources/assets/jquery-tags-input/jquery.tagsinput.min.js"></script>
+		<script type="text/javascript"
+			src="${pageContext.request.contextPath}/resources/assets/jquery-pwstrength/jquery.pwstrength.min.js"></script>
+		<script type="text/javascript"
+			src="${pageContext.request.contextPath}/resources/assets/bootstrap-fileupload/bootstrap-fileupload.min.js"></script>
+		<script type="text/javascript"
+			src="${pageContext.request.contextPath}/resources/assets/bootstrap-duallistbox/duallistbox/bootstrap-duallistbox.js"></script>
+		<script type="text/javascript"
+			src="${pageContext.request.contextPath}/resources/assets/dropzone/downloads/dropzone.min.js"></script>
+		<script type="text/javascript"
+			src="${pageContext.request.contextPath}/resources/assets/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
+		<script type="text/javascript"
+			src="${pageContext.request.contextPath}/resources/assets/clockface/js/clockface.js"></script>
+		<script type="text/javascript"
+			src="${pageContext.request.contextPath}/resources/assets/bootstrap-colorpicker/js/bootstrap-colorpicker.js"></script>
+		<script type="text/javascript"
+			src="${pageContext.request.contextPath}/resources/assets/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+		<script type="text/javascript"
+			src="${pageContext.request.contextPath}/resources/assets/bootstrap-daterangepicker/date.js"></script>
+		<script type="text/javascript"
+			src="${pageContext.request.contextPath}/resources/assets/bootstrap-daterangepicker/daterangepicker.js"></script>
+		<script type="text/javascript"
+			src="${pageContext.request.contextPath}/resources/assets/bootstrap-switch/static/js/bootstrap-switch.js"></script>
+		<script type="text/javascript"
+			src="${pageContext.request.contextPath}/resources/assets/bootstrap-wysihtml5/wysihtml5-0.3.0.js"></script>
+		<script type="text/javascript"
+			src="${pageContext.request.contextPath}/resources/assets/bootstrap-wysihtml5/bootstrap-wysihtml5.js"></script>
+		<script type="text/javascript"
+			src="${pageContext.request.contextPath}/resources/assets/ckeditor/ckeditor.js"></script>
 
-	<!--flaty scripts-->
-	<script src="${pageContext.request.contextPath}/resources/js/flaty.js"></script>
-	<script
-		src="${pageContext.request.contextPath}/resources/js/flaty-demo-codes.js"></script>
-		
-
+		<!--flaty scripts-->
+		<script src="${pageContext.request.contextPath}/resources/js/flaty.js"></script>
+		<script
+			src="${pageContext.request.contextPath}/resources/js/flaty-demo-codes.js"></script>
 </body>
 </html>
