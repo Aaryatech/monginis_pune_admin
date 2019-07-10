@@ -254,7 +254,7 @@ public class ReportController {
 				rowData.add("" + crNoteRegItemList.get(i).getFrCode());
 				rowData.add("" + crNoteRegItemList.get(i).getCrnDate());
 				rowData.add(" ");
-				rowData.add("27-Maharashtra");
+				rowData.add(""+Constants.STATE);
 				rowData.add("" + roundUp(crnTotal));
 				rowData.add(" ");
 				rowData.add("" + (crNoteRegItemList.get(i).getCgstPer() + crNoteRegItemList.get(i).getSgstPer()));

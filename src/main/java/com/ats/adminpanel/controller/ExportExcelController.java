@@ -374,6 +374,7 @@ public class ExportExcelController {
 		/*
 		 * writeHeaders(wb, sheet); writeHeaders(wb, sheet); writeHeaders(wb, sheet);
 		 */
+		 XSSFCellStyle cellStyle = wb.createCellStyle();
 
 		for (int rowIndex = 0; rowIndex < exportToExcelListNew.size(); rowIndex++) {
 			XSSFRow row = sheet.createRow(rowIndex + 2);
@@ -392,7 +393,6 @@ public class ExportExcelController {
 		        	 try
 		             { 
 		                 // checking valid float using parseInt() method
-		        		 XSSFCellStyle cellStyle = wb.createCellStyle();
 		        		 XSSFDataFormat xssfDataFormat = wb.createDataFormat(); 
 
 		                double value=Double.parseDouble(exportToExcelListNew.get(rowIndex).getRowData().get(j)); 

@@ -181,9 +181,6 @@ public class ManualOrderController {
 					if (franchiseeList.getFrRateCat() == 1) {
 						order.setOrderRate(item.getItemRate1());
 						order.setOrderMrp(item.getItemMrp1());
-					} else if (franchiseeList.getFrRateCat() == 2) {
-						order.setOrderRate(item.getItemRate2());
-						order.setOrderMrp(item.getItemMrp2());
 					} else {
 						order.setOrderRate(item.getItemRate3());
 						order.setOrderMrp(item.getItemMrp3());
@@ -194,9 +191,6 @@ public class ManualOrderController {
 					if (franchiseeList.getFrRateCat() == 1) {
 						order.setOrderRate(item.getItemMrp1());
 						order.setOrderMrp(item.getItemMrp1());
-					} else if (franchiseeList.getFrRateCat() == 2) {
-						order.setOrderRate(item.getItemMrp2());
-						order.setOrderMrp(item.getItemMrp2());
 					} else {
 						order.setOrderRate(item.getItemMrp3());
 						order.setOrderMrp(item.getItemMrp3());
@@ -318,10 +312,7 @@ public class ManualOrderController {
 			if (franchiseeList.getFrRateCat() == 1) {
 				order.setOrderRate(item.getItemRate1());
 				order.setOrderMrp(item.getItemMrp1());
-			} else if (franchiseeList.getFrRateCat() == 2) {
-				order.setOrderRate(item.getItemRate2());
-				order.setOrderMrp(item.getItemMrp2());
-			} else {
+			}  else {
 				order.setOrderRate(item.getItemRate3());
 				order.setOrderMrp(item.getItemMrp3());
 			}

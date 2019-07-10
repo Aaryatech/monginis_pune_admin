@@ -362,8 +362,7 @@ public class ViewMixingController {
 	     }
 
 	     document.open();
-	     Paragraph company = new Paragraph("LUTF FOODS PVT. LTD.\n" + 
-					"Sr No 37, Near Angraj Hotel, Kondhwa, Pune, Maharashtra 411048", f);
+	     Paragraph company = new Paragraph(Constants.FACTORYNAME+"\n"+Constants.FACTORYADDRESS, f);
 	     company.setAlignment(Element.ALIGN_CENTER);
 	     document.add(company);
 	     document.add(new Paragraph(" "));

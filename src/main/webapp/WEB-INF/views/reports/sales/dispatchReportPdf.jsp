@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ page import="com.ats.adminpanel.commons.Constants" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -49,8 +50,8 @@ th {
 </style>
 </head>
 <body onload="myFunction()">
-<h4 align="center">LUTF FOODS PVT. LTD.</h4>
-<p align="center">Sr No 37, Near Angraj Hotel, Kondhwa, Pune, Maharashtra 411048</p>
+<h4 align="center">${Constants.FACTORYNAME}</h4>
+<p align="center">${Constants.FACTORYADDRESS}</p>
 <div align="center"> <h5>Dispatch Sheet &nbsp;&nbsp;&nbsp;&nbsp; Date &nbsp; ${billDate} Route ${routeName}</h5></div>
 
 

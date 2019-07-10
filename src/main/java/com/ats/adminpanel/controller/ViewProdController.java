@@ -939,7 +939,7 @@ public class ViewProdController {
 			}
 
 			document.open();
-			Paragraph company = new Paragraph("LUTF FOODS PVT. LTD.\n", f);
+			Paragraph company = new Paragraph(Constants.FACTORYNAME+"\n", f);
 			company.setAlignment(Element.ALIGN_CENTER);
 			document.add(company);
 

@@ -399,7 +399,7 @@ public class RegCakeAsSpOrderController {
 
 				document.open();
 				Paragraph company = new Paragraph(
-						"LUTF FOODS PVT. LTD.\n" + "Sr No 37, Near Angraj Hotel, Kondhwa, Pune, Maharashtra 411048",
+						Constants.FACTORYNAME+"\n" + Constants.FACTORYADDRESS,
 						f);
 				company.setAlignment(Element.ALIGN_CENTER);
 				document.add(company);

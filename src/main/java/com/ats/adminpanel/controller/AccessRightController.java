@@ -430,8 +430,8 @@ public class AccessRightController {
 		Constants.subAct = 112;
 		ModelAndView model = null;
 		HttpSession session = request.getSession();
-
-		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+        
+		/*List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
 		Info view = AccessControll.checkAccess("showPasswordChange", "showPasswordChange", "1", "0", "0", "0",
 				newModuleList);
 
@@ -439,8 +439,9 @@ public class AccessRightController {
 
 			model = new ModelAndView("accessDenied");
 
-		} else {
+		} else {*/
 			model = new ModelAndView("accessRight/changePass");
+			try {
 			session = request.getSession();
 			UserResponse userResponse = (UserResponse) session.getAttribute("UserDetail");
 
@@ -451,7 +452,10 @@ public class AccessRightController {
 			model.addObject("uname", uname);
 
 			model.addObject("curPass", curPass);
-		}
+		//}
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
 		return model;
 
 	}

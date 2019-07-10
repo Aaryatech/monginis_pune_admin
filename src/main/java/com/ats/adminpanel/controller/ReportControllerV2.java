@@ -751,7 +751,7 @@ public class ReportControllerV2 {
 
 			HttpSession session = request.getSession();
 			session.setAttribute("exportExcelListNew", exportToExcelList);
-			session.setAttribute("excelName", "Sales_Report");
+			session.setAttribute("excelNameNew", "GST Register Report");
 			session.setAttribute("reportNameNew", "GST Register Report By Franchise");
 			session.setAttribute("searchByNew", "From Date: " + fromDate + "  To Date: " + toDate + " ");
 			session.setAttribute("mergeUpto1", "$A$1:$L$1");

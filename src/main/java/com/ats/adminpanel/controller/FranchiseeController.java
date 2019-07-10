@@ -109,7 +109,7 @@ public class FranchiseeController {
 
 		int maxFrIdLenth = String.valueOf(maxFrId).length();
 		maxFrIdLenth = 5 - maxFrIdLenth;
-		StringBuilder frCode = new StringBuilder("LF");
+		StringBuilder frCode = new StringBuilder(""+Constants.CODE);
 
 		for (int i = 0; i < maxFrIdLenth; i++) {
 			String j = "0";
@@ -2519,7 +2519,7 @@ public class FranchiseeController {
 		mav.addObject("frSupList", frSupList.getFrList());
 		mav.addObject("frIdForSupp", frIdForSupp);
 		mav.addObject("isEdit", 0);
-		mav.addObject("state", "MAHARASHTRA");
+		mav.addObject("state", Constants.STATE);
 		frIdForSupp = 0;
 
 		return mav;

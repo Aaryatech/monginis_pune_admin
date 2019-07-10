@@ -1084,7 +1084,7 @@ public class BillController {
 					rowData.add("" + salesVoucherList.getSalesVoucherList().get(i).getFrCode());
 					rowData.add("" + salesVoucherList.getSalesVoucherList().get(i).getPartyName());
 					rowData.add("" + salesVoucherList.getSalesVoucherList().get(i).getGstin());
-					rowData.add("" + salesVoucherList.getSalesVoucherList().get(i).getState());
+					rowData.add("" + Constants.STATE);
 					rowData.add("" + salesVoucherList.getSalesVoucherList().get(i).getCatId());
 					rowData.add("" + salesVoucherList.getSalesVoucherList().get(i).getItemId());
 					rowData.add(salesVoucherList.getSalesVoucherList().get(i).getItemCode());
@@ -1208,7 +1208,7 @@ public class BillController {
 					rowData.add("" + salesExcelListRes.get(i).getInvoiceTotal());
 					rowData.add("" + salesExcelListRes.get(i).getPartyGstin());
 					rowData.add("" + salesExcelListRes.get(i).getCountry());
-					rowData.add("" + salesExcelListRes.get(i).getState());
+					rowData.add("" + Constants.STATE);
 
 					expoExcel.setRowData(rowData);
 					exportToExcelList.add(expoExcel);
@@ -1396,7 +1396,7 @@ public class BillController {
 						rowData.add("" + salesExcelListRes.get(i).getInvoiceTotal());
 						rowData.add("" + salesExcelListRes.get(i).getPartyGstin());
 						rowData.add("" + salesExcelListRes.get(i).getCountry());
-						rowData.add("" + salesExcelListRes.get(i).getState());
+						rowData.add("" + Constants.STATE);
 
 						expoExcel.setRowData(rowData);
 						exportToExcelList.add(expoExcel);

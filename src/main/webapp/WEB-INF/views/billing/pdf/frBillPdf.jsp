@@ -2,6 +2,7 @@
 <%@page contentType="text/html; charset=ISO8859_1"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ page import="java.lang.*"%>
+ <%@ page import="com.ats.adminpanel.commons.Constants" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -93,7 +94,7 @@ page-break-inside: auto !important
 					</p> --%>
 					<p
 						style="color: #000; font-size: 13px; text-align: left; margin: 0px;">Place
-						of supply: &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Maharashtra    &nbsp;&nbsp;&nbsp;&nbsp; Bill Prep Time:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${frDetails.billTime}</p>
+						of supply: &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ${Constants.STATE}    &nbsp;&nbsp;&nbsp;&nbsp; Bill Prep Time:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${frDetails.billTime}</p>
 				</td>
 			</tr>
 			<tr>
@@ -269,7 +270,7 @@ page-break-inside: auto !important
 
 				<td align="center" colspan="5" width="38%"
 					style="border-bottom: 1px solid #313131; border-top: 1px solid #313131; border-left: 1px solid #313131; padding: 10px; color: #000; font-size: 11px;"><p>
-						<b>For LUTF FOODS PVT. LTD.<br></br> <br></br> <br></br>
+						<b>For ----.<br></br> <br></br> <br></br>
 							Authorised Signatory
 						</b>
 					</p></td>
@@ -363,7 +364,7 @@ page-break-inside: auto !important
 					</p>
 					<p
 						style="color: #000; font-size: 13px; text-align: left; margin: 0px;">Place
-						of supply:&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; PUNE&nbsp;&nbsp;&nbsp;&nbsp; Bill Prep Time:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${frDetails.billTime}</p>
+						of supply:&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ${Constants.CITY}&nbsp;&nbsp;&nbsp;&nbsp; Bill Prep Time:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${frDetails.billTime}</p>
 				</td>
 			</tr>
 			<tr>
@@ -855,7 +856,7 @@ page-break-inside: auto !important
 					style="border-bottom: 1px solid #313131; border-top: 1px solid #313131; border-left: 1px solid #313131; padding-top: 4px; color: #000; font-size: 8px;">
 					<p
 						style="color: #000; font-size: 9px; text-align: left; margin: 0px;">&nbsp;&nbsp; Subject
-						to PUNE Jurisdiction
+						to ${Constants.CITY} Jurisdiction
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Receiver's
 						Signature</p>
 				</td>
@@ -921,7 +922,7 @@ duplicate for tranpoter</p>
  
   <tr>
     <td width="50%" colspan="6" style="border-top:1px solid #313131;padding:8px;color:#FFF; font-size:14px;">
-        <p style="color:#000; font-size:13px; text-align:;left;margin:0px;">GSTIIN: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>27AHIPJ7279D1Z3</b>&nbsp;&nbsp;&nbsp;&nbsp;<span> State:&nbsp;27 Maharashtra </span> </p>
+        <p style="color:#000; font-size:13px; text-align:;left;margin:0px;">GSTIIN: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>27AHIPJ7279D1Z3</b>&nbsp;&nbsp;&nbsp;&nbsp;<span> State:&nbsp;27 ${Constants.STATE} </span> </p>
 <!--         <p style="color:#000; font-size:13px; text-align:left;margin:0px;"></p>
  -->        <p style="color:#000; font-size:13px; text-align:left;margin:0px;">Invoice No: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>${frDetails.invoiceNo}</b></p>
         <p style="color:#000; font-size:13px; text-align:left;margin:0px;">Invoice Date: &nbsp;&nbsp;&nbsp;<b>${frDetails.billDate}</b></p>

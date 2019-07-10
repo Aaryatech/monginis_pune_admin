@@ -347,7 +347,7 @@ public class SalesReportController {
 					rowData.add("" + taxReportList.get(i).getBillDate());
 
 					rowData.add("" + finalTotal);
-					rowData.add("27-Maharashtra");
+					rowData.add(""+Constants.STATE);
 					rowData.add("N");
 					rowData.add(" ");
 

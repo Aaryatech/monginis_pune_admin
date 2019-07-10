@@ -3,6 +3,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ page import="com.ats.adminpanel.commons.Constants" %>
+
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
@@ -17,9 +19,9 @@
   <tr>
     <td colspan="2" width="20%" style=" padding:10px;color:#FFF; font-size:15px;">&nbsp;</td>
     <td width="60%" colspan="6" style="border-left:1px solid #313131; padding:5px;color:#000; font-size:15px; text-align:center">
-    <h4 style="color:#000; font-size:16px; text-align:center; margin:0px;">LUTF FOODS PVT. LTD.</h4>
-   <p style="color:#000; font-size:10px; text-align:center;margin:0px;">Factory Add: Sr No 37, Near Angraj Hotel, Kondhwa, Pune, Maharashtra 411048 </p>
-  <p style="color:#000; font-size:10px; text-align:center;margin:0px;">GSTIIN: <b>27AAACL1073F1ZU</b></p>
+    <h4 style="color:#000; font-size:16px; text-align:center; margin:0px;">${Constants.FACTORYNAME}</h4>
+   <p style="color:#000; font-size:10px; text-align:center;margin:0px;">Factory Add: ${Constants.FACTORYADDRESS} </p>
+  <p style="color:#000; font-size:10px; text-align:center;margin:0px;">GSTIIN: <b>${Constants.FACTORYGSTIN}</b></p>
  </td>
     <td colspan="3" width="20%" style="border-left:1px solid #313131; padding:10px;color:#FFF; font-size:15px;">
    	<p style="color:#000; font-size:11px; text-align:center;margin:0px;"> Original for buyer <br />
@@ -117,7 +119,7 @@ duplicate for tranpoter</p>
   
   <tr>
     <td colspan="6"  width="50%" style="border-bottom:1px solid #313131;border-top:1px solid #313131;border-left:1px solid #313131; padding:10px;color:#000; font-size:12px;">
-     <p style="color:#000; font-size:12px; text-align:left;margin:0px;">Subject to : Aurangabad</p>
+     <p style="color:#000; font-size:12px; text-align:left;margin:0px;">Subject to : ${Constants.CITY}</p>
 </td>
     <td align="center" colspan="5" width="38%" style="border-bottom:1px solid #313131;border-top:1px solid #313131;border-left:1px solid #313131; padding:10px;color:#000;font-size:12px;">Authorised Signature</td>
   </tr>

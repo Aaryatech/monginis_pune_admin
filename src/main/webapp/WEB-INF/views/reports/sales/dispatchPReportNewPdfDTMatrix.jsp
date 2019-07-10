@@ -5,6 +5,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ page import="java.util.*"%>
+<%@ page import="com.ats.adminpanel.commons.Constants" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -51,7 +52,7 @@ th {
 </head>
 <body onload="myFunction()">
 	<h4 style="text-align: center; font-weight: bold; font-size: 20px;">
-		<strong>MONGINIS PUNE</strong>
+		<strong>MONGINIS ${Constants.CITY}</strong>
 	</h4>
 
 

@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ page import="com.ats.adminpanel.commons.Constants" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -50,7 +51,7 @@ th {
 </head>
 <body onload="myFunction()">
 <h4 align="center">MONGINIS</h4>
-<p align="center">Pune,Maharashtra</p>
+<p align="center">${Constants.CITY} , ${Constants.STATE}</p>
 <div align="center"> <h5>
 <c:forEach items="${frList}" var="fr" varStatus="count">
 			<c:if test="${fr.frId==frId}">
