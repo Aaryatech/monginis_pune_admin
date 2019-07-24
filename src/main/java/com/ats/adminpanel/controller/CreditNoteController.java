@@ -1,6 +1,7 @@
 package com.ats.adminpanel.controller;
 
 import java.io.BufferedInputStream;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,7 +26,6 @@ import java.util.stream.Stream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.smartcardio.CommandAPDU;
 
 import org.json.CDL;
 import org.springframework.context.annotation.Scope;
@@ -98,19 +98,19 @@ public class CreditNoteController {
 	}
 
 	GetGrnGvnForCreditNoteList getGrnGvnForCreditNoteList;
-	String selectedFr="";
+	String selectedFr = "";
 	List<GetGrnGvnForCreditNote> getGrnGvnForCreditNote;
-	List<FranchiseeList> franchiseeList=null;
-	LinkedHashMap<Integer, GetCreditNoteHeaders> crnHeadersMap =null;
-	LinkedHashMap<Integer, List<GetCrnDetails>> crnDetailsMap =null;
-	
+	List<FranchiseeList> franchiseeList = null;
+	LinkedHashMap<Integer, GetCreditNoteHeaders> crnHeadersMap = null;
+	LinkedHashMap<Integer, List<GetCrnDetails>> crnDetailsMap = null;
+
 	@RequestMapping(value = "/showInsertCreditNote", method = RequestMethod.GET)
 	public ModelAndView showCrediNotePage(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = null;
 		HttpSession session = request.getSession();
 		crnHeadersMap = new LinkedHashMap<Integer, GetCreditNoteHeaders>();
-	    crnDetailsMap = new LinkedHashMap<Integer, List<GetCrnDetails>>();
-	    
+		crnDetailsMap = new LinkedHashMap<Integer, List<GetCrnDetails>>();
+
 		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
 		Info view = AccessControll.checkAccess("showAddNewFranchisee", "showAddNewFranchisee", "1", "0", "0", "0",
 				newModuleList);
@@ -128,13 +128,13 @@ public class CreditNoteController {
 
 		}
 		RestTemplate restTemplate = new RestTemplate();
-		FranchiseeAndMenuList	franchiseeAndMenuList = restTemplate.getForObject(Constants.url + "getFranchiseeAndMenu",
+		FranchiseeAndMenuList franchiseeAndMenuList = restTemplate.getForObject(Constants.url + "getFranchiseeAndMenu",
 				FranchiseeAndMenuList.class);
-		franchiseeList=franchiseeAndMenuList.getAllFranchisee();
+		franchiseeList = franchiseeAndMenuList.getAllFranchisee();
 		StringBuilder allfr = new StringBuilder();
 		for (int i = 0; i < franchiseeList.size(); i++) {
 
-			allfr = allfr.append(franchiseeList.get(i).getFrId()+ ",");
+			allfr = allfr.append(franchiseeList.get(i).getFrId() + ",");
 
 		}
 
@@ -175,28 +175,28 @@ public class CreditNoteController {
 		// Constants.subAct = 72;
 
 		ModelAndView model = new ModelAndView("creditNote/generateCreditNote");
-        int isAllFrSel=0;
+		int isAllFrSel = 0;
 		try {
 			String type = request.getParameter("selectType");
 			String fromdate = request.getParameter("fromdate");
 			String todate = request.getParameter("todate");
 			String[] selectedFranchase = request.getParameterValues("frid");
-			String strselectedFranchase=new String();
-			for(int i=0; i < selectedFranchase.length ; i++) {
-				strselectedFranchase=strselectedFranchase+","+selectedFranchase[i];
+			String strselectedFranchase = new String();
+			for (int i = 0; i < selectedFranchase.length; i++) {
+				strselectedFranchase = strselectedFranchase + "," + selectedFranchase[i];
 			}
-			strselectedFranchase=strselectedFranchase.substring(1, strselectedFranchase.length());
+			strselectedFranchase = strselectedFranchase.substring(1, strselectedFranchase.length());
 			strselectedFranchase = strselectedFranchase.replaceAll("\"", "");
-			
-			System.err.println(strselectedFranchase+"strselectedFranchase");
-			
-			  List<String> list = Arrays.asList(selectedFranchase);
-		        
-		        if(list.contains("-1")){
-		        	isAllFrSel=1;
-		        	strselectedFranchase=selectedFr;
-		        }
-			
+
+			System.err.println(strselectedFranchase + "strselectedFranchase");
+
+			List<String> list = Arrays.asList(selectedFranchase);
+
+			if (list.contains("-1")) {
+				isAllFrSel = 1;
+				strselectedFranchase = selectedFr;
+			}
+
 			RestTemplate restTemplate = new RestTemplate();
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 
@@ -213,7 +213,7 @@ public class CreditNoteController {
 
 			} else {
 				isGrn = 0;
-			
+
 				map.add("isGrn", 0);
 				map.add("fromDate", DateConvertor.convertToYMD(fromdate));
 				map.add("toDate", DateConvertor.convertToYMD(todate));
@@ -234,12 +234,12 @@ public class CreditNoteController {
 			model.addObject("type", type);
 			model.addObject("fromDate", fromdate);
 			model.addObject("toDate", todate);
-			
+
 			List<Integer> frids = Stream.of(strselectedFranchase.split(",")).map(Integer::parseInt)
 					.collect(Collectors.toList());
 			model.addObject("selFranchise", frids);
 			model.addObject("franchiseeList", franchiseeList);
-            model.addObject("isAllFrSel", isAllFrSel);
+			model.addObject("isAllFrSel", isAllFrSel);
 		} catch (Exception e) {
 
 			System.out.println("Error in Getting grngvn for credit details " + e.getMessage());
@@ -271,9 +271,8 @@ public class CreditNoteController {
 			crnExcelList = restTemplate.postForObject(Constants.url + "/getCrnHsnwiseExcelReport", map,
 					CrnHsnwiseExcelReport[].class);
 			crnExcelListRes = new ArrayList<CrnHsnwiseExcelReport>(Arrays.asList(crnExcelList));
-			System.out.println(crnExcelListRes.size()+"crnExcelList " + crnExcelListRes.toString());
-			List<Integer> crnIds = Stream.of(checkboxes.split(",")).map(Integer::parseInt)
-					.collect(Collectors.toList());
+			System.out.println(crnExcelListRes.size() + "crnExcelList " + crnExcelListRes.toString());
+			List<Integer> crnIds = Stream.of(checkboxes.split(",")).map(Integer::parseInt).collect(Collectors.toList());
 			try {
 				List<ExportToExcel> exportToExcelList = new ArrayList<ExportToExcel>();
 
@@ -301,79 +300,72 @@ public class CreditNoteController {
 
 				expoExcel.setRowData(rowData);
 				exportToExcelList.add(expoExcel);
-				
-				for(int l=0;l<crnIds.size();l++)
-				{
-					float docAmt=0;
-					
-					for(int j=0;j<crnExcelListRes.size();j++)
-					{
-						if(crnIds.get(l)==crnExcelListRes.get(j).getCrnId())
-						{
-							docAmt=docAmt+roundUp(crnExcelListRes.get(j).getTaxableAmt() + crnExcelListRes.get(j).getCgstRs()
-									+ crnExcelListRes.get(j).getSgstRs());
+
+				for (int l = 0; l < crnIds.size(); l++) {
+					float docAmt = 0;
+
+					for (int j = 0; j < crnExcelListRes.size(); j++) {
+						if (crnIds.get(l) == crnExcelListRes.get(j).getCrnId()) {
+							docAmt = docAmt + roundUp(crnExcelListRes.get(j).getTaxableAmt()
+									+ crnExcelListRes.get(j).getCgstRs() + crnExcelListRes.get(j).getSgstRs());
 						}
 					}
-					for(int i=0;i<crnExcelListRes.size();i++)
-					{
-						if(crnIds.get(l)==crnExcelListRes.get(i).getCrnId())
-						{
-					expoExcel = new ExportToExcel();
-					rowData = new ArrayList<String>();
-					rowData.add("" + (i + 1));
-					rowData.add("" + crnExcelListRes.get(i).getSupplierInvoiceNo());
-					rowData.add("" + crnExcelListRes.get(i).getSupplierInvoiceDate());
-					rowData.add("" + crnExcelListRes.get(i).getInvoiceNo());
-					rowData.add("" + crnExcelListRes.get(i).getInvoiceDate());
-					rowData.add("" + crnExcelListRes.get(i).getFrName());
-					rowData.add("" + crnExcelListRes.get(i).getItemHsncd());
-					rowData.add("" + roundUp(crnExcelListRes.get(i).getQty()));
-					rowData.add("" + roundUp(crnExcelListRes.get(i).getTaxableAmt()));
-					rowData.add("" + roundUp(crnExcelListRes.get(i).getCgstRs()));
-					rowData.add("" + roundUp(crnExcelListRes.get(i).getSgstRs()));
-					rowData.add("" + roundUp(crnExcelListRes.get(i).getIgstRs()));
-					rowData.add("" + roundUp(crnExcelListRes.get(i).getTaxRate()));
-					rowData.add(roundUp(crnExcelListRes.get(i).getTaxableAmt() + crnExcelListRes.get(i).getCgstRs()
-							+ crnExcelListRes.get(i).getSgstRs()) + "");
-					rowData.add("" + roundUp(docAmt));
-					rowData.add("" + crnExcelListRes.get(i).getFrGstNo());
-					rowData.add("" + crnExcelListRes.get(i).getCountry());
-					rowData.add("" + crnExcelListRes.get(i).getState());
+					for (int i = 0; i < crnExcelListRes.size(); i++) {
+						if (crnIds.get(l) == crnExcelListRes.get(i).getCrnId()) {
+							expoExcel = new ExportToExcel();
+							rowData = new ArrayList<String>();
+							rowData.add("" + (i + 1));
+							rowData.add("" + crnExcelListRes.get(i).getSupplierInvoiceNo());
+							rowData.add("" + crnExcelListRes.get(i).getSupplierInvoiceDate());
+							rowData.add("" + crnExcelListRes.get(i).getInvoiceNo());
+							rowData.add("" + crnExcelListRes.get(i).getInvoiceDate());
+							rowData.add("" + crnExcelListRes.get(i).getFrName());
+							rowData.add("" + crnExcelListRes.get(i).getItemHsncd());
+							rowData.add("" + roundUp(crnExcelListRes.get(i).getQty()));
+							rowData.add("" + roundUp(crnExcelListRes.get(i).getTaxableAmt()));
+							rowData.add("" + roundUp(crnExcelListRes.get(i).getCgstRs()));
+							rowData.add("" + roundUp(crnExcelListRes.get(i).getSgstRs()));
+							rowData.add("" + roundUp(crnExcelListRes.get(i).getIgstRs()));
+							rowData.add("" + roundUp(crnExcelListRes.get(i).getTaxRate()));
+							rowData.add(roundUp(crnExcelListRes.get(i).getTaxableAmt()
+									+ crnExcelListRes.get(i).getCgstRs() + crnExcelListRes.get(i).getSgstRs()) + "");
+							rowData.add("" + roundUp(docAmt));
+							rowData.add("" + crnExcelListRes.get(i).getFrGstNo());
+							rowData.add("" + crnExcelListRes.get(i).getCountry());
+							rowData.add("" + crnExcelListRes.get(i).getState());
 
-					expoExcel.setRowData(rowData);
-					exportToExcelList.add(expoExcel);
+							expoExcel.setRowData(rowData);
+							exportToExcelList.add(expoExcel);
 						}
 					}
 				}
-				
-				
-			/*	for (int i = 0; i < crnExcelListRes.size(); i++) {
-					expoExcel = new ExportToExcel();
-					rowData = new ArrayList<String>();
-					rowData.add("" + (i + 1));
-					rowData.add("" + crnExcelListRes.get(i).getSupplierInvoiceNo());
-					rowData.add("" + crnExcelListRes.get(i).getSupplierInvoiceDate());
-					rowData.add("" + crnExcelListRes.get(i).getInvoiceNo());
-					rowData.add("" + crnExcelListRes.get(i).getInvoiceDate());
-					rowData.add("" + crnExcelListRes.get(i).getFrName());
-					rowData.add("" + crnExcelListRes.get(i).getItemHsncd());
-					rowData.add("" + roundUp(crnExcelListRes.get(i).getQty()));
-					rowData.add("" + roundUp(crnExcelListRes.get(i).getTaxableAmt()));
-					rowData.add("" + roundUp(crnExcelListRes.get(i).getCgstRs()));
-					rowData.add("" + roundUp(crnExcelListRes.get(i).getSgstRs()));
-					rowData.add("" + roundUp(crnExcelListRes.get(i).getIgstRs()));
-					rowData.add("" + roundUp(crnExcelListRes.get(i).getTaxRate()));
-					rowData.add(roundUp(crnExcelListRes.get(i).getTaxableAmt() + crnExcelListRes.get(i).getCgstRs()
-							+ crnExcelListRes.get(i).getSgstRs()) + "");
-					rowData.add("" + roundUp(crnExcelListRes.get(i).getDocumentAmount()));
-					rowData.add("" + crnExcelListRes.get(i).getFrGstNo());
-					rowData.add("" + crnExcelListRes.get(i).getCountry());
-					rowData.add("" + crnExcelListRes.get(i).getState());
 
-					expoExcel.setRowData(rowData);
-					exportToExcelList.add(expoExcel);
-
-				}*/
+				/*
+				 * for (int i = 0; i < crnExcelListRes.size(); i++) { expoExcel = new
+				 * ExportToExcel(); rowData = new ArrayList<String>(); rowData.add("" + (i +
+				 * 1)); rowData.add("" + crnExcelListRes.get(i).getSupplierInvoiceNo());
+				 * rowData.add("" + crnExcelListRes.get(i).getSupplierInvoiceDate());
+				 * rowData.add("" + crnExcelListRes.get(i).getInvoiceNo()); rowData.add("" +
+				 * crnExcelListRes.get(i).getInvoiceDate()); rowData.add("" +
+				 * crnExcelListRes.get(i).getFrName()); rowData.add("" +
+				 * crnExcelListRes.get(i).getItemHsncd()); rowData.add("" +
+				 * roundUp(crnExcelListRes.get(i).getQty())); rowData.add("" +
+				 * roundUp(crnExcelListRes.get(i).getTaxableAmt())); rowData.add("" +
+				 * roundUp(crnExcelListRes.get(i).getCgstRs())); rowData.add("" +
+				 * roundUp(crnExcelListRes.get(i).getSgstRs())); rowData.add("" +
+				 * roundUp(crnExcelListRes.get(i).getIgstRs())); rowData.add("" +
+				 * roundUp(crnExcelListRes.get(i).getTaxRate()));
+				 * rowData.add(roundUp(crnExcelListRes.get(i).getTaxableAmt() +
+				 * crnExcelListRes.get(i).getCgstRs() + crnExcelListRes.get(i).getSgstRs()) +
+				 * ""); rowData.add("" + roundUp(crnExcelListRes.get(i).getDocumentAmount()));
+				 * rowData.add("" + crnExcelListRes.get(i).getFrGstNo()); rowData.add("" +
+				 * crnExcelListRes.get(i).getCountry()); rowData.add("" +
+				 * crnExcelListRes.get(i).getState());
+				 * 
+				 * expoExcel.setRowData(rowData); exportToExcelList.add(expoExcel);
+				 * 
+				 * }
+				 */
 
 				HttpSession session = request.getSession();
 				session.setAttribute("exportExcelList", exportToExcelList);
@@ -393,7 +385,7 @@ public class CreditNoteController {
 	public String insertCreditNote(HttpServletRequest request, HttpServletResponse response) {
 
 		ModelAndView model = new ModelAndView("creditNote/generateCreditNote");
-		//System.err.println("inside insert credit note ");
+		// System.err.println("inside insert credit note ");
 
 		try {
 			String date = request.getParameter("date");
@@ -483,7 +475,7 @@ public class CreditNoteController {
 
 						creditNoteDetail.setIsGrn(creditNote.getIsGrn());
 						creditNoteDetail.setItemId(creditNote.getItemId());
-						creditNoteDetail.setHsnCode(creditNote.getHsnCode());//new on 4june19
+						creditNoteDetail.setHsnCode(creditNote.getHsnCode());// new on 4june19
 						creditNoteDetail.setTaxableAmt(roundUp(creditNote.getAprTaxableAmt()));
 						creditNoteDetail.setTotalTax(roundUp(creditNote.getAprTotalTax()));
 
@@ -503,9 +495,11 @@ public class CreditNoteController {
 
 						creditHeader.setPostCreditNoteDetails(postCreditNoteDetailsListMatched);
 
-						creditHeader.setCrnTaxableAmt(roundUp(creditHeader.getCrnTaxableAmt() + creditNote.getAprTaxableAmt()));
+						creditHeader.setCrnTaxableAmt(
+								roundUp(creditHeader.getCrnTaxableAmt() + creditNote.getAprTaxableAmt()));
 
-						creditHeader.setCrnTotalTax(roundUp(creditHeader.getCrnTotalTax() + creditNote.getAprTotalTax()));
+						creditHeader
+								.setCrnTotalTax(roundUp(creditHeader.getCrnTotalTax() + creditNote.getAprTotalTax()));
 
 						if (creditHeader.getGrnGvnSrNoList() == null) {
 
@@ -526,7 +520,7 @@ public class CreditNoteController {
 
 						creditHeader.setCrnFinalAmt(Math.round((grandTotal)));
 
-						float roundOff = roundUp(grandTotal)-Math.round(grandTotal);
+						float roundOff = roundUp(grandTotal) - Math.round(grandTotal);
 
 						creditHeader.setRoundOff(roundUp(roundOff));
 
@@ -545,10 +539,10 @@ public class CreditNoteController {
 
 					if (isGrn == 1) {
 
-						//System.err.println("Value of isGrn ==1");
+						// System.err.println("Value of isGrn ==1");
 						postCreditHeader.setIsGrn(1);
 					} else {
-						//System.err.println("Value of isGrn ==0");
+						// System.err.println("Value of isGrn ==0");
 						postCreditHeader.setIsGrn(0);
 					}
 
@@ -557,8 +551,10 @@ public class CreditNoteController {
 					java.util.Date udate = sdf1.parse(date);
 					java.sql.Date creditNoteDate = new java.sql.Date(udate.getTime());
 					DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-					Calendar cal = Calendar.getInstance();//prev 
-					//java.sql.Date creditNoteDate = new java.sql.Date(Calendar.getInstance().getTime().getTime());commented on 15april
+					Calendar cal = Calendar.getInstance();// prev
+					// java.sql.Date creditNoteDate = new
+					// java.sql.Date(Calendar.getInstance().getTime().getTime());commented on
+					// 15april
 
 					postCreditHeader.setCreatedDateTime(dateFormat.format(cal.getTime()));
 					postCreditHeader.setCrnDate(creditNoteDate);
@@ -620,7 +616,7 @@ public class CreditNoteController {
 					creditNoteDetail.setItemId(creditNote.getItemId());
 					creditNoteDetail.setTaxableAmt(roundUp(creditNote.getAprTaxableAmt()));
 					creditNoteDetail.setTotalTax(roundUp(creditNote.getAprTotalTax()));
-					creditNoteDetail.setHsnCode(creditNote.getHsnCode());//new on 4june19
+					creditNoteDetail.setHsnCode(creditNote.getHsnCode());// new on 4june19
 					// newly added
 
 					creditNoteDetail.setRefInvoiceNo(creditNote.getInvoiceNo());
@@ -928,19 +924,19 @@ public class CreditNoteController {
 					rowData.add("" + report.getFrGstNo());
 					rowData.add("" + report.getCrnTaxableAmt());
 					if (report.getIsSameState() == 1) {
-						rowData.add(roundUp(report.getSgstSum())+"");
-						rowData.add(roundUp(report.getCgstSum())+"");
+						rowData.add(roundUp(report.getSgstSum()) + "");
+						rowData.add(roundUp(report.getCgstSum()) + "");
 						rowData.add("" + 0);
 
 					} else {
 
 						rowData.add("" + 0);
 						rowData.add("" + 0);
-						rowData.add(roundUp(report.getIgstSum())+"");
+						rowData.add(roundUp(report.getIgstSum()) + "");
 
 					}
-					rowData.add(roundUp(report.getCrnTotalTax())+"");
-					rowData.add(roundUp(report.getCrnGrandTotal())+"");
+					rowData.add(roundUp(report.getCrnTotalTax()) + "");
+					rowData.add(roundUp(report.getCrnGrandTotal()) + "");
 
 					expoExcel.setRowData(rowData);
 					exportToExcelList.add(expoExcel);
@@ -1040,66 +1036,66 @@ public class CreditNoteController {
 		ModelAndView model = new ModelAndView("creditNote/crnDetails");
 		System.out.println("In detail Page");
 		try {
-			
-		String fromDate=request.getParameter("from_date");
-		String toDate=request.getParameter("to_date");
-		String selectFr=request.getParameter("selectFr");
-		
-		GetCreditNoteHeaders creditNoteHeaders = new GetCreditNoteHeaders();
-		RestTemplate restTemplate = new RestTemplate();
 
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			String fromDate = request.getParameter("from_date");
+			String toDate = request.getParameter("to_date");
+			String selectFr = request.getParameter("selectFr");
 
-		map.add("crnId", crnId);
-		crnDetailResponse = restTemplate.postForObject(Constants.url + "getCrnDetails", map, GetCrnDetailsList.class);
+			GetCreditNoteHeaders creditNoteHeaders = new GetCreditNoteHeaders();
+			RestTemplate restTemplate = new RestTemplate();
 
-		crnDetailList = crnDetailResponse.getCrnDetails();
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 
-		System.out.println("crn Detail List******** " + crnDetailList);
-		for (int i = 0; i < creditHeaderList.size(); i++) {
-			if (crnId == creditHeaderList.get(i).getCrnId()) {
-				creditNoteHeaders = creditHeaderList.get(i);
-				break;
+			map.add("crnId", crnId);
+			crnDetailResponse = restTemplate.postForObject(Constants.url + "getCrnDetails", map,
+					GetCrnDetailsList.class);
+
+			crnDetailList = crnDetailResponse.getCrnDetails();
+
+			System.out.println("crn Detail List******** " + crnDetailList);
+			for (int i = 0; i < creditHeaderList.size(); i++) {
+				if (crnId == creditHeaderList.get(i).getCrnId()) {
+					creditNoteHeaders = creditHeaderList.get(i);
+					break;
+				}
 			}
-		}
-		crnHeadersMap.put(crnId, creditNoteHeaders);
-		crnDetailsMap.put(crnId, crnDetailList);//added crn details
-		System.err.println(crnDetailsMap.toString()+"crnDetailsMap");
-		model.addObject("crnDetailList", crnDetailList);
-		model.addObject("creditNoteHeaders", creditNoteHeaders);
-		model.addObject("fromDate", fromDate);
-		model.addObject("toDate", toDate);
-		model.addObject("selectFr", selectFr);
-		}
-		catch (Exception e) {
+			crnHeadersMap.put(crnId, creditNoteHeaders);
+			crnDetailsMap.put(crnId, crnDetailList);// added crn details
+			System.err.println(crnDetailsMap.toString() + "crnDetailsMap");
+			model.addObject("crnDetailList", crnDetailList);
+			model.addObject("creditNoteHeaders", creditNoteHeaders);
+			model.addObject("fromDate", fromDate);
+			model.addObject("toDate", toDate);
+			model.addObject("selectFr", selectFr);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return model;
 	}
-	
+
 	@RequestMapping(value = "/updateCreditNote", method = RequestMethod.POST)
 	public String updateCreditNote(HttpServletRequest request, HttpServletResponse response) {
 
 		ModelAndView model = new ModelAndView("creditNote/crnDetails");
 		RestTemplate restTemplate = new RestTemplate();
 		int crnId = 0;
-		
-		String fromDate=request.getParameter("fromDate");
-		String toDate=request.getParameter("toDate");
+
+		String fromDate = request.getParameter("fromDate");
+		String toDate = request.getParameter("toDate");
 		try {
-			
-			
+
 			String date = request.getParameter("date");
-			 crnId = Integer.parseInt(request.getParameter("crnId"));
-			
+			crnId = Integer.parseInt(request.getParameter("crnId"));
+
 			HttpSession session = request.getSession();
 			UserResponse userResponse = (UserResponse) session.getAttribute("UserDetail");
 			int userId = userResponse.getUser().getId();
-			
-			GetCreditNoteHeaders crnHeaderMap=crnHeadersMap.get(crnId);
-			List<GetCrnDetails> crnDetailListMap=crnDetailsMap.get(crnId);
-			//List<PostCreditNoteDetails> postCreditNoteDetailsListMatched=new ArrayList<>();
-			
+
+			GetCreditNoteHeaders crnHeaderMap = crnHeadersMap.get(crnId);
+			List<GetCrnDetails> crnDetailListMap = crnDetailsMap.get(crnId);
+			// List<PostCreditNoteDetails> postCreditNoteDetailsListMatched=new
+			// ArrayList<>();
+
 			List<PostCreditNoteHeader> creditHeaderList = new ArrayList<>();
 			List<PostCreditNoteDetails> postCreditNoteDetailsList = new ArrayList<>();
 			PostCreditNoteHeader postCreditHeader = new PostCreditNoteHeader();
@@ -1107,56 +1103,63 @@ public class CreditNoteController {
 			SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy");
 			java.util.Date udate = sdf1.parse(date);
 			java.sql.Date creditNoteDate = new java.sql.Date(udate.getTime());
-			//DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			//Calendar cal = Calendar.getInstance();//prev 
+			// DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			// Calendar cal = Calendar.getInstance();//prev
 
 			postCreditHeader.setCrnDate(creditNoteDate);
-			float finalAmt =0.0f;float totalRoundUpAmt =0.0f;float totalCrnTax=0.0f;float totTaxableAmt=0.0f;float totGrandAmt=0.0f;
-			
-			for (int i = 0;i < crnDetailListMap.size(); i++) {
-					
-				int grnGvnQty = Integer.parseInt(request.getParameter("grnGvnQty"+crnDetailListMap.get(i).getCrndId()));
-				float totalTaxPer = Float.parseFloat(request.getParameter("totalTaxPer"+crnDetailListMap.get(i).getCrndId()));
-				float grnBaseRate = Float.parseFloat(request.getParameter("grnBaseRate"+crnDetailListMap.get(i).getCrndId()));
+			float finalAmt = 0.0f;
+			float totalRoundUpAmt = 0.0f;
+			float totalCrnTax = 0.0f;
+			float totTaxableAmt = 0.0f;
+			float totGrandAmt = 0.0f;
 
-				float cgstPer=totalTaxPer/2;
-				float sgstPer=totalTaxPer/2;
-				
+			for (int i = 0; i < crnDetailListMap.size(); i++) {
+
+				int grnGvnQty = Integer
+						.parseInt(request.getParameter("grnGvnQty" + crnDetailListMap.get(i).getCrndId()));
+				float totalTaxPer = Float
+						.parseFloat(request.getParameter("totalTaxPer" + crnDetailListMap.get(i).getCrndId()));
+				float grnBaseRate = Float
+						.parseFloat(request.getParameter("grnBaseRate" + crnDetailListMap.get(i).getCrndId()));
+
+				float cgstPer = totalTaxPer / 2;
+				float sgstPer = totalTaxPer / 2;
+
 				PostCreditNoteDetails creditNoteDetail = new PostCreditNoteDetails();
-                float grnBaseRateTaxable=roundUp(grnBaseRate*grnGvnQty);
-				System.err.println("grnBaseRateTaxable"+grnBaseRateTaxable);
-                
+				float grnBaseRateTaxable = roundUp(grnBaseRate * grnGvnQty);
+				System.err.println("grnBaseRateTaxable" + grnBaseRateTaxable);
+
 				float aprTotalTax = (grnBaseRateTaxable * (sgstPer + cgstPer)) / 100;
-				System.err.println("aprTotalTax"+aprTotalTax);
-				
+				System.err.println("aprTotalTax" + aprTotalTax);
+
 				float grandTotal = grnBaseRateTaxable + aprTotalTax;
-				System.err.println("grandTotal"+grandTotal);
-				
-				totGrandAmt=totGrandAmt+grandTotal;
-				System.err.println("totGrandAmt"+totGrandAmt);
-				
-				totTaxableAmt=totTaxableAmt+grnBaseRateTaxable;
-				System.err.println("totGrandAmt"+totGrandAmt);
-				
-				totalCrnTax=totalCrnTax+aprTotalTax;
-				System.err.println("totalCrnTax"+totalCrnTax);
-				
+				System.err.println("grandTotal" + grandTotal);
+
+				totGrandAmt = totGrandAmt + grandTotal;
+				System.err.println("totGrandAmt" + totGrandAmt);
+
+				totTaxableAmt = totTaxableAmt + grnBaseRateTaxable;
+				System.err.println("totGrandAmt" + totGrandAmt);
+
+				totalCrnTax = totalCrnTax + aprTotalTax;
+				System.err.println("totalCrnTax" + totalCrnTax);
+
 				creditNoteDetail.setBillNo(crnDetailListMap.get(i).getBillNo());
 				creditNoteDetail.setCessRs(00);
 				creditNoteDetail.setCgstPer(cgstPer);
 				float cgstRs = (cgstPer * grnBaseRateTaxable) / 100;
-				System.err.println("cgstRs"+cgstRs);
-				
+				System.err.println("cgstRs" + cgstRs);
+
 				creditNoteDetail.setCgstRs(roundUp(cgstRs));
 				creditNoteDetail.setSgstPer(sgstPer);
 				float sgstRs = (sgstPer * grnBaseRateTaxable) / 100;
-				System.err.println("sgstRs"+sgstRs);
-				
+				System.err.println("sgstRs" + sgstRs);
+
 				creditNoteDetail.setSgstRs(roundUp(sgstRs));
 				creditNoteDetail.setIgstPer(totalTaxPer);
 				float igstRs = (totalTaxPer * grnBaseRateTaxable) / 100;
-				System.err.println("igstRs"+igstRs);
-				
+				System.err.println("igstRs" + igstRs);
+
 				creditNoteDetail.setIgstRs(roundUp(igstRs));
 				creditNoteDetail.setDelStatus(0);
 				creditNoteDetail.setGrnGvnAmt(roundUp(grandTotal));
@@ -1171,21 +1174,21 @@ public class CreditNoteController {
 				creditNoteDetail.setItemId(crnDetailListMap.get(i).getItemId());
 				creditNoteDetail.setTaxableAmt(roundUp(grnBaseRateTaxable));
 				creditNoteDetail.setTotalTax(roundUp(aprTotalTax));
-                creditNoteDetail.setBaseRate(roundUp(crnDetailListMap.get(i).getBaseRate()));
+				creditNoteDetail.setBaseRate(roundUp(crnDetailListMap.get(i).getBaseRate()));
 				creditNoteDetail.setCessPer(00);
 
 				creditNoteDetail.setCrndId(crnDetailListMap.get(i).getCrndId());
 				creditNoteDetail.setCrnId(crnDetailListMap.get(i).getCrnId());
 				creditNoteDetail.setCatId(crnDetailListMap.get(i).getCatId());
-			    creditNoteDetail.setBillDate(crnDetailListMap.get(i).getBillDate());
-			    creditNoteDetail.setRefInvoiceNo(crnDetailListMap.get(i).getRefInvoiceNo());
-			    creditNoteDetail.setGrngvnSrno(crnDetailListMap.get(i).getGrngvnSrno());
-			    creditNoteDetail.setGrnGvnHeaderId(crnDetailListMap.get(i).getGrnGvnHeaderId());
-			    creditNoteDetail.setHsnCode(crnDetailListMap.get(i).getItemHsncd());//new on 4june19
+				creditNoteDetail.setBillDate(crnDetailListMap.get(i).getBillDate());
+				creditNoteDetail.setRefInvoiceNo(crnDetailListMap.get(i).getRefInvoiceNo());
+				creditNoteDetail.setGrngvnSrno(crnDetailListMap.get(i).getGrngvnSrno());
+				creditNoteDetail.setGrnGvnHeaderId(crnDetailListMap.get(i).getGrnGvnHeaderId());
+				creditNoteDetail.setHsnCode(crnDetailListMap.get(i).getItemHsncd());// new on 4june19
 				postCreditNoteDetailsList.add(creditNoteDetail);
 			}
-			totalRoundUpAmt=Math.round(totGrandAmt)-roundUp(totGrandAmt);
-			
+			totalRoundUpAmt = Math.round(totGrandAmt) - roundUp(totGrandAmt);
+
 			postCreditHeader.setCreatedDateTime(crnHeaderMap.getCreatedDateTime());
 			postCreditHeader.setCrnFinalAmt(Math.round(totGrandAmt));
 			postCreditHeader.setCrnGrandTotal(roundUp(totGrandAmt));
@@ -1202,20 +1205,17 @@ public class CreditNoteController {
 			postCreditHeader.setIsDeposited(crnHeaderMap.getIsDeposited());
 			postCreditHeader.setIsGrn(crnHeaderMap.getIsGrn());
 			postCreditHeader.setIsTallySync(crnHeaderMap.getIsTallySync());
-			
-			
-				postCreditHeader.setPostCreditNoteDetails(postCreditNoteDetailsList);
 
-				creditHeaderList.add(postCreditHeader);
-			
-				PostCreditNoteHeaderList postCreditNoteHeaderList = new PostCreditNoteHeaderList();
+			postCreditHeader.setPostCreditNoteDetails(postCreditNoteDetailsList);
 
-				postCreditNoteHeaderList.setPostCreditNoteHeader(creditHeaderList);
-				System.err.println("postCreditNoteHeaderList**" + postCreditNoteHeaderList.toString());
-				Info info = restTemplate.postForObject(Constants.url + "postCreditNoteForUpdate", postCreditNoteHeaderList,
-						Info.class);
-			
+			creditHeaderList.add(postCreditHeader);
 
+			PostCreditNoteHeaderList postCreditNoteHeaderList = new PostCreditNoteHeaderList();
+
+			postCreditNoteHeaderList.setPostCreditNoteHeader(creditHeaderList);
+			System.err.println("postCreditNoteHeaderList**" + postCreditNoteHeaderList.toString());
+			Info info = restTemplate.postForObject(Constants.url + "postCreditNoteForUpdate", postCreditNoteHeaderList,
+					Info.class);
 
 		} catch (Exception e) {
 
@@ -1225,10 +1225,10 @@ public class CreditNoteController {
 
 		}
 
-		return "redirect:/getCrnDetailList/"+crnId+"?from_date="+fromDate+"&to_date="+toDate+"&selectFr=-1";
+		return "redirect:/getCrnDetailList/" + crnId + "?from_date=" + fromDate + "&to_date=" + toDate + "&selectFr=-1";
 
 	}
-	
+
 	@RequestMapping(value = "genCrnReport/{checked}/{fromDate}/{toDate}", method = RequestMethod.GET)
 	public void genCrnReportPdf(HttpServletRequest request, HttpServletResponse response,
 			@PathVariable("checked") String[] checked, @PathVariable("fromDate") String fromDate,
@@ -1703,7 +1703,7 @@ public class CreditNoteController {
 
 		return model;
 	}
-	
+
 	@RequestMapping(value = "/showCumulativeCrnReport", method = RequestMethod.GET)
 	public ModelAndView showCumulativeCrnReport(HttpServletRequest request, HttpServletResponse response) {
 
@@ -1730,6 +1730,7 @@ public class CreditNoteController {
 
 		return model;
 	}
+
 	@RequestMapping(value = "/getCumulativeHeaders", method = RequestMethod.GET)
 	public @ResponseBody List<GetCreditNoteHeaders> getCumulativeHeaders(HttpServletRequest request,
 			HttpServletResponse response) {
@@ -1788,7 +1789,9 @@ public class CreditNoteController {
 
 		return creditHeaderList;
 	}
-	//----------------------------------------Cumulative Crn List--------------------------------------------------
+
+	// ----------------------------------------Cumulative Crn
+	// List--------------------------------------------------
 	@RequestMapping(value = "/showCumulativeCrnNotes", method = RequestMethod.GET)
 	public ModelAndView viewCumulativeCrnNotes(HttpServletRequest request, HttpServletResponse response) {
 
@@ -1802,11 +1805,10 @@ public class CreditNoteController {
 			try {
 
 				allFrIdNameList = restTemplate.getForObject(Constants.url + "getAllFrIdName", AllFrIdNameList.class);
-               String allFr=""+allFrIdNameList.getFrIdNamesList().get(0).getFrId();
-               
-				for(int i=1;i<allFrIdNameList.getFrIdNamesList().size();i++)
-				{
-					allFr=allFr+","+allFrIdNameList.getFrIdNamesList().get(i).getFrId();
+				String allFr = "" + allFrIdNameList.getFrIdNamesList().get(0).getFrId();
+
+				for (int i = 1; i < allFrIdNameList.getFrIdNamesList().size(); i++) {
+					allFr = allFr + "," + allFrIdNameList.getFrIdNamesList().get(i).getFrId();
 				}
 				model.addObject("allFr", allFr);
 			} catch (Exception e) {
@@ -1820,12 +1822,13 @@ public class CreditNoteController {
 
 		return model;
 	}
+
 	@RequestMapping(value = "/getCumulativeCrn", method = RequestMethod.GET)
 	public @ResponseBody List<GetCrnCumulative> getCumulativeCrn(HttpServletRequest request,
 			HttpServletResponse response) {
 
 		ModelAndView model = new ModelAndView("creditNote/cumulativeCrn");
-		List<GetCrnCumulative>	headerList=null;
+		List<GetCrnCumulative> headerList = null;
 		try {
 
 			RestTemplate restTemplate = new RestTemplate();
@@ -1844,8 +1847,7 @@ public class CreditNoteController {
 				map.add("toDate", DateConvertor.convertToYMD(toDate));
 				map.add("frIdList", selectedFr);
 
-				headerList = restTemplate.postForObject(Constants.url + "getCumulativeCrn", map,
-						List.class);
+				headerList = restTemplate.postForObject(Constants.url + "getCumulativeCrn", map, List.class);
 
 				System.err.println("CH List " + headerList.toString());
 
@@ -1859,6 +1861,7 @@ public class CreditNoteController {
 
 		return headerList;
 	}
+
 	@RequestMapping(value = "pdf/getCrnCumulativeHeaders/{checked}", method = RequestMethod.GET)
 	public ModelAndView getCrnCumulativeHeaders(HttpServletRequest request, HttpServletResponse response,
 			@PathVariable("checked") String[] checked) {
@@ -1866,7 +1869,7 @@ public class CreditNoteController {
 		ModelAndView model = new ModelAndView("creditNote/pdf/crncumulativepdf");
 
 		try {
-			LinkedHashMap<String, CrnDetailsTaxSummary> totalSummaryList=new LinkedHashMap<String, CrnDetailsTaxSummary>(); 
+			LinkedHashMap<String, CrnDetailsTaxSummary> totalSummaryList = new LinkedHashMap<String, CrnDetailsTaxSummary>();
 
 			RestTemplate restTemplate = new RestTemplate();
 
@@ -1900,7 +1903,7 @@ public class CreditNoteController {
 
 			List<CreditPrintBean> printList = new ArrayList<>();
 
-				CreditPrintBean printBean = new CreditPrintBean();
+			CreditPrintBean printBean = new CreditPrintBean();
 			for (int i = 0; i < creditHeaderList.size(); i++) {
 				printBean = new CreditPrintBean();
 				CreditNoteHeaderPrint cNoteHeaderPrint = new CreditNoteHeaderPrint();
@@ -1911,53 +1914,60 @@ public class CreditNoteController {
 					map.add("crnId", creditHeaderList.get(i).getCrnId());
 					CrnDetailsSummary[] crnSummaryList = restTemplate
 							.postForObject(Constants.url + "getCrnDetailsSummary", map, CrnDetailsSummary[].class);
-					
-					ArrayList<CrnDetailsSummary> crnSummaryListRes=new ArrayList<CrnDetailsSummary>(Arrays.asList(crnSummaryList));
+
+					ArrayList<CrnDetailsSummary> crnSummaryListRes = new ArrayList<CrnDetailsSummary>(
+							Arrays.asList(crnSummaryList));
 					cNoteHeaderPrint.setCrnDetailsSummaryList(crnSummaryListRes);
 					crnSummaryListRes.remove(null);
-					if(totalSummaryList.isEmpty())
-					{
-						for(CrnDetailsSummary crnDetailsSummary:crnSummaryListRes) {
-							CrnDetailsTaxSummary crnDetailsTaxSummary=new CrnDetailsTaxSummary(crnDetailsSummary.getItemHsncd()+""+creditHeaderList.get(i).getCrnId(),crnDetailsSummary.getItemHsncd(),
-									crnDetailsSummary.getItemHsncdesc(),crnDetailsSummary.getGrnGvnQty(),crnDetailsSummary.getTaxableAmt(),
-									crnDetailsSummary.getCgstPer(),crnDetailsSummary.getCgstRs(),crnDetailsSummary.getSgstPer(),crnDetailsSummary.getSgstRs(),
-									crnDetailsSummary.getIgstPer(),crnDetailsSummary.getIgstRs());
-						  totalSummaryList.put(crnDetailsSummary.getItemHsncd(), crnDetailsTaxSummary);
+					if (totalSummaryList.isEmpty()) {
+						for (CrnDetailsSummary crnDetailsSummary : crnSummaryListRes) {
+							CrnDetailsTaxSummary crnDetailsTaxSummary = new CrnDetailsTaxSummary(
+									crnDetailsSummary.getItemHsncd() + "" + creditHeaderList.get(i).getCrnId(),
+									crnDetailsSummary.getItemHsncd(), crnDetailsSummary.getItemHsncdesc(),
+									crnDetailsSummary.getGrnGvnQty(), crnDetailsSummary.getTaxableAmt(),
+									crnDetailsSummary.getCgstPer(), crnDetailsSummary.getCgstRs(),
+									crnDetailsSummary.getSgstPer(), crnDetailsSummary.getSgstRs(),
+									crnDetailsSummary.getIgstPer(), crnDetailsSummary.getIgstRs());
+							totalSummaryList.put(crnDetailsSummary.getItemHsncd(), crnDetailsTaxSummary);
 						}
-					}else
-					{
+					} else {
 
-					System.err.println("crnSummaryListRes:---->"+crnSummaryListRes.toString());
-						for(CrnDetailsSummary crnDetailsSummary:crnSummaryListRes)
-						{
-						  int flag=0;
-						  for(Map.Entry<String,CrnDetailsTaxSummary> entry:totalSummaryList.entrySet()){  
-							
-								if(crnDetailsSummary.getItemHsncd().equalsIgnoreCase(entry.getKey()))
-								{
-									flag=1;
-									entry.getValue().setGrnGvnQty(entry.getValue().getGrnGvnQty()+crnDetailsSummary.getGrnGvnQty());
-									entry.getValue().setCgstRs(entry.getValue().getCgstRs()+crnDetailsSummary.getCgstRs());
-									entry.getValue().setSgstRs(entry.getValue().getSgstRs()+crnDetailsSummary.getSgstRs());
-									entry.getValue().setIgstRs(entry.getValue().getIgstRs()+crnDetailsSummary.getIgstRs());
-									entry.getValue().setTaxableAmt(entry.getValue().getTaxableAmt()+crnDetailsSummary.getTaxableAmt());
+						System.err.println("crnSummaryListRes:---->" + crnSummaryListRes.toString());
+						for (CrnDetailsSummary crnDetailsSummary : crnSummaryListRes) {
+							int flag = 0;
+							for (Map.Entry<String, CrnDetailsTaxSummary> entry : totalSummaryList.entrySet()) {
+
+								if (crnDetailsSummary.getItemHsncd().equalsIgnoreCase(entry.getKey())) {
+									flag = 1;
+									entry.getValue().setGrnGvnQty(
+											entry.getValue().getGrnGvnQty() + crnDetailsSummary.getGrnGvnQty());
+									entry.getValue()
+											.setCgstRs(entry.getValue().getCgstRs() + crnDetailsSummary.getCgstRs());
+									entry.getValue()
+											.setSgstRs(entry.getValue().getSgstRs() + crnDetailsSummary.getSgstRs());
+									entry.getValue()
+											.setIgstRs(entry.getValue().getIgstRs() + crnDetailsSummary.getIgstRs());
+									entry.getValue().setTaxableAmt(
+											entry.getValue().getTaxableAmt() + crnDetailsSummary.getTaxableAmt());
 								}
 							}
-						  if(flag==0)
-						  {
-							  CrnDetailsTaxSummary crnDetailsTaxSummary=new CrnDetailsTaxSummary(crnDetailsSummary.getItemHsncd()+""+creditHeaderList.get(i).getCrnId(),crnDetailsSummary.getItemHsncd(),
-										crnDetailsSummary.getItemHsncdesc(),crnDetailsSummary.getGrnGvnQty(),crnDetailsSummary.getTaxableAmt(),
-										crnDetailsSummary.getCgstPer(),crnDetailsSummary.getCgstRs(),crnDetailsSummary.getSgstPer(),crnDetailsSummary.getSgstRs(),
-										crnDetailsSummary.getIgstPer(),crnDetailsSummary.getIgstRs());
-							  totalSummaryList.put(crnDetailsTaxSummary.getItemHsncd(), crnDetailsTaxSummary);  
-						  }
-						
+							if (flag == 0) {
+								CrnDetailsTaxSummary crnDetailsTaxSummary = new CrnDetailsTaxSummary(
+										crnDetailsSummary.getItemHsncd() + "" + creditHeaderList.get(i).getCrnId(),
+										crnDetailsSummary.getItemHsncd(), crnDetailsSummary.getItemHsncdesc(),
+										crnDetailsSummary.getGrnGvnQty(), crnDetailsSummary.getTaxableAmt(),
+										crnDetailsSummary.getCgstPer(), crnDetailsSummary.getCgstRs(),
+										crnDetailsSummary.getSgstPer(), crnDetailsSummary.getSgstRs(),
+										crnDetailsSummary.getIgstPer(), crnDetailsSummary.getIgstRs());
+								totalSummaryList.put(crnDetailsTaxSummary.getItemHsncd(), crnDetailsTaxSummary);
+							}
+
 						}
-					
+
 					}
-					
-						System.err.println("crnSummaryListRes:---->"+crnSummaryListRes.toString());
-					System.err.println("------------->"+totalSummaryList.toString());
+
+					System.err.println("crnSummaryListRes:---->" + crnSummaryListRes.toString());
+					System.err.println("------------->" + totalSummaryList.toString());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -2017,7 +2027,6 @@ public class CreditNoteController {
 							srNoDateList.add(bean);
 
 						}
-					
 
 						if (initDateFrom.before(fmt.parse(crnDetailList.get(j).getGrnGvnDate()))) {
 
@@ -2066,6 +2075,6 @@ public class CreditNoteController {
 
 		return model;
 	}
-	//---------------------------------------------------------------------------------------------------------------
-	
+	// ---------------------------------------------------------------------------------------------------------------
+
 }
