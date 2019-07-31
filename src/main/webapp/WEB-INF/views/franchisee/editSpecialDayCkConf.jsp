@@ -207,7 +207,7 @@ select {
 								</div>
 
                                         	<input type="hidden" name="sp_day_id" id="sp_day_id"  value="${spdayId}">      
-                                         <%--  <input type="hidden" name="menu_id" id="menu_id" value="${menuId}">  --%>
+                                           <input type="hidden" name="menu_id" id="menu_id" value="${menuId}">  
                                             <input type="hidden" name="cat_id" id="cat_id" value="${catId}">
                              										 
                                 <div class="form-group">
@@ -241,7 +241,7 @@ select {
 											<div class="col-sm-9 col-lg-10 controls">
 												<select data-placeholder="Select Menu" name="menu_id"
 													class="form-control chosen"  id="menu_id" onchange="getItemsByMenuId()"
-													>
+													 disabled="disabled">
                                                    <option value=""> </option>
 													<optgroup label="All Menu">
 														

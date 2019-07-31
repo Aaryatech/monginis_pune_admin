@@ -4,11 +4,11 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 
- 
 
- <jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
- <jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
-  
+
+<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
+
 <style>
 @media only screen and (min-width: 1200px) {
 	.franchisee_label, .menu_label {
@@ -26,25 +26,23 @@
 	}
 }
 
-.table-responsive tbody > tr:hover{
-  background-color: #ffa;
+.table-responsive tbody>tr:hover {
+	background-color: #ffa;
 }
-	
 </style>
-  	<style>
- table{
-  width:100%;
- 
-  border:1px solid #ddd;
+<style>
+table {
+	width: 100%;
+	border: 1px solid #ddd;
 }
- </style>
+</style>
 </head>
 <body>
 
 
 	<c:url var="getItemList" value="/getItemList"></c:url>
+<c:url var="getItemListByMenuId" value="/getItemsByMenuId"></c:url>
 
-	 
 
 
 	<!-- BEGIN Sidebar -->
@@ -64,7 +62,7 @@
 	<!-- BEGIN Content -->
 	<div id="main-content">
 		<!-- BEGIN Page Title -->
-	<!-- 	<div class="page-title">
+		<!-- 	<div class="page-title">
 			<div>
 				<h1>
 					<i class="fa fa-file-o"></i>Push Orders
@@ -72,137 +70,152 @@
 			</div>
 		</div> -->
 		<!-- END Page Title -->
-	<form id="submitPushOrderForm"
-				action="${pageContext.request.contextPath}/submitPushOrder" onsubmit="submitOrder.disabled = true; return confirm('Do you want Submit ?');"
-				method="post">
+		<form id="submitPushOrderForm"
+			action="${pageContext.request.contextPath}/submitPushOrder"
+			onsubmit="submitOrder.disabled = true; return confirm('Do you want Submit ?');"
+			method="post">
 
-		<!-- BEGIN Main Content -->
-		<div class="box">
-			<div class="box-title">
-				<h3>
-					<i class="fa fa-bars"></i>Push Orders For Franchise
-				</h3>
+			<!-- BEGIN Main Content -->
+			<div class="box">
+				<div class="box-title">
+					<h3>
+						<i class="fa fa-bars"></i>Push Orders For Franchise
+					</h3>
 
-			</div>
-			<div class="box-content">
-				
-					<div class="form-group">
-						<label class=" col-md-1 control-label menu_label">Menu</label>
-						<div class=" col-md-3 controls menu_select">
+				</div>
 
-							<select data-placeholder="Choose Menu"
-								class="form-control chosen" tabindex="6" id="selectMenu"
-								name="selectMenu">
+				<div class="box-content">
 
-								<option value="-1"><c:out value=""/></option>
+					<div class="row">
+						<div class="form-group">
+
+							<label class=" col-md-1 control-label menu_label">Menu</label>
+							<div class=" col-md-5 controls menu_select">
+
+								<select data-placeholder="Choose Menu"
+									class="form-control chosen" tabindex="6" id="selectMenu"
+									name="selectMenu" onchange="getItemsByMenuId()">
+
+									<option value="-1"><c:out value="" /></option>
+
+									<c:forEach items="${unSelectedMenuList}" var="unSelectedMenu"
+										varStatus="count">
+										<option value="${unSelectedMenu.menuId}"><c:out
+												value="${unSelectedMenu.menuTitle}" /></option>
+									</c:forEach>
 
 
+								</select>
+							</div>
 
+							<label class=" col-md-1 control-label menu_label">Item</label>
+							<div class=" col-md-5 controls menu_select">
 
+								<select data-placeholder="Select Items" multiple="multiple"
+							class="form-control chosen " name="item" id="item"
+							tabindex="-1" data-rule-required="true"></select>
+							</div>
 
-								<c:forEach items="${unSelectedMenuList}" var="unSelectedMenu"
-									varStatus="count">
-									<option value="${unSelectedMenu.menuId}"><c:out value="${unSelectedMenu.menuTitle}"/></option>
-								</c:forEach>
-
-
-							</select>
 						</div>
-					<!-- </div>
+					</div>
+					<br>
 
-					<div class="form-group col-md-8"> -->
-						<label class=" col-md-1 control-label franchisee_label">Franchise </label>
-						<div class=" col-md-3 controls franchisee_select">
-							<select data-placeholder="Choose Franchisee"
-								class="form-control chosen " multiple="multiple" tabindex="6"
-								id="selectFr" name="selectFr">
+					<div class="row">
+						<div class="form-group">
 
-								<option value="-1"><c:out value=""/></option>
+							<label class=" col-md-1 control-label franchisee_label">Franchise
+							</label>
+							<div class=" col-md-3 controls franchisee_select">
+								<select data-placeholder="Choose Franchisee"
+									class="form-control chosen " multiple="multiple" tabindex="6"
+									id="selectFr" name="selectFr">
 
-
-
-								<c:forEach items="${unSelectedFrList}" var="fr"
-									varStatus="count">
-									<option value="${fr.frId}"><c:out value="${fr.frName}"/></option>
-								</c:forEach>
+									<option value="-1"><c:out value="" /></option>
 
 
 
-							</select>
-						</div>
-						
-							<label class=" col-md-1 control-label franchisee_label">Discount % </label>
-						<div class="col-md-1">
-							<input type="text" name="discPer" id="discPer" value="1" class="form-control" width="30px"/>
-						</div>
-					<!-- </div>
+									<c:forEach items="${unSelectedFrList}" var="fr"
+										varStatus="count">
+										<option value="${fr.frId}"><c:out
+												value="${fr.frName}" /></option>
+									</c:forEach>
+
+
+
+								</select>
+							</div>
+
+							<label class=" col-md-1 control-label franchisee_label">Discount
+								% </label>
+							<div class="col-md-1">
+								<input type="text" name="discPer" id="discPer" value="1"
+									class="form-control" width="30px" />
+							</div>
+
+							<!-- </div>
 					
 					<div class="form-group col-md-8">
 					<label class=" col-md-3 control-label franchisee_label"></label> -->
-						
 
 
 
 
-				
 
-			<!-- 	<div class="row">
+
+
+							<!-- 	<div class="row">
 					<div class="col-md-12" style="text-align: center"> -->
-						<input type="button" id="searchFr" class="btn btn-info"
-							value="Search" onclick="searchItem()" />
-						<!-- onclick="generateOrders()" -->
-						<!-- </button> -->
+
+							<input type="button" id="searchFr" class="btn btn-info"
+								value="Search" onclick="searchItem()" />
+
+							<!-- onclick="generateOrders()" -->
+							<!-- </button> -->
 
 
-					<!-- </div> -->
+							<!-- </div> -->
+						</div>
+					</div>
+
+
+
 				</div>
-
-			
-
 			</div>
-		</div>	
 
-	<div align="center" id="loader" style="display: none">
+			<div align="center" id="loader" style="display: none">
 
-					<span>
-						<h4>
-							<font color="#343690">Loading</font>
-						</h4>
-					</span> <span class="l-1"></span> <span class="l-2"></span> <span
-						class="l-3"></span> <span class="l-4"></span> <span class="l-5"></span>
-					<span class="l-6"></span>
-				</div>
-		<div class="box">
-		<!-- 	<div class="box-title">
-				<h3>
-					<i class="fa fa-list-alt"></i>Push Order
-				</h3>
+				<span>
+					<h4>
+						<font color="#343690">Loading</font>
+					</h4>
+				</span> <span class="l-1"></span> <span class="l-2"></span> <span
+					class="l-3"></span> <span class="l-4"></span> <span class="l-5"></span>
+				<span class="l-6"></span>
+			</div>
 
-			</div> -->
-
-		
+			<div class="box">
 				<div class=" box-content">
 					<div id="table-scroll" class="table-scroll">
-							 
-									<div id="faux-table" class="faux-table" aria="hidden">
-									<table id="table2" class="table table-advance" border="1">
-											<thead>
-												<tr class="bgpink">
-										
-												</tr>
-												</thead>
-												</table>
-									
-									</div>
-									<div class="table-wrap">
-									
-										<table id="table_grid" class="table table-advance" border="1">
-											<thead>
-												<tr class="bgpink">
-									
-												</tr>
-												</thead>
-						<!-- <div class="col-md-12 table-responsive">
+
+						<div id="faux-table" class="faux-table" aria="hidden">
+							<table id="table2" class="table table-advance" border="1">
+								<thead>
+									<tr class="bgpink">
+
+									</tr>
+								</thead>
+							</table>
+
+						</div>
+						<div class="table-wrap">
+
+							<table id="table_grid" class="table table-advance" border="1">
+								<thead>
+									<tr class="bgpink">
+
+									</tr>
+								</thead>
+								<!-- <div class="col-md-12 table-responsive">
 							<table class="table table-advance"
 								style="width: 100%" id="table_grid">
 								<thead> 
@@ -224,67 +237,149 @@
 
 
 					<div class="row">
-					<label class=" col-md-1 control-label franchisee_label">Production Date</label>
+						<label class=" col-md-1 control-label franchisee_label">Production
+							Date</label>
 						<div class="col-sm-3 col-lg-2 controls">
-										<input class="form-control date-picker" id="date" size="19" placeholder="dd-MM-yyyy"
-											type="text" name="date" value="${date}"  required/>
-									</div>
-				<label class=" col-md-1 control-label franchisee_label">Delivery Date</label>
+							<input class="form-control date-picker" id="date" size="19"
+								placeholder="dd-MM-yyyy" type="text" name="date" value="${date}"
+								required />
+						</div>
+						<label class=" col-md-1 control-label franchisee_label">Delivery
+							Date</label>
 						<div class="col-sm-3 col-lg-2 controls">
-										<input class="form-control date-picker" id="deldate" size="19" placeholder="dd-MM-yyyy"
-											type="text" name="deldate" value="" required />
-									</div>
+							<input class="form-control date-picker" id="deldate" size="19"
+								placeholder="dd-MM-yyyy" type="text" name="deldate" value=""
+								required />
+						</div>
 						<div class="col-md-offset-6 col-md-1">
 
 							<button class="btn btn-info pull-right"
-								style="margin-right: 5px;" onclick="submitOrder()" id="submitOrder" disabled>Submit</button>
+								style="margin-right: 5px;" onclick="submitOrder()"
+								id="submitOrder" disabled>Submit</button>
 						</div>
 					</div>
 				</div>
-			
-		</div></form>
+
+			</div>
+		</form>
 	</div>
 	<!-- END Main Content -->
 
 	<footer>
-	<p>2019 © Monginis.</p>
+		<p>2019 © Monginis.</p>
 	</footer>
 
 	<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
 		class="fa fa-chevron-up"></i></a>
+		
+		
+		<script type="text/javascript">
+		
+		function getItemsByMenuId() {
+			
+			var menuId = $("#selectMenu").val();
+			
+
+				 if(menuId=="" || menuId==null){
+					  
+						$('#item')
+					    .find('option')
+					    .remove()
+					    .end()
+					    $("#item").trigger("chosen:updated");
+				 }else{
+						$.getJSON('${getItemListByMenuId}', {
+							
+							menuId : menuId,
+							ajax : 'true'
+						}, function(data) {
+						 	/* var html = '<option value="">Select Item</option>';
+						
+							var len = data.length;
+							
+							$('#item')
+						    .find('option')
+						    .remove()
+						    .end()
+						    
+						
+							
+							for ( var i = 0; i < len; i++) {
+					            $("#item").append(
+					                    $("<option selected></option>").attr(
+					                        "value", data[i].id).text(data[i].itemName)
+					                );
+							}
+							   $("#item").trigger("chosen:updated"); */
+							   
+							   
+							   
+							   var html = '<option multiple="multiple" value="">Items</option>';
+
+								var len = data.length;
+
+								$('#item').find('option').remove().end()
+
+								/* $("#item")
+										.append(
+												$("<option ></option>").attr(
+														"value", "").text(
+														"Select Items")); */
+								$("#item").append(
+										$("<option></option>")
+												.attr("value", -1).text("ALL"));
+								for (var i = 0; i < len; i++) {
+									$("#item").append(
+											$("<option ></option>").attr(
+													"value", data[i].id)
+													.text(data[i].itemName));
+								}
+								$("#item").trigger("chosen:updated");
+							   
+						}); 
+				 }
+				 getCatIdByMenuId();
+		}
+		
+		</script>
 
 
 	<script type="text/javascript">
-	
 		function searchItem() {
-			
-		
+
 			$('#table_grid td').remove();
 			$('#table_grid th').remove();
 			var isValid = validate();
 
 			if (isValid) {
-				document.getElementById("searchFr").disabled=true;
+				document.getElementById("searchFr").disabled = true;
 				var selectedMenu = $("#selectMenu").val();
 				var discPer = $("#discPer").val();
 				var selectedFr = $("#selectFr").val();
+				var selectedItem = $("#item").val();
 				franchasee();
 				var frId = [];
-			       
-			     
-		        $.each($("#selectFr option:selected"), function(){            
-		        	frId.push($(this).val());
-		           
-		            
-		        });
+				var itemId = [];
+
+				$.each($("#selectFr option:selected"), function() {
+					frId.push($(this).val()); 
+
+				});
 				
-		       
-		        
-				$.getJSON('${getItemList}',{
-					
+				$.each($("#item option:selected"), function() {
+					itemId.push($(this).val());
+
+				});
+
+				$
+						.getJSON(
+								'${getItemList}',
+								{
+
 									menu_id : selectedMenu,
 									fr_id_list : JSON.stringify(frId),
-									
+									item_id: JSON.stringify(itemId),
+
 									ajax : 'true'
 
 								},
@@ -292,71 +387,107 @@
 
 									//$('#table_grid td').remove();
 									//alert(data);
-									document.getElementById("searchFr").disabled=false;
+									document.getElementById("searchFr").disabled = false;
 
 									if (data == "") {
 										alert("No records found !!");
 
+									} else {
+										document.getElementById("submitOrder").disabled = false;
+										$
+												.each(
+														data,
+														function(key, itemname) {
+
+															var index = key + 1;
+
+															var tr = $('<tr></tr>');
+
+															tr
+																	.append($(
+																			'<td></td>')
+																			.html(
+																					""
+																							+ index));
+
+															tr
+																	.append($(
+																			'<td></td>')
+																			.html(
+																					itemname.itemName));
+
+															tr
+																	.append($(
+																			'<td></td>')
+																			.html(
+																					"<input type='text' name=disc_per"+itemname.itemId+" style='width:45px' class='form-control' id=disc_per"+itemname.itemId+" value="+discPer+" > "));
+
+															var pushQty = 0;
+															var orderQty = 0;
+
+															$
+																	.each(
+																			frId,
+																			function(
+																					key,
+																					id) {
+																				var qty = 0;
+																				if (itemname.getOrderDataForPushOrder != null) {
+
+																					//alert("Push Order Data not null");
+
+																					$
+																							.each(
+																									itemname.getOrderDataForPushOrder,
+																									function(
+																											key,
+																											frData) {
+																										if (frData.frId == id
+																												&& itemname.itemId == frData.itemId) {
+																											qty = frData.orderQty;
+
+																										}
+
+																									});
+
+																				}
+
+																				if (qty > 0) {
+																					//var orderQty = "<td align=center><input type=number min=0 max=500 class=form-control  readonly='true'   id=itemId"+itemname.itemId+"orderQty"+ id+ " name=itemId"+itemname.itemId+"orderQty"+id+" value = "+qty+"></td>"; 
+																					tr
+																							.append($(
+																									'<td></td>')
+																									.html(
+																											"<input type=number min=0 max=500 class=form-control  readonly='true' style='  height: 24px;'  id=itemId"+itemname.itemId+"orderQty"+ id+ " name=itemId"+itemname.itemId+"orderQty"+id+" value = "+qty+">"));
+																				} else {//var orderQty = "<td align=center><input onkeypress='return IsNumeric(event);' ondrop='return false;' onpaste='return false;' type=number min=0 max=500 class=form-control   id=itemId"+itemname.itemId+"orderQty"+ id+ " name=itemId"+itemname.itemId+"orderQty"+id+" value = "+qty+"></td>"; 
+
+																					tr
+																							.append($(
+																									'<td></td>')
+																									.html(
+																											"<input onkeypress='return IsNumeric(event);' ondrop='return false;'style='  height: 24px;'  onpaste='return false;' type=number min=0 max=500 class=form-control   id=itemId"
+																													+ itemname.itemId
+																													+ "orderQty"
+																													+ id
+																													+ " name=itemId"
+																													+ itemname.itemId
+																													+ "orderQty"
+																													+ id
+																													+ " value = "
+																													+ qty
+																													+ " tabindex="
+																													+ key
+																													+ ">"));
+																				}
+																			});
+
+															$(
+																	'#table_grid tbody')
+																	.append(tr);
+														})
 									}
-									else{ 
-										document.getElementById("submitOrder").disabled=false;
-									$.each(data,function(key, itemname) {
 
-														var index = key + 1;
-
-
-														var tr = $('<tr></tr>');
-														 
-													  	tr.append($('<td></td>').html(""+index));
-
-													  	tr.append($('<td></td>').html(itemname.itemName));
- 
-													  	tr.append($('<td></td>').html("<input type='text' name=disc_per"+itemname.itemId+" style='width:45px' class='form-control' id=disc_per"+itemname.itemId+" value="+discPer+" > "));
-														
- 
-														
-														
-														var pushQty=0;
-												    	  var  orderQty=0;
-												    	
-													      $.each(frId, function(key, id){  
-													    	  var qty=0;
-													    	  if(itemname.getOrderDataForPushOrder!=null)
-												    	 		 {
-													    		  
-													    		  //alert("Push Order Data not null");
-													    		
-												    	  $.each(itemname.getOrderDataForPushOrder, function(key, frData){
-												    			if (frData.frId == id && itemname.itemId==frData.itemId){
-												    	 				qty=frData.orderQty;
-
-												    		}
-					    	
-												    	
-												    	  });	
-												    	  
-	
-												    	 		 }
-													    	  
-													    	  if(qty > 0){
-												    		//var orderQty = "<td align=center><input type=number min=0 max=500 class=form-control  readonly='true'   id=itemId"+itemname.itemId+"orderQty"+ id+ " name=itemId"+itemname.itemId+"orderQty"+id+" value = "+qty+"></td>"; 
-												    		tr.append($('<td></td>').html("<input type=number min=0 max=500 class=form-control  readonly='true' style='  height: 24px;'  id=itemId"+itemname.itemId+"orderQty"+ id+ " name=itemId"+itemname.itemId+"orderQty"+id+" value = "+qty+">"));
-													    	  }
-													    	  else
-													    		{//var orderQty = "<td align=center><input onkeypress='return IsNumeric(event);' ondrop='return false;' onpaste='return false;' type=number min=0 max=500 class=form-control   id=itemId"+itemname.itemId+"orderQty"+ id+ " name=itemId"+itemname.itemId+"orderQty"+id+" value = "+qty+"></td>"; 
-	
-													    		tr.append($('<td></td>').html("<input onkeypress='return IsNumeric(event);' ondrop='return false;'style='  height: 24px;'  onpaste='return false;' type=number min=0 max=500 class=form-control   id=itemId"+itemname.itemId+"orderQty"+ id+ " name=itemId"+itemname.itemId+"orderQty"+id+" value = "+qty+" tabindex="+key+">"));
-													    		}
-												      });
-												    
-												 
-
-													$('#table_grid tbody').append(tr);
-												})
-									}
-													
-
-							});
+								});
 
 			}
 		}
@@ -367,14 +498,19 @@
 
 			var selectedMenu = $("#selectMenu").val();
 			var selectedFr = $("#selectFr").val();
-			
+			var selectedItem = $("#item").val();
 
 			var isValid = true;
 
-			if($('#selectMenu :selected').text() == ''){
-				    			
+			if ($('#selectMenu :selected').text() == '') {
+
 				isValid = false;
 				alert("Please select Menu");
+
+			}else if (selectedItem == "" || selectedItem == null) {
+
+				isValid = false;
+				alert("Please select Items");
 
 			} else if (selectedFr == "" || selectedFr == null) {
 
@@ -391,43 +527,39 @@
 
 	<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 	<script type="text/javascript">
+		function franchasee() {
+			var frName = [];
 
-		
-    
-	function franchasee() {
-        var frName = [];
-       
-        var i=0;
-   
-        var tr;
-        tr = document.getElementById('table_grid').tHead.children[0];
-        tr.insertCell(0).outerHTML = "<th aligh='right'>Sr.</th>"
-        tr.insertCell(1).outerHTML = "<th aligh='right'>ItemName</th>"
-        tr.insertCell(2).outerHTML = "<th>Disc%</th>"
-        $.each($("#selectFr option:selected"), function(){            
-        	frName.push($(this).text());
-        	i++;
-        });
-        i=i-1;
-        $.each(frName, function(){  
-       
-            tr.insertCell(3).outerHTML = "<th>"+frName[i] +"</th>"
-            i--;
-       });
-        	
-        
-	}
-	
-	var specialKeys = new Array();
-    specialKeys.push(8); //Backspace
-    function IsNumeric(e) {
-        var keyCode = e.which ? e.which : e.keyCode
-        var ret = ((keyCode >= 48 && keyCode <= 57) || specialKeys.indexOf(keyCode) != -1 || keyCode==9);
-       // document.getElementById("error").style.display = ret ? "none" : "inline";
-        return ret;
-    }
+			var i = 0;
 
-</script>
+			var tr;
+			tr = document.getElementById('table_grid').tHead.children[0];
+			tr.insertCell(0).outerHTML = "<th aligh='right'>Sr.</th>"
+			tr.insertCell(1).outerHTML = "<th aligh='right'>ItemName</th>"
+			tr.insertCell(2).outerHTML = "<th>Disc%</th>"
+			$.each($("#selectFr option:selected"), function() {
+				frName.push($(this).text());
+				i++;
+			});
+			i = i - 1;
+			$.each(frName, function() {
+
+				tr.insertCell(3).outerHTML = "<th>" + frName[i] + "</th>"
+				i--;
+			});
+
+		}
+
+		var specialKeys = new Array();
+		specialKeys.push(8); //Backspace
+		function IsNumeric(e) {
+			var keyCode = e.which ? e.which : e.keyCode
+			var ret = ((keyCode >= 48 && keyCode <= 57)
+					|| specialKeys.indexOf(keyCode) != -1 || keyCode == 9);
+			// document.getElementById("error").style.display = ret ? "none" : "inline";
+			return ret;
+		}
+	</script>
 
 
 	<!--basic scripts-->
