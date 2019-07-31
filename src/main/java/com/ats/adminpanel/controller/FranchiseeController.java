@@ -2354,15 +2354,10 @@ public class FranchiseeController {
 		logger.info("Franchisee Response " + franchiseeAndMenuList.getAllFranchisee());
 
 		List<Menu> menuList = franchiseeAndMenuList.getAllMenu();
-		Menu frMenu = new Menu();
-		for (Menu menu : menuList) {
-			if (menu.getMainCatId() == 6) {
-				frMenu = menu;
-				break;
-			}
-		}
-		int catId = 6;
-		int menuId = frMenu.getMenuId();
+		System.err.println("MENU LIST ------------------- EDIT----------"+menuList);
+	
+		//int catId = 6;
+		//int menuId = frMenu.getMenuId();
 		// ------------------------------------------------------------------------
 		// ------------Service Call to get Selected Record for Edit by Id----------
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
@@ -2370,6 +2365,17 @@ public class FranchiseeController {
 
 		GetConfiguredSpDayCk getConfiguredSpDayCk = restTemplate.postForObject(Constants.url + "getConfSpDayCake", map,
 				GetConfiguredSpDayCk.class);
+		
+		/*Menu frMenu = new Menu();
+		for (Menu menu : menuList) {
+			if (menu.getMainCatId() == getConfiguredSpDayCk.getCatId()) {
+				frMenu = menu;
+				break;
+			}
+		}*/
+		
+		int catId =getConfiguredSpDayCk.getCatId();
+		int menuId = getConfiguredSpDayCk.getMenuId();
 
 		// ------------------------------------------------------------------------
 

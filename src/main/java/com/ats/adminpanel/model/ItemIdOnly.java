@@ -26,4 +26,11 @@ public class ItemIdOnly {
 		this.itemName = itemName;
 	}
 
+	@Override
+	public String toString() {
+		return "ItemIdOnly [id=" + id + ", itemName=" + itemName + "]";
+	}
+	
+	
+
 }

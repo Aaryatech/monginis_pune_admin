@@ -44,6 +44,7 @@ import com.ats.adminpanel.model.AllFrIdName;
 import com.ats.adminpanel.model.AllFrIdNameList;
 import com.ats.adminpanel.model.GenerateBill;
 import com.ats.adminpanel.model.Info;
+import com.ats.adminpanel.model.ItemIdOnly;
 import com.ats.adminpanel.model.Order;
 import com.ats.adminpanel.model.Orders;
 import com.ats.adminpanel.model.accessright.ModuleJson;
@@ -63,7 +64,9 @@ public class PushOrderController {
 	AllFrIdNameList allFrIdNameList;
 	List<Menu> menuList;// = new ArrayList<Menu>();
 	List<String> selectedFrList;
+	List<String> selectedItemList;
 	ArrayList<Integer> selectedFrIdList;
+	ArrayList<Integer> selectedItemIdList;
 	List<Menu> selectedMenuList = new ArrayList<Menu>();
 	public static List<Item> items;
 	int menuId;
@@ -160,24 +163,72 @@ public class PushOrderController {
 		selectedFrIdList = new ArrayList();
 		List<AllFrIdName> allFrList = allFrIdNameList.getFrIdNamesList();
 
+		String selectedItem = request.getParameter("item_id");
+
+		selectedItem = selectedItem.substring(1, selectedItem.length() - 1);
+		selectedItem = selectedItem.replaceAll("\"", "");
+
+		selectedItemList = new ArrayList<>();
+
+		selectedItemList = Arrays.asList(selectedItem.split(","));
+		System.out.println("ITEM ID ---------------------------- " + selectedItem);
+
+		List<ItemIdOnly> itemList = null;
+		if (selectedItemList.contains("-1")) {
+
+			System.out.println("************************* 1");
+
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+			map.add("menuId", menuId);
+			
+			ParameterizedTypeReference<List<ItemIdOnly>> typeRef = new ParameterizedTypeReference<List<ItemIdOnly>>() {
+			};
+			ResponseEntity<List<ItemIdOnly>> responseEntity = restTemplate.exchange(
+					Constants.url + "getItemsByMenuId", HttpMethod.POST, new HttpEntity<>(map), typeRef);
+			
+			itemList = responseEntity.getBody();
+
+			System.out.println("************************* 2" + itemList);
+
+			List<Integer> tempItemIdList=new ArrayList<>();
+			
+			try {
+				if (itemList != null) {
+					for (int i = 0; i < itemList.size(); i++) {
+						//int id=itemList.get(i).getId();
+						tempItemIdList.add(itemList.get(i).getId());
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			selectedItem = tempItemIdList.toString().substring(1, tempItemIdList.toString().length() - 1);
+			System.out.println("SUBSTRING --------------------------------- " + selectedItem);
+			selectedItem = selectedItem.replaceAll(" ", "");
+
+			System.out.println("************************* " + selectedItem);
+
+		}
+
 		for (int i = 0; i < menuList.size(); i++) {
 			if (menuList.get(i).getMenuId() == menuId) {
 				selectedMainCatId = menuList.get(i).getMainCatId();
 			}
 		}
 
-		System.out.println("Before Rest of Items   and mennu id is  :  " + selectedMenu);
+		// System.out.println("Before Rest of Items and mennu id is : " + selectedMenu);
 
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 
-		map.add("itemGrp1", selectedMainCatId);
+		map.add("itemIds", selectedItem);
 
 		try {
 
 			ParameterizedTypeReference<List<Item>> typeRef = new ParameterizedTypeReference<List<Item>>() {
 			};
 			ResponseEntity<List<Item>> responseEntity = restTemplate.exchange(
-					Constants.url + "getItemsByCatIdAndSortId", HttpMethod.POST, new HttpEntity<>(map), typeRef);
+					Constants.url + "getItemsByIdAndSortId", HttpMethod.POST, new HttpEntity<>(map), typeRef);
 
 			items = responseEntity.getBody();
 
@@ -186,7 +237,7 @@ public class PushOrderController {
 			System.out.println(e.getMessage());
 
 		}
-		System.out.println("After Rest of Items   and mennu id is  :");
+		// System.out.println("After Rest of Items and mennu id is :");
 
 		map = new LinkedMultiValueMap<String, Object>();
 
@@ -201,7 +252,7 @@ public class PushOrderController {
 
 		// System.out.println("push order data "+pushOrderData.toString());
 
-		System.out.println("Item List: " + items.toString());
+		// System.out.println("Item List: " + items.toString());
 
 		// new code start
 
@@ -236,7 +287,7 @@ public class PushOrderController {
 		int x = 0;
 		for (int j = 0; j < items.size(); j++) {
 
-			System.out.println("Inside First For ");
+			// System.out.println("Inside First For ");
 
 			pushOrder = new PushOrderList();
 
@@ -251,20 +302,20 @@ public class PushOrderController {
 
 					if (pushOrderData.get(k).getItemId() == items.get(j).getId()) {
 						x = x + 1;
-						System.out.println("matched " + x);
+						// System.out.println("matched " + x);
 
 						prevOrderData.setFrId(pushOrderData.get(k).getFrId());
 						prevOrderData.setItemId(pushOrderData.get(k).getItemId());
 						prevOrderData.setOrderId(pushOrderData.get(k).getOrderId());
 						prevOrderData.setOrderQty(pushOrderData.get(k).getOrderQty());
 
-						System.out.println("prev Order Dat " + prevOrderData.toString());
+						// System.out.println("prev Order Dat " + prevOrderData.toString());
 
 						prevPushOrderList.add(prevOrderData);
 
 						pushOrder.setGetOrderDataForPushOrder(prevPushOrderList);
 
-						System.out.println("prev Order Dat List " + prevPushOrderList.toString());
+						// System.out.println("prev Order Dat List " + prevPushOrderList.toString());
 
 					}
 
@@ -277,7 +328,7 @@ public class PushOrderController {
 
 		}
 
-		System.out.println("to String push Order List " + pushOrdeList.toString());
+		// System.out.println("to String push Order List " + pushOrdeList.toString());
 
 		/*
 		 * Ganesh code Comment: String selectedFr = request.getParameter("fr_id_list");
