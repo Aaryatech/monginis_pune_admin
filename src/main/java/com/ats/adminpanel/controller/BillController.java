@@ -2680,7 +2680,7 @@ public class BillController {
 		System.out.println("URL " + url);
 		// http://monginis.ap-south-1.elasticbeanstalk.com
 		// File f = new File("/home/ats-12/bill.pdf");
-		File f = new File("/home/supertom/apache-tomcat-8.5.35/webapps/admin/bill.pdf");
+		File f = new File(Constants.BILL_REPORT_PATH);
 		// File f = new
 		// File("/Users/MIRACLEINFOTAINMENT/ATS/uplaods/reports/ordermemo221.pdf");
 
@@ -2700,7 +2700,7 @@ public class BillController {
 		String appPath = context.getRealPath("");
 		String filename = "ordermemo221.pdf";
 		// String filePath = "/home/ats-12/bill.pdf";
-		String filePath = "/home/supertom/apache-tomcat-8.5.35/webapps/admin/bill.pdf";
+		String filePath = Constants.BILL_REPORT_PATH;
 		// String filePath =
 		// "/Users/MIRACLEINFOTAINMENT/ATS/uplaods/reports/ordermemo221.pdf";
 

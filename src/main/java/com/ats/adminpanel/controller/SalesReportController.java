@@ -5757,7 +5757,7 @@ public class SalesReportController {
 					rowData.add("" + roundUp(salesReturnQtyReport.get(i).getTotGrnQty()));
 					rowData.add(roundUp(
 							(salesReturnQtyReport.get(i).getTotBillQty() - (salesReturnQtyReport.get(i).getTotGrnQty()
-									+ salesReturnQtyReport.get(i).getTotGrnQty())))
+									+ salesReturnQtyReport.get(i).getTotGvnQty())))
 							+ "");
 				}
 				rowData.add("" + totBillQty);
@@ -6195,7 +6195,7 @@ public class SalesReportController {
 		String url = request.getParameter("url");
 		System.out.println("URL " + url);
 
-		File f = new File("/home/supertom/apache-tomcat-8.5.35/webapps/admin/report.pdf");
+		File f = new File(Constants.SALES_REPORT_PATH);
 		// File f = new File("/home/ats-12/Report.pdf");
 
 		try {
@@ -6212,7 +6212,7 @@ public class SalesReportController {
 		String appPath = context.getRealPath("");
 		// String filePath = "/home/ats-12/Report.pdf";
 
-		String filePath = "/home/supertom/apache-tomcat-8.5.35/webapps/admin/report.pdf";
+		String filePath =Constants.SALES_REPORT_PATH;
 
 		// construct the complete absolute path of the file
 		String fullPath = appPath + filePath;
@@ -6305,7 +6305,7 @@ public class SalesReportController {
 		String url = request.getParameter("url");
 		System.out.println("URL " + url);
 
-		File f = new File("/home/supertom/apache-tomcat-8.5.35/webapps/admin/report.pdf");
+		File f = new File(Constants.SALES_REPORT_PATH);
 		// File f = new File("/opt/apache-tomcat-8.5.6/webapps/uploads/report.pdf");
 		// File f = new File("/home/ats-12/Report.pdf");
 
@@ -6321,7 +6321,7 @@ public class SalesReportController {
 		// get absolute path of the application
 		ServletContext context = request.getSession().getServletContext();
 		String appPath = context.getRealPath("");
-		String filePath = "/home/supertom/apache-tomcat-8.5.35/webapps/admin/report.pdf";
+		String filePath =Constants.SALES_REPORT_PATH;
 
 		// String filePath = "/home/ats-12/Report.pdf";
 

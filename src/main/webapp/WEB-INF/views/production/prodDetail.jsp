@@ -791,7 +791,6 @@ function changeQty(id)
 $('#complete_prod').click(function(){
 	document.getElementById("prodUnit").style.display="block";
 	var prodUnit=document.getElementById("prodUnit").value;
-	alert(prodUnit);
 	
     var form = document.getElementById("validation_form")
    form.action ="${pageContext.request.contextPath}/completeProd";

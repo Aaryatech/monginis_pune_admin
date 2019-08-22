@@ -541,6 +541,10 @@
 
 																			var netValue = report.spValue
 																					- report.grnGvnAmt;
+																			
+																			netQtyTotal = netQtyTotal+ netQty;
+
+																			netValueTotal = netValueTotal+ netValue;
 
 																			spQty = spQty
 																					+ report.spQty;

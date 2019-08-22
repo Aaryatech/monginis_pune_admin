@@ -213,10 +213,10 @@ table {
 
 
 
-									<div align="right" class="form-group">
+									<div align="center" class="form-group" style="background-color: #ffffff;">
 
 										<div
-											class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-0">
+											class="col-sm-25 col-sm-offset-2 col-lg-15 col-lg-offset-0">
 											<input type="submit" class="btn btn-primary" value="Submit"
 												id="submitBtn" disabled="disabled"> <input
 												type="button" id="expExcel" class="btn btn-primary"
@@ -230,7 +230,7 @@ table {
 
 
 										</div>
-
+<br>
 									</div>
 							</form>
 						</div>

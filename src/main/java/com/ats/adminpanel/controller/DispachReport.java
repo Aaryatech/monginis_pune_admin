@@ -2298,7 +2298,7 @@ public class DispachReport {
 		String url = request.getParameter("url");
 		System.out.println("URL " + url);
 
-		File f = new File("/home/supertom/apache-tomcat-8.5.35/webapps/admin/report.pdf");
+		File f = new File(Constants.DISPATCH_PATH);
 		// File f = new File("/opt/apache-tomcat-8.5.6/webapps/uploads/report.pdf");
 		// File f =new File("/home/ats-12/Report.pdf");
 
@@ -2314,7 +2314,7 @@ public class DispachReport {
 		// get absolute path of the application
 		ServletContext context = request.getSession().getServletContext();
 		String appPath = context.getRealPath("");
-		String filePath = "/home/supertom/apache-tomcat-8.5.35/webapps/admin/report.pdf";
+		String filePath =Constants.DISPATCH_PATH;
 
 		// String filePath ="/home/lenovo/Documents/pdf/Report.pdf";
 

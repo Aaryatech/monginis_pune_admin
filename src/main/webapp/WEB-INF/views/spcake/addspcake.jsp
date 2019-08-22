@@ -157,7 +157,7 @@
 											<label class="col-sm-3 col-lg-2 control-label">Description</label>
 											<div class="col-sm-9 col-lg-10 controls">
 												<textarea class="form-control" name="sp_desc" data-rule-required="true"
-													cols="" rows="" id="sp_desc" placeholder="Description"></textarea>
+													cols="" rows="" id="sp_desc" placeholder="Description" ></textarea>
 
 											</div>
 
@@ -167,7 +167,7 @@
 									<div class="col-sm-9 col-lg-10 controls">
 										<input type="text" name="spck_hsncd" id="spck_hsncd"
 											placeholder="HSN Code" class="form-control"
-											data-rule-required="true" value="" />
+											data-rule-required="true" value="19059010" />
 									</div>
 								</div>
 								<div class="form-group">
@@ -179,15 +179,23 @@
 											<option value="">Select Special Cake UOM</option>
 											<c:forEach items="${rmUomList}" var="rmUomList"
 												varStatus="count">
-											
-														<option value="${rmUomList.uomId}"><c:out value="${rmUomList.uom}"/></option>
+											  <c:choose>
+											  <c:when test="${rmUomList.uom eq 'Kg'}">
+											  <option value="${rmUomList.uomId}" selected><c:out value="${rmUomList.uom}"/></option>
+											  
+											  </c:when>
+											  <c:otherwise>
+											   <option value="${rmUomList.uomId}" ><c:out value="${rmUomList.uom}"/></option>
+											  
+											  </c:otherwise>
+											  </c:choose>
 												
 											</c:forEach>
 										</select>
 									</div>
 								</div>
 								<input type="hidden" name="sp_uom_name" id="sp_uom_name"
-									value="" />
+									value="Kg" />
 							
 
 								<div class="form-group">
@@ -200,7 +208,7 @@
 
 													<option value="0" selected>Alphabetical</option>
 													<option value="1">Numerical</option>
-													<option value="2">Regular</option>
+													<option value="2" selected>Regular</option>
 												
 										</select>
 									</div>
@@ -211,13 +219,13 @@
 											<div class="col-sm-9 col-lg-10 controls">
 												<select class="form-control input-sm" name="spc_type" id="spc_type">
 													<option value="">Select Type</option>
-														<option value="0">All</option>
+													<!-- 	<option value="0">All</option> -->
 													<option value="1">Chocolate</option>
-													<option value="2">FC</option>
-													<option value="3">BC</option>
+													<!-- <option value="2">FC</option>
+													<option value="3">BC</option> -->
 													<option value="4">Chocolate+FC</option>
-													<option value="5">Chocolate+BC</option>
-													<option value="6">FC+BC</option>
+													<!-- <option value="5">Chocolate+BC</option>
+													<option value="6">FC+BC</option> -->
 												
 												</select>
 											</div>
@@ -321,7 +329,7 @@
 									<div class="col-sm-9 col-lg-10 controls">
 										<input type="text" name="margin" id="margin"
 											placeholder="Enter Margin %" class="form-control"
-											data-rule-required="true" data-rule-number="true" value="25" onchange="calMrp()"/>
+											data-rule-required="true" data-rule-number="true" value="21" onchange="calMrp()"/>
 									</div>
 								</div>
 									 <div class="form-group">
@@ -371,7 +379,7 @@
 											<div class="col-sm-9 col-lg-10 controls">
 												<input type="text" name="order_disc" id="order_disc"
 											        placeholder="Order Discount" class="form-control"
-													data-rule-number="true" data-rule-required="true" />
+													data-rule-number="true" data-rule-required="true" value="0"/>
 											</div>
 										</div>
                                        <div class="form-group">
@@ -380,7 +388,7 @@
 											<div class="col-sm-9 col-lg-10 controls">
 												<input type="text" name="tax_3" id="tax_3"
 													tax_3"" placeholder="IGST" class="form-control"
-													data-rule-required="true" data-rule-number="true" value="0.0" onchange="calTotalGst()"/>
+													data-rule-required="true" data-rule-number="true" value="18" onchange="calTotalGst()"/>
 											</div>
 										</div>
 										 <div class="form-group">
@@ -390,7 +398,7 @@
 												<input type="text" name="tax_1" id="tax_1"
 													 placeholder="CGST" class="form-control"
 													data-rule-required="true"
-													data-rule-number="true" value="0.0" onchange="calTotalGst()"/>
+													data-rule-number="true" value="9.0" onchange="calTotalGst()"/>
 											</div>
 										</div>
 
@@ -401,7 +409,7 @@
 												<input type="text" name="tax_2" id="tax_2"
 													 placeholder="SGST" class="form-control"	
 													data-rule-required="true" data-rule-number="true"
-													value="0.0" />
+													value="9.0" />
 													
 											</div>
 										</div>
@@ -419,7 +427,7 @@
 									<label class="col-sm-3 col-lg-2 control-label">Total GST Applicable %</label>
 									<div class="col-sm-9 col-lg-10 controls">
 										<input type="text" name="total_gst_appli" id="total_gst_appli"
-											placeholder="Total GST Applicable" class="form-control"
+											placeholder="Total GST Applicable" class="form-control" value="18"
 											data-rule-required="true" data-rule-number="true" disabled/>
 									</div>
 								</div>
@@ -436,7 +444,7 @@
 
 														<c:forEach items="${eventList}" var="eventList">
 
-															<option value="${eventList.speId}">${eventList.speName}</option>
+															<option value="${eventList.speId}" selected>${eventList.speName}</option>
 														</c:forEach>
 
 												</select>
@@ -458,7 +466,7 @@
 											<div class="col-sm-9 col-lg-10 controls">
                                                <input type="text" name="no_of_char" id="no_of_char"
 											placeholder="No. of characters" class="form-control"
-											data-rule-required="true" data-rule-number="true" />
+											data-rule-required="true" data-rule-number="true" value="0"/>
 											</div>
 										</div>
 
@@ -507,9 +515,9 @@
 												Used?</label>
 											<div class="col-sm-9 col-lg-10 controls">
 												<label class="radio-inline"> <input type="radio"
-													name="is_used" id="is_used" value="0" checked > No
+													name="is_used" id="is_used" value="0"  > No
 												</label> <label class="radio-inline"> <input type="radio"
-													name="is_used" id="is_used" value="1" /> Yes
+													name="is_used" id="is_used" value="1" checked/> Yes
 												</label>
 											</div>
 										</div>
@@ -730,7 +738,7 @@ $(document).ready(function() {
 					
 					for ( var i = 0; i < len; i++) {
                         $("#erplinkcode").append(
-                                $("<option></option>").attr(
+                                $("<option selected></option>").attr(
                                     "value", data[i].spfId).text(data[i].spfName)
                             );
 					}

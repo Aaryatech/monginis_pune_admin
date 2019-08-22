@@ -9,7 +9,7 @@
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 
 	<c:url var="getCumulativeCrn" value="/getCumulativeCrn" />
-	<c:url var="excelForCreaditNote" value="/excelForCreaditNote" />
+	<c:url var="createCumPrint" value="/createCumPrint" />
 
 	<c:url var="excelForCreaditNoteReport" value="/exportToExcelReport" />
 	<c:url value="/excelForCrnExcel" var="excelForCrnExcel" />
@@ -120,7 +120,7 @@
 							</form>
 
 							<form action="getCrnCheckedHeaders" class="form-horizontal"
-								method="post" id="validation-form">
+								method="post" id="validation-form1">
 
 								<div class="box">
 									<div class="box-title">
@@ -143,8 +143,8 @@
 												id="table1">
 												<thead  style="background-color:#f3b5db; ">
 													<tr>
-														<th>Sr No <!-- <input type="checkbox"
-															onClick="selectBillNo(this)" /> --></th>
+														<th>Sr No </th><th> <input type="checkbox"
+															onClick="selectBillNo(this)" /></th>
 														<th class="col-md-1">Date</th>
 														<th class="col-md-2">Franchise Name</th>
 														<th class="col-md-2">Taxable Amt</th>
@@ -158,18 +158,18 @@
 												<tbody>
 											</table>
 										</div>
-<!-- 
+                                     <!-- 
 										<div class="form-group">
 											<div class="col-sm-2 col-lg-2 controls">
 												<input type="button" value="PDF Report "
 													onclick="genPdfReport()" class="btn btn-primary">
-											</div>
+											</div> -->
 
 											<div class="col-sm-5 col-lg-1 controls">
 												<input type="button" id="expExcel" class="btn btn-primary"
-													value="Excel Report" onclick="createExelReport();">
+													value="Cumulative Print" onclick="createCumPrint()">
 											</div>
-
+                                         <!-- 
 											<label class="col-sm-3 col-lg-1 control-label"></label>
 											<div class="col-sm-2 col-lg-2 controls">
 												<input type="button" value="Generate PDF For Fr"
@@ -186,9 +186,9 @@
                                      </div> -->
 										</div>
 										
-									</div>
+									</div></form>
 								</div>
-							</form>
+							
 						</div>
 					</div>
 				</div>
@@ -296,10 +296,10 @@
 
 													tr.append($('<td></td>')
 															.html(key + 1));
+												      var crnId=headers.crnNo+"";
+												 	tr
+															.append($('<td><input type=checkbox name="select_to_agree" id="select_to_agree'+key+'"  value='+crnId+'></td>'));
 
-												/* 	tr
-															.append($('<td><input type=checkbox name="select_to_agree" id="select_to_agree'+key+'"  value='+headers.crnId+'></td>'));
- */
 													tr
 															.append($(
 																	'<td></td>')
@@ -330,7 +330,7 @@
 																	'<td></td>')
 																	.html(
 																			headers.crnGrandTotal));
-                                                  var crnId=headers.crnNo+"";
+                                            
 													tr
 															.append($('<td ><a href="#" class="action_btn" onclick="genPdf(['
 																	+ crnId
@@ -360,39 +360,44 @@
 	</script>
 	<script>
 	
-	function createExelHsnwise() {
-		 
-	   var select_to_print = document.forms[1];
-		var txt = "";
-		var i;
+	function createCumPrint() {
+
+	    var select_to_print=document.forms["validation-form1"];
+
+		var txt=''; 
+	    var i;
 		var flag=0;
-		var all=0;
+		 var all=0;
 		 for (i = 0; i < select_to_print.length; i++) {
 			if (select_to_print[i].checked  && select_to_print[i].value!="on") {
-	    		txt = txt + select_to_print[i].value + ",";
+	    		txt=txt+'"'+select_to_print[i].value+'"_';
 	    		flag=1;
 		}
-		} 
+		}
+		 var newStr = txt.substring(0, txt.length - 1);
+		 newStr=newStr+'';
 		 if(flag==1)
 			 {
 		$
 				.getJSON(
-						'${excelForCrnExcel}',
+						'${createCumPrint}',
 						{
-							checkboxes : txt ,
+							checkboxes :newStr,
 						
 							ajax : 'true'
 						},
 						function(data) {
 							
-						 //alert("Excel Ready");
-							 exportToExcel();
+						 if(data==true)
+							 {
+								window.open('${pageContext.request.contextPath}/pdf/getCrnCumulativePrintHeaders/');
+							 }
 						 
 						});
 			 }
 		 else
 			 {
-			 alert("Please select minimum 1 CRN Note ");
+			 alert("Please select minimum 1 Cumulative CRN Note ");
 			 }
 
 	}

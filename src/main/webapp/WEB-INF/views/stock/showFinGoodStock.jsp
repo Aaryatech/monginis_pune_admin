@@ -87,7 +87,7 @@ table {
 						</div>
 
 						<div class="box-content">
-							<form class="form-horizontal" id="validation-form1">
+							<form class="form-horizontal" id="validation-form1" style="background-color: #ffffff;">
 
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">Category</label>
@@ -213,7 +213,7 @@ table {
 							</form>
 							<form method="post" id="validation-form">
 
-								<div class="box">
+								<div class="box" style="background-color: #ffffff;">
 									<!-- 	<div class="box-title">
 										<h3>
 											<i class="fa fa-table"></i> Finished Good
@@ -224,9 +224,9 @@ table {
 											<a data-action="close" href="#"><i class="fa fa-times"></i></a>
 										</div>
 									</div>
-									<br> -->
+									<br> --><div style="background-color: #ffffff;">
 									<div
-										class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-4">
+										class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-4" >
 										<!-- 										<input type="submit" class="btn btn-primary" value="Submit">
  -->
 										<input type="text" readonly
@@ -237,7 +237,7 @@ table {
 
 									</div>
 
-									<div class="box-content">
+									<div class="box-content" >
 
 										<div class="clearfix"></div>
 										<div id="table-scroll" class="table-scroll">
@@ -313,7 +313,7 @@ table {
 
 									</div>
 
-									<div align="center" class="form-group">
+									<div align="center" class="form-group" style="background-color: #ffffff;">
 
 										<div
 											class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-0">
@@ -326,7 +326,7 @@ table {
 										</div>
 
 									</div>
-
+                                 
 									<input type="button" class="btn btn-primary"
 										value="Closing Qty PDF" id="PDFButtonClosing"
 										onclick="genClosingQtyPdf()" disabled> <input
@@ -338,6 +338,8 @@ table {
 									<input type="button" id="expExcelSummery"
 										class="btn btn-primary" value="EXPORT TO Excel Summery"
 										onclick="exportToExcel1();" disabled>
+										</div>
+										</div>
 							</form>
 						</div>
 

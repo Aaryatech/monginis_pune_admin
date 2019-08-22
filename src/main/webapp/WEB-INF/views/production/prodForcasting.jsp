@@ -134,7 +134,7 @@
 </form>
 					<form action="${pageContext.request.contextPath}/submitProductionPlan" method ="post">
 
-								<div class="box">
+								<div class="box" >
 									<!-- <div class="box-title">
 										<h3>
 											<i class="fa fa-table"></i> Production List
@@ -229,10 +229,10 @@
 										<!-- 	</div>//added div -->
 										</div>
 									</div>
-								</div>
+								
 						
 						
-								<div align="center" class="form-group">
+								<div align="center" class="form-group" style="background-color: #ffffff;">
 								<div class="col-sm-5 col-lg-10 controls">
 
 										Select Time Slot <select  data-placeholder="Choose Time Slot"
@@ -253,7 +253,7 @@
 
 
 									</div>
-								</div>
+								</div></div>
 						</form>		</div>
 					</div>
 				</div>

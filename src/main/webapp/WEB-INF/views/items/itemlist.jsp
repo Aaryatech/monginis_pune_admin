@@ -268,12 +268,15 @@
 												
 												<td align="left">
 												<c:choose>
-												<c:when test="${itemsList.itemIsUsed==1}">
-													<c:out value="Active" />
-												</c:when>
-												<c:when test="${itemsList.itemIsUsed==2}"><c:out value="Special Days"/></c:when>
-												<c:when test="${itemsList.itemIsUsed==3}"><c:out value="Sp Day Cake"/></c:when>
+												<c:when test="${itemsList.itemIsUsed==1}"><c:out value="Active" /></c:when>
 												<c:when test="${itemsList.itemIsUsed==4}"><c:out value="InActive"/></c:when>
+												<c:when test="${itemsList.itemIsUsed==11}"><c:out value="Monday Active"/></c:when>
+												<c:when test="${itemsList.itemIsUsed==12}"><c:out value="Tuesday Active"/></c:when>
+												<c:when test="${itemsList.itemIsUsed==13}"><c:out value="Wednesday Active"/></c:when>
+												<c:when test="${itemsList.itemIsUsed==14}"><c:out value="Thursday Active"/></c:when>
+												<c:when test="${itemsList.itemIsUsed==15}"><c:out value="Friday Active"/></c:when>
+												<c:when test="${itemsList.itemIsUsed==16}"><c:out value="Saturday Active"/></c:when>
+												<c:when test="${itemsList.itemIsUsed==17}"><c:out value="Sunday Active"/></c:when>
 												</c:choose>
 											
 												</td>

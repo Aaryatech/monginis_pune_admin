@@ -14,6 +14,7 @@
 
 </head>
 <body>
+		<c:forEach items="${cumulativePrintCrnList}" var="cumulativePrintCrnList" varStatus="count">
 	<table width="100%" border="0" cellpadding="0" cellspacing="0"
 		style="border-left: 1px solid #313131; border-right: 1px solid #313131;">
 		<tr>
@@ -44,9 +45,9 @@
 		</tr>
 		<tr>
 			<td width="30%" colspan="3" align="left"
-				style="border-top: 1px solid #313131; padding: 4px; font-size: 10px; font-weight: bold;"><b>${crnPrint[0].creditHeader.frName}</b>&nbsp;${crnPrint[0].creditHeader.frAddress}</td>
+				style="border-top: 1px solid #313131; padding: 4px; font-size: 10px; font-weight: bold;"><b>${cumulativePrintCrnList.crnPrint[0].creditHeader.frName}</b>&nbsp;${cumulativePrintCrnList.crnPrint[0].creditHeader.frAddress}</td>
 			<td width="70%" colspan="6" align="left"
-				style="border-top: 1px solid #313131; border-left: 1px solid #313131; padding: 4px; font-size: 10px; font-weight: bold;"><b>${crnPrint[0].creditHeader.frName}</b>&nbsp;${crnPrint[0].creditHeader.frAddress}</td>
+				style="border-top: 1px solid #313131; border-left: 1px solid #313131; padding: 4px; font-size: 10px; font-weight: bold;"><b>${cumulativePrintCrnList.crnPrint[0].creditHeader.frName}</b>&nbsp;${cumulativePrintCrnList.crnPrint[0].creditHeader.frAddress}</td>
 
 		</tr>
 
@@ -62,11 +63,11 @@
 		<tr>
 			<td width="30%" colspan="3" align="left"
 				style="border-top: 1px solid #313131; padding: 4px; font-size: 10px; font-weight: bold;">GSTIIN:
-				&nbsp;<b>${crnPrint[0].creditHeader.frGstNo}</b>
+				&nbsp;<b>${cumulativePrintCrnList.crnPrint[0].creditHeader.frGstNo}</b>
 			</td>
 			<td width="70%" colspan="6" align="left"
 				style="border-top: 1px solid #313131; border-left: 1px solid #313131; padding: 4px; font-size: 10px; font-weight: bold;">GSTIIN:
-				&nbsp;<b>${crnPrint[0].creditHeader.frGstNo}</b>&nbsp;&nbsp;&nbsp;&nbsp;State:
+				&nbsp;<b>${cumulativePrintCrnList.crnPrint[0].creditHeader.frGstNo}</b>&nbsp;&nbsp;&nbsp;&nbsp;State:
 				&nbsp;<b>${Constants.STATE}</b>
 			</td>
 
@@ -77,7 +78,7 @@
 				NOTE</td>
 
 		</tr>
-		<c:forEach items="${crnPrint}" var="headerH" varStatus="count">
+		<c:forEach items="${cumulativePrintCrnList.crnPrint}" var="headerH" varStatus="count">
 			<table width="100%" border="0" cellpadding="0" cellspacing="0"
 				style="border-left: 1px solid #313131; border-right: 1px solid #313131;">
 
@@ -639,7 +640,7 @@
 		<c:set var="hsnTotalCgst" value="0" />
 		<c:set var="hsnTotalSgst" value="0" />
 		<c:set var="hsnTotal" value="0" />
-		<c:forEach items="${totalSummaryList}" var="totalSummaryList"
+		<c:forEach items="${cumulativePrintCrnList.totalSummaryList}" var="totalSummaryList"
 			varStatus="cnt1">
 
 
@@ -780,6 +781,9 @@
 		</tr>
 
 	</table>
+	<div style="page-break-after: always;"></div>
+	
+	</c:forEach>
 
 </body>
 </html>

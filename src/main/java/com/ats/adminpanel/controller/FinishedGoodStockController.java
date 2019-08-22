@@ -1451,7 +1451,7 @@ public class FinishedGoodStockController {
 		String url = request.getParameter("url");
 		System.out.println("URL " + url);
 
-		File f = new File("/opt/tomcat-latest/webapps/uploads/Inward.pdf");
+		File f = new File(Constants.FINISHEDGOOD_REPORT_PATH);
 		// File f = new File("C:/pdf/ordermemo221.pdf");
 
 		try {
@@ -1468,7 +1468,7 @@ public class FinishedGoodStockController {
 		String appPath = context.getRealPath("");
 		// String filePath = "C:/pdf/ordermemo221.pdf";
 
-		String filePath = "/opt/tomcat-latest/webapps/uploads/Inward.pdf";
+		String filePath = Constants.FINISHEDGOOD_REPORT_PATH;
 
 		// construct the complete absolute path of the file
 		String fullPath = appPath + filePath;

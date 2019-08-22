@@ -1629,7 +1629,7 @@ public class PurchaseOrderController {
 		String url = request.getParameter("url");
 		System.out.println("URL " + url);
 		// http://monginis.ap-south-1.elasticbeanstalk.com
-		File f = new File("/opt/apache-tomcat-8.5.6/webapps/uploads/Po.pdf");
+		File f = new File(Constants.PO_PDF_PATH);
 		//File f = new File("/home/ats-12/Po.pdf");
 		System.out.println("I am here " + f.toString());
 		try {
@@ -1645,7 +1645,7 @@ public class PurchaseOrderController {
 		ServletContext context = request.getSession().getServletContext();
 		String appPath = context.getRealPath("");
 		String filename = "ordermemo221.pdf";
-		String filePath = "/opt/apache-tomcat-8.5.6/webapps/uploads/Po.pdf";
+		String filePath = Constants.PO_PDF_PATH;
 		//String filePath = "/home/ats-12/Po.pdf";
 		//String filePath = "/ordermemo221.pdf";
 

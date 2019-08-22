@@ -316,7 +316,11 @@
 									tr.append($('<td style="text-align:right;font-weight:bold;"></td>').html(""+totalGrnValue.toFixed(2)));
 									tr.append($('<td style="text-align:right;font-weight:bold;"></td>').html(""+totalNetVal2.toFixed(2)));
 									tr.append($('<td style="text-align:right;font-weight:bold;"></td>').html(""+totalInLac.toFixed(2)));
-									tr.append($('<td style="text-align:right;font-weight:bold;"></td>').html(""+totalRetPer.toFixed(2)));
+									var totRetPer=0;
+									 if(totalGrnValue>0){
+										 totRetPer=(totalGrnValue)/(totalSaleValue/100);
+									 }
+									tr.append($('<td style="text-align:right;font-weight:bold;"></td>').html(""+totRetPer.toFixed(2)));
 									$('#table_grid tbody')
 									.append(
 											tr);
