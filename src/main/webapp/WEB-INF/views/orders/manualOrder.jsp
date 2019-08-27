@@ -36,6 +36,7 @@
 	href="${pageContext.request.contextPath}/resources/assets/bootstrap-daterangepicker/daterangepicker.css" />
 
 <!--page specific css styles-->
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/tableSearch.css">
 
 <!--flaty css styles-->
 <link rel="stylesheet"
@@ -346,7 +347,13 @@ select {
 							
 		
 		<div class="box-content">
+		<div class="col-md-9" ></div> 
+					<label for="search" class="col-md-3" id="search">
+    <i class="fa fa-search" style="font-size:20px"></i>
+									<input type="text"  id="myInput" onkeyup="myFunction()" autocomplete="off" style="border-radius: 25px;" placeholder="Search items by Name" title="Type in a name">
+										</label>  <br> <br> <br>
 					<div class="row">
+					
 						<div class="col-md-12 table-responsive">
 							<table class="table table-bordered table-striped fill-head "
 								style="width: 100%" id="table_grid">
@@ -844,6 +851,31 @@ function checkOrderByStatus()
 		   onSearch();
 	   }
       }
+}
+</script>
+<script>
+function myFunction() {
+  var input, filter, table, tr, td,td1, i;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("table_grid");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[2];
+    td1 = tr[i].getElementsByTagName("td")[1];
+    if (td || td1) {
+      if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      }else if (td1.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      }  else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }//end of for
+  
+ 
+  
 }
 </script>
 
