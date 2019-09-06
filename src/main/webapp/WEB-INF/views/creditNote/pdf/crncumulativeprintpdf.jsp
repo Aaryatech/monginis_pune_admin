@@ -78,7 +78,9 @@
 				NOTE</td>
 
 		</tr>
+		<c:set var="penaltyTotalAmt" value="0" />
 		<c:forEach items="${cumulativePrintCrnList.crnPrint}" var="headerH" varStatus="count">
+		<c:set var="penaltyTotal" value="0" />
 			<table width="100%" border="0" cellpadding="0" cellspacing="0"
 				style="border-left: 1px solid #313131; border-right: 1px solid #313131;">
 
@@ -299,7 +301,8 @@
 											minFractionDigits="2" value="${crnDetail.sgstRs}" /></td>
 
 									<c:set var="totalSgst" value="${totalSgst+crnDetail.sgstRs}" />
-
+									<c:set var="penaltyTotal" value="${penaltyTotal+crnDetail.cessPer}" />
+									<c:set var="penaltyTotalAmt" value="${penaltyTotalAmt+crnDetail.cessPer}" />
 								</tr>
 							</c:when>
 							<%--   <c:otherwise>
@@ -425,8 +428,11 @@
 						style="border-left: 1px solid #313131; border-bottom: 1px solid #313131; padding: 4px; color: white; font-size: 10px;">-</td>
 					<td align="right"
 						style="border-left: 1px solid #313131; border-bottom: 1px solid #313131; padding: 4px; color: white; font-size: 10px;">-</td>
-					<td style="border-bottom: 1px solid #313131; font-size: 0px;">-</td>
-					<td style="border-bottom: 1px solid #313131; font-size: 10px;">-</td>
+					<!-- <td style="border-bottom: 1px solid #313131; font-size: 0px;">-</td> -->
+					<td  colspan="2" style="border-bottom: 1px solid #313131; font-size: 10px;font-weight:bold;">Penalty Amt: <fmt:formatNumber
+							type="number" minFractionDigits="2" groupingUsed="false"
+							maxFractionDigits="2"
+							value="${penaltyTotal}"/></td>
 					<td style="border-bottom: 1px solid #313131; font-size: 0px;">-</td>
 					<td
 						style="border-bottom: 1px solid #313131; padding: 4px; color: #000; font-size: 0px;">-</td>
@@ -597,9 +603,12 @@
 	<table width="100%" border="0" cellpadding="0" cellspacing="0"
 		style="border-right: 1px solid #313131">
 		<tr bgcolor="pink">
-			<td width="100%" colspan="12" align="left"
+			<td width="86%" colspan="8" align="left"
 				style="border-left: 1px solid #313131; border-bottom: 1px solid #313131; padding: 4px; font-size: 10px; font-weight: bold;">Total
-				Tax Summary</td>
+				Tax Summary</td><td  colspan="1" style="border-left: 1px solid #313131; border-bottom: 1px solid #313131; padding: 4px; font-size: 10px; font-weight: bold;">Total Penalty Amt:  <fmt:formatNumber
+							type="number" minFractionDigits="2" groupingUsed="false"
+							maxFractionDigits="2"
+							value="${penaltyTotalAmt}"/></td>
 
 		</tr>
 		<tr bgcolor="lightgrey">

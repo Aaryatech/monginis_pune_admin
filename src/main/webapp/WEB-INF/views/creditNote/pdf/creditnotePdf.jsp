@@ -186,6 +186,7 @@
 			<c:set var="totalAmt" value="0" />
 			<c:set var="totalCgst" value="0" />
 			<c:set var="totalSgst" value="0" />
+			<c:set var="penaltyTotal" value="0" />
 
 			<c:forEach items="${headerH.creditHeader.srNoDateList}" var="srNos">
 				<tr>
@@ -295,6 +296,8 @@
 										minFractionDigits="2" value="${crnDetail.sgstRs}" /></td>
 
 								<c:set var="totalSgst" value="${totalSgst+crnDetail.sgstRs}" />
+								
+								<c:set var="penaltyTotal" value="${penaltyTotal+crnDetail.cessPer}" />
 
 							</tr>
 						</c:when>
@@ -419,8 +422,11 @@
 					style="border-left: 1px solid #313131; border-bottom: 1px solid #313131; padding: 4px; color: white; font-size: 10px;">-</td>
 				<td align="right"
 					style="border-left: 1px solid #313131; border-bottom: 1px solid #313131; padding: 4px; color: white; font-size: 10px;">-</td>
-				<td style="border-bottom: 1px solid #313131; font-size: 0px;">-</td>
-				<td style="border-bottom: 1px solid #313131; font-size: 10px;">-</td>
+				<!-- <td style="border-bottom: 1px solid #313131; font-size: 0px;">-</td> -->
+				<td colspan="2" style="border-bottom: 1px solid #313131; font-size: 10px;font-weight:bold;">Penalty Amt: <fmt:formatNumber
+							type="number" minFractionDigits="2" groupingUsed="false"
+							maxFractionDigits="2"
+							value="${penaltyTotal}"/></td>
 				<td style="border-bottom: 1px solid #313131; font-size: 0px;">-</td>
 				<td
 					style="border-bottom: 1px solid #313131; padding: 4px; color: #000; font-size: 0px;">-</td>

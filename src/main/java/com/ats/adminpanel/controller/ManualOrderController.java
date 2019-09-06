@@ -125,10 +125,14 @@ public class ManualOrderController {
 	public @ResponseBody List<Orders> commonItemById(@RequestParam(value = "menuId", required = true) int menuId,
 			@RequestParam(value = "frId", required = true) int frId,
 			@RequestParam(value = "by", required = true) int by,
-			@RequestParam(value = "ordertype", required = true) int ordertype) throws ParseException {
+			@RequestParam(value = "ordertype", required = true) int ordertype,HttpServletRequest request, HttpServletResponse response) throws ParseException {
 
 		try {
 			// System.out.println("menuId " + menuId);
+			String selectedItem=request.getParameter("itemId");
+			selectedItem = selectedItem.substring(1, selectedItem.length() - 1);
+			selectedItem = selectedItem.replaceAll("\"", "");
+			
 			orderList = new ArrayList<Orders>();
 			RestTemplate restTemplate = new RestTemplate();
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -148,7 +152,7 @@ public class ManualOrderController {
 			}
 			int selectedCatId = frMenu.getMainCatId();
 
-			System.out.println("Finding Item List for Selected CatId=" + selectedCatId);
+			System.out.println("Finding Item List for  selectedItem=" + selectedItem);
 
 			java.util.Date utilDate = new java.util.Date(sqlCurrDate.getTime());
 
@@ -158,6 +162,7 @@ public class ManualOrderController {
 			map.add("frId", frId);
 			map.add("prodDate", formatter.format(utilDate));
 			map.add("ordertype", ordertype);
+			map.add("itemList", selectedItem);
 			ItemForMOrder[] itemRes = restTemplate.postForObject(Constants.url + "getItemListForMOrder", map,
 					ItemForMOrder[].class);
 			ArrayList<ItemForMOrder> itemList = new ArrayList<ItemForMOrder>(Arrays.asList(itemRes));

@@ -52,7 +52,7 @@
 
 				<div class=" box-content">
 					 
-		<div class="box">
+		<div class="">
 			<form id="submitPurchaseOrder"
 				action="${pageContext.request.contextPath}/requestPOFinalByDirectore"
 				method="post" enctype="multipart/form-data" onsubmit="return(validate());">
@@ -222,7 +222,7 @@
 						<div class="col-md-12 table-responsive">
 							<table class="table table-bordered table-striped fill-head "
 								style="width: 100%" id="table_grid">
-								<thead>
+								<thead style="background-color: pink;">
 									<tr>
 										<th>Sr.No.</th>
 										<th>Part Name</th>

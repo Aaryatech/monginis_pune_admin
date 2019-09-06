@@ -57,9 +57,9 @@
 											window.jQuery
 													|| document
 															.write('<script src="${pageContext.request.contextPath}/resources/assets/jquery/jquery-2.0.3.min.js"><\/script>')
-										</script>
+										</script><%-- 
 <script
-	src="${pageContext.request.contextPath}/resources/assets/bootstrap/js/bootstrap.min.js"></script>
+	src="${pageContext.request.contextPath}/resources/assets/bootstrap/js/bootstrap.min.js"></script> --%>
 <script
 	src="${pageContext.request.contextPath}/resources/assets/jquery-slimscroll/jquery.slimscroll.min.js"></script>
 <script
@@ -109,7 +109,6 @@
 	src="${pageContext.request.contextPath}/resources/assets/jquery-validation/dist/jquery.validate.min.js"></script>
 <script type="text/javascript"
 	src="${pageContext.request.contextPath}/resources/assets/jquery-validation/dist/additional-methods.min.js"></script>
-<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 <style type="text/css">
 select {
     width: 180px;
@@ -172,12 +171,15 @@ select {
 
 </head>
 <body onload="showPdf(${billNo})">
+<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
+
 
 	<c:url var="setAllItemSelected" value="/setAllItemSelected" />
 	<c:url var="findFranchiseeData" value="/findFranchiseeData" />
 	<c:url var="findItemsByCatId" value="/getItemsOfMenuId" />
 	<c:url var="findAllMenus" value="/getMenuForOrder" />
 	<c:url var="insertItem" value="/insertItem" />
+	<c:url var="getItemListByMenuId" value="/getItemsByMenuId" />
 	<c:url var="deleteItems" value="/deleteItems" />
 	<c:url var="generateManualBill" value="/generateManualBill" />
 	<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
@@ -251,7 +253,7 @@ select {
 
 										<div class="form-group">
 											<label class="col-sm-3 col-lg-2 control-label">Franchisee</label>
-											<div class="col-sm-9 col-lg-5 controls">
+											<div class="col-sm-9 col-lg-4 controls">
 												<select data-placeholder="Select Franchisee" name="fr_id"
 													class="form-control chosen" tabindex="-1" id="fr_id"
 													data-rule-required="true" onchange="findFranchiseeData(this.value)">
@@ -266,20 +268,28 @@ select {
 
 												</select>
 											</div>
-										</div>
+									<!-- 	</div>
 
-										<div class="form-group">
-											<label class="col-sm-3 col-lg-2 control-label">Menu</label>
-											<div class="col-sm-9 col-lg-5 controls">
+										<div class="form-group"> -->
+											<label class="col-sm-3 col-lg-1 control-label">Menu</label>
+											<div class="col-sm-9 col-lg-4 controls">
 												<select data-placeholder="Select Menu" name="menu"
 													class="form-control chosen" tabindex="-1" id="menu"
-													data-rule-required="true">
+													data-rule-required="true" onchange="getItemsByMenuId()">
 	                                            	<option value="0">Select Menu </option>                                                     
 
 
 												</select>
 											</div>
 										</div>
+											<div class="form-group">
+											<label class=" col-md-2 control-label menu_label">Item</label>
+							<div class=" col-md-10 controls menu_select">
+
+								<select data-placeholder="Select Items" multiple="multiple"
+							class="form-control chosen " name="item" id="item" onchange="getItemsAndSetSelected(this.value)"
+							tabindex="-1" data-rule-required="true"></select>
+							</div></div>
 										<div class="form-group">
 										<label class="col-sm-3 col-lg-2 control-label">Order</label>
 									  <label class="col-sm-3 col-lg-2 control-label">
@@ -432,7 +442,7 @@ $(function() {
     	if(isValid){
     	var type = $('.type:checked').val();
     	var ordertype = $('.order:checked').val();//alert(ordertype);
-    	
+    	var itemId=$('#item').val();
     	$('#table_grid td').remove();
     
           	 $('#loader').show();
@@ -442,6 +452,7 @@ $(function() {
                     frId:$('#fr_id').val(),
                     by:type,
                     ordertype:ordertype,
+                    itemId:JSON.stringify(itemId),
                     ajax : 'true'
                 }, function(data) {
                 		 $('#loader').hide();
@@ -878,6 +889,87 @@ function myFunction() {
   
 }
 </script>
+	
+		<script type="text/javascript">
+		
+		function getItemsByMenuId() {
+			
+			var menuId = $("#menu").val();
+			
 
+				 if(menuId=="" || menuId==null){
+					  
+						$('#item')
+					    .find('option')
+					    .remove()
+					    .end()
+					    $("#item").trigger("chosen:updated");
+				 }else{
+						$.getJSON('${getItemListByMenuId}', {
+							
+							menuId : menuId,
+							ajax : 'true'
+						}, function(data) {
+							   var html = '<option value="">Select Items</option>';
+
+								var len = data.length;
+
+								$('#item').find('option').remove().end()
+
+								$("#item").append(
+										$("<option></option>")
+												.attr("value", -1).text("ALL"));
+								for (var i = 0; i < len; i++) {
+									$("#item").append(
+											$("<option ></option>").attr(
+													"value", data[i].id)
+													.text(data[i].itemName));
+								}
+								$("#item").trigger("chosen:updated");
+							   
+						}); 
+				 }
+		}
+	function getItemsAndSetSelected(id) {
+			
+			var menuId = $("#menu").val();
+			
+
+				 if(menuId=="" || menuId==null){
+					  
+						$('#item')
+					    .find('option')
+					    .remove()
+					    .end()
+					    $("#item").trigger("chosen:updated");
+				 }else{
+						if(id==-1){
+					       $.getJSON('${getItemListByMenuId}', {
+							
+							menuId : menuId,
+							ajax : 'true'
+						}, function(data) {
+							   var html = '<option value="">Select Items</option>';
+
+								var len = data.length;
+
+								$('#item').find('option').remove().end()
+
+								$("#item").append(
+										$("<option></option>")
+												.attr("value", -1).text("ALL"));
+								for (var i = 0; i < len; i++) {
+									$("#item").append(
+											$("<option selected></option>").attr(
+													"value", data[i].id)
+													.text(data[i].itemName));
+								}
+								$("#item").trigger("chosen:updated");
+							   
+						}); 
+						}
+				 }
+		}
+		</script>
 </body>
 </html>

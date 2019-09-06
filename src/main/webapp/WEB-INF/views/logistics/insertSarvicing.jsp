@@ -90,12 +90,12 @@
 							</div><br>
 							<div class="box-content">
 								<div class="col-md-2">Bill No*</div>
-								<div class="col-md-3"><input type="text" id="billNo" name="billNo" placeholder="Bill No"  class="form-control" required>
+								<div class="col-md-3"><input type="text" id="billNo" name="billNo" placeholder="Bill No" autocomplete="off"  class="form-control" required>
 								</div>
 								
 								<div class="col-md-2">Bill Date* </div>
 									<div class="col-md-3">
-									<input class="form-control date-picker" id="billDate" placeholder="Servicing Date" size="16"
+									<input class="form-control date-picker" id="billDate" placeholder="Servicing Date" autocomplete="off" size="16"
 											type="text" name="billDate"  required />
 									</div>
 					
@@ -132,7 +132,7 @@
 							
 							<div class="col-md-2">Servicing Date* </div>
 									<div class="col-md-3">
-									<input class="form-control date-picker" id="servDate" placeholder="Servicing Date" size="16"
+									<input class="form-control date-picker" id="servDate" placeholder="Servicing Date" size="16" autocomplete="off"
 											type="text" name="servDate"  required />
 									</div>
 									
@@ -160,7 +160,7 @@
 								</div>
 									
 									<div class="col-md-2">Service Advice Remainder*</div>
-										<div class="col-md-3"><input type="text" id="servAdvRem" name="servAdvRem" placeholder="Service Advice Remainder" class="form-control"  required>
+										<div class="col-md-3"><input type="text" id="servAdvRem" autocomplete="off" name="servAdvRem" placeholder="Service Advice Remainder" class="form-control"  required>
 									</div>
 							
 							</div><br>
@@ -196,12 +196,12 @@
 							
 									<div class="col-md-2">Spare Qty*</div>
 										<div class="col-md-3">
-										<input type="text" id="spareQty" name="spareQty" onkeyup="calculateDetail()" placeholder="Spare Qty" class="form-control"   >
+										<input type="text" id="spareQty" name="spareQty" autocomplete="off" onkeyup="calculateDetail()" placeholder="Spare Qty" class="form-control"   >
 									</div>
 								 
 									
 									<div class="col-md-2">Spare Rate*</div>
-										<div class="col-md-3"><input type="text" id="spareRate" onkeyup="calculateDetail()" name="spareRate" placeholder="Next Due Km" class="form-control"  readonly>
+										<div class="col-md-3"><input type="text" id="spareRate" autocomplete="off" onkeyup="calculateDetail()" name="spareRate" placeholder="Spare Rate" class="form-control"  >
 									</div>
 							
 							</div><br>
@@ -642,10 +642,11 @@
 											document.getElementById("taxAmtDetail").value="";
 											document.getElementById("totalDetail").value="";	
 											document.getElementById("spareQty").value=""; 
-											document.getElementById("groupId").value="";  
-											$('#groupId').trigger("chosen:updated");
-											var html = '<option value="">Select Spare Part</option>';
-											$('#sprId').html(html);
+											//document.getElementById("groupId").value="";  
+											//$('#groupId').trigger("chosen:updated");
+										//	var html = '<option value="">Select Spare Part</option>';
+											//$('#sprId').html(html);
+											document.getElementById("sprId").value="";  
 											$('#sprId').trigger("chosen:updated");
 											document.getElementById("servTypeDetail").value="";
 											$('#servTypeDetail').trigger("chosen:updated");
@@ -758,10 +759,11 @@
 											document.getElementById("taxAmtDetail").value="";
 											document.getElementById("totalDetail").value="";	
 											document.getElementById("spareQty").value=""; 
-											document.getElementById("groupId").value="";  
-											$('#groupId').trigger("chosen:updated");
-											var html = '<option value="">Select Spare Part</option>';
-											$('#sprId').html(html);
+											//document.getElementById("groupId").value="";  
+											//$('#groupId').trigger("chosen:updated");
+											//var html = '<option value="">Select Spare Part</option>';
+										//	$('#sprId').html(html);
+										document.getElementById("sprId").value="";  
 											$('#sprId').trigger("chosen:updated");
 											document.getElementById("servTypeDetail").value="";
 											$('#servTypeDetail').trigger("chosen:updated");
