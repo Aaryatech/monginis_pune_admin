@@ -255,8 +255,8 @@
 
 									<div class="col-md-2">Disc%</div>
 									<div class="col-md-3">
-										<input type="text" id="discPer" name="discPer"
-											placeholder="Discount" class="form-control" readonly>
+										<input type="text" onkeyup="calculateDetail()" id="discPer"
+											name="discPer" placeholder="Discount" class="form-control">
 									</div>
 
 
@@ -295,7 +295,8 @@
 									<div class="col-md-2">Tax%*</div>
 									<div class="col-md-3">
 										<input type="text" id="taxPer" name="taxPer"
-											placeholder="Tax Perentage" class="form-control" readonly>
+											placeholder="Tax Perentage" onkeyup="calculateDetail()"
+											class="form-control">
 									</div>
 
 
@@ -1052,7 +1053,8 @@
 								var otherPartIds = $("#otherPartIds").val();
 								var fields = otherPartIds.split(',');
 
-								if (fields[0] == data.sprId || fields[1] == data.sprId) {
+								if (fields[0] == data.sprId
+										|| fields[1] == data.sprId) {
 
 									document.getElementById("partNameDiv").style.display = 'block';
 									document.getElementById("partName").value = data.partName;

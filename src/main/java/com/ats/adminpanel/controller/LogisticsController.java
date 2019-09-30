@@ -1506,25 +1506,24 @@ public class LogisticsController {
 		} else {
 			model = new ModelAndView("logistics/insertSarvicing");
 			try {
-				
-				
+
 				MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 				String otherPartIdss = "logis_part_other";
 				map.add("key", otherPartIdss);
-				LogisSetting otherPartIds = restTemplate.postForObject(Constants.url + "getLogisOtherPartIds",
-						map, LogisSetting.class);
+				LogisSetting otherPartIds = restTemplate.postForObject(Constants.url + "getLogisOtherPartIds", map,
+						LogisSetting.class);
 				model.addObject("otherPartIds", otherPartIds);
-				
+
 				addSparePartList = new ArrayList<ServDetailAddPart>();
 				List<SparePart> getAllSparePart = restTemplate.getForObject(Constants.url + "getAllSparePart",
 						List.class);
-				//System.out.println("getAllSparePart" + getAllSparePart.toString());
+				// System.out.println("getAllSparePart" + getAllSparePart.toString());
 				List<Dealer> getAllDealerList = restTemplate.getForObject(Constants.url + "getAllDealerList",
 						List.class);
-				//System.out.println("getAllDealerList" + getAllDealerList.toString());
+				// System.out.println("getAllDealerList" + getAllDealerList.toString());
 				List<VehicalMaster> vehicleList = restTemplate.getForObject(Constants.url + "getAllVehicalList",
 						List.class);
-				//System.out.println("vehicleList" + vehicleList.toString());
+				// System.out.println("vehicleList" + vehicleList.toString());
 
 				map = new LinkedMultiValueMap<String, Object>();
 				String settingKey = "m_logis_labour_group";
@@ -1532,7 +1531,7 @@ public class LogisticsController {
 				FrItemStockConfigureList settingList = restTemplate.postForObject(Constants.url + "getDeptSettingValue",
 						map, FrItemStockConfigureList.class);
 				int labourGroupId = settingList.getFrItemStockConfigure().get(0).getSettingValue();
-				//System.out.println("labourGroupId" + labourGroupId);
+				// System.out.println("labourGroupId" + labourGroupId);
 
 				model.addObject("dealerList", getAllDealerList);
 				model.addObject("sprPartList", getAllSparePart);
@@ -1613,19 +1612,18 @@ public class LogisticsController {
 
 			String partName = request.getParameter("partName");
 			String otherPartIds = request.getParameter("otherPartIds");
-			
-			
+
 			ServDetailAddPart addSparePart = new ServDetailAddPart();
-			
+
 			String[] ids = otherPartIds.split(",");
-			
-			if(Integer.parseInt(ids[0])==sprId || Integer.parseInt(ids[1])==sprId) {
+
+			if (Integer.parseInt(ids[0]) == sprId || Integer.parseInt(ids[1]) == sprId) {
 				addSparePart.setPartName(partName);
-			}else {
+			} else {
 				addSparePart.setPartName(sprName);
 			}
-			
-			addSparePart.setSprId(sprId); 
+
+			addSparePart.setSprId(sprId);
 			addSparePart.setGroupId(groupId);
 			addSparePart.setVehId(vehId);
 			addSparePart.setVehName(vehName);
@@ -1720,14 +1718,14 @@ public class LogisticsController {
 			String partName = request.getParameter("partName");
 			String otherPartIds = request.getParameter("otherPartIds");
 			String[] ids = otherPartIds.split(",");
-			
-			if(Integer.parseInt(ids[0])==sprId || Integer.parseInt(ids[1])==sprId) {
+
+			if (Integer.parseInt(ids[0]) == sprId || Integer.parseInt(ids[1]) == sprId) {
 				addSparePartList.get(editindex).setPartName(partName);
-			}else {
+			} else {
 				addSparePartList.get(editindex).setPartName(sprName);
 			}
-			
-			addSparePartList.get(editindex).setSprId(sprId); 
+
+			addSparePartList.get(editindex).setSprId(sprId);
 			addSparePartList.get(editindex).setGroupId(groupId);
 			addSparePartList.get(editindex).setVehId(vehId);
 			addSparePartList.get(editindex).setVehName(vehName);
@@ -1853,11 +1851,10 @@ public class LogisticsController {
 			float taxaleAmt = Float.parseFloat(request.getParameter("taxaleAmt"));
 			float total = Float.parseFloat(request.getParameter("total"));
 			String typeName = request.getParameter("typeName");
-			
+
 			String otherPartIds = request.getParameter("otherPartIds");
 			String[] ids = otherPartIds.split(",");
-			 
-			
+
 			int servDoneKm = 0;
 			int nextDueKm = 0;
 			if (type == 1) {
@@ -1915,7 +1912,7 @@ public class LogisticsController {
 			for (int i = 0; i < addSparePartList.size(); i++) {
 				ServDetail servDetail = new ServDetail();
 				servDetail.setServDate(servDate);
-				 
+
 				servDetail.setServType(addSparePartList.get(i).getServType());
 				servDetail.setGroupId(addSparePartList.get(i).getGroupId());
 				servDetail.setSprId(addSparePartList.get(i).getSprId());
@@ -1925,11 +1922,13 @@ public class LogisticsController {
 				servDetail.setSprTaxAmt(addSparePartList.get(i).getSprTaxAmt());
 				servDetail.setTotal(addSparePartList.get(i).getTotal());
 				servDetail.setDisc(addSparePartList.get(i).getDisc());
-				servDetail.setExtraCharges(addSparePartList.get(i).getExtraCharges()); 
-				if(Integer.parseInt(ids[0])==servDetail.getSprId() || Integer.parseInt(ids[1])==servDetail.getSprId()) {
+				servDetail.setExtraCharges(addSparePartList.get(i).getExtraCharges());
+				servDetail.setVarchar2(String.valueOf(addSparePartList.get(i).getSprTaxAmtPer()));
+				if (Integer.parseInt(ids[0]) == servDetail.getSprId()
+						|| Integer.parseInt(ids[1]) == servDetail.getSprId()) {
 					servDetail.setVarchar1(addSparePartList.get(i).getPartName());
-				} 
-				
+				}
+
 				vehName = addSparePartList.get(i).getVehName();
 				servDetailList.add(servDetail);
 			}
@@ -2002,7 +2001,15 @@ public class LogisticsController {
 		List<MachineMaster> machineList = new ArrayList<MachineMaster>();
 		ModelAndView model = new ModelAndView("logistics/editServiceBill");
 		try {
+
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			String otherPartIdss = "logis_part_other";
+			map.add("key", otherPartIdss);
+			LogisSetting otherPartIds = restTemplate.postForObject(Constants.url + "getLogisOtherPartIds", map,
+					LogisSetting.class);
+			model.addObject("otherPartIds", otherPartIds);
+
+			map = new LinkedMultiValueMap<String, Object>();
 			String settingKey = "m_logis_labour_group";
 			map.add("settingKeyList", settingKey);
 			FrItemStockConfigureList settingList = restTemplate.postForObject(Constants.url + "getDeptSettingValue",
@@ -2052,6 +2059,7 @@ public class LogisticsController {
 				servDetailAddPart.setExtraCharges(viewServicingDetail.getServDetail().get(i).getExtraCharges());
 				servDetailAddPart.setVehName(viewServicingDetail.getVehNo());
 				servDetailAddPart.setTotal(viewServicingDetail.getServDetail().get(i).getTotal());
+
 				for (int j = 0; j < sparePartList.size(); j++) {
 					if (viewServicingDetail.getServDetail().get(i).getSprId() == sparePartList.get(j).getSprId()) {
 						servDetailAddPart.setSprId(sparePartList.get(j).getSprId());
@@ -2073,16 +2081,25 @@ public class LogisticsController {
 				for (int j = 0; j < groupList.size(); j++) {
 
 					if (viewServicingDetail.getServDetail().get(i).getGroupId() == groupList.get(j).getGroupId()) {
-
+						servDetailAddPart.setSprTaxAmtPer(Float.parseFloat(viewServicingDetail.getServDetail().get(i).getVarchar2()));
 						servDetailAddPart.setGroupId(groupList.get(j).getGroupId());
 						servDetailAddPart.setGroupName(groupList.get(j).getGroupName());
 						break;
 					}
 				}
 
+				String[] ids = otherPartIds.getKeyValue().split(",");
+
+				if (Integer.parseInt(ids[0]) == viewServicingDetail.getServDetail().get(i).getSprId()
+						|| Integer.parseInt(ids[1]) == viewServicingDetail.getServDetail().get(i).getSprId()) {
+
+					servDetailAddPart.setPartName(viewServicingDetail.getServDetail().get(i).getVarchar1());
+					System.out.println("getSprId " + servDetailAddPart.getSprId());
+				}
+
 				addSparePartListInEdit.add(servDetailAddPart);
 			}
-			System.out.println("header " + viewServicingDetail);
+
 			System.out.println("addSparePartListInEdit " + addSparePartListInEdit);
 			model.addObject("dealerList", getAllDealerList);
 			model.addObject("sprGroupList", sprGroupList);
@@ -2125,9 +2142,21 @@ public class LogisticsController {
 			float extraChargePer = Float.parseFloat(request.getParameter("extraChargePer"));
 			float taxPer = Float.parseFloat(request.getParameter("taxPer"));
 
+			String partName = request.getParameter("partName");
+			String otherPartIds = request.getParameter("otherPartIds");
+
 			ServDetailAddPart addSparePart = new ServDetailAddPart();
+
+			String[] ids = otherPartIds.split(",");
+
+			if (Integer.parseInt(ids[0]) == sprId || Integer.parseInt(ids[1]) == sprId) {
+				addSparePart.setPartName(partName);
+			} else {
+				addSparePart.setPartName(sprName);
+			}
+
 			addSparePart.setSprId(sprId);
-			addSparePart.setPartName(sprName);
+			// addSparePart.setPartName(sprName);
 			addSparePart.setGroupId(groupId);
 			addSparePart.setVehId(vehId);
 			addSparePart.setVehName(vehName);
@@ -2144,7 +2173,7 @@ public class LogisticsController {
 			addSparePart.setExtraChargesPer(extraChargePer);
 			addSparePart.setSprTaxAmtPer(taxPer);
 			addSparePartListInEdit.add(addSparePart);
-			System.out.println("addSparePartList" + addSparePartListInEdit);
+			// System.out.println("addSparePartList" + addSparePartListInEdit);
 
 		} catch (Exception e) {
 			System.out.println("errorr  " + e.getMessage());
@@ -2224,7 +2253,7 @@ public class LogisticsController {
 			float discDetail = Float.parseFloat(request.getParameter("discDetail"));
 			float extraChargeDetail = Float.parseFloat(request.getParameter("extraChargeDetail"));
 			int servTypeDetail = Integer.parseInt(request.getParameter("servTypeDetail"));
-			System.out.println(spareQty);
+			// System.out.println(spareQty);
 			addSparePartListInEdit.get(editViewIndex).setSprId(sprId);
 			addSparePartListInEdit.get(editViewIndex).setPartName(sprName);
 			addSparePartListInEdit.get(editViewIndex).setGroupId(groupId);
@@ -2273,6 +2302,9 @@ public class LogisticsController {
 			float taxaleAmt = Float.parseFloat(request.getParameter("taxaleAmt"));
 			float total = Float.parseFloat(request.getParameter("total"));
 			String typeName = request.getParameter("typeName");
+			String otherPartIds = request.getParameter("otherPartIds");
+			String[] ids = otherPartIds.split(",");
+			
 			int servDoneKm = 0;
 			int nextDueKm = 0;
 			if (type == 1) {
@@ -2346,6 +2378,13 @@ public class LogisticsController {
 				servDetail.setDisc(addSparePartListInEdit.get(i).getDisc());
 				servDetail.setExtraCharges(addSparePartListInEdit.get(i).getExtraCharges());
 				servDetail.setDelStatus(addSparePartListInEdit.get(i).getDelStatus());
+				servDetail.setVarchar2(String.valueOf(addSparePartListInEdit.get(i).getSprTaxAmtPer()));
+				if (Integer.parseInt(ids[0]) == servDetail.getSprId()
+						|| Integer.parseInt(ids[1]) == servDetail.getSprId()) {
+					servDetail.setVarchar1(addSparePartListInEdit.get(i).getPartName());
+				}
+
+				
 				vehName = addSparePartListInEdit.get(i).getVehName();
 				servDetailList.add(servDetail);
 			}
@@ -3413,5 +3452,4 @@ public class LogisticsController {
 		}
 	}
 
-	
 }

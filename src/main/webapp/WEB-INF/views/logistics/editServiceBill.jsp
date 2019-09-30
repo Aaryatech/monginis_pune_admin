@@ -2,22 +2,26 @@
 	pageEncoding="UTF-8"%><%@ taglib
 	uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-	 
 
-	<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
-	<body>
-	
-	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include> 
+
+<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
+<body>
+
+	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 	<c:url var="getTypeList" value="/getTypeList"></c:url>
 	<c:url var="machineListOrVehicleList" value="/machineListOrVehicleList"></c:url>
-<c:url var="groupByTypeId" value="/groupByTypeId"></c:url>
-	<c:url var="addSparePartInEditInvoice" value="/addSparePartInEditInvoice"></c:url>
+	<c:url var="groupByTypeId" value="/groupByTypeId"></c:url>
+	<c:url var="addSparePartInEditInvoice"
+		value="/addSparePartInEditInvoice"></c:url>
 	<c:url var="sparePartByGroupId" value="/sparePartByGroupId"></c:url>
 	<c:url var="partDetailById" value="/partDetailById"></c:url>
-	<c:url var="deleteSparePartInEditInvoice" value="/deleteSparePartInEditInvoice"></c:url>
+	<c:url var="deleteSparePartInEditInvoice"
+		value="/deleteSparePartInEditInvoice"></c:url>
 	<c:url var="updateNextServicingDueKm" value="/updateNextServicingDueKm"></c:url>
-<c:url var="editSparePartInEditInvoice" value="/editSparePartInEditInvoice"></c:url>
-<c:url var="changeQtyOfSparePartInEditInvoice" value="/changeQtyOfSparePartInEditInvoice"></c:url>
+	<c:url var="editSparePartInEditInvoice"
+		value="/editSparePartInEditInvoice"></c:url>
+	<c:url var="changeQtyOfSparePartInEditInvoice"
+		value="/changeQtyOfSparePartInEditInvoice"></c:url>
 
 	<jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
 
@@ -56,485 +60,622 @@
 							<h3>
 								<i class="fa fa-table"></i>Edit Servicing Bill
 							</h3>
-							
+
 							<div class="box-tool">
-								<a href="${pageContext.request.contextPath}/insertSarvicing">Servicing Bill</a> <a data-action="collapse" href="#"><i
+								<a href="${pageContext.request.contextPath}/insertSarvicing">Servicing
+									Bill</a> <a data-action="collapse" href="#"><i
 									class="fa fa-chevron-up"></i></a>
 							</div>
-							
+
 						</div>
 						<input class="form-control" id="typeIdName" size="16"
-											type="hidden" name="typeIdName"  required />
-						<input class="form-control" id="labourGroupId" value="${labourGroupId}" size="16"
-											type="hidden" name="labourGroupId"    />
+							type="hidden" name="typeIdName" required /> <input
+							class="form-control" id="labourGroupId" value="${labourGroupId}"
+							size="16" type="hidden" name="labourGroupId" />
 						<div class="box-content">
 
-							<form id="submitMaterialStore" action="${pageContext.request.contextPath}/submitEditInvoice" method="post"
-							enctype="multipart/form-data">
-							<div class="box-content">
-							
-								<div class="col-md-2">Select Vehicle Or Machine*</div>
+							<form id="submitMaterialStore"
+								action="${pageContext.request.contextPath}/submitEditInvoice"
+								method="post" enctype="multipart/form-data">
+								<div class="box-content">
+									<input class="form-control" id="otherPartIds"
+										value="${otherPartIds.keyValue}" type="hidden"
+										name="otherPartIds" />
+									<div class="col-md-2">Select Vehicle Or Machine*</div>
 									<div class="col-md-3">
-									<c:choose>
-										<c:when test="${editServicing.servType2==1}">
-											<c:set var="typeName" value="Vehicle"></c:set>
-											<c:set var="typeIdValue" value="1"></c:set>
-										</c:when>
-										<c:when test="${editServicing.servType2==2}">
-											<c:set var="typeName" value="Machine"></c:set>
-											<c:set var="typeIdValue" value="2"></c:set>
-										</c:when> 
-									</c:choose>
-									<select name="type" id="type" class="form-control chosen" tabindex="6" onchange="typeList();" required>
-											 <option value="${typeIdValue}">${typeName}</option>
-											  <option value="1">Vehicle</option>
-											   <option value="2">Machine</option>
+										<c:choose>
+											<c:when test="${editServicing.servType2==1}">
+												<c:set var="typeName" value="Vehicle"></c:set>
+												<c:set var="typeIdValue" value="1"></c:set>
+											</c:when>
+											<c:when test="${editServicing.servType2==2}">
+												<c:set var="typeName" value="Machine"></c:set>
+												<c:set var="typeIdValue" value="2"></c:set>
+											</c:when>
+										</c:choose>
+										<select name="type" id="type" class="form-control chosen"
+											tabindex="6" onchange="typeList();" required>
+											<option value="${typeIdValue}">${typeName}</option>
+											<option value="1">Vehicle</option>
+											<option value="2">Machine</option>
 										</select>
-									
-									</div> 
-									
-							</div><br>
-							<div class="box-content">
-							<input type="hidden" id="servId" name="servId" value="${editServicing.servId}" placeholder="Service Advice Remainder" class="form-control"  required>
-									
-								<div class="col-md-2">Bill No*</div>
-								<div class="col-md-3"><input type="text" id="billNo" name="billNo" placeholder="Bill No" value="${editServicing.billNo}" class="form-control" required>
+
+									</div>
+
 								</div>
-								
-								<div class="col-md-2">Bill Date* </div>
+								<br>
+								<div class="box-content">
+									<input type="hidden" id="servId" name="servId"
+										value="${editServicing.servId}"
+										placeholder="Service Advice Remainder" class="form-control"
+										required>
+
+									<div class="col-md-2">Bill No*</div>
 									<div class="col-md-3">
-									<input class="form-control date-picker" id="billDate" placeholder="Servicing Date" value="${editServicing.billDate}" size="16"
-											type="text" name="billDate"  required />
+										<input type="text" id="billNo" name="billNo"
+											placeholder="Bill No" value="${editServicing.billNo}"
+											class="form-control" required>
 									</div>
-					
-							</div><br>
-							
-							<div class="box-content">
-							
-								<div class="col-md-2">Type*</div>
+
+									<div class="col-md-2">Bill Date*</div>
 									<div class="col-md-3">
-									
-									<select name="typeId" id="typeId" class="form-control chosen" onchange="updateNextServicingDueKm()" tabindex="6" required>
-											<c:forEach items="${typeList}" var="typeList"> 
-												<c:choose> 
-														<c:when test="${typeList.typeId==editServicing.typeId}">
-															<option value="${typeList.typeId}" selected><c:out value="${typeList.typeName}"></c:out> </option>
-												 		</c:when> 
+										<input class="form-control date-picker" id="billDate"
+											placeholder="Servicing Date"
+											value="${editServicing.billDate}" size="16" type="text"
+											name="billDate" required />
+									</div>
+
+								</div>
+								<br>
+
+								<div class="box-content">
+
+									<div class="col-md-2">Type*</div>
+									<div class="col-md-3">
+
+										<select name="typeId" id="typeId" class="form-control chosen"
+											onchange="updateNextServicingDueKm()" tabindex="6" required>
+											<c:forEach items="${typeList}" var="typeList">
+												<c:choose>
+													<c:when test="${typeList.typeId==editServicing.typeId}">
+														<option value="${typeList.typeId}" selected><c:out
+																value="${typeList.typeName}"></c:out>
+														</option>
+													</c:when>
 												</c:choose>
-									 		</c:forEach>
-									 
-									<c:forEach items="${typeList}" var="typeList"> 
-										<option value="${typeList.typeId}"><c:out value="${typeList.typeName}"></c:out> </option>
-									 </c:forEach>
-											 
+											</c:forEach>
+
+											<c:forEach items="${typeList}" var="typeList">
+												<option value="${typeList.typeId}"><c:out
+														value="${typeList.typeName}"></c:out>
+												</option>
+											</c:forEach>
+
 										</select>
-									
+
 									</div>
-								<div class="col-md-2">Servicing Type*</div>
+									<div class="col-md-2">Servicing Type*</div>
 									<div class="col-md-3">
-									<c:choose>
-										<c:when test="${editServicing.servType==1}">
-											<c:set var="servTypeName" value="Regular"></c:set>
-											<c:set var="servTypeValue" value="1"></c:set>
-										</c:when>
-										<c:when test="${editServicing.servType==2}">
-											<c:set var="servTypeName" value="Break Down"></c:set>
-											<c:set var="servTypeValue" value="2"></c:set>
-										</c:when> 
-									</c:choose>
-									
-									<select name="servType" id="servType" class="form-control chosen" tabindex="6" required>
+										<c:choose>
+											<c:when test="${editServicing.servType==1}">
+												<c:set var="servTypeName" value="Regular"></c:set>
+												<c:set var="servTypeValue" value="1"></c:set>
+											</c:when>
+											<c:when test="${editServicing.servType==2}">
+												<c:set var="servTypeName" value="Break Down"></c:set>
+												<c:set var="servTypeValue" value="2"></c:set>
+											</c:when>
+										</c:choose>
+
+										<select name="servType" id="servType"
+											class="form-control chosen" tabindex="6" required>
 											<option value="${servTypeValue}">${servTypeName}</option>
 											<option value="1">Regular</option>
-											 <option value="2">Break Down</option>  
+											<option value="2">Break Down</option>
 										</select>
-									
+
 									</div>
-								
-				 
-							</div><br>
-							
-							
-							<div class="box-content">
-							
-							<div class="col-md-2">Servicing Date* </div>
-									<div class="col-md-3">
-									<input class="form-control date-picker" id="servDate" placeholder="Servicing Date" value="${editServicing.servDate}" size="16"
-											type="text" name="servDate"  required />
-									</div>
-									
-									<div class="col-md-2">Dealer*</div>
-									<div class="col-md-3"> 
-									<select name="dealerId" id="dealerId" class="form-control chosen" tabindex="6" required>
-									<c:forEach items="${dealerList}" var="dealerList"> 
-											<c:choose> 
-													<c:when test="${dealerList.dealerId==editServicing.dealerId}">
-														<option value="${dealerList.dealerId}" selected><c:out value="${dealerList.dealerName}"></c:out> </option>
-											 		</c:when> 
-											</c:choose>
-									 </c:forEach>
-									 
-									<c:forEach items="${dealerList}" var="dealerList"> 
-										<option value="${dealerList.dealerId}"><c:out value="${dealerList.dealerName}"></c:out> </option>
-									 </c:forEach>
-									</select>
+
+
 								</div>
-								
-							</div><br> 
-							
-							
-							
-							<div class="box-content">
-							
-									<div class="col-md-2">Vehicle Or Machine*</div>
-									<div class="col-md-3"> 
-									<select name="vehId" id="vehId" class="form-control chosen" tabindex="6" onchange="updateNextServicingDueKm()" required>
-									<c:choose>
-									<c:when test="${editServicing.servType2==1}">
-												<c:forEach items="${vehicleList}" var="vehicleList"> 
-														<c:choose> 
-																<c:when test="${vehicleList.vehId==editServicing.vehId}">
-																	<option value="${vehicleList.vehId}" selected><c:out value="${vehicleList.vehNo}"></c:out> </option>
-														 		</c:when> 
-														</c:choose>
-												 </c:forEach>
-									 
-													<c:forEach items="${vehicleList}" var="vehicleList"> 
-														<option value="${vehicleList.vehId}"><c:out value="${vehicleList.vehNo}"></c:out> </option>
-													 </c:forEach>
-									
-									</c:when> 
-									<c:otherwise>
-											<c:forEach items="${vehicleList}" var="vehicleList"> 
-														<c:choose> 
-																<c:when test="${vehicleList.machineId==editServicing.vehId}">
-																	<option value="${vehicleList.machineId}" selected><c:out value="${vehicleList.machineName}"></c:out> </option>
-														 		</c:when> 
-														</c:choose>
-												 </c:forEach>
-									 
-													<c:forEach items="${vehicleList}" var="vehicleList"> 
-														<option value="${vehicleList.machineId}"><c:out value="${vehicleList.machineName}"></c:out> </option>
-													 </c:forEach> 
-									</c:otherwise>
-									</c:choose>
-													
-									</select>
-								</div>
-									
-									<div class="col-md-2">Service Advice Remainder*</div>
-										<div class="col-md-3"><input type="text" id="servAdvRem" name="servAdvRem" value="${editServicing.servAdviseRem}" placeholder="Service Advice Remainder" class="form-control"  required>
-									</div>
-							
-							</div><br>
-							
-							
-							
-							
-							
-							<hr/>
-							
-							<div class="box-content">
-									
-									<div class="col-md-2" >Group</div>
-									<div class="col-md-3">
-										<select   class="form-control chosen" name="groupId" tabindex="-1" id="groupId"  >
-											<option   value="">Select Group</option> 
-											<c:forEach items="${sprGroupList}" var="sprGroupList"> 
-											<option value="${sprGroupList.groupId}"><c:out value="${sprGroupList.groupName}"></c:out> </option>
-											 </c:forEach>
-											</select>
-												 
-									</div>
-									
-									<div class="col-md-2" >Select Spare Part</div>
-									<div class="col-md-3">
-										<select   class="form-control chosen" name="sprId" tabindex="-1" id="sprId"  >
-										 
-											 
-											</select>
-									</div> 
-								
-									 	 
-								</div><br> 
-								
+								<br>
+
+
 								<div class="box-content">
-							
-									<div class="col-md-2">Spare Qty*</div>
-										<div class="col-md-3">
-										<input type="text" id="spareQty" name="spareQty" onkeyup="calculateDetail()" placeholder="Spare Qty" class="form-control"   >
-									</div>
-								 
-									
-									<div class="col-md-2">Spare Rate*</div>
-										<div class="col-md-3"><input type="text" id="spareRate" onkeyup="calculateDetail()" name="spareRate" placeholder="Next Due Km" class="form-control"  readonly>
-									</div>
-							
-							</div><br>
-							 
-							
-							<div class="box-content">
-							
-									<div class="col-md-2">Disc% </div>
-										<div class="col-md-3">
-										<input type="text" id="discPer" name="discPer"   placeholder="Discount" class="form-control"  readonly>
-									</div>
-								 
-									
-									<div class="col-md-2">Extra Charge% </div>
-										<div class="col-md-3"><input type="text" id="extraChargePer"   name="extraChargePer" placeholder="Extra Charges" class="form-control"  readonly>
-									</div>
-							
-							</div><br>
-							
-							
-							<div class="box-content">
-							
-									<div class="col-md-2">Disc Amt </div>
-										<div class="col-md-3">
-										<input type="text" id="discDetail" name="discDetail" onkeyup="calculateDetail()" placeholder="Discount" class="form-control"  readonly>
-									</div>
-								 
-									
-									<div class="col-md-2">Extra Amt </div>
-										<div class="col-md-3"><input type="text" id="extraChargeDetail" onkeyup="calculateDetail()" name="extraChargeDetail" placeholder="Extra Charges" class="form-control"  readonly>
-									</div>
-							
-							</div><br>
-							
-							<div class="box-content">
-							
-								<div class="col-md-2">Tax%*</div>
-										<div class="col-md-3">
-										<input type="text" id="taxPer" name="taxPer" placeholder="Tax Perentage" class="form-control"  readonly>
-									</div>
-							
-									
-								 
-									
-									<div class="col-md-2">Tax Amt*</div>
-										<div class="col-md-3"><input type="text" id="taxAmtDetail" onkeyup="calculateDetail()" name="taxAmtDetail" placeholder="Tax Amt" class="form-control"  readonly>
-									</div>
-							
-							</div><br>
-							
-							<div class="box-content">
-							
-									<div class="col-md-2">Taxable Amt*</div>
-										<div class="col-md-3">
-										<input type="text" id="taxaleAmtDetail" name="taxaleAmtDetail" onkeyup="calculateDetail()" placeholder="Taxable Amt" class="form-control"  readonly>
-									</div>
-									
-										<div class="col-md-2">Total*</div>
-										<div class="col-md-3">
-										<input type="text" id="totalDetail" name="totalDetail" placeholder="Total Amt" class="form-control"  readonly>
-									</div> 
-								  
-							</div><br>
-							
-							<div class="box-content">
-							
-								
-									
-										<div class="col-md-2">Servicing Type*</div>
+
+									<div class="col-md-2">Servicing Date*</div>
 									<div class="col-md-3">
-									
-									<select name="servTypeDetail" id="servTypeDetail" class="form-control chosen" tabindex="6"  >
+										<input class="form-control date-picker" id="servDate"
+											placeholder="Servicing Date"
+											value="${editServicing.servDate}" size="16" type="text"
+											name="servDate" required />
+									</div>
+
+									<div class="col-md-2">Dealer*</div>
+									<div class="col-md-3">
+										<select name="dealerId" id="dealerId"
+											class="form-control chosen" tabindex="6" required>
+											<c:forEach items="${dealerList}" var="dealerList">
+												<c:choose>
+													<c:when
+														test="${dealerList.dealerId==editServicing.dealerId}">
+														<option value="${dealerList.dealerId}" selected><c:out
+																value="${dealerList.dealerName}"></c:out>
+														</option>
+													</c:when>
+												</c:choose>
+											</c:forEach>
+
+											<c:forEach items="${dealerList}" var="dealerList">
+												<option value="${dealerList.dealerId}"><c:out
+														value="${dealerList.dealerName}"></c:out>
+												</option>
+											</c:forEach>
+										</select>
+									</div>
+
+								</div>
+								<br>
+
+
+
+								<div class="box-content">
+
+									<div class="col-md-2">Vehicle Or Machine*</div>
+									<div class="col-md-3">
+										<select name="vehId" id="vehId" class="form-control chosen"
+											tabindex="6" onchange="updateNextServicingDueKm()" required>
+											<c:choose>
+												<c:when test="${editServicing.servType2==1}">
+													<c:forEach items="${vehicleList}" var="vehicleList">
+														<c:choose>
+															<c:when test="${vehicleList.vehId==editServicing.vehId}">
+																<option value="${vehicleList.vehId}" selected><c:out
+																		value="${vehicleList.vehNo}"></c:out>
+																</option>
+															</c:when>
+														</c:choose>
+													</c:forEach>
+
+													<c:forEach items="${vehicleList}" var="vehicleList">
+														<option value="${vehicleList.vehId}"><c:out
+																value="${vehicleList.vehNo}"></c:out>
+														</option>
+													</c:forEach>
+
+												</c:when>
+												<c:otherwise>
+													<c:forEach items="${vehicleList}" var="vehicleList">
+														<c:choose>
+															<c:when
+																test="${vehicleList.machineId==editServicing.vehId}">
+																<option value="${vehicleList.machineId}" selected><c:out
+																		value="${vehicleList.machineName}"></c:out>
+																</option>
+															</c:when>
+														</c:choose>
+													</c:forEach>
+
+													<c:forEach items="${vehicleList}" var="vehicleList">
+														<option value="${vehicleList.machineId}"><c:out
+																value="${vehicleList.machineName}"></c:out>
+														</option>
+													</c:forEach>
+												</c:otherwise>
+											</c:choose>
+
+										</select>
+									</div>
+
+									<div class="col-md-2">Service Advice Remainder*</div>
+									<div class="col-md-3">
+										<input type="text" id="servAdvRem" name="servAdvRem"
+											value="${editServicing.servAdviseRem}"
+											placeholder="Service Advice Remainder" class="form-control"
+											required>
+									</div>
+
+								</div>
+								<br>
+
+
+
+
+
+								<hr />
+
+								<div class="box-content">
+
+									<div class="col-md-2">Group</div>
+									<div class="col-md-3">
+										<select class="form-control chosen" name="groupId"
+											tabindex="-1" id="groupId">
+											<option value="">Select Group</option>
+											<c:forEach items="${sprGroupList}" var="sprGroupList">
+												<option value="${sprGroupList.groupId}"><c:out
+														value="${sprGroupList.groupName}"></c:out>
+												</option>
+											</c:forEach>
+										</select>
+
+									</div>
+
+									<div class="col-md-2">Select Spare Part</div>
+									<div class="col-md-3">
+										<select class="form-control chosen" name="sprId" tabindex="-1"
+											id="sprId">
+
+
+										</select>
+									</div>
+
+
+								</div>
+								<br>
+								<div style="display: none;" id="partNameDiv">
+									<div class="box-content">
+										<div class="col-md-2">Part Name*</div>
+										<div class="col-md-3">
+											<input type="text" id="partName" name="partName"
+												autocomplete="off" placeholder="Specify Part Name"
+												class="form-control">
+										</div>
+
+									</div>
+									<br>
+								</div>
+								<div class="box-content">
+
+									<div class="col-md-2">Spare Qty*</div>
+									<div class="col-md-3">
+										<input type="text" id="spareQty" name="spareQty"
+											onkeyup="calculateDetail()" placeholder="Spare Qty"
+											class="form-control">
+									</div>
+
+
+									<div class="col-md-2">Spare Rate*</div>
+									<div class="col-md-3">
+										<input type="text" id="spareRate" onkeyup="calculateDetail()"
+											name="spareRate" placeholder="Rate" class="form-control">
+									</div>
+
+								</div>
+								<br>
+
+
+								<div class="box-content">
+
+									<div class="col-md-2">Disc%</div>
+									<div class="col-md-3">
+										<input type="text" id="discPer" name="discPer"
+											placeholder="Discount" onkeyup="calculateDetail()"
+											class="form-control">
+									</div>
+
+
+									<div class="col-md-2">Extra Charge%</div>
+									<div class="col-md-3">
+										<input type="text" id="extraChargePer" name="extraChargePer"
+											placeholder="Extra Charges" class="form-control" readonly>
+									</div>
+
+								</div>
+								<br>
+
+
+								<div class="box-content">
+
+									<div class="col-md-2">Disc Amt</div>
+									<div class="col-md-3">
+										<input type="text" id="discDetail" name="discDetail"
+											onkeyup="calculateDetail()" placeholder="Discount"
+											class="form-control" readonly>
+									</div>
+
+
+									<div class="col-md-2">Extra Amt</div>
+									<div class="col-md-3">
+										<input type="text" id="extraChargeDetail"
+											onkeyup="calculateDetail()" name="extraChargeDetail"
+											placeholder="Extra Charges" class="form-control" readonly>
+									</div>
+
+								</div>
+								<br>
+
+								<div class="box-content">
+
+									<div class="col-md-2">Tax%*</div>
+									<div class="col-md-3">
+										<input type="text" id="taxPer" name="taxPer"
+											placeholder="Tax Perentage" onkeyup="calculateDetail()"
+											class="form-control"  >
+									</div>
+
+
+
+
+									<div class="col-md-2">Tax Amt*</div>
+									<div class="col-md-3">
+										<input type="text" id="taxAmtDetail"
+											onkeyup="calculateDetail()" name="taxAmtDetail"
+											placeholder="Tax Amt" class="form-control" readonly>
+									</div>
+
+								</div>
+								<br>
+
+								<div class="box-content">
+
+									<div class="col-md-2">Taxable Amt*</div>
+									<div class="col-md-3">
+										<input type="text" id="taxaleAmtDetail" name="taxaleAmtDetail"
+											onkeyup="calculateDetail()" placeholder="Taxable Amt"
+											class="form-control" readonly>
+									</div>
+
+									<div class="col-md-2">Total*</div>
+									<div class="col-md-3">
+										<input type="text" id="totalDetail" name="totalDetail"
+											placeholder="Total Amt" class="form-control" readonly>
+									</div>
+
+								</div>
+								<br>
+
+								<div class="box-content">
+
+
+
+									<div class="col-md-2">Servicing Type*</div>
+									<div class="col-md-3">
+
+										<select name="servTypeDetail" id="servTypeDetail"
+											class="form-control chosen" tabindex="6">
 											<option value="">Select Servicing Type</option>
 											<option value="1">Regular</option>
-											 <option value="2">Break Down</option>  
+											<option value="2">Break Down</option>
 										</select>
-									
+
 									</div>
-									
-									 
-							</div><br><br>
-							
-							<div class="form-group">
+
+
+								</div>
+								<br> <br>
+
+								<div class="form-group">
 									<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-5">
-										<input type="button" class="btn btn-primary" value="Add" onclick="addPart()">  
+										<input type="button" class="btn btn-primary" value="Add"
+											onclick="addPart()">
 									</div>
-								</div><br><br>
-							
-							
+								</div>
+								<br> <br>
+
+
 								<div align="center" id="loader" style="display: none">
 
-							<span>
-								<h4>
-									<font color="#343690">Loading</font>
-								</h4>
-							</span> <span class="l-1"></span> <span class="l-2"></span> <span
-						class="l-3"></span> <span class="l-4"></span> <span class="l-5"></span>
-					<span class="l-6"></span>
-				</div>
-											
-							
-							
-							<div class=" box-content">
-					<div class="row">
-						<div class="col-md-12 table-responsive">
-							<table class="table table-bordered table-striped fill-head "
-								style="width: 100%" id="table_grid">
-								<thead>
-									<tr>
-										<th>Sr.No.</th>
-										<th>Part Name</th> 
-										<th>Group</th>
-										<th>Spare Qty</th>
-										<th>Spare Rate</th>
-										<th>Tax</th>
-										<th>Taxable Amt</th>
-										<th>Discount</th>
-										<th>Extra Charges</th>
-										<th>Total</th>
-										<th>Action</th>
+									<span>
+										<h4>
+											<font color="#343690">Loading</font>
+										</h4>
+									</span> <span class="l-1"></span> <span class="l-2"></span> <span
+										class="l-3"></span> <span class="l-4"></span> <span
+										class="l-5"></span> <span class="l-6"></span>
+								</div>
 
-									</tr>
-								</thead>
-								<tbody>
-								
-								<c:forEach items="${servDetail}" var="servDetail"
+
+
+								<div class=" box-content">
+									<div class="row">
+										<div class="col-md-12 table-responsive">
+											<table class="table table-bordered table-striped fill-head "
+												style="width: 100%" id="table_grid">
+												<thead>
+													<tr>
+														<th>Sr.No.</th>
+														<th>Part Name</th>
+														<th>Group</th>
+														<th>Spare Qty</th>
+														<th>Spare Rate</th>
+														<th>Tax</th>
+														<th>Taxable Amt</th>
+														<th>Discount</th>
+														<th>Extra Charges</th>
+														<th>Total</th>
+														<th>Action</th>
+
+													</tr>
+												</thead>
+												<tbody>
+
+													<c:forEach items="${servDetail}" var="servDetail"
 														varStatus="count">
 
 
 														<tr>
 															<td><c:out value="${count.index+1}" /></td>
 															<c:set var="srNo" value="${srNo+1}" />
-															<td><c:out value="${servDetail.partName}" /></td> 
+															<td><c:out value="${servDetail.partName}" /></td>
 															<td><c:out value="${servDetail.groupName}" /></td>
-															<td><c:out value="${servDetail.sprQty}" /></td> 
+															<td><c:out value="${servDetail.sprQty}" /></td>
 															<td><c:out value="${servDetail.sprRate}" /></td>
 															<td><c:out value="${servDetail.sprTaxAmt}" /></td>
 															<td><c:out value="${servDetail.sprTaxableAmt}" /></td>
 															<td><c:out value="${servDetail.disc}" /></td>
 															<td><c:out value="${servDetail.extraCharges}" /></td>
 															<td><c:out value="${servDetail.total}" /></td>
-															<td align="left"><span class='glyphicon glyphicon-edit' onclick="edit(${count.index})" id="edit${count.index}"></span> 
-		                                                    <span class="glyphicon glyphicon-remove" onclick="del(${count.index})" id="del${count.index}"></span>
-     														 </td>
-												  	 
+															<td align="left">
+																<%-- <span class='glyphicon glyphicon-edit' onclick="edit(${count.index})" id="edit${count.index}"></span>  --%>
+																<span class="glyphicon glyphicon-remove"
+																onclick="del(${count.index})" id="del${count.index}"></span>
+															</td>
+
 
 														</tr>
 													</c:forEach>
 
-								</tbody>
-							</table>
-						</div>
-					</div>
+												</tbody>
+											</table>
+										</div>
+									</div>
 								</div>
-							<hr>	
+								<hr>
 								<div class="box-content">
-							
-									<div class="col-md-2">Service Done Remainder*</div>
-									<div class="col-md-3"> 
-									<input type="text" id="servDoneRem" name="servDoneRem" value="${editServicing.servDoneRem}" class="form-control" placeholder="Service Done Remainder" required>
-									</div>
-								 
-									
-									<div class="col-md-2">Total Spare Part</div>
-										<div class="col-md-3"><input type="text" value="${editServicing.sprTot}" id="totPart" name="totPart" placeholder="Total Spare Part" class="form-control"  required>
-									</div>
-							
-							</div><br>
-							
-							
-							<div class="box-content">
-							
-									<div class="col-md-2">Labour Charge*</div>
-									<div class="col-md-3"> 
-									<input type="text" id="labCharge" name="labCharge" value="${editServicing.labChrge}" onkeyup="calculateHeader()" placeholder="Labour Charge" class="form-control"  required>
-									</div>
-								 
-									
-									<div class="col-md-2">Total Discount</div>
-										<div class="col-md-3"><input type="text" id="totDisc" value="${editServicing.totalDisc}" name="totDisc" placeholder="Total Spare Part" class="form-control"   readonly>
-									</div>
-							
-							</div><br> 
-							
-							<div class="box-content">
-							
-									<div class="col-md-2">Total Extra Charge</div>
-									<div class="col-md-3"> 
-									<input type="text" id="totExtraCharge" name="totExtraCharge" value="${editServicing.totalExtra}" placeholder="Total Extra Charge" class="form-control"   readonly>
-									</div>
-								 
-									
-									<div class="col-md-2">Tax Amt*</div>
-										<div class="col-md-3"><input type="text" id="taxAmt" value="${editServicing.taxAmt}" name="taxAmt" placeholder="Tax Amt" class="form-control"  required>
-									</div>
-							
-							</div><br> 
-							
-							<div class="box-content">
-							
-									<div class="col-md-2">Taxable Amt*</div>
-										<div class="col-md-3">
-										<input type="text" id="taxaleAmt" name="taxaleAmt" value="${editServicing.taxableAmt}" placeholder="Taxable Amt" class="form-control"  required>
-									</div>
-								 
-									
-									<div class="col-md-2">Total*</div>
-										<div class="col-md-3"><input type="text" id="total" value="${editServicing.total}" name="total" placeholder="Total" class="form-control"  required>
-									</div>
-								 
-									 <input type="hidden" id="totalfirst" name="totalfirst" placeholder="Total" class="form-control"  required>
-								 
-							
-							</div><br>
-							<c:choose>
-								<c:when test="${editServicing.servType2==1}">
-									<div class="box-content">
-							
-									<div class="col-md-2">Servicing Done Km*</div>
-										<div class="col-md-3">
-										<input type="text" id="servDoneKm" value="${editServicing.servDoneKm}" name="servDoneKm" placeholder="Servicing Done Km" onchange="updateNextServicingDueKm()" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;" class="form-control"  required>
-									</div>
-								 
-									
-									<div class="col-md-2">Next Due Km*</div>
-										<div class="col-md-3"><input type="text" value="${editServicing.nextDueKm}" id="nextDueKm" name="nextDueKm" placeholder="Next Due Km" class="form-control"  required>
-									</div>
-							
-							</div><br>
-								</c:when>
-							</c:choose>
-							
-							<div class="box-content">
-							 
-									<div class="col-md-2" >Select Pdf</div>
-												<div class="col-md-4"> 
-													<input type="file" id="file" name="attachFile" value="${editServicing.billFile}" size="60" data-rule-required="true"/> 
-													<input type="hidden" id="fileName" name="fileName" value="${editServicing.billFile}" size="60"/> 
-												</div>
-							
-							</div><br>
-							 
-								
-							<div class="form-group">
-									<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-5">
-										<input type="submit" class="btn btn-primary" value="Submit" onclick="check();">
-<!-- 										<button type="button" class="btn">Cancel</button>
- -->									</div>
-								</div><br><br>
-						
-							
-							
 
-						</form>
-						</div>	
+									<div class="col-md-2">Service Done Remainder*</div>
+									<div class="col-md-3">
+										<input type="text" id="servDoneRem" name="servDoneRem"
+											value="${editServicing.servDoneRem}" class="form-control"
+											placeholder="Service Done Remainder" required>
+									</div>
+
+
+									<div class="col-md-2">Total Spare Part</div>
+									<div class="col-md-3">
+										<input type="text" value="${editServicing.sprTot}"
+											id="totPart" name="totPart" placeholder="Total Spare Part"
+											class="form-control" required>
+									</div>
+
+								</div>
+								<br>
+
+
+								<div class="box-content">
+
+									<div class="col-md-2">Labour Charge*</div>
+									<div class="col-md-3">
+										<input type="text" id="labCharge" name="labCharge"
+											value="${editServicing.labChrge}" onkeyup="calculateHeader()"
+											placeholder="Labour Charge" class="form-control" required>
+									</div>
+
+
+									<div class="col-md-2">Total Discount</div>
+									<div class="col-md-3">
+										<input type="text" id="totDisc"
+											value="${editServicing.totalDisc}" name="totDisc"
+											placeholder="Total Spare Part" class="form-control" readonly>
+									</div>
+
+								</div>
+								<br>
+
+								<div class="box-content">
+
+									<div class="col-md-2">Total Extra Charge</div>
+									<div class="col-md-3">
+										<input type="text" id="totExtraCharge" name="totExtraCharge"
+											value="${editServicing.totalExtra}"
+											placeholder="Total Extra Charge" class="form-control"
+											readonly>
+									</div>
+
+
+									<div class="col-md-2">Tax Amt*</div>
+									<div class="col-md-3">
+										<input type="text" id="taxAmt" value="${editServicing.taxAmt}"
+											name="taxAmt" placeholder="Tax Amt" class="form-control"
+											required>
+									</div>
+
+								</div>
+								<br>
+
+								<div class="box-content">
+
+									<div class="col-md-2">Taxable Amt*</div>
+									<div class="col-md-3">
+										<input type="text" id="taxaleAmt" name="taxaleAmt"
+											value="${editServicing.taxableAmt}" placeholder="Taxable Amt"
+											class="form-control" required>
+									</div>
+
+
+									<div class="col-md-2">Total*</div>
+									<div class="col-md-3">
+										<input type="text" id="total" value="${editServicing.total}"
+											name="total" placeholder="Total" class="form-control"
+											required>
+									</div>
+
+									<input type="hidden" id="totalfirst" name="totalfirst"
+										placeholder="Total" class="form-control" required>
+
+
+								</div>
+								<br>
+								<c:choose>
+									<c:when test="${editServicing.servType2==1}">
+										<div class="box-content">
+
+											<div class="col-md-2">Servicing Done Km*</div>
+											<div class="col-md-3">
+												<input type="text" id="servDoneKm"
+													value="${editServicing.servDoneKm}" name="servDoneKm"
+													placeholder="Servicing Done Km"
+													onchange="updateNextServicingDueKm()"
+													onkeypress="return IsNumeric(event);"
+													ondrop="return false;" onpaste="return false;"
+													class="form-control" required>
+											</div>
+
+
+											<div class="col-md-2">Next Due Km*</div>
+											<div class="col-md-3">
+												<input type="text" value="${editServicing.nextDueKm}"
+													id="nextDueKm" name="nextDueKm" placeholder="Next Due Km"
+													class="form-control" required>
+											</div>
+
+										</div>
+										<br>
+									</c:when>
+								</c:choose>
+
+								<div class="box-content">
+
+									<div class="col-md-2">Select Pdf</div>
+									<div class="col-md-4">
+										<input type="file" id="file" name="attachFile"
+											value="${editServicing.billFile}" size="60"
+											data-rule-required="true" /> <input type="hidden"
+											id="fileName" name="fileName"
+											value="${editServicing.billFile}" size="60" />
+									</div>
+
+								</div>
+								<br>
+
+
+								<div class="form-group">
+									<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-5">
+										<input type="submit" class="btn btn-primary" value="Submit"
+											onclick="check();">
+										<!-- 										<button type="button" class="btn">Cancel</button>
+ -->
+									</div>
+								</div>
+								<br> <br>
+
+
+
+
+							</form>
 						</div>
 					</div>
 				</div>
 			</div>
-			<!-- END Main Content -->
-			<footer>
+		</div>
+		<!-- END Main Content -->
+		<footer>
 			<p>2017 © MONGINIS.</p>
-			</footer>
+		</footer>
 
-			<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
-				class="fa fa-chevron-up"></i></a>
-		
+		<a id="btn-scrollup" class="btn btn-circle btn-lg" href="#"><i
+			class="fa fa-chevron-up"></i></a>
+
 		<!-- END Content -->
 	</div>
 	<!-- END Container -->
@@ -602,7 +743,7 @@
 		src="${pageContext.request.contextPath}/resources/assets/bootstrap-daterangepicker/date.js"></script>
 	<script type="text/javascript"
 		src="${pageContext.request.contextPath}/resources/assets/bootstrap-daterangepicker/daterangepicker.js"></script>
-		<script type="text/javascript">
+	<script type="text/javascript">
 		
 		var editItem=0;
 		function addPart() {
@@ -627,6 +768,9 @@
 				var extraChargePer = $("#extraChargePer").val(); 
 				var taxPer = $("#taxPer").val(); 
 				var labourGroupId = $("#labourGroupId").val();
+				var otherPartIds = $("#otherPartIds").val();
+				var partName = $("#partName").val();
+				
 				if(validation()==true){	
 				
 					if(editItem==0)
@@ -656,6 +800,8 @@
 											discPer : discPer,
 											extraChargePer : extraChargePer,
 											taxPer : taxPer,
+											partName : partName,
+											otherPartIds : otherPartIds,
 											ajax : 'true'
 
 										},
@@ -709,8 +855,9 @@
 														  		 
 														  		totSparePart=totSparePart+itemList.total;
 														  		}
-															  	tr.append($('<td></td>').html('<span class="glyphicon glyphicon-edit" id="edit'+key+'" onclick="edit('+key+');"> </span><span style="visibility: hidden;" class="glyphicon glyphicon-ok" onclick="submit('+key+');" id="ok'+key+'"></span><span class="glyphicon glyphicon-remove"  onclick="del('+key+')" id="del'+key+'"></span>'));
-															    $('#table_grid tbody').append(tr);
+															  	tr.append($('<td></td>').html('<span style="visibility: hidden;" class="glyphicon glyphicon-ok" onclick="submit('+key+');" id="ok'+key+'"></span><span class="glyphicon glyphicon-remove"  onclick="del('+key+')" id="del'+key+'"></span>'));
+															  	/* <span class="glyphicon glyphicon-edit" id="edit'+key+'" onclick="edit('+key+');"> </span> */
+															  	$('#table_grid tbody').append(tr);
 															} 
 														})  
 														    
@@ -735,6 +882,8 @@
 											document.getElementById("totalDetail").value="";	
 											document.getElementById("spareQty").value=""; 
 											document.getElementById("groupId").value="";  
+											document.getElementById("partName").value = "";
+											document.getElementById("partNameDiv").style.display = 'none';
 											$('#groupId').trigger("chosen:updated");
 											var html = '<option value="">Select Spare Part</option>';
 											$('#sprId').html(html);
@@ -771,6 +920,8 @@
 											discPer : discPer,
 											extraChargePer : extraChargePer,
 											taxPer : taxPer,
+											partName : partName,
+											otherPartIds : otherPartIds,
 											ajax : 'true'
 
 										},
@@ -825,8 +976,9 @@
 														  		 
 														  		totSparePart=totSparePart+itemList.total;
 														  		}
-															  	tr.append($('<td></td>').html('<span class="glyphicon glyphicon-edit" id="edit'+key+'" onclick="edit('+key+');"> </span><span style="visibility: hidden;" class="glyphicon glyphicon-ok" onclick="submit('+key+');" id="ok'+key+'"></span><span class="glyphicon glyphicon-remove"  onclick="del('+key+')" id="del'+key+'"></span>'));
-															    $('#table_grid tbody').append(tr);
+															  	tr.append($('<td></td>').html('<span style="visibility: hidden;" class="glyphicon glyphicon-ok" onclick="submit('+key+');" id="ok'+key+'"></span><span class="glyphicon glyphicon-remove"  onclick="del('+key+')" id="del'+key+'"></span>'));
+															  	/* <span class="glyphicon glyphicon-edit" id="edit'+key+'" onclick="edit('+key+');"> </span> */
+															  	$('#table_grid tbody').append(tr);
 															}
 														 
 														})  
@@ -852,7 +1004,9 @@
 											document.getElementById("taxAmtDetail").value="";
 											document.getElementById("totalDetail").value="";	
 											document.getElementById("spareQty").value=""; 
-											document.getElementById("groupId").value="";  
+											document.getElementById("groupId").value=""; 
+											document.getElementById("partName").value = "";
+											document.getElementById("partNameDiv").style.display = 'none';
 											$('#groupId').trigger("chosen:updated");
 											var html = '<option value="">Select Spare Part</option>';
 											$('#sprId').html(html);
@@ -1005,8 +1159,9 @@
 							  		totSparePart=totSparePart+itemList.total;
 							  		}
 							  	
-							  	tr.append($('<td></td>').html('<span class="glyphicon glyphicon-edit" id="edit'+key+'" onclick="edit('+key+');"> </span><span style="visibility: hidden;" class="glyphicon glyphicon-ok" onclick="submit('+key+');" id="ok'+key+'"></span><span class="glyphicon glyphicon-remove"  onclick="del('+key+')" id="del'+key+'"></span>'));
-							    $('#table_grid tbody').append(tr);
+							  	tr.append($('<td></td>').html('<span style="visibility: hidden;" class="glyphicon glyphicon-ok" onclick="submit('+key+');" id="ok'+key+'"></span><span class="glyphicon glyphicon-remove"  onclick="del('+key+')" id="del'+key+'"></span>'));
+							  	/* <span class="glyphicon glyphicon-edit" id="edit'+key+'" onclick="edit('+key+');"> </span> */
+							  	$('#table_grid tbody').append(tr);
 							}
 							
  
@@ -1060,7 +1215,7 @@
 			
 		}
 	</script>
-<script type="text/javascript">
+	<script type="text/javascript">
 function validation()
 {
 	        
@@ -1304,6 +1459,21 @@ $(document).ready(function() {
 					document.getElementById("taxAmtDetail").value=0;
 					document.getElementById("totalDetail").value="";	
 					document.getElementById("spareQty").value="";
+					
+					var otherPartIds = $(
+					"#otherPartIds")
+					.val();
+
+			var fields = otherPartIds
+					.split(',');
+
+			if (fields[0] == sprId
+					|| fields[1] == sprId) {
+				showHidePartName();
+			} else {
+				document
+						.getElementById("partNameDiv").style.display = 'none';
+			}
 						});
 				}
 				 
@@ -1320,6 +1490,12 @@ $(document).ready(function() {
 		})
 		 		 
 });
+
+function showHidePartName() {
+
+	document.getElementById("partNameDiv").style.display = 'block';
+	//alert("int hide")
+}
 
 function calculateDetail()
 {
@@ -1380,9 +1556,9 @@ function check()
   
 			 
 </script>
-	
-								
-							
-	
+
+
+
+
 </body>
 </html>

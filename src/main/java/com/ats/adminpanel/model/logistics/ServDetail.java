@@ -22,6 +22,7 @@ public class ServDetail {
 	private float extraCharges; 
 	private int delStatus;
 	private String varchar1;
+	private String varchar2;
 	
 	public int getServDetailId() {
 		return servDetailId;
@@ -114,13 +115,19 @@ public class ServDetail {
 	public void setVarchar1(String varchar1) {
 		this.varchar1 = varchar1;
 	}
+	public String getVarchar2() {
+		return varchar2;
+	}
+	public void setVarchar2(String varchar2) {
+		this.varchar2 = varchar2;
+	}
 	@Override
 	public String toString() {
 		return "ServDetail [servDetailId=" + servDetailId + ", servId=" + servId + ", servDate=" + servDate
 				+ ", servType=" + servType + ", groupId=" + groupId + ", sprId=" + sprId + ", sprQty=" + sprQty
 				+ ", sprRate=" + sprRate + ", sprTaxableAmt=" + sprTaxableAmt + ", sprTaxAmt=" + sprTaxAmt + ", total="
 				+ total + ", disc=" + disc + ", extraCharges=" + extraCharges + ", delStatus=" + delStatus
-				+ ", varchar1=" + varchar1 + "]";
+				+ ", varchar1=" + varchar1 + ", varchar2=" + varchar2 + "]";
 	}
 	
 	
