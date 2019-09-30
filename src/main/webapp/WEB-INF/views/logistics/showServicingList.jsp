@@ -524,7 +524,8 @@
 											  	tr.append($('<td style="text-align:right"></td>').html((itemList.taxAmt).toFixed(2)));
 											  	tr.append($('<td style="text-align:right"></td>').html((itemList.total).toFixed(2)));
 											  	tr.append($('<td></td>').html(stats));
-											  	tr.append($('<td ></td>').html("<a href='${pageContext.request.contextPath}/viewServicingDetail/"+itemList.servId+"/"+abc+"' class='action_btn'> <abbr title='detailed'> <i class='fa fa-list' ></i></abbr> "));
+											  	tr.append($('<td ></td>').html("<a href='javascript:genPdf("+itemList.servId+");'><abbr title='PDF'>"+
+											  	"<i class='glyphicon glyphicon glyphicon-file'></i></abbr></a><a href='${pageContext.request.contextPath}/viewServicingDetail/"+itemList.servId+"/"+abc+"' class='action_btn'> <abbr title='detailed'> <i class='fa fa-list' ></i></abbr> "));
 												
 												$('#table_grid tbody').append(tr); 
 											 
@@ -534,6 +535,12 @@
 				 } 
 		 
 	}
+		
+		function genPdf(id) {
+
+			window.open('poPdfReport?url=/pdf/logisPo/' + id);
+
+		}
 	</script>
 	
 	<script type="text/javascript">
