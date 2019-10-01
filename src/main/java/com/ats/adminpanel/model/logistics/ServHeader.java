@@ -1,7 +1,7 @@
 package com.ats.adminpanel.model.logistics;
-
-import java.util.Date;
+ 
 import java.util.List;
+ 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
  
@@ -36,6 +36,9 @@ public class ServHeader {
 	private int isApproved; 
 	private int delStatus; 
 	private String billFile;
+	private String varchar1; 
+	private String varchar2;
+	
 	List<ServDetail> servDetail;
 	public int getServId() {
 		return servId;
@@ -201,13 +204,24 @@ public class ServHeader {
 	public void setServDetail(List<ServDetail> servDetail) {
 		this.servDetail = servDetail;
 	}
-	
-	
+	 
 	public String getBillFile() {
 		return billFile;
 	}
 	public void setBillFile(String billFile) {
 		this.billFile = billFile;
+	}
+	public String getVarchar1() {
+		return varchar1;
+	}
+	public void setVarchar1(String varchar1) {
+		this.varchar1 = varchar1;
+	}
+	public String getVarchar2() {
+		return varchar2;
+	}
+	public void setVarchar2(String varchar2) {
+		this.varchar2 = varchar2;
 	}
 	@Override
 	public String toString() {
@@ -218,8 +232,8 @@ public class ServHeader {
 				+ ", totalDisc=" + totalDisc + ", totalExtra=" + totalExtra + ", discOnBill=" + discOnBill
 				+ ", extraOnBill=" + extraOnBill + ", taxAmt=" + taxAmt + ", taxableAmt=" + taxableAmt + ", roundOff="
 				+ roundOff + ", total=" + total + ", servDoneKm=" + servDoneKm + ", nextDueKm=" + nextDueKm
-				+ ", isApproved=" + isApproved + ", delStatus=" + delStatus + ", billFile=" + billFile + ", servDetail="
-				+ servDetail + "]";
+				+ ", isApproved=" + isApproved + ", delStatus=" + delStatus + ", billFile=" + billFile + ", varchar1="
+				+ varchar1 + ", varchar2=" + varchar2 + ", servDetail=" + servDetail + "]";
 	}
 	
 	

@@ -34,6 +34,7 @@ import org.zefer.pd4ml.PD4PageMark;
 import com.ats.adminpanel.commons.Constants;
 import com.ats.adminpanel.model.LogisSetting;
 import com.ats.adminpanel.model.ServDetailForPdf;
+import com.ats.adminpanel.model.ServHeaderForPdf;
 import com.ats.adminpanel.model.billing.Company;
 import com.ats.adminpanel.model.logistics.Dealer;
 import com.ats.adminpanel.model.logistics.MechType;
@@ -67,15 +68,11 @@ public class LogisticsPoController {
 			
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			map.add("servId", listOfIds);
-			ServHeader viewServicingDetail = restTemplate.postForObject(Constants.url + "getServHeaderAndDetailById", map,
-					ServHeader.class);
-			List<ServHeader> list = new ArrayList<>();
-			list.add(viewServicingDetail);
-			 
-			ServDetailForPdf[] servDetailForPdf = restTemplate.postForObject(Constants.url + "getServiceDetailByServIdForPdf", map,
-					ServDetailForPdf[].class);
-			Dealer[] getAllDealerList = restTemplate.getForObject(Constants.url + "getAllDealerList", Dealer[].class);
-			MechType[] mechTypeList = restTemplate.getForObject(Constants.url + "getTypeList", MechType[].class);
+			  
+			ServHeaderForPdf servDetailForPdf = restTemplate.postForObject(Constants.url + "getServiceDetailByServIdForPdf", map,
+					ServHeaderForPdf.class);
+			List<ServHeaderForPdf> list = new ArrayList<>();
+			list.add(servDetailForPdf);
 			
 			map = new LinkedMultiValueMap<String, Object>();
 			String otherPartIdss = "logis_part_other";
@@ -83,12 +80,11 @@ public class LogisticsPoController {
 			LogisSetting otherPartIds = restTemplate.postForObject(Constants.url + "getLogisOtherPartIds", map,
 					LogisSetting.class);
 			
-			List<ServDetailForPdf> detailList = new ArrayList<>(Arrays.asList(servDetailForPdf));
+			List<ServDetailForPdf> detailList = servDetailForPdf.getList();
 			
-			model.addObject("viewServicingDetail", list);
-			model.addObject("mechTypeList", mechTypeList);
-			model.addObject("detailList", detailList);
-			model.addObject("getAllDealerList", getAllDealerList);
+			model.addObject("viewServicingDetail", list); 
+			model.addObject("detailList", detailList); 
+			
 			String[] ids = otherPartIds.getKeyValue().split(",");
 			
 			for(int i=0;i<detailList.size() ; i++) {

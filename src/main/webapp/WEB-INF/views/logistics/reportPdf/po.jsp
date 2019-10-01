@@ -118,8 +118,7 @@ hr {
 		<!--  -->
 
 		<p style="text-align: left; font-weight: normal;">
-			Original / Duplicate(Acnt)/Triplicate(Purch)/Stroes <span
-				style="float: right;">${documentBean.docIsoSerialNumber}</span>
+			Original / Duplicate(Acnt)/Triplicate <span style="float: right;">${documentBean.docIsoSerialNumber}</span>
 		</p>
 		<!-- p -->
 
@@ -177,7 +176,8 @@ hr {
 									PURCHASE ORDER</td>
 
 								<td width="33.33%" valign="top"
-									style="font-weight: bold; margin: 0px;" align="right"></td>
+									style="font-weight: bold; margin: 0px;" align="right">PO
+									No.: ${viewServicingDetail.varchar1}</td>
 
 							</tr>
 
@@ -204,15 +204,10 @@ hr {
 									style="border-left: 1px solid #313131; border-top: 1px solid #313131; border-bottom: 1px solid #313131; padding: 8px; color: #000; font-size: 12px; font-weight: bold;">To,<br>
 
 
-									<c:forEach items="${getAllDealerList}" var="dealerList">
-										<c:choose>
-											<c:when
-												test="${dealerList.dealerId==viewServicingDetail.dealerId}">
-												${dealerList.dealerName}<br>${dealerList.city}<br>GST No.
-									: ${dealerList.gstnNo}
-											</c:when>
-										</c:choose>
-									</c:forEach>
+
+									${viewServicingDetail.dealerName}<br>${viewServicingDetail.city}<br>GST
+									No. : ${viewServicingDetail.gstnNo}
+
 								</td>
 
 								<td width="50%" valign="top"
@@ -226,8 +221,10 @@ hr {
 														<tr>
 
 															<td width="50%" valign="top">Bill No.:
-																${viewServicingDetail.billNo} <br> Date :
-																${viewServicingDetail.servDate}
+																${viewServicingDetail.billNo}<br> Date :
+																${viewServicingDetail.servDate}<br> Vehicle No.:
+																${viewServicingDetail.vehName}<br> Reading.:
+																${viewServicingDetail.servDoneRem} KM<br>
 															</td>
 
 
@@ -256,6 +253,7 @@ hr {
 			FOR UNDERMENTIONED GOODS.
 
 		</h5>
+		<br>
 
 		<c:set var="pageCount" value="1" />
 		<c:set var="totalPage" value="${detailList.size()/8}" />
@@ -278,6 +276,8 @@ hr {
 			<tbody>
 				<c:set var="totalRowCount" value="0" />
 				<c:set var="maxRowCount" value="8" />
+				<c:set var="taxabletotal" value="0" />
+				<c:set var="taxtotal" value="0" />
 				<c:set var="total" value="0" />
 
 				<c:forEach items="${detailList}" var="row" varStatus="count">
@@ -427,8 +427,7 @@ hr {
 
 
 		<p style="text-align: left; font-weight: normal;">
-			Original / Duplicate(Acnt)/Triplicate(Purch)/Stroes <span
-				style="float: right;">${documentBean.docIsoSerialNumber}</span>
+			Original / Duplicate(Acnt)/Triplicate <span style="float: right;">${documentBean.docIsoSerialNumber}</span>
 		</p>
 
 
@@ -485,8 +484,8 @@ hr {
 									PURCHASE ORDER</td>
 
 								<td width="33.33%" valign="top"
-									style="font-weight: bold; margin: 0px;" align="right"> 
-								</td>
+									style="font-weight: bold; margin: 0px;" align="right">PO
+									No.: ${viewServicingDetail.varchar1}</td>
 
 							</tr>
 
@@ -503,6 +502,7 @@ hr {
 			FOR UNDERMENTIONED GOODS.
 
 		</h5>
+		<br>
 		<table align="center" border="1" cellpadding="0" cellspacing="0"
 			id="table_grid">
 			<thead>
@@ -539,16 +539,19 @@ hr {
 
 
 				<c:set var="total" value="${row.total+total}" />
+				<c:set var="taxabletotal" value="${row.sprTaxableAmt+taxabletotal}" />
+				<c:set var="taxtotal" value="${row.sprTaxAmt+taxtotal}" />
+
 				<tr style="font-size: 13px;">
 					<td height="5px" style="max-height: 5px" align="center"
 						width="30px"><c:out value="${count.index+1}" /></td>
-					<td align="left" style="padding: 2px;"><c:out
+					<td align="left" style="padding: 5px;"><c:out
 							value="${row.sprName}" /></td>
 					<td align="right" style="padding: 5px;"><fmt:formatNumber
 							type="number" maxFractionDigits="2" minFractionDigits="2"
 							value="${row.sprQty}" /></td>
-					<td align="right"><fmt:formatNumber type="number"
-							maxFractionDigits="2" minFractionDigits="2"
+					<td align="right" style="padding: 5px;"><fmt:formatNumber
+							type="number" maxFractionDigits="2" minFractionDigits="2"
 							value="${row.sprRate}" /></td>
 					<td align="right" style="padding: 5px;"><fmt:formatNumber
 							type="number" maxFractionDigits="2" minFractionDigits="2"
@@ -560,9 +563,7 @@ hr {
 					<td align="right" style="padding: 5px;"><fmt:formatNumber
 							type="number" maxFractionDigits="2" minFractionDigits="2"
 							value="${row.sprTaxAmt}" /></td>
-					<%-- <td align="right" style="padding: 5px;"><fmt:formatNumber
-							type="number" maxFractionDigits="2" minFractionDigits="2"
-							value="${row.itemRate}" /></td> --%>
+
 					<td align="right" style="padding: 5px;"><fmt:formatNumber
 							type="number" maxFractionDigits="2" minFractionDigits="2"
 							value="${row.total}" /></td>
@@ -573,8 +574,14 @@ hr {
 				</c:forEach>
 
 				<tr style="font-size: 13px;">
-					<td colspan="7"><c:out value="Total " /></td>
-
+					<td colspan="4"><c:out value="Total " /></td>
+					<td align="right" style="padding: 5px;"><fmt:formatNumber
+							type="number" maxFractionDigits="2" minFractionDigits="2"
+							value="${taxabletotal}" /></td>
+					<td align="center" style="padding: 5px;">-</td>
+					<td align="right" style="padding: 5px;"><fmt:formatNumber
+							type="number" maxFractionDigits="2" minFractionDigits="2"
+							value="${taxtotal}" /></td>
 					<td align="right" style="padding: 5px;"><fmt:formatNumber
 							type="number" maxFractionDigits="2" minFractionDigits="2"
 							value="${total}" /></td>

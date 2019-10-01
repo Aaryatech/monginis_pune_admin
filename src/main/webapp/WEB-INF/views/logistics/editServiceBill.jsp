@@ -102,6 +102,13 @@
 
 									</div>
 
+									<div class="col-md-2">PO No.</div>
+									<div class="col-md-3">
+										<input type="text" id="poNo" name="poNo" placeholder="PO No"
+											autocomplete="off" value="${editServicing.varchar1}"
+											class="form-control" readonly>
+									</div>
+
 								</div>
 								<br>
 								<div class="box-content">
@@ -390,7 +397,7 @@
 									<div class="col-md-3">
 										<input type="text" id="taxPer" name="taxPer"
 											placeholder="Tax Perentage" onkeyup="calculateDetail()"
-											class="form-control"  >
+											class="form-control">
 									</div>
 
 

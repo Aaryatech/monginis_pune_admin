@@ -1537,6 +1537,18 @@ public class LogisticsController {
 				model.addObject("sprPartList", getAllSparePart);
 				model.addObject("vehicleList", vehicleList);
 				model.addObject("labourGroupId", labourGroupId);
+
+				map = new LinkedMultiValueMap<String, Object>();
+				map.add("key", "po_year");
+				LogisSetting PoYear = restTemplate.postForObject(Constants.url + "getLogisOtherPartIds", map,
+						LogisSetting.class);
+
+				map = new LinkedMultiValueMap<String, Object>();
+				map.add("key", "po_index");
+				LogisSetting poIndex = restTemplate.postForObject(Constants.url + "getLogisOtherPartIds", map,
+						LogisSetting.class);
+				model.addObject("poNo", "Logistic " + PoYear.getKeyValue() + "/" + poIndex.getKeyValue());
+
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -1851,6 +1863,7 @@ public class LogisticsController {
 			float taxaleAmt = Float.parseFloat(request.getParameter("taxaleAmt"));
 			float total = Float.parseFloat(request.getParameter("total"));
 			String typeName = request.getParameter("typeName");
+			String poNo = request.getParameter("poNo");
 
 			String otherPartIds = request.getParameter("otherPartIds");
 			String[] ids = otherPartIds.split(",");
@@ -1906,6 +1919,7 @@ public class LogisticsController {
 
 			servHeader.setTotal(total);
 			servHeader.setBillFile(pdf);
+			servHeader.setVarchar1(poNo);
 
 			String vehName = null;
 			List<ServDetail> servDetailList = new ArrayList<ServDetail>();
@@ -1980,6 +1994,10 @@ public class LogisticsController {
 						System.out.println("insert alert Vehicle " + insert);
 					}
 				}
+
+				MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+				map.add("key", "po_index");
+				Info info = restTemplate.postForObject(Constants.url + "updateKeyValue", map, Info.class);
 
 			}
 
@@ -2081,7 +2099,8 @@ public class LogisticsController {
 				for (int j = 0; j < groupList.size(); j++) {
 
 					if (viewServicingDetail.getServDetail().get(i).getGroupId() == groupList.get(j).getGroupId()) {
-						servDetailAddPart.setSprTaxAmtPer(Float.parseFloat(viewServicingDetail.getServDetail().get(i).getVarchar2()));
+						servDetailAddPart.setSprTaxAmtPer(
+								Float.parseFloat(viewServicingDetail.getServDetail().get(i).getVarchar2()));
 						servDetailAddPart.setGroupId(groupList.get(j).getGroupId());
 						servDetailAddPart.setGroupName(groupList.get(j).getGroupName());
 						break;
@@ -2304,6 +2323,7 @@ public class LogisticsController {
 			String typeName = request.getParameter("typeName");
 			String otherPartIds = request.getParameter("otherPartIds");
 			String[] ids = otherPartIds.split(",");
+			String poNo = request.getParameter("poNo");
 			
 			int servDoneKm = 0;
 			int nextDueKm = 0;
@@ -2384,13 +2404,12 @@ public class LogisticsController {
 					servDetail.setVarchar1(addSparePartListInEdit.get(i).getPartName());
 				}
 
-				
 				vehName = addSparePartListInEdit.get(i).getVehName();
 				servDetailList.add(servDetail);
 			}
 			servHeader.setVehNo(vehName);
 			servHeader.setServDetail(servDetailList);
-
+			servHeader.setVarchar1(poNo);
 			System.out.println("before insert " + servHeader);
 			ServHeader res = restTemplate.postForObject(Constants.url + "postServHeader", servHeader, ServHeader.class);
 			System.out.println("insertSparePart" + servHeader.toString());

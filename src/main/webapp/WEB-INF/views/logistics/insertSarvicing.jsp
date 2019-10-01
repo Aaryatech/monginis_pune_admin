@@ -87,6 +87,12 @@
 										</select>
 
 									</div>
+									<div class="col-md-2">PO No.</div>
+									<div class="col-md-3">
+										<input type="text" id="poNo" name="poNo" placeholder="PO No"
+											autocomplete="off" value="${poNo}" class="form-control"
+											readonly>
+									</div>
 									<input class="form-control" id="typeName" size="16"
 										type="hidden" name="typeName" required /> <input
 										class="form-control" id="labourGroupId"
