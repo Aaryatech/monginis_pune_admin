@@ -107,6 +107,7 @@ public class LogisticsController {
 		ModelAndView model = new ModelAndView("logistics/logisticsDashbord");
 		try {
 
+			
 			List<AlertAmcRecord> alertMachineAmcRecordList = restTemplate
 					.getForObject(Constants.url + "getAlertMachineAmcRecord", List.class);
 			List<AlertAmcRecord> alertVehicleAmcRecordList = restTemplate
