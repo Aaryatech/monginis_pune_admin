@@ -309,58 +309,38 @@ hr {
 
 		<br>
 
-
-		<%-- <table cellpadding="0" cellspacing="0" width="100%"
-			style="min-width: 100%">
-
-			<tr>
-				<td colspan="12" valign="top">
-					<table>
-						<tr>
-							<td colspan="6" width="50%" valign="top"
-								style="border-bottom: 1px solid #313131; border-top: 1px solid #313131; border-left: 1px solid #313131; padding: 10px; color: #000; font-size: 12px;">Delivery
-								Terms : ${item.deliveryDesc}<br> <br> Payment Terms :
-								${item.pymtDesc} <br> <br> Dispatch Mode :
-								${item.dispModeDesc}<br> <br>
-								<p
-									style="color: #000; font-size: 10px; text-align: left; margin: 0px; font-weight: bold;">*
-									Ensure that your supplies are full filling current goverment
-									rules/regulations as applicable.</p>
-							</td>
-							<td colspan="6" width="50%" valign="top"
-								style="border-bottom: 1px solid #313131; border-top: 1px solid #313131; border-left: 1px solid #313131; border-right: 1px solid #313131; padding: 10px; color: #000; font-size: 12px;">Packing/Forwarding
-								&nbsp;&nbsp;&nbsp;- ${item.poPackRemark} <br> <br> GST
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-
-								AS APPLICABLE. <br> <br> Freight/Transport
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - ${item.poFrtRemark} <br>
-								<br> Other Charges
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								&nbsp;&nbsp;&nbsp;- ${item.otherChargeAfterRemark}
-
-							</td>
-
-						</tr>
-
-
-
-					</table>
-				</td>
-			</tr>
-		</table> --%>
-
-
 		<br>
 
-		<%-- <p
-			style="color: #000; font-size: 10px; text-align: left; margin: 0px; font-weight: normal;">
-			REMARKS IF ANY : ${item.poRemark }<br>
-		</p> --%>
+
+		<table width="100%" border="0" cellpadding="0" cellspacing="0">
 
 
+			<tr>
+				<td colspan="6" width="50%"
+					style="padding: 8px; color: #000; font-size: 12px;">
+					<p
+						style="color: #000; font-size: 10px; vertical-align: top; text-align: center; margin: 0px; font-weight: normal;">
+						<br> <br> <br> Prepared By
+					</p>
+				</td>
+				<td colspan="6" width="50%"
+					style="padding: 8px; color: #000; font-size: 12px;">
+					<p
+						style="color: #000; font-size: 10px; vertical-align: top; text-align: center; margin: 0px; font-weight: normal;">
+						<br> <br> <br> Authorised By
+					</p>
+				</td>
+			</tr>
+
+
+		</table>
+		<br>
 
 		<p
 			style="color: #000; font-size: 10px; text-align: left; margin: 0px; font-weight: bold;">NOTE
 			: PLEASE MENTION THE FOLLOWING</p>
+
+
 
 		<table width="100%" border="0" cellpadding="0" cellspacing="0"
 			style="border-top: 1px solid #313131; border-right: 1px solid #313131;">
@@ -371,23 +351,11 @@ hr {
 					style="border-left: 1px solid #313131; border-bottom: 1px solid #313131; padding: 8px; color: #000; font-size: 12px;">
 					<p
 						style="color: #000; font-size: 10px; text-align: left; margin: 0px; font-weight: normal;">
-						1) ITEMCODE, PARTY CODE & PO.NO ON YOUR D/C./Invoice <br> 2)
-						PL. PROVIDE YOUR TEST & INSP.CERTIFICATE -YES/NO<br> 3)
-						INSPECTION SUBJECT TO OUR / YOUR END.<br> 4) EXPIRY DATE OF
-						EACH ITEM.<br> 5) IF MTRL.REJECTED, PLS.ARRANGE TO COLLECT
-						FROM OUR FACTORY SITE &nbsp;&nbsp;&nbsp;&nbsp;WITHIN 8 DAYS
-						OTHERWISE WE WILL NOT RESPONSIBLE FOR ANY LOSS OR
-						&nbsp;&nbsp;&nbsp;&nbsp;DAMAGE.<br> 6) IF REJECTION PLEASE
-						SUBMIT INVOICE ONLY FOR ACCEPTED MATERIAL.
+						1. Mode of payment : CHEQUE <br>2. Payment Terms : AFTER
+						MATERIAL DISPATCH <br>3.Lutf Foods GST NO. Should mention on
+						bill/invoice
 
 					</p>
-				</td>
-				<td colspan="6" width="50%"
-					style="border-left: 1px solid #313131; border-bottom: 1px solid #313131; padding: 8px; color: #000; font-size: 12px;">
-					<p
-						style="color: #000; font-size: 10px; vertical-align: top; text-align: center; margin: 0px; font-weight: normal;">
-						For ${company.companyName}<br> <br> <br> <br>
-						Purchase Order authorised Shabbir Fatehnagri/Shabbir Kanorewala
 				</td>
 			</tr>
 
@@ -681,7 +649,29 @@ hr {
 			REMARKS IF ANY : ${item.poRemark }<br>
 		</p> --%>
 
+		<table width="100%" border="0" cellpadding="0" cellspacing="0">
 
+
+			<tr>
+				<td colspan="6" width="50%"
+					style="padding: 8px; color: #000; font-size: 12px;">
+					<p
+						style="color: #000; font-size: 10px; vertical-align: top; text-align: center; margin: 0px; font-weight: normal;">
+						<br> <br> <br> Prepared By
+					</p>
+				</td>
+				<td colspan="6" width="50%"
+					style="padding: 8px; color: #000; font-size: 12px;">
+					<p
+						style="color: #000; font-size: 10px; vertical-align: top; text-align: center; margin: 0px; font-weight: normal;">
+						<br> <br> <br> Authorised By
+					</p>
+				</td>
+			</tr>
+
+
+		</table>
+		<br>
 
 		<p
 			style="color: #000; font-size: 10px; text-align: left; margin: 0px; font-weight: bold;">NOTE
@@ -698,23 +688,11 @@ hr {
 					style="border-left: 1px solid #313131; border-bottom: 1px solid #313131; padding: 8px; color: #000; font-size: 12px;">
 					<p
 						style="color: #000; font-size: 10px; text-align: left; margin: 0px; font-weight: normal;">
-						1) ITEMCODE, PARTY CODE & PO.NO ON YOUR D/C./Invoice<br> 2)
-						PL. PROVIDE YOUR TEST & INSP.CERTIFICATE -YES/NO<br> 3)
-						INSPECTION SUBJECT TO OUR / YOUR END.<br> 4) EXPIRY DATE OF
-						EACH ITEM.<br> 5) IF MTRL.REJECTED, PLS.ARRANGE TO COLLECT
-						FROM OUR FACTORY SITE &nbsp;&nbsp;&nbsp;&nbsp;WITHIN 8 DAYS
-						OTHERWISE WE WILL NOT RESPONSIBLE FOR ANY LOSS OR
-						&nbsp;&nbsp;&nbsp;&nbsp;DAMAGE.<br> 6) IF REJECTION PLEASE
-						SUBMIT INVOICE ONLY FOR ACCEPTED MATERIAL.
+						1. Mode of payment : CHEQUE <br>2. Payment Terms : AFTER
+						MATERIAL DISPATCH <br>3.Lutf Foods GST NO. Should mention on
+						bill/invoice
 
 					</p>
-				</td>
-				<td colspan="6" width="50%"
-					style="border-left: 1px solid #313131; border-bottom: 1px solid #313131; padding: 8px; color: #000; font-size: 12px;">
-					<p
-						style="color: #000; font-size: 10px; vertical-align: top; text-align: center; margin: 0px; font-weight: normal;">
-						For ${company.companyName} <br> <br> <br> <br>
-						Authorised By <br> Shabbir Fatehnagri/Shabbir Kanorewala
 				</td>
 			</tr>
 
