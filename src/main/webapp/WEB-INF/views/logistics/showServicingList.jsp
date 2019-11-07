@@ -538,7 +538,7 @@
 		
 		function genPdf(id) {
 
-			window.open('poPdfReport?url=/pdf/logisPo/' + id);
+			window.open('poPdfReport?url=pdf/logisPo/' + id);
 
 		}
 	</script>
