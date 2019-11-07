@@ -45,7 +45,7 @@ import com.ats.adminpanel.model.logistics.SparePart;
 @Scope("session")
 public class LogisticsPoController {
 
-	@RequestMapping(value = "/pdf/logisPo/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "pdf/logisPo/{id}", method = RequestMethod.GET)
 	public ModelAndView poPdf(@PathVariable int[] id, HttpServletRequest request, HttpServletResponse response) {
 
 		ModelAndView model = new ModelAndView("logistics/reportPdf/po");
