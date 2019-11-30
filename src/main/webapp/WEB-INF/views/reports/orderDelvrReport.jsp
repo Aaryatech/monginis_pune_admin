@@ -134,7 +134,7 @@
 								<thead style="background-color: #f3b5db;">
 									<tr>
 										<th>Sr.No.</th>
-										<th>Franchisee Id</th>
+										<!-- <th>Franchisee Id</th> -->
 										<th>Franchisee Name</th>
 										<th>Total Amount</th>
 										<!-- <th>Action</th> -->
@@ -155,7 +155,14 @@
 									value="EXPORT TO Excel" onclick="exportToExcel();"
 									disabled="disabled">
 							</div>
+							
+							<label class="col-sm-6 col-lg-3	 control-label" style=" text-align: center; font-size: large;">Total : </label>
+						<div class="col-sm-6 col-lg-4 controls date_select">
+							<input type="text" id="ttl_amt" readonly="readonly" style="color: black; font-size: large;" class="form-control">
 						</div>
+						</div>
+						
+						
 					</div>
 
 				</div>
@@ -195,10 +202,10 @@
 							function(data) {
 
 								//alert(data);
-
+								var ttlamt = 0;
 								$('#table_grid td').remove();
 								$('#loader').hide();
-
+								
 								if (data == "") {
 									alert("No records found !!");
 									document.getElementById("expExcel").disabled = true;
@@ -219,6 +226,7 @@
 													document
 															.getElementById('range').style.display = 'block';
 													var index = key + 1;
+													ttlamt=report.ttlAmt+ttlamt;
 													//var tr = "<tr>";
 
 													var tr = $('<tr></tr>');
@@ -226,15 +234,15 @@
 													tr.append($('<td></td>')
 															.html(key + 1));
 
-													tr
+													/* tr
 															.append($(
 																	'<td></td>')
 																	.html(
-																			report.frId));
+																			report.frId)); */
 
 													tr
 															.append($(
-																	'<td  style="text-align:center;"></td>')
+																	'<td  style="text-align:left;"></td>')
 																	.html(
 																			report.frName));
 
@@ -242,7 +250,7 @@
 															.append($(
 																	'<td  style="text-align:right;"></td>')
 																	.html(
-																			report.ttlAmt));
+																			report.ttlAmt.toFixed(2)));
 												
 
 												/* 	var acButton = '<a href="#" class="action_btn" onclick="callEdit('
@@ -261,7 +269,8 @@
 															.append(tr);
 
 												})
-
+								
+								document.getElementById("ttl_amt").value = ttlamt.toFixed(2);
 								var tr = $('<tr></tr>');
 
 								tr.append($('<td></td>').html(" "));
@@ -276,10 +285,11 @@
 										'<td  style="text-align:right;"></td>')
 										.html(totalBillQty));
 
-								$('#table_grid tbody').append(tr);
-
+								$('#table_grid tbody').append(tr);								
+								
+								
 							});
-
+			
 		}
 	</script>
 

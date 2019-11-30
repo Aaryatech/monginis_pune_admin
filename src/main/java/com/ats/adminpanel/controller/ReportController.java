@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.URLConnection;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -1714,6 +1715,7 @@ public class ReportController {
 
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			RestTemplate restTemplate = new RestTemplate();
+			DecimalFormat df2 = new DecimalFormat("#.##");
 			
 			String fromDate = request.getParameter("fromDate");
 			String toDate = request.getParameter("toDate");
@@ -1734,12 +1736,13 @@ public class ReportController {
 			List<String> rowData = new ArrayList<String>();
 
 			rowData.add("Sr No");
-			rowData.add("Franchisee Id");
+			/* rowData.add("Franchisee Id"); */
 			rowData.add("Franchisee Name");
 			rowData.add("Total Amt");
 
 			expoExcel.setRowData(rowData);
 			int srno = 1;
+			double ttlAmt = 0; 
 			exportToExcelList.add(expoExcel);
 			for (int i = 0; i < orderDelvrList.size(); i++) {
 				expoExcel = new ExportToExcel();
@@ -1747,16 +1750,31 @@ public class ReportController {
 
 				rowData.add("" + srno);
 
-				rowData.add(""+orderDelvrList.get(i).getFrId());
+				/* rowData.add(""+orderDelvrList.get(i).getFrId()); */
 				rowData.add(orderDelvrList.get(i).getFrName());
-				rowData.add(""+orderDelvrList.get(i).getTtlAmt());
-
+				rowData.add(""+df2.format(orderDelvrList.get(i).getTtlAmt()));
+				ttlAmt = orderDelvrList.get(i).getTtlAmt()+ttlAmt;
+				
 				srno = srno + 1;
 
 				expoExcel.setRowData(rowData);
 				exportToExcelList.add(expoExcel);
 
 			}
+			
+			expoExcel = new ExportToExcel();
+			rowData = new ArrayList<String>();
+
+			rowData.add("");
+
+			rowData.add("Total : ");
+			rowData.add(""+ttlAmt);
+			
+			
+
+			expoExcel.setRowData(rowData);
+			exportToExcelList.add(expoExcel);
+			
 			HttpSession session = request.getSession();
 			session.setAttribute("exportExcelListNew", exportToExcelList);
 			session.setAttribute("excelNameNew", "OrderDeliveryDateReport");
@@ -1783,7 +1801,7 @@ public class ReportController {
 			throws FileNotFoundException {
 
 		
-		
+		DecimalFormat df2 = new DecimalFormat("#.##");
 		Document document = new Document(PageSize.A4);
 		document.setPageSize(PageSize.A4.rotate());
 		// ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -1807,12 +1825,12 @@ public class ReportController {
 			e.printStackTrace();
 		}
 
-		PdfPTable table = new PdfPTable(4);
+		PdfPTable table = new PdfPTable(3);
 		table.setHeaderRows(1);
 		try {
 			System.out.println("Inside PDF Table try");
 			table.setWidthPercentage(100);
-			table.setWidths(new float[] { 0.7f, 1.2f, 1.2f, 1.2f});
+			table.setWidths(new float[] { 0.5f, 1.4f, 1.2f});
 			Font headFont = new Font(FontFamily.HELVETICA, 8, Font.NORMAL, BaseColor.BLACK);
 			Font headFont1 = new Font(FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.BLACK);
 			Font f = new Font(FontFamily.TIMES_ROMAN, 10.0f, Font.UNDERLINE, BaseColor.BLUE);
@@ -1823,10 +1841,11 @@ public class ReportController {
 			hcell.setBackgroundColor(BaseColor.PINK);
 			table.addCell(hcell);
 
-			hcell = new PdfPCell(new Phrase("Franchisee Id", headFont1));
-			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-			hcell.setBackgroundColor(BaseColor.PINK);
-			table.addCell(hcell);
+			/*
+			 * hcell = new PdfPCell(new Phrase("Franchisee Id", headFont1));
+			 * hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			 * hcell.setBackgroundColor(BaseColor.PINK); table.addCell(hcell);
+			 */
 
 			hcell = new PdfPCell(new Phrase("Franchisee Name", headFont1));
 			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -1837,7 +1856,8 @@ public class ReportController {
 			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
 			hcell.setBackgroundColor(BaseColor.PINK);
 			table.addCell(hcell);
-
+			
+			double ttlAmt=0;
 			int index = 0;
 			for (int j = 0; j < orderDelvrList.size(); j++) {
 
@@ -1847,26 +1867,29 @@ public class ReportController {
 				cell = new PdfPCell(new Phrase(String.valueOf(index), headFont));
 
 				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				cell.setHorizontalAlignment(Element.ALIGN_LEFT);
 				table.addCell(cell);
 
-				cell = new PdfPCell(new Phrase("" + orderDelvrList.get(j).getFrId(), headFont));
+				/*
+				 * cell = new PdfPCell(new Phrase("" + orderDelvrList.get(j).getFrId(),
+				 * headFont)); cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				 * cell.setHorizontalAlignment(Element.ALIGN_LEFT); cell.setPaddingRight(1);
+				 * table.addCell(cell);
+				 */
+
+				cell = new PdfPCell(new Phrase("" + orderDelvrList.get(j).getFrName(), headFont));
 				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 				cell.setHorizontalAlignment(Element.ALIGN_LEFT);
 				cell.setPaddingRight(1);
 				table.addCell(cell);
 
-				cell = new PdfPCell(new Phrase("" + orderDelvrList.get(j).getFrName(), headFont));
-				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-				cell.setPaddingRight(1);
-				table.addCell(cell);
-
-				cell = new PdfPCell(new Phrase("" + orderDelvrList.get(j).getTtlAmt(), headFont));
+				cell = new PdfPCell(new Phrase("" + df2.format(orderDelvrList.get(j).getTtlAmt()), headFont));
 				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 				cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 				cell.setPaddingRight(1);
 				table.addCell(cell);
+				
+				ttlAmt = orderDelvrList.get(j).getTtlAmt()+ttlAmt;
 			}
 			document.open();
 			
@@ -1880,7 +1903,12 @@ public class ReportController {
 			document.add(new Paragraph("\n"));
 
 			document.add(table);
-
+			
+			document.add(new Paragraph("\n"));
+			Paragraph amtSum = new Paragraph("Total : " + df2.format(ttlAmt));
+			amtSum.setAlignment(Element.ALIGN_LEFT);
+			document.add(amtSum);
+			
 			document.close();
 
 			if (file != null) {
