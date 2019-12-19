@@ -525,7 +525,7 @@ public class OrderController {
 		  List<SplitOrderData> orderJson=new ArrayList<>();
 		  for(int i=0;i<orderList.size();i++)
 		  {
-			 int splitQty=Integer.parseInt(request.getParameter("splitQty"+orderList.get(i).getOrderId()+""+orderList.get(i).getId()));
+			 int splitQty=Integer.parseInt(request.getParameter("splitQty"+orderList.get(i).getOrderId()));
 			 int updatedQty=Integer.parseInt(request.getParameter("updatedQty"+orderList.get(i).getOrderId()));
 			if(splitQty>0) {
 			 updateLhm.put(orderList.get(i).getOrderId(), updatedQty);

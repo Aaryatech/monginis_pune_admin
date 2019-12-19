@@ -596,7 +596,7 @@ else
 
 		$.each(data,function(key, orders) {
 		
-			document.getElementById('range').style.display = 'block';
+			//document.getElementById('range').style.display = 'block';
 		var tr = $('<tr></tr>');
 		
 	  	tr.append($('<td></td>').html(key+1));
@@ -607,7 +607,7 @@ else
 
 		tr.append($('<td></td>').html(orders.deliveryDate));
 	  	tr.append($('<td></td>').html(orders.orderQty));
-	  	tr.append($('<td></td>').html("<input type=number onkeypress='return IsNumeric(event);' ondrop='return false;' onpaste='return false;' style='text-align: center;' class='form-control' min=0 id=splitQty"+orders.id+" value=0 name=splitQty"+orders.id+" onchange='onQtyChange("+orders.id+","+orders.orderId+","+orders.orderQty+",this.value)' >"));
+	  	tr.append($('<td></td>').html("<input type=number onkeypress='return IsNumeric(event);' ondrop='return false;' onpaste='return false;' style='text-align: center;' class='form-control' min=0 id=splitQty"+orders.orderId+" value=0 name=splitQty"+orders.orderId+" onchange='onQtyChange("+orders.id+","+orders.orderId+","+orders.orderQty+",this.value)' >"));
 	  	tr.append($('<td></td>').html("<input type=number onkeypress='return IsNumeric(event);' ondrop='return false;' onpaste='return false;' style='text-align: center;' class='form-control' min=0 id=updatedQty"+orders.orderId+" value="+orders.orderQty+" name=updatedQty"+orders.orderId+" >"));
 	
 	 
