@@ -561,7 +561,7 @@ $.getJSON('${callSearchOrdersProcess}', {
   	tr.append($('<td></td>').html(orders.itemName));
 	tr.append($('<td></td>').html(orders.deliveryDate));
 	tr.append($('<td></td>').html(orders.orderQty));
-  	tr.append($('<td></td>').html("<input type=text onkeypress='return IsNumeric(event);' ondrop='return false;' onpaste='return false;' style='text-align: center;' class='form-control' min=0 id=splitQty"+orders.orderId+""+orders.id+"  value=0  name=splitQty"+orders.orderId+""+orders.id+"  onchange='onQtyChange("+orders.id+","+orders.orderId+","+orders.orderQty+",this.value)' >"));
+  	tr.append($('<td></td>').html("<input type=text onkeypress='return IsNumeric(event);' ondrop='return false;' onpaste='return false;' style='text-align: center;' class='form-control' min=0 id=splitQty"+orders.orderId+"  value=0  name=splitQty"+orders.orderId+"  onchange='onQtyChange("+orders.id+","+orders.orderId+","+orders.orderQty+",this.value)' >"));
   	tr.append($('<td></td>').html("<input type=text onkeypress='return IsNumeric(event);' ondrop='return false;' onpaste='return false;' style='text-align: center;' class='form-control' min=0 id=updatedQty"+orders.orderId+" value="+orders.orderQty+" name=updatedQty"+orders.orderId+" >"));
 	$('#table1 tbody').append(tr); 
 
