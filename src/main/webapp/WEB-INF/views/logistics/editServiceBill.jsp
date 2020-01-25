@@ -647,7 +647,7 @@
 									<div class="col-md-4">
 										<input type="file" id="file" name="attachFile"
 											value="${editServicing.billFile}" size="60"
-											data-rule-required="true" /> <input type="hidden"
+											/> <input type="hidden"
 											id="fileName" name="fileName"
 											value="${editServicing.billFile}" size="60" />
 									</div>
@@ -1548,7 +1548,7 @@ function check()
 	 
 	var servType = $("#servType").val();
 	var dealerId = $("#dealerId").val();
-	var file = $("#file").val();
+//	var file = $("#file").val();
 	if(servType=="")
 		{
 		alert("Select Service Type");

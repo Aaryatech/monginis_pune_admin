@@ -1611,8 +1611,8 @@ public class LogisticsController {
 			String groupName = request.getParameter("groupName");
 			int vehId = Integer.parseInt(request.getParameter("vehId"));
 			String vehName = request.getParameter("vehName");
-			int spareRate = Integer.parseInt(request.getParameter("spareRate"));
-			int spareQty = Integer.parseInt(request.getParameter("spareQty"));
+			float spareRate = Float.parseFloat(request.getParameter("spareRate"));
+			float spareQty = Float.parseFloat(request.getParameter("spareQty"));
 			float taxaleAmtDetail = Float.parseFloat(request.getParameter("taxaleAmtDetail"));
 			float taxAmtDetail = Float.parseFloat(request.getParameter("taxAmtDetail"));
 			float totalDetail = Float.parseFloat(request.getParameter("totalDetail"));
@@ -1719,8 +1719,8 @@ public class LogisticsController {
 			String groupName = request.getParameter("groupName");
 			int vehId = Integer.parseInt(request.getParameter("vehId"));
 			String vehName = request.getParameter("vehName");
-			int spareRate = Integer.parseInt(request.getParameter("spareRate"));
-			int spareQty = Integer.parseInt(request.getParameter("spareQty"));
+			float spareRate = Float.parseFloat(request.getParameter("spareRate"));
+			float spareQty = Float.parseFloat(request.getParameter("spareQty"));
 			float taxaleAmtDetail = Float.parseFloat(request.getParameter("taxaleAmtDetail"));
 			float taxAmtDetail = Float.parseFloat(request.getParameter("taxAmtDetail"));
 			float totalDetail = Float.parseFloat(request.getParameter("totalDetail"));
@@ -2150,8 +2150,8 @@ public class LogisticsController {
 			String groupName = request.getParameter("groupName");
 			int vehId = Integer.parseInt(request.getParameter("vehId"));
 			String vehName = request.getParameter("vehName");
-			int spareRate = Integer.parseInt(request.getParameter("spareRate"));
-			int spareQty = Integer.parseInt(request.getParameter("spareQty"));
+			float spareRate =  Float.parseFloat(request.getParameter("spareRate"));
+			float spareQty = Float.parseFloat(request.getParameter("spareQty"));
 			float taxaleAmtDetail = Float.parseFloat(request.getParameter("taxaleAmtDetail"));
 			float taxAmtDetail = Float.parseFloat(request.getParameter("taxAmtDetail"));
 			float totalDetail = Float.parseFloat(request.getParameter("totalDetail"));
@@ -2265,8 +2265,8 @@ public class LogisticsController {
 			String groupName = request.getParameter("groupName");
 			int vehId = Integer.parseInt(request.getParameter("vehId"));
 			String vehName = request.getParameter("vehName");
-			int spareRate = Integer.parseInt(request.getParameter("spareRate"));
-			int spareQty = Integer.parseInt(request.getParameter("spareQty"));
+			float spareRate = Float.parseFloat(request.getParameter("spareRate"));
+			float spareQty =  Float.parseFloat(request.getParameter("spareQty"));
 			float taxaleAmtDetail = Float.parseFloat(request.getParameter("taxaleAmtDetail"));
 			float taxAmtDetail = Float.parseFloat(request.getParameter("taxAmtDetail"));
 			float totalDetail = Float.parseFloat(request.getParameter("totalDetail"));

@@ -194,13 +194,7 @@
 
 								</div>
 								<br>
-
-
-
-
-
 								<hr />
-
 								<div class="box-content">
 
 									<div class="col-md-2">Group</div>
@@ -220,8 +214,6 @@
 
 										</select>
 									</div>
-
-
 								</div>
 								<br>
 								<div style="display: none;" id="partNameDiv">
@@ -244,21 +236,15 @@
 											autocomplete="off" onkeyup="calculateDetail()"
 											placeholder="Spare Qty" class="form-control">
 									</div>
-
-
 									<div class="col-md-2">Spare Rate*</div>
 									<div class="col-md-3">
 										<input type="text" id="spareRate" autocomplete="off"
 											onkeyup="calculateDetail()" name="spareRate"
 											placeholder="Spare Rate" class="form-control">
 									</div>
-
 								</div>
 								<br>
-
-
 								<div class="box-content">
-
 									<div class="col-md-2">Disc%</div>
 									<div class="col-md-3">
 										<input type="text" onkeyup="calculateDetail()" id="discPer"
@@ -274,59 +260,44 @@
 
 								</div>
 								<br>
-
-
 								<div class="box-content">
-
 									<div class="col-md-2">Disc Amt</div>
 									<div class="col-md-3">
 										<input type="text" id="discDetail" name="discDetail"
 											onkeyup="calculateDetail()" placeholder="Discount"
 											class="form-control" readonly>
 									</div>
-
-
 									<div class="col-md-2">Extra Amt</div>
 									<div class="col-md-3">
 										<input type="text" id="extraChargeDetail"
 											onkeyup="calculateDetail()" name="extraChargeDetail"
 											placeholder="Extra Charges" class="form-control" readonly>
 									</div>
-
 								</div>
 								<br>
-
 								<div class="box-content">
-
 									<div class="col-md-2">Tax%*</div>
 									<div class="col-md-3">
 										<input type="text" id="taxPer" name="taxPer"
 											placeholder="Tax Perentage" onkeyup="calculateDetail()"
 											class="form-control">
 									</div>
-
-
-
-
 									<div class="col-md-2">Tax Amt*</div>
 									<div class="col-md-3">
 										<input type="text" id="taxAmtDetail"
 											onkeyup="calculateDetail()" name="taxAmtDetail"
 											placeholder="Tax Amt" class="form-control" readonly>
 									</div>
-
 								</div>
 								<br>
 
 								<div class="box-content">
-
 									<div class="col-md-2">Taxable Amt*</div>
 									<div class="col-md-3">
 										<input type="text" id="taxaleAmtDetail" name="taxaleAmtDetail"
 											onkeyup="calculateDetail()" placeholder="Taxable Amt"
 											class="form-control" readonly>
 									</div>
-
 									<div class="col-md-2">Total*</div>
 									<div class="col-md-3">
 										<input type="text" id="totalDetail" name="totalDetail"
@@ -337,9 +308,6 @@
 								<br>
 
 								<div class="box-content">
-
-
-
 									<div class="col-md-2">Servicing Type*</div>
 									<div class="col-md-3">
 
@@ -349,10 +317,7 @@
 											<option value="1">Regular</option>
 											<option value="2">Break Down</option>
 										</select>
-
 									</div>
-
-
 								</div>
 								<br> <br>
 
@@ -363,10 +328,7 @@
 									</div>
 								</div>
 								<br> <br>
-
-
 								<div align="center" id="loader" style="display: none">
-
 									<span>
 										<h4>
 											<font color="#343690">Loading</font>
@@ -375,9 +337,6 @@
 										class="l-3"></span> <span class="l-4"></span> <span
 										class="l-5"></span> <span class="l-6"></span>
 								</div>
-
-
-
 								<div class=" box-content">
 									<div class="row">
 										<div class="col-md-12 table-responsive">
@@ -396,7 +355,6 @@
 														<th>Tax</th>
 														<th>Total</th>
 														<th>Action</th>
-
 													</tr>
 												</thead>
 												<tbody>
@@ -415,8 +373,6 @@
 											class="form-control" placeholder="Service Done Remainder"
 											required>
 									</div>
-
-
 									<div class="col-md-2">Total Spare Part</div>
 									<div class="col-md-3">
 										<input type="text" id="totPart" name="totPart"
@@ -425,8 +381,6 @@
 
 								</div>
 								<br>
-
-
 								<div class="box-content">
 
 									<div class="col-md-2">Labour Charge*</div>
@@ -435,8 +389,6 @@
 											onkeyup="calculateHeader()" placeholder="Labour Charge"
 											class="form-control" required>
 									</div>
-
-
 									<div class="col-md-2">Total Discount</div>
 									<div class="col-md-3">
 										<input type="text" id="totDisc" name="totDisc"
@@ -461,13 +413,9 @@
 										<input type="text" id="taxAmt" name="taxAmt"
 											placeholder="Tax Amt" class="form-control" required>
 									</div>
-
 								</div>
 								<br>
-
-
 								<div class="box-content">
-
 									<div class="col-md-2">Taxable Amt*</div>
 									<div class="col-md-3">
 										<input type="text" id="taxaleAmt" name="taxaleAmt"
@@ -513,7 +461,7 @@
 									<div class="col-md-2">Select Pdf</div>
 									<div class="col-md-4">
 										<input type="file" id="file" name="attachFile" size="60"
-											required>
+											>
 									</div>
 
 								</div>
@@ -588,11 +536,6 @@
 		src="${pageContext.request.contextPath}/resources/assets/jquery-validation/dist/jquery.validate.min.js"></script>
 	<script type="text/javascript"
 		src="${pageContext.request.contextPath}/resources/assets/jquery-validation/dist/additional-methods.min.js"></script>
-
-
-
-
-
 	<!--flaty scripts-->
 	<script src="${pageContext.request.contextPath}/resources/js/flaty.js"></script>
 	<script
@@ -1714,14 +1657,14 @@
 
 			var servType = $("#servType").val();
 			var dealerId = $("#dealerId").val();
-			var file = $("#file").val();
+			//var file = $("#file").val();
 			if (servType == "") {
 				alert("Select Service Type");
 			} else if (dealerId == "") {
 				alert("Select Dealer");
-			} else if (file == "") {
+			} /* else if (file == "") {
 				alert("Select file");
-			}
+			} */
 		}
 	</script>
 

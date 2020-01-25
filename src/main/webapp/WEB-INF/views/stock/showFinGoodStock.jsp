@@ -32,7 +32,7 @@ table {
 <body>
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 	<c:url var="getFinGoodStock" value="/getFinGoodStock"></c:url>
-
+ <c:url var="getFinGoodStockByOrder" value="/getFinGoodStockByOrder"></c:url>
 
 
 	<c:url var="finishedGoodDayEnd" value="/finishedGoodDayEnd"></c:url>
@@ -90,9 +90,16 @@ table {
 							<form class="form-horizontal" id="validation-form1" style="background-color: #ffffff;">
 
 								<div class="form-group">
-									<label class="col-sm-3 col-lg-2 control-label">Category</label>
+								<label class="col-sm-3 col-lg-1 control-label">By </label>
+								     <div class="col-sm-9 col-lg-2 controls">
+										 <select class="form-control chosen" name="type" id="type" onchange="onTypeChange(this.value)">
+                                            <option value="1">Bill</option>
+                                            <option value="2">Order</option>
+										 </select>
+									 </div>
+									<label class="col-sm-3 col-lg-1 control-label">Category</label>
 
-									<div class="col-sm-9 col-lg-3 controls">
+									<div class="col-sm-9 col-lg-2 controls">
 										<select class="form-control chosen" name="catId" id="catId"
 											onclick="DayEndEnable()">
 
@@ -113,7 +120,7 @@ table {
 								</div>
 
 								<div class="form-group"> -->
-									<label class="col-sm-3 col-lg-2 control-label">Select
+									<label class="col-sm-3 col-lg-1 control-label">Select
 										Option</label>
 									<div class="col-sm-5 col-lg-3 controls">
 										<select name="selectStock" class="form-control chosen"
@@ -187,8 +194,20 @@ table {
 										</div>
 
 									</div>
+									<div class="colOuter" style="display: none"  id=select_menu>
+                              <label for="textfield2" class="col-xs-3 col-lg-1 control-label">Menu</label>
+									<div class="col-sm-9 col-lg-9 controls">
+										<select class="form-control chosen" 
+											tabindex="6" name="menuId" id="menuId" multiple="multiple">
+											<option value="">Select Menu</option>
+											<c:forEach items="${menuList}" var="menuList">
+												<option value="${menuList.menuId}">${menuList.menuTitle}</option>
 
+											</c:forEach>
 
+										</select>
+									</div>
+                                 </div>
 
 								</div>
 
@@ -226,7 +245,7 @@ table {
 									</div>
 									<br> --><div style="background-color: #ffffff;">
 									<div
-										class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-4" >
+										class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-4" id="dayEndDiv">
 										<!-- 										<input type="submit" class="btn btn-primary" value="Submit">
  -->
 										<input type="text" readonly
@@ -281,14 +300,14 @@ table {
 
 															<th class="col-md-1">Prod Qty</th>
 															<th class="col-md-1">Rej Qty</th>
-															<th class="col-md-1">Return Qty</th>
-															<th class="col-md-1">Bill Qty</th>
+															<th class="col-md-1">Ret Qty</th>
+															<th class="col-md-1">Bill/Order</th>
 															<!-- <th class="col-md-1">Dumy Qty</th>
 														<th class="col-md-1">Curr Close</th>
 														<th class="col-md-1">Clos-T</th>
 														<th class="col-md-1">Clos-T1</th>
 														<th class="col-md-1">Clos-T2</th> -->
-															<th class="col-md-1">Total Clo</th>
+															<th class="col-md-1">Total Closing</th>
 														</tr>
 													</thead>
 													<tbody>
@@ -431,60 +450,39 @@ table {
 	<script type="text/javascript">
 		function searchItemsByCategory() {
 
+			var type = $("#type").val();
 			var catId = $("#catId").val();
 			document.getElementById("selectedCatId").value = catId;
-			//var to_datepicker = document.getElementById("to_datepicker").value ;
-			//var from_datepicker= document.getElementById("from_datepicker").value ;
-
 			var to_datepicker = $('#to_datepicker').val();
-
 			var from_datepicker = $('#from_datepicker').val();
-
 			var option = $("#selectStock").val();
-
+			if(type==1){
+			
 			$('#loader').show();
-
-			$
-					.getJSON(
-							'${getFinGoodStock}',
+			$.getJSON('${getFinGoodStock}',
 							{
 								catId : catId,
 								option : option,
 								from_datepicker : from_datepicker,
 								to_datepicker : to_datepicker,
 								ajax : 'true',
-
 							},
 							function(data) {
-
 								$('#table1 td').remove();
-
 								$('#loader').hide();
-								//alert("Day End " +data.isDayEndEnable);
 								document.getElementById("setDate").value = data.stockDate;
 								if (data.isDayEndEnable == 1) {
 									if (option == 1 && catId == -1) {
-
-										//alert("in if enable true");
-										//$('#dayEndButton').removeAttr('disabled');
 										document.getElementById("dayEndButton").disabled = false;
-
 									} else if (data.isDayEndEnable == 0) {
-										//alert("in else disable true");
 										document.getElementById("dayEndButton").disabled = true;
 									}
 								}
-
 								if (data == "") {
 									alert("No records found !!");
-
 								}
-
-								$
-										.each(
-												data.stockDetail,
+								$.each(data.stockDetail,
 												function(key, stock) {
-
 													document
 															.getElementById("expExcel").disabled = false;
 													document
@@ -572,8 +570,6 @@ table {
 															billQty);
 
 													/* 
-													
-
 
 													 $('#table1 tbody').append(
 													 cloCurrent);
@@ -596,6 +592,126 @@ table {
 												})
 
 							});
+			}else
+				{
+				var menuIds=$("#menuId").val();
+				if (menuIds == "" || menuIds == null) {
+					alert("Please Select Menus!!")
+				}else{
+				$('#loader').show();
+				$.getJSON('${getFinGoodStockByOrder}',
+								{
+									catId : catId,
+									option : option,
+									from_datepicker : from_datepicker,
+									to_datepicker : to_datepicker,
+									menuId : JSON.stringify(menuIds),
+
+									ajax : 'true',
+								},
+								function(data) {
+									$('#table1 td').remove();
+									$('#loader').hide();
+									document.getElementById("setDate").value = data.stockDate;
+									if (data.isDayEndEnable == 1) {
+										if (option == 1 && catId == -1) {
+											document.getElementById("dayEndButton").disabled = false;
+										} else if (data.isDayEndEnable == 0) {
+											document.getElementById("dayEndButton").disabled = true;
+										}
+									}
+									if (data == "") {
+										alert("No records found !!");
+									}
+									$.each(data.stockDetail,
+													function(key, stock) {
+														document
+																.getElementById("expExcel").disabled = false;
+														document
+																.getElementById("expExcelSummery").disabled = false;
+														document
+																.getElementById("expExcelClosing").disabled = false;
+
+														document
+																.getElementById("PDFButtonSummery").disabled = false;
+
+														document
+																.getElementById("PDFButtonClosing").disabled = false;
+
+														document
+																.getElementById("spCakeCount").value = data.spCakeCount;
+														var index = key + 1;
+
+														var tr = "<tr>";
+
+														var index = "<td>" + index
+																+ "</td>";
+
+														var itemName = "<td>"
+																+ stock.itemName
+																+ "</td>";
+
+														var t1 = "<td align=center ><input type=text size='4' class=form-control1 style='font-size:8pt; height:20px; text-align:right;'  value="+stock.opT1+" readonly ></td>";
+
+														var t2 = "<td align=center ><input type=text size='4' class=form-control1 style='font-size:8pt;height:20px;text-align:right;' value="+stock.opT2+" readonly></td>";
+
+														var t3 = "<td align=center ><input type=text size='4'  class=form-control1  style='font-size:8pt;height:20px;text-align:right;' value="+stock.opT3+" readonly></td>";
+
+														var opTotal = "<td align=center ><input type=text size='4'  class=form-control1  style='font-size:8pt;height:20px;text-align:right;' value="+stock.opTotal+" readonly></td>";
+
+														var prodQty = "<td align=center ><input type=text size='4'  class=form-control1 style='font-size:8pt;height:20px;text-align:right;'  value="+stock.prodQty+" readonly ></td>";
+
+														var rejQty = "<td align=center ><input type=text size='4' class=form-control1  style='font-size:8pt;height:20px;text-align:right;' value="+stock.rejQty+"  readonly></td>";
+
+														var gateSaleQty = "<td align=center ><input type=text size='4'  class=form-control1  style='font-size:8pt;' value="+stock.gateSaleQty+" readonly ></td>";
+
+														var billQty = "<td align=center ><input type=text size='4'  class=form-control1 style='font-size:8pt;height:20px;text-align:right;'  value="+stock.frSaleQty+"  readonly></td>";
+
+														var totalClosing = "<td align=center ><input type=text size='4' class=form-control1  style='font-size:8pt;height:20px;text-align:right;' value="+stock.totalCloStk+" readonly></td>";
+
+														var trclosed = "</tr>";
+
+														$('#table1 tbody').append(
+																tr);
+														$('#table1 tbody').append(
+																index);
+														$('#table1 tbody').append(
+																itemName);
+														$('#table1 tbody').append(
+																t1);
+
+														$('#table1 tbody').append(
+																t2);
+
+														$('#table1 tbody').append(
+																t3);
+
+														$('#table1 tbody').append(
+																opTotal);
+														$('#table1 tbody').append(
+																prodQty);
+
+														$('#table1 tbody').append(
+																rejQty);
+
+														$('#table1 tbody').append(
+																gateSaleQty);
+
+														$('#table1 tbody').append(
+																billQty);
+
+
+														$('#table1 tbody').append(
+																totalClosing);
+
+														$('#table1 tbody').append(
+																trclosed);
+
+													})
+
+								});
+				}
+				}
 			/* if(stock.isDayEndEnable==1){
 			$('#dayEndButton').removeAttr('disabled');
 			} */
@@ -664,6 +780,7 @@ table {
 			if (elem.value == 1) {
 				document.getElementById('select_month_year').style = "display:none";
 				document.getElementById('select_date').style = "display:none";
+				document.getElementById("dayEndDiv").style.display = "block";
 
 			} else if (elem.value == 2) {
 				document.getElementById('select_month_year').style.display = "block";
@@ -671,7 +788,10 @@ table {
 			} else if (elem.value == 3) {
 				document.getElementById('select_date').style.display = "block";
 				document.getElementById('select_month_year').style = "display:none";
-
+				document.getElementById('type').value=1;
+				document.getElementById('select_menu').style = "display:none";
+                $("#type").trigger("chosen:updated");
+                document.getElementById("dayEndDiv").style.display = "block";
 			}
 
 		}
@@ -679,6 +799,21 @@ table {
 
 			window.open("${pageContext.request.contextPath}/exportToExcel");
 			document.getElementById("expExcel").disabled = true;
+		}
+		function onTypeChange(type)
+		{
+			if(type==1){
+				document.getElementById("dayEndDiv").style.display = "block";
+			    document.getElementById('select_menu').style = "display:none";
+			}else
+			{
+				document.getElementById("dayEndDiv").style = "display:none";
+
+				document.getElementById('select_date').style = "display:none";
+				document.getElementById('select_menu').style.display = "block";
+				document.getElementById('selectStock').value=1;
+			    $("#selectStock").trigger("chosen:updated");
+			}
 		}
 	</script>
 </body>

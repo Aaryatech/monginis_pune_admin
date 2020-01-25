@@ -9,8 +9,8 @@ public class ServDetailForPdf {
 	private int servType;   
 	private int groupId; 
 	private int sprId; 
-	private int sprQty; 
-	private int sprRate; 
+	private float sprQty; 
+	private float sprRate; 
 	private float sprTaxableAmt; 
 	private float sprTaxAmt;  
 	private float total; 
@@ -58,16 +58,16 @@ public class ServDetailForPdf {
 	public void setSprId(int sprId) {
 		this.sprId = sprId;
 	}
-	public int getSprQty() {
+	public float getSprQty() {
 		return sprQty;
 	}
-	public void setSprQty(int sprQty) {
+	public void setSprQty(float sprQty) {
 		this.sprQty = sprQty;
 	}
-	public int getSprRate() {
+	public float getSprRate() {
 		return sprRate;
 	}
-	public void setSprRate(int sprRate) {
+	public void setSprRate(float sprRate) {
 		this.sprRate = sprRate;
 	}
 	public float getSprTaxableAmt() {
