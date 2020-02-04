@@ -563,12 +563,17 @@ public class AccessRightController {
 		try {
 			String upass = request.getParameter("upass");
 
+			String email = request.getParameter("email");
+			String contact = request.getParameter("contact");
 			int deptId = Integer.parseInt(request.getParameter("dept_id"));
 			int userType = Integer.parseInt(request.getParameter("user_type"));
 			User editUser = new User();
 			user.setDeptId(deptId);
 			user.setUsertype(userType);
 			user.setPassword(upass);
+			
+			editUser.setContact(contact);
+			editUser.setEmail(email);
 
 			editUser.setDeptId(deptId);
 			editUser.setUsertype(userType);

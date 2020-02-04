@@ -60,17 +60,40 @@
 							Sign in
 						</button>
 					</div>
+					
+							<%
+						if (session.getAttribute("changePassword") != null) {
+					%>
+					
+						<p style="color: white;">Password Change Successfully</p>
+					
+					<%
+						}
+
+						session.removeAttribute("changePassword");
+					%>
+
+					<%
+						if (session.getAttribute("changePasswordFail") != null) {
+					%>
+				
+						<p style="color: white;">Password Not Changed</p>
+					
+					<%
+						}
+
+						session.removeAttribute("changePasswordFail");
+					%>
 	<c:if test="${not empty loginResponseMessage}">
    <!-- here would be a message with a result of processing -->
     <div style="color:white;"> ${loginResponseMessage} </div>
         	
 </c:if><div class="text-center p-t-45 p-b-4">
-					
-						<span class="txt1">
-							<!-- Forgot -->
-						</span>
 
-						<a href="#" class="txt2 hov1">
+						<span class="txt1"> <a
+							href="${pageContext.request.contextPath}/forgetPwd"><span
+								class="links" style="color: white;"> Forget Password</span></a>
+						</span> <a href="#" class="txt2 hov1">
 							<!-- Username / Password? -->
 						</a>
 					</div>
