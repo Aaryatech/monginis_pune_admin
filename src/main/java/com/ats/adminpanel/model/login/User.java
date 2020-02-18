@@ -18,8 +18,9 @@ public class User implements Serializable {
     private String message;
     private int roleId;
     private int deptId;
-    
-    
+    private String email;
+    private String contact;
+
         
     
     public User() {
@@ -49,6 +50,26 @@ public class User implements Serializable {
 
 	public void setDeptId(int deptId) {
 		this.deptId = deptId;
+	}
+
+
+	public String getEmail() {
+		return email;
+	}
+
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+
+	public String getContact() {
+		return contact;
+	}
+
+
+	public void setContact(String contact) {
+		this.contact = contact;
 	}
 
 
@@ -122,10 +143,8 @@ public class User implements Serializable {
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", password=" + password + ", usertype=" + usertype
 				+ ", delStatus=" + delStatus + ", error=" + error + ", message=" + message + ", roleId=" + roleId
-				+ ", deptId=" + deptId + "]";
+				+ ", deptId=" + deptId + ", email=" + email + ", contact=" + contact + "]";
 	}
 
-
-	 
-	
+    
 }
