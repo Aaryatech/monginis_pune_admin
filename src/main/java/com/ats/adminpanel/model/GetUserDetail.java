@@ -1,9 +1,6 @@
 package com.ats.adminpanel.model;
 
-
-
 public class GetUserDetail {
-
 
 	private int id;
 	private String username;

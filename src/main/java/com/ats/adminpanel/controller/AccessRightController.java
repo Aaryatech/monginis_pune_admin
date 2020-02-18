@@ -613,4 +613,5 @@ public class AccessRightController {
 		return "redirect:/showManageUser";
 	}
 
+	
 }

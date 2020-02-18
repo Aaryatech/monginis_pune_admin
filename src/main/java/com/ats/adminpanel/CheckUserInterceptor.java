@@ -43,8 +43,6 @@ public class CheckUserInterceptor extends HandlerInterceptorAdapter {
 			// TODO: handle exception
 		}
    
-    	
-       
          
          if( ! path.equalsIgnoreCase("/sessionTimeOut") || path.startsWith("/resources")) {
         	 
