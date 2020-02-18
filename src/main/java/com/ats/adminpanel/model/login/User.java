@@ -20,6 +20,7 @@ public class User implements Serializable {
     private int deptId;
     private String email;
     private String contact;
+    
 
         
     
@@ -29,7 +30,7 @@ public class User implements Serializable {
     
     
 	public User(int id, String username, String password, int usertype, int delStatus, boolean error,
-			String message,int deptId, int roleId) {
+			String message,int deptId, int roleId, String email, String contact) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -40,6 +41,8 @@ public class User implements Serializable {
 		this.message = message;
 		this.deptId=deptId;
 		this.roleId=roleId;
+		this.email=email;
+		this.contact=contact;
 	}
 
 
@@ -50,26 +53,6 @@ public class User implements Serializable {
 
 	public void setDeptId(int deptId) {
 		this.deptId = deptId;
-	}
-
-
-	public String getEmail() {
-		return email;
-	}
-
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-
-	public String getContact() {
-		return contact;
-	}
-
-
-	public void setContact(String contact) {
-		this.contact = contact;
 	}
 
 
@@ -136,6 +119,25 @@ public class User implements Serializable {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+
+	public String getContact() {
+		return contact;
+	}
+
+
+	public void setContact(String contact) {
+		this.contact = contact;
 	}
 
 
