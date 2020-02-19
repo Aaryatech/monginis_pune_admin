@@ -2266,7 +2266,7 @@ public class FranchiseeController {
 			spDayConfigure.setSpdayId(spdayId);
 			spDayConfigure.setSpdayName(spdayName);
 			spDayConfigure.setDeliveryFromDate(deliveryFromDate);
-			spDayConfigure.setDeliveryToDate(deliveryToDate);
+			spDayConfigure.setDeliveryToDate(deliveryFromDate);//changed on 19Feb
 			spDayConfigure.setFromTime(sqlFromTime);
 			spDayConfigure.setToTime(sqlToTime);
 			spDayConfigure.setItemId(items);

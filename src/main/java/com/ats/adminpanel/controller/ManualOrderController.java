@@ -43,6 +43,7 @@ import com.ats.adminpanel.model.franchisee.FranchiseeAndMenuList;
 import com.ats.adminpanel.model.franchisee.FranchiseeList;
 import com.ats.adminpanel.model.franchisee.Menu;
 import com.ats.adminpanel.model.item.Item;
+import com.ats.adminpanel.model.setting.NewSetting;
 
 @Controller
 @Scope("session")
@@ -171,6 +172,19 @@ public class ManualOrderController {
 			FranchiseeAndMenuList franchiseeListRes = restTemplate.getForObject(Constants.url + "getFranchiseeAndMenu",
 					FranchiseeAndMenuList.class);
 			System.out.println("franchiseeList" + franchiseeListRes.toString());
+			//-----------------------------------------------------------------------------
+			List<String> menuOfSameDay=new ArrayList<>();
+			try {
+			map = new LinkedMultiValueMap<String, Object>();
+			map.add("settingKey", "advance_order_menu");
+			NewSetting settingValue= restTemplate.postForObject(Constants.url + "/findNewSettingByKey", map, NewSetting.class);	
+			 menuOfSameDay = Arrays.asList(settingValue.getSettingValue1().split("\\s*,\\s*"));
+
+			}catch (Exception e) {
+				menuOfSameDay.add("-");
+			}
+			//------------------------------------------------------------------------------
+			
 			FranchiseeList franchiseeList = null;
 
 			for (int i = 0; i < franchiseeListRes.getAllFranchisee().size(); i++) {
@@ -244,7 +258,8 @@ public class ManualOrderController {
 				order.setItemId(String.valueOf(item.getId()));
 				order.setItemName(item.getItemName() + "--[" + franchiseeList.getFrCode() + "]");
 				order.setFrId(frId);
-				if (menuId == 29 || menuId == 86 || menuId == 87 ) {
+				
+				if (menuOfSameDay.contains(""+menuId)) {
 					order.setDeliveryDate(sqlCurrDate);
 				} else {
 					order.setDeliveryDate(sqlTommDate);
