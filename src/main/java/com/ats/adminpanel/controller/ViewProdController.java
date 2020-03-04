@@ -44,6 +44,7 @@ import com.ats.adminpanel.commons.Constants;
 import com.ats.adminpanel.model.AllFrIdNameList;
 import com.ats.adminpanel.model.ExportToExcel;
 import com.ats.adminpanel.model.Info;
+import com.ats.adminpanel.model.LineMaster;
 import com.ats.adminpanel.model.RawMaterial.ItemDetailList;
 import com.ats.adminpanel.model.accessright.ModuleJson;
 import com.ats.adminpanel.model.franchisee.SubCategory;
@@ -603,7 +604,7 @@ public class ViewProdController {
 
 			itemsList = allItemsListResponse.getItems();
 
-			SubCategory[] subCatList = restTemplate.getForObject(Constants.url + "getAllSubCatList",
+			SubCategory[] subCatList = restTemplate.getForObject(Constants.url + "getAllSubCatListOrderByPrefix",
 					SubCategory[].class);
 
 			subCatAList = new ArrayList<SubCategory>(Arrays.asList(subCatList));
@@ -1002,6 +1003,428 @@ public class ViewProdController {
 		}
 
 	}
+	
+	
+	@RequestMapping(value = "/showProdLinePdf", method = RequestMethod.GET)
+	public void showProdLinePdf(HttpServletRequest request, HttpServletResponse response)
+			throws FileNotFoundException {
+		BufferedOutputStream outStream = null;
+		System.out.println("Inside Pdf showProdLinePdf View Prod Contr");
+
+		List<GetProdPlanDetail> moneyOutList = prodPlanDetailList;
+		// -------------------------------------------------------------------------
+		ArrayList<LineMaster> subCatAList = null;
+		List<Item> itemsList = null;
+		try {
+			RestTemplate restTemplate = new RestTemplate();
+			
+			//getAllItemsForProdLine 
+			AllItemsListResponse allItemsListResponse = restTemplate.getForObject(Constants.url + "getAllItemsForProdLine",
+					AllItemsListResponse.class);
+
+			itemsList = allItemsListResponse.getItems();
+
+			LineMaster[] lineMstArray = restTemplate.getForObject(Constants.url + "getLineMasterList",
+					LineMaster[].class);
+
+			subCatAList = new ArrayList<LineMaster>(Arrays.asList(lineMstArray));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		// --------------------------------------------------------------------------
+		// moneyOutList = prodPlanDetailList;
+		Document document = new Document(PageSize.A4);
+		// ByteArrayOutputStream out = new ByteArrayOutputStream();
+		DateFormat DF = new SimpleDateFormat("dd-MM-yyyy");
+		String reportDate = DF.format(new Date());
+		document.addHeader("Date: ", reportDate);
+		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+		Calendar cal = Calendar.getInstance();
+
+		System.out.println("time in Gen Bill PDF ==" + dateFormat.format(cal.getTime()));
+		String timeStamp = dateFormat.format(cal.getTime());
+		String FILE_PATH = Constants.REPORT_SAVE;
+		File file = new File(FILE_PATH);
+
+		PdfWriter writer = null;
+
+		FileOutputStream out = new FileOutputStream(FILE_PATH);
+		try {
+			writer = PdfWriter.getInstance(document, out);
+		} catch (DocumentException e) {
+
+			e.printStackTrace();
+		}
+		int cols = 0;
+		float[] cols1 = new float[] { 0.4f, 1.7f, 1.0f, 0.9f, 1.0f };
+		if (pdfPlanHeader.getIsPlanned() == 0) {
+			cols = 5;
+			cols1 = new float[] { 0.4f, 1.7f, 1.0f, 0.9f, 1.0f };
+		} else if (pdfPlanHeader.getIsPlanned() == 1) {
+			cols = 6;
+			cols1 = new float[] { 0.4f, 1.7f, 1.0f, 1.0f, 0.9f, 1.0f };
+		} else if (pdfPlanHeader.getIsPlanned() == 2) {
+			cols = 8;
+			cols1 = new float[] { 0.4f, 1.7f, 1.0f, 1.0f, 1.0f, 1.0f, 0.9f, 1.0f };
+		}
+		PdfPTable table = new PdfPTable(cols);
+		try {
+			System.out.println("Inside PDF Table try showProdLinePdf");
+			table.setWidthPercentage(100);
+			table.setWidths(cols1);
+			Font headFont = new Font(FontFamily.TIMES_ROMAN, 10, Font.NORMAL, BaseColor.BLACK);
+			Font headFont1 = new Font(FontFamily.HELVETICA, 11, Font.BOLD, BaseColor.WHITE);
+			Font f = new Font(FontFamily.TIMES_ROMAN, 11.0f, Font.UNDERLINE, BaseColor.BLUE);
+			Font f1 = new Font(FontFamily.TIMES_ROMAN, 11.0f, Font.UNDERLINE, BaseColor.DARK_GRAY);
+
+			PdfPCell hcell = new PdfPCell();
+
+			hcell.setPadding(4);
+			hcell = new PdfPCell(new Phrase("Sr.No.", headFont1));
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			table.addCell(hcell);
+
+			hcell = new PdfPCell(new Phrase("Item Name", headFont1));
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			table.addCell(hcell);
+
+			System.out.println("Plan Header data " + pdfPlanHeader.getIsPlanned());
+			hcell = new PdfPCell(new Phrase("Current Stock", headFont1));
+			hcell.setBackgroundColor(BaseColor.PINK);
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			table.addCell(hcell);
+			if (pdfPlanHeader.getIsPlanned() == 0) {
+				hcell = new PdfPCell(new Phrase("Order Quantity", headFont1));
+				hcell.setBackgroundColor(BaseColor.PINK);
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+			} else if (pdfPlanHeader.getIsPlanned() == 1) {
+				hcell = new PdfPCell(new Phrase("Plan Quantity", headFont1));
+				hcell.setBackgroundColor(BaseColor.PINK);
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+				hcell = new PdfPCell(new Phrase("Prod1 Quantity", headFont1));
+				hcell.setBackgroundColor(BaseColor.PINK);
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+
+			} else if (pdfPlanHeader.getIsPlanned() == 2) {
+				hcell = new PdfPCell(new Phrase("Plan Quantity", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				hcell.setBackgroundColor(BaseColor.PINK);
+				table.addCell(hcell);
+				hcell = new PdfPCell(new Phrase("Prod1 Qty", headFont1));
+				hcell.setBackgroundColor(BaseColor.PINK);
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				table.addCell(hcell);
+				hcell = new PdfPCell(new Phrase("Act Order Qty", headFont1));
+				hcell.setBackgroundColor(BaseColor.PINK);
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				hcell.setBackgroundColor(BaseColor.PINK);
+				table.addCell(hcell);
+				hcell = new PdfPCell(new Phrase("Prod2 Qty", headFont1));
+				hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				hcell.setBackgroundColor(BaseColor.PINK);
+				table.addCell(hcell);
+
+			}
+			hcell = new PdfPCell(new Phrase("Actual Prod Qty", headFont1));
+			hcell.setBackgroundColor(BaseColor.PINK);
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			table.addCell(hcell);
+
+			int index = 0;
+			for (int i = 0; i < subCatAList.size(); i++) {
+				int flag = 0;
+				for (int j = 0; j < itemsList.size(); j++) {
+
+					if (subCatAList.get(i).getLineId() == itemsList.get(j).getItemGrp3()) {
+
+						for (int k = 0; k < moneyOutList.size(); k++) {
+							if (moneyOutList.get(k).getItemId() == itemsList.get(j).getId()) {
+
+								index++;
+								if (flag == 0) {
+									PdfPCell cell;
+
+									cell = new PdfPCell(new Phrase(String.valueOf(""), headFont));
+									cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+									cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+									cell.setPadding(3);
+									cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+									table.addCell(cell);
+
+									cell = new PdfPCell(new Phrase(subCatAList.get(i).getLineName(), headFont1));
+									cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+									cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+									cell.setPaddingRight(2);
+									cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+									cell.setPadding(3);
+									table.addCell(cell);
+
+									cell = new PdfPCell(new Phrase("", headFont));
+									cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+									cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+									cell.setPaddingRight(2);
+									cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+									cell.setPadding(3);
+									table.addCell(cell);
+									if (pdfPlanHeader.getIsPlanned() == 0) {
+										cell = new PdfPCell(new Phrase("", headFont));
+										cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+										cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+										table.addCell(cell);
+									} else if (pdfPlanHeader.getIsPlanned() == 1) {
+										cell = new PdfPCell(new Phrase("", headFont));
+										cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+										cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+										table.addCell(cell);
+										cell = new PdfPCell(new Phrase("", headFont));
+										cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+										cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+										table.addCell(cell);
+
+									} else if (pdfPlanHeader.getIsPlanned() == 2) {
+										cell = new PdfPCell(new Phrase("", headFont));
+										cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+										cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+										table.addCell(cell);
+										cell = new PdfPCell(new Phrase("", headFont));
+										cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+										cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+										table.addCell(cell);
+										cell = new PdfPCell(new Phrase("", headFont));
+										cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+										cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+										table.addCell(cell);
+										cell = new PdfPCell(new Phrase("", headFont));
+										cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+										cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+										table.addCell(cell);
+
+									}
+									cell = new PdfPCell(new Phrase("", headFont));
+									cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+									cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+									cell.setPaddingRight(2);
+									cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+									cell.setPadding(3);
+									table.addCell(cell);
+
+									flag = 1;
+								}
+								// FooterTable footerEvent = new FooterTable(table);
+								// writer.setPageEvent(footerEvent);
+								PdfPCell cell;
+								cell = new PdfPCell(new Phrase(String.valueOf(index), headFont));
+								cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+								cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+								cell.setPadding(4);
+								table.addCell(cell);
+
+								cell = new PdfPCell(new Phrase(moneyOutList.get(k).getItemName(), headFont));
+								cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+								cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+								cell.setPaddingRight(2);
+								cell.setPadding(4);
+								table.addCell(cell);
+								cell = new PdfPCell(
+										new Phrase(String.valueOf(moneyOutList.get(k).getCurOpeQty()), headFont));
+								cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+								cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+								cell.setPaddingRight(2);
+								cell.setPadding(4);
+								table.addCell(cell);
+
+								int currentQty = (int) (Math.round(moneyOutList.get(k).getCurOpeQty()));
+								int production1Qty = (moneyOutList.get(k).getPlanQty() - currentQty);
+								int production2Qty = (moneyOutList.get(k).getOrderQty() - production1Qty);
+								if (pdfPlanHeader.getIsPlanned() == 0) {
+									cell = new PdfPCell(
+											new Phrase(String.valueOf(moneyOutList.get(k).getOrderQty()), headFont));
+									cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+									cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+									cell.setPaddingRight(2);
+									cell.setPadding(4);
+									table.addCell(cell);
+								} else if (pdfPlanHeader.getIsPlanned() == 1) {
+									cell = new PdfPCell(
+											new Phrase(String.valueOf(moneyOutList.get(k).getPlanQty()), headFont));
+									cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+									cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+									cell.setPaddingRight(2);
+									cell.setPadding(4);
+									table.addCell(cell);
+									cell = new PdfPCell(new Phrase(String.valueOf(production1Qty), headFont));
+									cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+									cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+									cell.setPaddingRight(2);
+									cell.setPadding(4);
+									table.addCell(cell);
+								} else if (pdfPlanHeader.getIsPlanned() == 2) {
+									cell = new PdfPCell(
+											new Phrase(String.valueOf(moneyOutList.get(k).getPlanQty()), headFont));
+									cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+									cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+									cell.setPaddingRight(2);
+									cell.setPadding(4);
+									table.addCell(cell);
+									cell = new PdfPCell(new Phrase(String.valueOf(production1Qty), headFont));
+									cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+									cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+									cell.setPaddingRight(2);
+									cell.setPadding(4);
+									table.addCell(cell);
+									cell = new PdfPCell(
+											new Phrase(String.valueOf(moneyOutList.get(k).getOrderQty()), headFont));
+									cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+									cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+									cell.setPaddingRight(2);
+									cell.setPadding(4);
+									table.addCell(cell);
+									cell = new PdfPCell(new Phrase(String.valueOf(production2Qty), headFont));
+									cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+									cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+									cell.setPaddingRight(2);
+									cell.setPadding(4);
+									table.addCell(cell);
+								}
+								cell = new PdfPCell(new Phrase("", headFont));
+								cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+								cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+								cell.setPaddingRight(2);
+								cell.setPadding(4);
+								table.addCell(cell);
+							}
+
+						}
+					}
+				}
+			}
+			PdfPTable subCatTable = new PdfPTable(3);
+
+			System.out.println("Inside PDF Table try");
+			subCatTable.setWidthPercentage(100);
+			subCatTable.setWidths(new float[] { 0.4f, 1.7f, 1.7f });
+
+			hcell = new PdfPCell();
+			hcell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+			hcell.setPadding(2);
+			hcell = new PdfPCell(new Phrase("Sr.No.", headFont1));
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			hcell.setBackgroundColor(BaseColor.PINK);
+			subCatTable.addCell(hcell);
+
+			hcell = new PdfPCell(new Phrase("Sub Category Name", headFont1));
+			hcell.setBackgroundColor(BaseColor.PINK);
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			subCatTable.addCell(hcell);
+
+			hcell = new PdfPCell(new Phrase("Total Quantity", headFont1));
+			hcell.setBackgroundColor(BaseColor.PINK);
+			hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			subCatTable.addCell(hcell);
+			RestTemplate restTemplate = new RestTemplate();
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			map.add("prodHeaderId", globalHeaderId);
+			GetProdDetailBySubCatList subList = restTemplate.postForObject(Constants.url + "getProdDetailBySubCat", map,
+					GetProdDetailBySubCatList.class);
+			index = 0;
+			for (GetProdDetailBySubCat getMoneyOut : subList.getProdDetailBySubCat()) {
+				index++;
+				PdfPCell cell;
+
+				cell = new PdfPCell(new Phrase(String.valueOf(index), headFont));
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				cell.setPadding(2);
+				subCatTable.addCell(cell);
+
+				cell = new PdfPCell(new Phrase(getMoneyOut.getSubCateName(), headFont));
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+				cell.setPaddingRight(2);
+				cell.setPadding(2);
+				subCatTable.addCell(cell);
+
+				cell = new PdfPCell(new Phrase(String.valueOf(getMoneyOut.getTotalQty()), headFont));
+				cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				cell.setPaddingRight(2);
+				cell.setPadding(2);
+				subCatTable.addCell(cell);
+
+			}
+
+			document.open();
+			Paragraph company = new Paragraph(Constants.FACTORYNAME+"\n", f);
+			company.setAlignment(Element.ALIGN_CENTER);
+			document.add(company);
+
+			if (pdfPlanHeader.getIsPlanned() == 1) {
+				Paragraph heading = new Paragraph(
+						pdfPlanHeader.getCatName()+"- Production Line Report"  );
+				heading.setAlignment(Element.ALIGN_CENTER);
+				document.add(heading);
+			}
+			if (pdfPlanHeader.getIsPlanned() == 0) {
+				Paragraph heading = new Paragraph(pdfPlanHeader.getCatName() + " Production Line  Report- ", f1);
+				heading.setAlignment(Element.ALIGN_CENTER);
+				document.add(heading);
+			}
+
+			document.add(new Paragraph("Production Date: " + pdfPlanHeader.getProductionDate() + "\n"));
+			Paragraph heading = new Paragraph(" ");
+			document.add(heading);
+			document.add(table);
+
+			document.add(subCatTable);
+			int totalPages = writer.getPageNumber();
+
+			System.out.println("Page no " + totalPages);
+
+			document.close();
+			// Atul Sir code to open a Pdf File
+			if (file != null) {
+
+				String mimeType = URLConnection.guessContentTypeFromName(file.getName());
+
+				if (mimeType == null) {
+
+					mimeType = "application/pdf";
+
+				}
+
+				response.setContentType(mimeType);
+
+				response.addHeader("content-disposition", String.format("inline; filename=\"%s\"", file.getName()));
+
+				response.setContentLength((int) file.length());
+
+				InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
+
+				try {
+					FileCopyUtils.copy(inputStream, response.getOutputStream());
+				} catch (IOException e) {
+					System.out.println("Excep in Opening a Pdf File");
+					e.printStackTrace();
+				}
+			}
+
+		} catch (DocumentException ex) {
+
+			System.out.println("Pdf Generation Error: BOm Prod  View Prod" + ex.getMessage());
+
+			ex.printStackTrace();
+
+		}
+
+	}
+	
+	
 
 	@RequestMapping(value = "/updateQty", method = RequestMethod.POST)
 	public String updateQty(HttpServletRequest request, HttpServletResponse response) {

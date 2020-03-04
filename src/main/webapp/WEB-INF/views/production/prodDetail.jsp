@@ -189,6 +189,10 @@
 
 												<input type="button" value="PDF" class="btn btn-primary"
 													onclick="genPdf()" />
+													
+													<input type="button" value="Prod Line" class="btn btn-primary"
+													onclick="genProdLinePdf()" />
+													
 										<!-- 	</div> -->
 										</div>
 										<div class="clearfix"></div>
@@ -748,6 +752,10 @@
 
 function genPdf(){
 	window.open('${pageContext.request.contextPath}/showProdByOrderPdf/');
+}
+
+function genProdLinePdf(){
+	window.open('${pageContext.request.contextPath}/showProdLinePdf/');
 }
 
 </script>

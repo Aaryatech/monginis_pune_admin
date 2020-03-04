@@ -1201,7 +1201,7 @@ public class ProductionController {
 		Info view = AccessControll.checkAccess("listForVariation", "listForVariation", "1", "0", "0", "0",
 				newModuleList);
 
-		if (view.getError() == true) {
+		if (view.getError() == false) {
 
 			model = new ModelAndView("accessDenied");
 

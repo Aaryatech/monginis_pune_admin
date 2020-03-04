@@ -435,8 +435,8 @@
 													$('#table1 tbody')
 													.append(
 															qty5);
-													/* $('#table1 tbody')
-													.append(curOpening); */
+													/*  $('#table1 tbody')
+													.append(curOpening);  */
 													
 													/* $('#table1 tbody')
 															.append(
