@@ -1330,7 +1330,7 @@ public class ViewProdController {
 			RestTemplate restTemplate = new RestTemplate();
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			map.add("prodHeaderId", globalHeaderId);
-			GetProdDetailBySubCatList subList = restTemplate.postForObject(Constants.url + "getProdDetailBySubCat", map,
+			GetProdDetailBySubCatList subList = restTemplate.postForObject(Constants.url + "getProdDetailByProdLine", map,
 					GetProdDetailBySubCatList.class);
 			index = 0;
 			for (GetProdDetailBySubCat getMoneyOut : subList.getProdDetailBySubCat()) {

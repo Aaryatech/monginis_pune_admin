@@ -38,12 +38,15 @@ import com.ats.adminpanel.commons.Constants;
 import com.ats.adminpanel.model.GetMenuShow;
 import com.ats.adminpanel.model.GetProdVariation;
 import com.ats.adminpanel.model.Info;
+import com.ats.adminpanel.model.LineMaster;
 import com.ats.adminpanel.model.accessright.ModuleJson;
 import com.ats.adminpanel.model.franchisee.AllMenuResponse;
 import com.ats.adminpanel.model.franchisee.Menu;
 import com.ats.adminpanel.model.franchisee.SubCategory;
 import com.ats.adminpanel.model.item.AllItemsListResponse;
+import com.ats.adminpanel.model.item.CategoryListResponse;
 import com.ats.adminpanel.model.item.Item;
+import com.ats.adminpanel.model.item.MCategoryList;
 import com.ats.adminpanel.model.production.GetProdDetailBySubCat;
 import com.ats.adminpanel.model.production.GetProdDetailBySubCatList;
 import com.ats.adminpanel.model.production.GetProdPlanDetail;
@@ -73,7 +76,7 @@ public class NewProdController {
 		HttpSession session = request.getSession();
 
 		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
-		Info view = AccessControll.checkAccess("showProdVariation", "showProdVariation", "0", "1", "0", "0",
+		Info view = AccessControll.checkAccess("showProdVariation", "showProdVariation", "1", "0", "0", "0",
 				newModuleList);
 
 		if (view.getError() == true) {
@@ -461,6 +464,94 @@ public class NewProdController {
 	
 	}
 	
+	
+	AllItemsListResponse allItemsListResponse;
+
+	public static List<MCategoryList> mCategoryList = null;
+
+	public static CategoryListResponse categoryListResponse;
+
+	@RequestMapping(value = "/showAddLineNameToItems", method = RequestMethod.GET)
+	public ModelAndView showAddLineNameToItems(HttpServletRequest request, HttpServletResponse response) {
+
+		ModelAndView model = null;
+		HttpSession session = request.getSession();
+
+		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
+		Info view = AccessControll.checkAccess("showAddLineNameToItems", "showAddLineNameToItems", "1", "0", "0", "0", newModuleList);
+
+		if (view.getError() == false) {
+
+			model = new ModelAndView("accessDenied");
+
+		} else {
+			model = new ModelAndView("items/updateLineNames");
+			try {
+				RestTemplate restTemplate = new RestTemplate();
+				allItemsListResponse = restTemplate.getForObject(Constants.url + "getAllItems",
+						AllItemsListResponse.class);
+
+				List<Item> itemsList = new ArrayList<Item>();
+				itemsList = allItemsListResponse.getItems();
+
+				categoryListResponse = restTemplate.getForObject(Constants.url + "showAllCategory",
+						CategoryListResponse.class);
+				mCategoryList = categoryListResponse.getmCategoryList();
+				List<MCategoryList> resCatList = new ArrayList<MCategoryList>();
+				for (MCategoryList mCat : mCategoryList) {
+					if (mCat.getCatId() != 5 && mCat.getCatId() != 6) {
+						resCatList.add(mCat);
+					}
+				}
+				model.addObject("itemsList", itemsList);
+				model.addObject("mCategoryList", resCatList);
+				
+				List<LineMaster> lineMstList=new ArrayList<LineMaster>();
+				LineMaster[] lineMstArray = restTemplate.getForObject(Constants.url + "getLineMasterList",
+						LineMaster[].class);
+
+				lineMstList = new ArrayList<LineMaster>(Arrays.asList(lineMstArray));
+
+				model.addObject("lineMstList", lineMstList);
+				
+			} catch (Exception e) {
+				System.out.println("" + e.getMessage());
+			}
+		}
+		return model;
+	}
+
+	//updateItemsLineMaster
+	@RequestMapping(value = "/updateItemsLineMaster", method = RequestMethod.POST)
+	public String updateItemsLineMaster(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			RestTemplate restTemplate = new RestTemplate();
+
+			String[] item = request.getParameterValues("items[]");
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < item.length; i++) {
+				sb = sb.append(item[i] + ",");
+			}
+			String items = sb.toString();
+			items = items.substring(0, items.length() - 1);
+
+
+			String lineId = request.getParameter("line_id");
+
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			map.add("items", items);
+			map.add("lineId", lineId);
+
+			Info info = restTemplate.postForObject(Constants.url + "updateItemLineId", map, Info.class);
+
+			System.err.println(info.toString());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "redirect:/itemList";
+	}
+
 	
 	
 
