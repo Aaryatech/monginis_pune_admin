@@ -29,6 +29,7 @@ public class GetProdPlanHeader {
 	
 	private int isBom;
 	
+	private int isStoreBom;
 	
 	private int delStatus;
 	
@@ -38,6 +39,16 @@ public class GetProdPlanHeader {
 	private int isPlanned;
 	
 	
+	public int getIsStoreBom() {
+		return isStoreBom;
+	}
+
+
+	public void setIsStoreBom(int isStoreBom) {
+		this.isStoreBom = isStoreBom;
+	}
+
+
 	public int getProductionHeaderId() {
 		return productionHeaderId;
 	}
@@ -152,8 +163,8 @@ public class GetProdPlanHeader {
 	public String toString() {
 		return "GetProdPlanHeader [productionHeaderId=" + productionHeaderId + ", catId=" + catId + ", timeSlot="
 				+ timeSlot + ", productionBatch=" + productionBatch + ", productionStatus=" + productionStatus
-				+ ", productionDate=" + productionDate + ", isMixing=" + isMixing + ", isBom=" + isBom + ", delStatus="
-				+ delStatus + ", catName=" + catName + ", isPlanned=" + isPlanned + "]";
+				+ ", productionDate=" + productionDate + ", isMixing=" + isMixing + ", isBom=" + isBom + ", isStoreBom="
+				+ isStoreBom + ", delStatus=" + delStatus + ", catName=" + catName + ", isPlanned=" + isPlanned + "]";
 	}
 
 

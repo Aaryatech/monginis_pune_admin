@@ -22,6 +22,28 @@ private int sfDid;
 	 
 	private int rmType;
 	
+private int  seqNo;
+	
+	private String uom;//for admin end
+	
+	
+	
+	public int getSeqNo() {
+		return seqNo;
+	}
+
+	public void setSeqNo(int seqNo) {
+		this.seqNo = seqNo;
+	}
+
+	public String getUom() {
+		return uom;
+	}
+
+	public void setUom(String uom) {
+		this.uom = uom;
+	}
+
 	public int getRmType() {
 		return rmType;
 	}

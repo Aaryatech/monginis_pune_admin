@@ -174,7 +174,7 @@
 
 						
 					</div>
-					<div class="form-group">
+					<%-- <div class="form-group">
 					<label class="col-sm-3 col-lg-2 control-label">RM Opening Rate
 						</label>
 						<div class="col-sm-6 col-lg-4 controls">
@@ -269,7 +269,26 @@
 										</div>
 
 									</div>
-								</div>
+								</div> --%>
+								
+								 <div class="form-group">
+					<label class="col-sm-3 col-lg-2 control-label">Issue Seq.No
+						</label>
+						<div class="col-sm-6 col-lg-4 controls">
+							<input type="text" name="issueSeqNo"  id="issueSeqNo" class="form-control"placeholder="Issue Seq.No "data-rule-number="true" data-rule-required="true"   autocomplete="off"/>
+						</div>
+						<label class="col-sm-3 col-lg-2 control-label">Department </label>
+						<div class="col-sm-6 col-lg-4 controls">
+	                        <select name="to_dept" id="to_dept" class="form-control"
+											placeholder="Department" data-rule-required="true">
+											<option value="0">Select Department</option>
+											<c:forEach items="${deptList}" var="dept">
+												<option value="${dept.deptId}">${dept.deptName}</option>
+											</c:forEach>
+										</select>
+						</div>
+
+					</div>
 							
 					<div class="row">
 						<div class="col-md-12" style="text-align: center">
@@ -432,7 +451,7 @@ function validation() {
 	  }
 	return isValid;
 }
-function validationForStore() {
+/* function validationForStore() {
 	
 	var storeIssueQty=parseFloat($("#rm_iss_qty").val());
 	var storeOpQty=parseFloat($("#rm_op_qty").val());
@@ -453,17 +472,17 @@ function validationForStore() {
 	}
     }
 	return isValid;
-}
+} */
 function validate() {
-    return validation() && validationForStore();
+    return validation() ;//&& validationForStore();
 }
 </script> 
-<script type="text/javascript">
+<!-- <script type="text/javascript">
 function onChangeGst(id)
 {
 	document.getElementById("hsncode").value=$('#rm_tax_id option:selected').text();
 }
-</script>
+</script> -->
 
 </body>
 </html>

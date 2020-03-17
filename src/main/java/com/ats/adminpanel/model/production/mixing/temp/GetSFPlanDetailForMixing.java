@@ -19,11 +19,32 @@ public class GetSFPlanDetailForMixing {
 	
 	private float rmQty;
 	
+	public float getSingleCut() {
+		return singleCut;
+	}
+
+	public void setSingleCut(float singleCut) {
+		this.singleCut = singleCut;
+	}
+
+	public float getDoubleCut() {
+		return doubleCut;
+	}
+
+	public void setDoubleCut(float doubleCut) {
+		this.doubleCut = doubleCut;
+	}
+
 	private float noPiecesPerItem;
 	
 	private String rmName;
 	
 	private float planQty;
+	
+float singleCut;
+	
+	float doubleCut;
+	
 	
 	float total;
 	

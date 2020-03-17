@@ -101,7 +101,7 @@
 											<c:set var="sts" value="Request Closed"></c:set>
 										</c:when>
 									</c:choose>
-									<input type="text" id="status" name="status"
+									<input type="text" id="status1" name="status"
 											value="${sts}" class="form-control"
 											readonly>
 										<input type="hidden" id="status" name="status"
@@ -112,7 +112,11 @@
 								<br>
 
 								<div class="box-content">
-
+								<c:set var="prod" value="PROD"></c:set>
+								<c:set var="mix" value="MIX"></c:set>
+								<input type="hidden" name="fromDept" id="fromDept" value="${billOfMaterialHeader.fromDeptName}"/>
+								<input type="hidden" name="toDept" id="toDept" value="${billOfMaterialHeader.toDeptName}" />
+								<c:set var="depname" value="${billOfMaterialHeader.fromDeptName}"></c:set>
 
 									<div class="col-md-2">From Department Name</div>
 									<div class="col-md-3">

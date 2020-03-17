@@ -170,7 +170,7 @@
 									<tr>
 									<td></td>
 									
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<c:out value="${allSubModuleList.subModulName}" /></td>
+									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<c:out value="${allSubModuleList.subModulName}-${allSubModuleList.subModuleMapping}" /></td>
 													<c:choose>
 														<c:when test="${allSubModuleList.view==1}">
 
@@ -293,7 +293,7 @@
 									<tr>
 									<td></td>
 									
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<c:out value="${allSubModuleList.subModulName}" /></td>
+									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<c:out value="${allSubModuleList.subModulName}-${allSubModuleList.subModuleMapping}" /></td>
 													<c:choose>
 														<c:when test="${allSubModuleList.view==1}">
 
@@ -416,7 +416,7 @@
 									<tr>
 									<td></td>
 									
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<c:out value="${allSubModuleList.subModulName}" /></td>
+									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<c:out value="${allSubModuleList.subModulName}-${allSubModuleList.subModuleMapping}" /></td>
 													<c:choose>
 														<c:when test="${allSubModuleList.view==1}">
 
@@ -539,7 +539,7 @@
 									<tr>
 									<td></td>
 									
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<c:out value="${allSubModuleList.subModulName}" /></td>
+									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<c:out value="${allSubModuleList.subModulName}-${allSubModuleList.subModuleMapping}" /></td>
 													<c:choose>
 														<c:when test="${allSubModuleList.view==1}">
 

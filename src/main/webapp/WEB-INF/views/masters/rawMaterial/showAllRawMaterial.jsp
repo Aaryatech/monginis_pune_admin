@@ -141,89 +141,8 @@ abbr:hover{
 									 
 				
 									 <c:choose>
-									 <c:when test="${grpId==1}">
-										<table width="100%" class="table table-advance" id="table1">
-											<thead style="background-color: #f3b5db;">
-												<tr>
-
-													<th width="100"  align="left">Sr No</th>
-													<th width="188" align="left">RM Name</th>
-													<th width="120" align="left">Category</th>
-													<th width="190" align="center">Sub Category</th>
-													<th width="270" align="center">BMS ROL Qty</th>
- 
-													<th width="270" align="center">Store ROL Qty</th>
-											     	<th width="40" align="center">SGST %</th> 
-												 	<th width="40" align="center">CGST %</th> 
-	                                                <th width="40" align="center">IGST %</th> 
-													<th class="col-sm-1"> Is Critical</th>
-													<th width="245" align="left"> Action</th>
-												 
-
-												</tr>
-
-											</thead>
-
-											<tbody>
-
-												<c:forEach items="${RawmaterialList}" var="RawmaterialList"
-													varStatus="count">
-
-													<tr>
-														<td><c:out value="${count.index+1}" /></td>
-
-														<td align="left"><c:out
-																value="${RawmaterialList.rmName}" /></td>
-
-
-														<td align="left"><c:out
-																value="${RawmaterialList.catName}" /></td>
-
-														<td align="center"><c:out
-																value="${RawmaterialList.sunCatName}" /></td>
-
-														<td align="center"><c:out value="${RawmaterialList.bmsRolQty}" /></td>
-
-														<td align="center"><c:out value="${RawmaterialList.storeRolQty}" /></td>
-
-														 <td class="col-sm-1" align="left"><c:out value="${RawmaterialList.sgstPer}" /></td>
-														 <td class="col-sm-1" align="left"><c:out value="${RawmaterialList.cgstPer}" /></td>
-														 <td class="col-sm-1" align="left"><c:out value="${RawmaterialList.igstPer}" /></td>
-														<c:choose>
-														<c:when test="${RawmaterialList.rmIsCritical==0}">
-														<td class="col-sm-1" align="center"><c:out
-																value="Low" /></td>
-														</c:when>
-														<c:when test="${RawmaterialList.rmIsCritical==1}">
-														<td class="col-sm-1" align="center"><c:out
-																value="Normal" /></td>
-														</c:when>
-														<c:when test="${RawmaterialList.rmIsCritical==2}">
-														<td class="col-sm-1" align="center"><c:out
-																value="High" /></td>
-														</c:when>
-														</c:choose>
-														
-					<td  class="col-md-1" ><a href="${pageContext.request.contextPath}/getRawMaterialDetails?selectedRmId=${RawmaterialList.rmId}" class="action_btn" >
-						<abbr title="Details"><i class="fa fa-edit fa-lg"></i></abbr></a>
-						
-					<a href="${pageContext.request.contextPath}/deleteRawMaterial/${RawmaterialList.rmId}/${grpId}"
-													onClick="return confirm('Are you sure want to delete this record');"><span
-														class="glyphicon glyphicon-remove fa-lg"></span></a>	
-						<a href="${pageContext.request.contextPath}/showRmRateVerification/${grpId}/${RawmaterialList.rmId}" class="action_btn" >
-						<abbr title="Rate Verification"><i class="fa fa-list"></i></abbr></a>
-						</td>
-
-												</tr>
-												</c:forEach>
-
-											</tbody>
-										</table>
-										</c:when>
-										<c:when test="${grpId==2 || grpId==3}">
-										
-										
-									
+									 <c:when test="${grpId==4||grpId==5}">
+				
 										<table id="table1" class="table table-advance">
 										<thead style="background-color: #f3b5db;">
 												<tr class="bgpink">
@@ -295,25 +214,28 @@ abbr:hover{
 							</tbody>
 
 						</table>
-					
-										</c:when>
-										<c:otherwise>
-											<table width="100%" class="table table-advance" id="table1">
-											<thead style="background-color: #f3b5db;">
+										 
+									 
+									 </c:when>
+									 <c:otherwise>
+									 
+									
+										<table  class="table table-advance" id="table1">
+											<thead>
 												<tr>
 
-													<th width="100"  align="left">Sr No</th>
-													<th width="188" align="left">RM Name</th>
-													<th width="120" align="left">Category</th>
-													<th width="190" align="center">Sub Category</th>
-													<th width="270" align="center">BMS ROL Qty</th>
+													<th class="col-md-1"  align="left">Sr No</th>
+													<th class="col-md-2" align="left">RM Name</th>
+													<th class="col-md-1" align="left">Category</th>
+													<th class="col-md-1" align="center">Sub Category</th>
+													<th class="col-md-1" align="center">BMS ROL Qty</th>
  
-													<th width="270" align="center">Store ROL Qty</th>
-											     	<th width="40" align="center">SGST %</th> 
-												 	<th width="40" align="center">CGST %</th> 
-	                                                <th width="40" align="center">IGST %</th> 
-													<th class="col-sm-1"> Is Critical</th>
-													<th width="105" align="left"> Action</th>
+													<!-- <th class="col-md-1" align="center">Store ROL Qty</th> -->
+											     	<th class="col-md-1" align="center">SGST %</th> 
+												 	<th class="col-md-1" align="center">CGST %</th> 
+	                                                <th class="col-md-1" align="center">IGST %</th> 
+													<th class="col-md-1"> Is Critical</th>
+													<th class="col-md-1" align="left"> Action</th>
 												 
 
 												</tr>
@@ -340,7 +262,7 @@ abbr:hover{
 
 														<td align="center"><c:out value="${RawmaterialList.bmsRolQty}" /></td>
 
-														<td align="center"><c:out value="${RawmaterialList.storeRolQty}" /></td>
+														<%-- <td align="center"><c:out value="${RawmaterialList.storeRolQty}" /></td> --%>
 
 														 <td class="col-sm-1" align="left"><c:out value="${RawmaterialList.sgstPer}" /></td>
 														 <td class="col-sm-1" align="left"><c:out value="${RawmaterialList.cgstPer}" /></td>
@@ -366,8 +288,8 @@ abbr:hover{
 					<a href="${pageContext.request.contextPath}/deleteRawMaterial/${RawmaterialList.rmId}/${grpId}"
 													onClick="return confirm('Are you sure want to delete this record');"><span
 														class="glyphicon glyphicon-remove fa-lg"></span></a>	
-						<a href="${pageContext.request.contextPath}/showRmRateVerification/${grpId}/${RawmaterialList.rmId}" class="action_btn" >
-						<abbr title="Rate Verification"><i class="fa fa-list fa-lg"></i></abbr></a>
+						<%-- <a href="${pageContext.request.contextPath}/showRmRateVerification/${grpId}/${RawmaterialList.rmId}" class="action_btn" >
+						<abbr title="Rate Verification"><i class="fa fa-list fa-lg"></i></abbr></a> --%>
 						</td>
 
 												</tr>
@@ -375,7 +297,9 @@ abbr:hover{
 
 											</tbody>
 										</table>
-										</c:otherwise>
+										
+										 </c:otherwise>
+				
 									 </c:choose>
 									</div>
 								</div>

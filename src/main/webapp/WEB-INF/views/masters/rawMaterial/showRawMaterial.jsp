@@ -68,7 +68,7 @@
 									"validation-form"
 										enctype="multipart/form-data" method="post">
 							
-
+<input type="hidden" id="rm_id" name="rm_id" value="${rawMaterialDetails.rmId}">
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">RM Code</label>
 									<div class="col-sm-6 col-lg-4 controls">
@@ -78,7 +78,7 @@
 									<label class="col-sm-3 col-lg-2 control-label">RM Name
 									</label>
 									<div class="col-sm-6 col-lg-4 controls">
-										<input type="text" value="${rawMaterialDetails.rmName }" name="rm_name" id="rm_name" class="form-control"placeholder="Raw Material Name"data-rule-required="true" />
+										<input type="text" value="${rawMaterialDetails.rmName}" name="rm_name" id="rm_name" class="form-control"placeholder="Raw Material Name"data-rule-required="true" />
 									</div>
 
 								</div>
@@ -205,145 +205,38 @@
 						</div>
 						 
 					</div>
-					<div class="form-group">
-						<label class="col-sm-3 col-lg-2 control-label">RM OP Rate
+					
+
+					<%--NEW Fields Added --%>
+					 <div class="form-group">
+					<label class="col-sm-3 col-lg-2 control-label">Issue Seq.No
 						</label>
 						<div class="col-sm-6 col-lg-4 controls">
-							<input type="text" value="${rawMaterialDetails.rmOpRate }" name="rm_op_rate" id="rm_op_rate" class="form-control"placeholder="RM Op Rate "data-rule-required="true"data-rule-number="true"/>
+							<input type="text" name="issueSeqNo"  id="issueSeqNo" class="form-control"placeholder="Issue Seq.No "data-rule-number="true" data-rule-required="true" value="${rawMaterialDetails.rmIcon}" />
 						</div>
-						
-						<label class="col-sm-3 col-lg-2 control-label">Rate </label>
+						<label class="col-sm-3 col-lg-2 control-label">Department </label>
 						<div class="col-sm-6 col-lg-4 controls">
-							<input type="text" value="${rawMaterialDetails.rmRate }" name="rm_rate" id="rm_rate" class="form-control" placeholder="Rate"data-rule-required="true"data-rule-number="true"/>
+	                        <select name="to_dept" id="to_dept" class="form-control"
+											placeholder="Department" data-rule-required="true">
+											<option value="0">Select Department</option>
+											<c:forEach items="${deptList}" var="dept">
+											<c:choose>
+											<c:when test="${dept.deptId==rawMaterialDetails.rmOpRate}">
+											<option value="${dept.deptId}" selected>${dept.deptName}</option>
+											
+											</c:when>
+											<c:otherwise>
+										<option value="${dept.deptId}">${dept.deptName}</option>
+											
+											</c:otherwise>
+											</c:choose>
+											</c:forEach>
+										</select>
 						</div>
-					</div>
-
-					<div class="form-group">
-							<label class="col-sm-3 col-lg-2 control-label">RM GST % </label>
-						<div class="col-sm-6 col-lg-4 controls">
-							<select name="rm_tax_id" id="rm_tax_id" class="form-control"  onchange="onChangeGst(this.value)">
-								<option value="1">Select RM GST</option>
-								<c:forEach items="${rmTaxList}" var="rmTaxList"
-													varStatus="count">
-													
-													<c:choose>
-													<c:when test="${rawMaterialDetails.rmTaxId==rmTaxList.taxId}">
-														<option selected value="${rmTaxList.taxId}"><c:out value="${rmTaxList.taxDesc}"/></option>
-												</c:when>
-													<c:otherwise>
-  														<option value="${rmTaxList.taxId}"><c:out value="${rmTaxList.taxDesc}"/></option>
-												 </c:otherwise>
- 													 </c:choose>
-												 
-												</c:forEach>
-							</select>
-						</div>
-						<label class="col-sm-3 col-lg-2 control-label">Store Min
-							Qty </label>
-						<div class="col-sm-6 col-lg-4 controls">
-							<input type="text" value="${rawMaterialDetails.rmIssQty }" name="rm_iss_qty" id="rm_iss_qty" class="form-control" placeholder="Store Min Qty"data-rule-required="true" data-rule-number="true"/>
-						</div>
-						
 
 					</div>
 				
-					<div class="form-group">
-						<label class="col-sm-3 col-lg-2 control-label">Store Max Qty </label>
-						<div class="col-sm-6 col-lg-4 controls">
-							<input type="text" value="${rawMaterialDetails.rmOpQty }" name="rm_op_qty" id="rm_op_qty" class="form-control"placeholder="Store Max Qty"data-rule-required="true" data-rule-number="true" />
-						</div>
-
-						<label class="col-sm-3 col-lg-2 control-label">Store ROL
-							Qty </label>
-						<div class="col-sm-6 col-lg-4 controls">
-							<input type="text" value="${rawMaterialDetails.rmReceivedQty }" name="rm_recd_qty" id="rm_recd_qty" class="form-control" placeholder="Store ROL Qty"data-rule-required="true" data-rule-number="true"/>
-						</div>
-					<input type="hidden" name="rm_id" id="rm_id"value="${rawMaterialDetails.rmId}"  />
-						
-					</div>
-					
-					<div class="form-group">
-						<label class="col-sm-3 col-lg-2 control-label">HSN Code</label>
-
-						<div class="col-sm-6 col-lg-4 controls">
-							<input type="text" value="${rawMaterialDetails.rmCloQty}" readonly name="rm_clo_qty" id="hsncode" class="form-control" placeholder="RM HSNCD" data-rule-required="true" data-rule-number="true"/>
-						</div>
-
-						<label class="col-sm-3 col-lg-2 control-label">RM Rejected
-							Qty </label>
-						<div class="col-sm-6 col-lg-4 controls">
-							<input type="text" value="${rawMaterialDetails.rmRejQty }"name="rm_rej_qty" id="rm_rej_qty" class="form-control"placeholder="Raw Rejected Qty "data-rule-required="true" data-rule-number="true"/>
-						</div>
-					</div>
-					
-					<div class="form-group">
-
-						<label class="col-sm-3 col-lg-2 control-label">RM
-							isCritical </label>
-						<div class="col-sm-6 col-lg-4 controls">
-						
-						   <c:choose>
-																	<c:when test="${rawMaterialDetails.rmIsCritical==1}">
-																		
-																		<input type="radio" name="rm_is_critical"id="rm_high"   value="2"> High
-							  											<input type="radio" name="rm_is_critical" id="rm_normal" checked="true" value="1"> Normal
-  																		<input type="radio" name="rm_is_critical" id="rm_low"    value="0"> Low
-																	</c:when>
-																		<c:when test="${rawMaterialDetails.rmIsCritical==0}">
-																		
-																		<input type="radio" name="rm_is_critical"id="rm_high"   value="2"> High
-							  											<input type="radio" name="rm_is_critical" id="rm_normal" value="1"> Normal
-  																		<input type="radio" name="rm_is_critical" id="rm_low" checked="true"   value="0"> Low
-																	</c:when>
-																	<c:when test="${rawMaterialDetails.rmIsCritical==2}">
-																		
-																		<input type="radio" name="rm_is_critical"id="rm_high" checked="true"  value="2"> High
-							  											<input type="radio" name="rm_is_critical" id="rm_normal" value="1"> Normal
-  																		<input type="radio" name="rm_is_critical" id="rm_low"   value="0"> Low
-																	</c:when>
-																
-													</c:choose>
-							  <%-- <input type="radio" name="rm_is_critical"id="rm_high" checked=<c:out value="${high}" /> value="2"> High
-							  <input type="radio" name="rm_is_critical" id="rm_normal"checked=<c:out value="${normal}" /> value="1"> Normal
-  							<input type="radio" name="rm_is_critical" id="rm_low"   value="0"> Low
-  							 --%>
- 						 </div>
-
-					<label class="col-sm-3 col-lg-2 control-label">
-					 </label>
-					 <input type="hidden" value="${rawMaterialDetails.rmIsCritical }"id="temp_is_critical" >
-						
-				</div>
-				
-							<div class="form-group">
-									<label class="col-sm-3 col-lg-2 control-label">Raw Material Image</label>
-														<div class="col-sm-9 col-lg-10 controls">
-					
-							<div class="fileupload fileupload-new"
-											data-provides="fileupload">
-											<div class="fileupload-new img-thumbnail"
-												style="width: 200px; height: 150px;">
-												 <img src="${url}${rawMaterialDetails.rmIcon}" onerror="this.src='${pageContext.request.contextPath}/resources/img/No_Image_Available.jpg';"/>
-												</div>
-											<div
-												class="fileupload-preview fileupload-exists img-thumbnail"
-												style="max-width: 200px; max-height: 150px; line-height: 20px;"></div>
-											<div>
-												<span class="btn btn-default btn-file"><span
-													class="fileupload-new" >Change image</span> <span
-													class="fileupload-exists">Change</span> <input type="file"
-													class="file-input" name="rm_icon" id="rm_icon"
-													 /></span> <a href="#"
-													class="btn btn-default fileupload-exists"
-													data-dismiss="fileupload">Previous Image</a>
-											</div>
-										</div>
-										 <div>
-            <input type="hidden" name="prevImage" value="${rawMaterialDetails.rmIcon}"></div>
-										
-
-					</div>
-</div>
+							
 				<br/>
 					<br/>
 					<div class="row">
@@ -548,14 +441,8 @@ function validationForStore() {
 }
 
 function validate() {
-    return validation() && validationForStore();
+    return validation();
 }</script> 
-<script type="text/javascript">
-function onChangeGst(id)
-{
-	document.getElementById("hsncode").value=$('#rm_tax_id option:selected').text();
-}
-</script>
 
 </body>
 </html>
