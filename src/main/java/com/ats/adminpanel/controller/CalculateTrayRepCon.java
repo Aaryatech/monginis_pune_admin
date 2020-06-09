@@ -235,9 +235,9 @@ public class CalculateTrayRepCon {
 			map = new LinkedMultiValueMap<>();
 			map.add("frIds", frIds);
 
-			FranchiseForDispatch[] frNameId = restTemplate
+			FranchiseForDispatch[] frNameId = restTemplate 
 					.postForObject(Constants.url + "getFranchiseForDispatchByFrIds", map, FranchiseForDispatch[].class);
-
+ 
 			List<FranchiseForDispatch> frNameIdByRouteIdList = new ArrayList<>(Arrays.asList(frNameId));
 
 			model.addObject("frNameIdByRouteIdList", frNameIdByRouteIdList);
