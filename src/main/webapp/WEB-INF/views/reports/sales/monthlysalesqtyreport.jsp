@@ -66,7 +66,7 @@
 								<select id="year" name="year" class="form-control">
 
 									<option value="2019-2020">2019-2020</option>
-									<option value="2019-2020">2020-2021</option>
+									<option value="2020-2021">2020-2021</option>
 								</select>
 							</div>
 
