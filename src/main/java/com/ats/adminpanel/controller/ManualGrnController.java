@@ -2,6 +2,7 @@ package com.ats.adminpanel.controller;
 
 import java.math.BigDecimal;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Year;
 import java.util.ArrayList;
@@ -304,6 +305,41 @@ public class ManualGrnController {
 				 * }
 				 */
 				if (grnQty > 0) {
+					
+					
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					SimpleDateFormat sdf11 = new SimpleDateFormat("dd-MM-yyyy");
+					java.util.Date dt1,dt2;
+			
+					int percent1=85,percent2=75;
+					
+					try {
+						dt1=sdf.parse(sdf.format(selectedGrn.get(i).getBillDate()));
+						dt2=sdf.parse("2020-12-01");
+						
+						System.err.println("DATE 1 ------------------ "+selectedGrn.get(i).getBillDate());
+						
+						if(dt1.compareTo(dt2)>0) {
+							percent1=85;
+							percent2=75;
+							System.out.println("---------------------------------------Date 1 occurs after Date 2");
+						}else if(dt1.compareTo(dt2)<0) {
+							percent1=80;
+							percent2=70;
+							System.out.println("---------------------------------------Date 1 occurs before Date 2");
+						}else if(dt1.compareTo(dt2)==0) {
+							percent1=85;
+							percent2=75;
+							System.out.println("---------------------------------------Both are same dates");
+						}
+						
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					
+					
 
 					GrnGvn postGrnGvn = new GrnGvn();
 
@@ -313,15 +349,15 @@ public class ManualGrnController {
 					float grnRate = 0.0f;
 
 					if (selectedGrn.get(i).getGrnType() == 0) {
-						grnBaseRate = baseRate * 80 / 100;
+						grnBaseRate = baseRate * percent1 / 100;
 
-						grnRate = (selectedGrn.get(i).getRate() * 80) / 100;
+						grnRate = (selectedGrn.get(i).getRate() * percent1) / 100;
 						// postGrnGvn.setGrnGvnAmt(roundUp(grnAmt));
 					}
 
 					if (selectedGrn.get(i).getGrnType() == 1) {
-						grnBaseRate = baseRate * 70 / 100;
-						grnRate = (selectedGrn.get(i).getRate() * 70) / 100;
+						grnBaseRate = baseRate * percent2 / 100;
+						grnRate = (selectedGrn.get(i).getRate() * percent2) / 100;
 						// postGrnGvn.setGrnGvnAmt(roundUp(grnAmt));
 					}
 
@@ -474,7 +510,7 @@ public class ManualGrnController {
 			postGrnList.setGrnGvnHeader(grnHeader);
 			Info insertGrn = null;
 			if (postGrnList != null) {
-				insertGrn = restTemplate.postForObject(Constants.url + "insertGrnGvn", postGrnList, Info.class);
+				//insertGrn = restTemplate.postForObject(Constants.url + "insertGrnGvn", postGrnList, Info.class);
 
 			}
 			// Info insertGrn=null;

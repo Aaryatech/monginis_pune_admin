@@ -11,6 +11,8 @@
 <jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
 <body onload="placeValue()">
 
+
+
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
 	<c:url var="insertGateGrnProcessAgree"
 		value="/insertGateGrnProcessAgree" />
@@ -47,7 +49,7 @@
 			<div class="page-title">
 				<div>
 					<h1>
-						<i class="fa fa-file-o"></i>Account GRN
+						<i class="fa fa-file-o"></i>Account GRN 
 					</h1>
 
 				</div>

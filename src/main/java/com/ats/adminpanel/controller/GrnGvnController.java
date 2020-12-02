@@ -127,7 +127,7 @@ public class GrnGvnController {
 		List<ModuleJson> newModuleList = (List<ModuleJson>) session.getAttribute("newModuleList");
 		Info view = AccessControll.checkAccess("getGrnHeaderForGate", "getGrnHeaderForGate", "1", "0", "0", "0",
 				newModuleList);
-		 List<Integer> franchiseList=new ArrayList<>();
+		List<Integer> franchiseList = new ArrayList<>();
 		if (view.getError() == true) {
 
 			model = new ModelAndView("accessDenied");
@@ -136,9 +136,9 @@ public class GrnGvnController {
 			model = new ModelAndView("grngvn/gateGrnHeader");
 
 			boolean isAllFrSelected = false;
-			 int frSelectedFlag=0;
+			int frSelectedFlag = 0;
 			try {
-				
+
 				RestTemplate restTemplate = new RestTemplate();
 
 				MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
@@ -195,7 +195,7 @@ public class GrnGvnController {
 					}
 
 					if (isAllFrSelected) {
-						frSelectedFlag=1;
+						frSelectedFlag = 1;
 						// all Fr selected Web Service
 						System.out.println("All Fr Selected =true");
 
@@ -215,7 +215,7 @@ public class GrnGvnController {
 						System.out.println("Grn Gate Header List  All FR" + grnGateHeaderList.toString());
 
 					} else {
-						frSelectedFlag=2;
+						frSelectedFlag = 2;
 						System.out.println("Specific Fr Selected ");
 
 						map = new LinkedMultiValueMap<String, Object>();
@@ -243,8 +243,6 @@ public class GrnGvnController {
 				model.addObject("toDate", gateGrnHeaderToDate);
 				model.addObject("grnList", grnGateHeaderList);
 				model.addObject("selectedFr", frList);
-				
-				
 
 			} catch (Exception e) {
 
@@ -253,9 +251,9 @@ public class GrnGvnController {
 			}
 			gateGrnHeaderFromDate = null;
 			gateGrnHeaderToDate = null;
-			
+
 			model.addObject("franchiseList", franchiseList);
-			model.addObject("frSelectedFlag", 	frSelectedFlag);
+			model.addObject("frSelectedFlag", frSelectedFlag);
 		}
 		return model;
 	}
@@ -847,9 +845,9 @@ public class GrnGvnController {
 			model = new ModelAndView("grngvn/accGrnHeader");
 
 			boolean isAllFrSelected = false;
-            int frSelectedFlag=0;
+			int frSelectedFlag = 0;
 			try {
-			    List<Integer> franchiseList=new ArrayList<>();
+				List<Integer> franchiseList = new ArrayList<>();
 				RestTemplate restTemplate = new RestTemplate();
 
 				MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
@@ -868,7 +866,7 @@ public class GrnGvnController {
 				model.addObject("unSelectedFrList", allFrIdNameList.getFrIdNamesList());
 
 				if (accGrnHeaderFromDate == "" || accGrnHeaderFromDate == null) {
-					
+
 					DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 					Calendar cal = Calendar.getInstance();
 
@@ -915,7 +913,7 @@ public class GrnGvnController {
 				else {
 
 					if (frList.contains("-1")) {
-						frSelectedFlag=1;
+						frSelectedFlag = 1;
 						/*
 						 * isAllFrSelected = true;
 						 * 
@@ -942,7 +940,7 @@ public class GrnGvnController {
 						System.out.println("Grn Acc Header List  All FR" + grnAccHeaderList.toString());
 
 					} else {
-						frSelectedFlag=2;
+						frSelectedFlag = 2;
 						System.out.println("Specific Fr Selected ");
 
 						map = new LinkedMultiValueMap<String, Object>();
@@ -973,9 +971,9 @@ public class GrnGvnController {
 
 				accGrnHeaderFromDate = null;
 				accGrnHeaderToDate = null;
-				
+
 				model.addObject("franchiseList", franchiseList);
-				model.addObject("frSelectedFlag", 	frSelectedFlag);
+				model.addObject("frSelectedFlag", frSelectedFlag);
 			} catch (Exception e) {
 
 				System.out.println("Excep in Acc GrN Header List /getGrnHeaderForAcc " + e.getMessage());
@@ -1096,16 +1094,51 @@ public class GrnGvnController {
 			float aprAmt = 0;
 			float aprTaxableAmt, aprTotalTax;
 			float sgstRs, cgstRs, igstRs;
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy");
+			java.util.Date dt1,dt2;
+	
+			int percent1=85,percent2=75;
+			
+			try {
+				dt1=sdf1.parse(detail.getRefInvoiceDate());
+				dt2=sdf.parse("2020-12-01");
+				
+				System.err.println("DATE 1 ------------------ "+detail.getRefInvoiceDate());
+				
+				if(dt1.compareTo(dt2)>0) {
+					percent1=85;
+					percent2=75;
+					System.out.println("---------------------------------------Date 1 occurs after Date 2");
+				}else if(dt1.compareTo(dt2)<0) {
+					percent1=80;
+					percent2=70;
+					System.out.println("---------------------------------------Date 1 occurs before Date 2");
+				}else if(dt1.compareTo(dt2)==0) {
+					percent1=85;
+					percent2=75;
+					System.out.println("---------------------------------------Both are same dates");
+				}
+				
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			modelAndView.addObject("percent1", percent1);
+			
+			
 
 			float grandTotal;
 			if (detail.getGrnType() == 0) {
 
-				grnRate = detail.getBaseRate() * 85 / 100;
+				grnRate = detail.getBaseRate() * percent1 / 100;
 			}
 
 			if (detail.getGrnType() == 1) {
 
-				grnRate = detail.getBaseRate() * 70 / 100;
+				grnRate = detail.getBaseRate() * percent2 / 100;
 			}
 
 			if (detail.getGrnType() == 2 || detail.getGrnType() == 4) {
@@ -1219,16 +1252,48 @@ public class GrnGvnController {
 					float aprAmt = 0;
 					float aprTaxableAmt, aprTotalTax;
 					float sgstRs, cgstRs, igstRs;
+					
+					
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					java.util.Date dt1,dt2;
+			
+					int percent1=85,percent2=75;
+					
+					try {
+						dt1=sdf.parse(detail.getRefInvoiceDate());
+						dt2=sdf.parse("2020-12-01");
+						
+						if(dt1.compareTo(dt2)>0) {
+							percent1=85;
+							percent2=75;
+							//System.out.println("Date 1 occurs after Date 2");
+						}else if(dt1.compareTo(dt2)<0) {
+							percent1=80;
+							percent2=70;
+							//System.out.println("Date 1 occurs before Date 2");
+						}else if(dt1.compareTo(dt2)==0) {
+							percent1=85;
+							percent2=75;
+							//System.out.println("Both are same dates");
+						}
+						
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					model.addObject("percent1", percent1);
+					
 
 					float grandTotal;
 					if (detail.getGrnType() == 0) {
 
-						grnRate = detail.getBaseRate() * 85 / 100;
+						grnRate = detail.getBaseRate() * percent1 / 100;
 					}
 
 					if (detail.getGrnType() == 1) {
 
-						grnRate = detail.getBaseRate() * 70 / 100;
+						grnRate = detail.getBaseRate() * percent2 / 100;
 					}
 
 					if (detail.getGrnType() == 2 || detail.getGrnType() == 4) {
@@ -1439,43 +1504,43 @@ public class GrnGvnController {
 			accHeader.setAprIgstRs(0);
 			accHeader.setAprROff(0);
 			accHeader.setApporvedAmt(0);
-			 float apporvedAmt=0.0f;
-	            float aprTaxableAmt=0.0f;
-	            float aprTotalTax=0.0f;
-	            float aprGrandTotal=0.0f;
-	            float aprCgstRs=0.0f;
-	            float aprSgstRs=0.0f;
-	            float aprIgstRs=0.0f;
-	            float aprROff=0.0f;
+			float apporvedAmt = 0.0f;
+			float aprTaxableAmt = 0.0f;
+			float aprTotalTax = 0.0f;
+			float aprGrandTotal = 0.0f;
+			float aprCgstRs = 0.0f;
+			float aprSgstRs = 0.0f;
+			float aprIgstRs = 0.0f;
+			float aprROff = 0.0f;
 			for (int i = 0; i < grnAccDetailList.size(); i++) {
 
 				if (grnAccDetailList.get(i).getGrnGvnStatus() == 6) {
 
 					System.out.println("Status 6 found ");
 
-					apporvedAmt=apporvedAmt+ grnAccDetailList.get(i).getAprGrandTotal();
+					apporvedAmt = apporvedAmt + grnAccDetailList.get(i).getAprGrandTotal();
 
-					aprTaxableAmt=aprTaxableAmt + grnAccDetailList.get(i).getAprTaxableAmt();
-					aprTotalTax=aprTotalTax + grnAccDetailList.get(i).getAprTotalTax();
-					aprGrandTotal=aprGrandTotal + grnAccDetailList.get(i).getAprGrandTotal();
-					aprCgstRs=aprCgstRs + grnAccDetailList.get(i).getAprCgstRs();
-					aprSgstRs=aprSgstRs + grnAccDetailList.get(i).getAprSgstRs();
-					aprIgstRs=aprIgstRs + grnAccDetailList.get(i).getAprIgstRs();
-					aprROff=aprROff + grnAccDetailList.get(i).getAprROff();
+					aprTaxableAmt = aprTaxableAmt + grnAccDetailList.get(i).getAprTaxableAmt();
+					aprTotalTax = aprTotalTax + grnAccDetailList.get(i).getAprTotalTax();
+					aprGrandTotal = aprGrandTotal + grnAccDetailList.get(i).getAprGrandTotal();
+					aprCgstRs = aprCgstRs + grnAccDetailList.get(i).getAprCgstRs();
+					aprSgstRs = aprSgstRs + grnAccDetailList.get(i).getAprSgstRs();
+					aprIgstRs = aprIgstRs + grnAccDetailList.get(i).getAprIgstRs();
+					aprROff = aprROff + grnAccDetailList.get(i).getAprROff();
 
 					// accHeader.setApporvedAmt(0);
 
 				}
 			}
 			accHeader.setApporvedAmt(roundUp(apporvedAmt));
-			accHeader.setAprTaxableAmt(roundUp(aprTaxableAmt));	
+			accHeader.setAprTaxableAmt(roundUp(aprTaxableAmt));
 			accHeader.setAprTotalTax(roundUp(aprTotalTax));
-			accHeader.setAprGrandTotal(roundUp(aprGrandTotal));	
+			accHeader.setAprGrandTotal(roundUp(aprGrandTotal));
 			accHeader.setAprCgstRs(roundUp(aprCgstRs));
 			accHeader.setAprSgstRs(roundUp(aprSgstRs));
-			accHeader.setAprIgstRs(roundUp(aprIgstRs));	
-			accHeader.setAprROff(roundUp(aprROff));	
-			
+			accHeader.setAprIgstRs(roundUp(aprIgstRs));
+			accHeader.setAprROff(roundUp(aprROff));
+
 			System.out.println("acc Header total amt " + accHeader.getApporvedAmt());
 			accHeader.setApprovedDatetime(dateFormat.format(cal.getTime()));
 
@@ -1579,16 +1644,51 @@ public class GrnGvnController {
 					float aprAmt = 0;
 					float aprTaxableAmt, aprTotalTax, aprGrandTotal;
 					float sgstRs, cgstRs, igstRs;
+					
+					
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					java.util.Date dt1,dt2;
+			
+					int percent1=85,percent2=75;
+					
+					try {
+						dt1=sdf.parse(detail.getRefInvoiceDate());
+						dt2=sdf.parse("2020-12-01");
+						
+						if(dt1.compareTo(dt2)>0) {
+							percent1=85;
+							percent2=75;
+							//System.out.println("Date 1 occurs after Date 2");
+						}else if(dt1.compareTo(dt2)<0) {
+							percent1=80;
+							percent2=70;
+							//System.out.println("Date 1 occurs before Date 2");
+						}else if(dt1.compareTo(dt2)==0) {
+							percent1=85;
+							percent2=75;
+							//System.out.println("Both are same dates");
+						}
+						
+						
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					
+					
+					
+					
 
 					float grandTotal;
 					if (detail.getGrnType() == 0) {
 
-						grnRate = detail.getBaseRate() * 85 / 100;
+						grnRate = detail.getBaseRate() * percent1 / 100;
 					}
 
 					if (detail.getGrnType() == 1) {
 
-						grnRate = detail.getBaseRate() * 70 / 100;
+						grnRate = detail.getBaseRate() * percent2 / 100;
 					}
 
 					if (detail.getGrnType() == 2 || detail.getGrnType() == 4) {
@@ -1796,42 +1896,42 @@ public class GrnGvnController {
 			accHeader.setAprIgstRs(0);
 			accHeader.setAprROff(0);
 			accHeader.setApporvedAmt(0);
-            float apporvedAmt=0.0f;
-            float aprTaxableAmt=0.0f;
-            float aprTotalTax=0.0f;
-            float aprGrandTotal=0.0f;
-            float aprCgstRs=0.0f;
-            float aprSgstRs=0.0f;
-            float aprIgstRs=0.0f;
-            float aprROff=0.0f;
-            
+			float apporvedAmt = 0.0f;
+			float aprTaxableAmt = 0.0f;
+			float aprTotalTax = 0.0f;
+			float aprGrandTotal = 0.0f;
+			float aprCgstRs = 0.0f;
+			float aprSgstRs = 0.0f;
+			float aprIgstRs = 0.0f;
+			float aprROff = 0.0f;
+
 			for (int i = 0; i < grnAccDetailList.size(); i++) {
 
 				if (grnAccDetailList.get(i).getGrnGvnStatus() == 6) {
 
-					apporvedAmt=apporvedAmt + grnAccDetailList.get(i).getAprGrandTotal();
+					apporvedAmt = apporvedAmt + grnAccDetailList.get(i).getAprGrandTotal();
 
-					aprTaxableAmt=aprTaxableAmt + grnAccDetailList.get(i).getAprTaxableAmt();
-					aprTotalTax=aprTotalTax + grnAccDetailList.get(i).getAprTotalTax();
-					aprGrandTotal=aprGrandTotal + grnAccDetailList.get(i).getAprGrandTotal();
-					aprCgstRs=aprCgstRs + grnAccDetailList.get(i).getAprCgstRs();
-					aprSgstRs=aprSgstRs + grnAccDetailList.get(i).getAprSgstRs();
-					aprIgstRs=aprIgstRs + grnAccDetailList.get(i).getAprIgstRs();
-					aprROff=aprROff + grnAccDetailList.get(i).getAprROff();
+					aprTaxableAmt = aprTaxableAmt + grnAccDetailList.get(i).getAprTaxableAmt();
+					aprTotalTax = aprTotalTax + grnAccDetailList.get(i).getAprTotalTax();
+					aprGrandTotal = aprGrandTotal + grnAccDetailList.get(i).getAprGrandTotal();
+					aprCgstRs = aprCgstRs + grnAccDetailList.get(i).getAprCgstRs();
+					aprSgstRs = aprSgstRs + grnAccDetailList.get(i).getAprSgstRs();
+					aprIgstRs = aprIgstRs + grnAccDetailList.get(i).getAprIgstRs();
+					aprROff = aprROff + grnAccDetailList.get(i).getAprROff();
 
 					// accHeader.setApporvedAmt(0);
 
 				}
 			}
 			accHeader.setApporvedAmt(roundUp(apporvedAmt));
-			accHeader.setAprTaxableAmt(roundUp(aprTaxableAmt));	
+			accHeader.setAprTaxableAmt(roundUp(aprTaxableAmt));
 			accHeader.setAprTotalTax(roundUp(aprTotalTax));
-			accHeader.setAprGrandTotal(roundUp(aprGrandTotal));	
+			accHeader.setAprGrandTotal(roundUp(aprGrandTotal));
 			accHeader.setAprCgstRs(roundUp(aprCgstRs));
 			accHeader.setAprSgstRs(roundUp(aprSgstRs));
-			accHeader.setAprIgstRs(roundUp(aprIgstRs));	
-			accHeader.setAprROff(roundUp(aprROff));	
-					
+			accHeader.setAprIgstRs(roundUp(aprIgstRs));
+			accHeader.setAprROff(roundUp(aprROff));
+
 			// Update Grn Gvn Header
 			accHeader.setApprovedDatetime(dateFormat.format(cal.getTime()));
 
@@ -1886,12 +1986,11 @@ public class GrnGvnController {
 		// ModelAndView model = new ModelAndView("grngvn/accGrn");
 		int key = Integer.parseInt(request.getParameter("headerId"));
 		String date = request.getParameter("date");
-		int isDateUpdate=0;
+		int isDateUpdate = 0;
 		try {
-			isDateUpdate=Integer.parseInt(request.getParameter("isDateUpdate"));
-		}
-		catch (Exception e) {
-			isDateUpdate=0;
+			isDateUpdate = Integer.parseInt(request.getParameter("isDateUpdate"));
+		} catch (Exception e) {
+			isDateUpdate = 0;
 		}
 		// ModelAndView modelAndView = null;
 		try {
@@ -1906,9 +2005,8 @@ public class GrnGvnController {
 			int accApproveLogin = userResponse.getUser().getId();
 
 			String[] grnIdList = request.getParameterValues("select_to_agree");
-			
-		
-			//System.out.println("GRN ID " + grnIdList[0]);
+
+			// System.out.println("GRN ID " + grnIdList[0]);
 
 			RestTemplate restTemplate = new RestTemplate();
 
@@ -1956,14 +2054,46 @@ public class GrnGvnController {
 						float aprTaxableAmt, aprTotalTax, aprGrandTotal;
 						float sgstRs, cgstRs, igstRs;
 						float grandTotal;
+
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+						java.util.Date dt1,dt2;
+				
+						int percent1=85,percent2=75;
+						
+						try {
+							dt1=sdf.parse(detail.getRefInvoiceDate());
+							dt2=sdf.parse("2020-12-01");
+							
+							if(dt1.compareTo(dt2)>0) {
+								percent1=85;
+								percent2=75;
+								//System.out.println("Date 1 occurs after Date 2");
+							}else if(dt1.compareTo(dt2)<0) {
+								percent1=80;
+								percent2=70;
+								//System.out.println("Date 1 occurs before Date 2");
+							}else if(dt1.compareTo(dt2)==0) {
+								percent1=85;
+								percent2=75;
+								//System.out.println("Both are same dates");
+							}
+							
+							
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+						
+
 						if (detail.getGrnType() == 0) {
 
-							grnRate = detail.getBaseRate() * 85 / 100;
+							grnRate = detail.getBaseRate() * percent1 / 100;
 						}
 
 						if (detail.getGrnType() == 1) {
 
-							grnRate = detail.getBaseRate() * 70 / 100;
+							grnRate = detail.getBaseRate() * percent2 / 100;
 						}
 
 						if (detail.getGrnType() == 2 || detail.getGrnType() == 4) {
@@ -2172,41 +2302,41 @@ public class GrnGvnController {
 			accHeader.setAprIgstRs(0);
 			accHeader.setAprROff(0);
 			accHeader.setApporvedAmt(0);
-			    float apporvedAmt=0.0f;
-	            float aprTaxableAmt=0.0f;
-	            float aprTotalTax=0.0f;
-	            float aprGrandTotal=0.0f;
-	            float aprCgstRs=0.0f;
-	            float aprSgstRs=0.0f;
-	            float aprIgstRs=0.0f;
-	            float aprROff=0.0f;
-	            
+			float apporvedAmt = 0.0f;
+			float aprTaxableAmt = 0.0f;
+			float aprTotalTax = 0.0f;
+			float aprGrandTotal = 0.0f;
+			float aprCgstRs = 0.0f;
+			float aprSgstRs = 0.0f;
+			float aprIgstRs = 0.0f;
+			float aprROff = 0.0f;
+
 			for (int i = 0; i < grnAccDetailList.size(); i++) {
 
 				if (grnAccDetailList.get(i).getGrnGvnStatus() == 6) {
 
-					//System.out.println("Status 6 found at C]");
+					// System.out.println("Status 6 found at C]");
 
-					apporvedAmt=apporvedAmt+ grnAccDetailList.get(i).getAprGrandTotal();
+					apporvedAmt = apporvedAmt + grnAccDetailList.get(i).getAprGrandTotal();
 
-					aprTaxableAmt=aprTaxableAmt + grnAccDetailList.get(i).getAprTaxableAmt();
-					aprTotalTax=aprTotalTax + grnAccDetailList.get(i).getAprTotalTax();
-					aprGrandTotal=aprGrandTotal+ grnAccDetailList.get(i).getAprGrandTotal();
-					aprCgstRs=aprCgstRs + grnAccDetailList.get(i).getAprCgstRs();
-					aprSgstRs=aprSgstRs + grnAccDetailList.get(i).getAprSgstRs();
-					aprIgstRs=aprIgstRs + grnAccDetailList.get(i).getAprIgstRs();
-					aprROff=aprROff + grnAccDetailList.get(i).getAprROff();
+					aprTaxableAmt = aprTaxableAmt + grnAccDetailList.get(i).getAprTaxableAmt();
+					aprTotalTax = aprTotalTax + grnAccDetailList.get(i).getAprTotalTax();
+					aprGrandTotal = aprGrandTotal + grnAccDetailList.get(i).getAprGrandTotal();
+					aprCgstRs = aprCgstRs + grnAccDetailList.get(i).getAprCgstRs();
+					aprSgstRs = aprSgstRs + grnAccDetailList.get(i).getAprSgstRs();
+					aprIgstRs = aprIgstRs + grnAccDetailList.get(i).getAprIgstRs();
+					aprROff = aprROff + grnAccDetailList.get(i).getAprROff();
 
 				}
 			}
 			accHeader.setApporvedAmt(roundUp(apporvedAmt));
-			accHeader.setAprTaxableAmt(roundUp(aprTaxableAmt));	
+			accHeader.setAprTaxableAmt(roundUp(aprTaxableAmt));
 			accHeader.setAprTotalTax(roundUp(aprTotalTax));
-			accHeader.setAprGrandTotal(roundUp(aprGrandTotal));	
+			accHeader.setAprGrandTotal(roundUp(aprGrandTotal));
 			accHeader.setAprCgstRs(roundUp(aprCgstRs));
 			accHeader.setAprSgstRs(roundUp(aprSgstRs));
-			accHeader.setAprIgstRs(roundUp(aprIgstRs));	
-			accHeader.setAprROff(roundUp(aprROff));	
+			accHeader.setAprIgstRs(roundUp(aprIgstRs));
+			accHeader.setAprROff(roundUp(aprROff));
 			System.out.println("acc Header total amt ***" + accHeader.getApporvedAmt());
 
 			System.out.println("LIST SIZE ACC GRN : " + grnAccDetailList.size());
@@ -2214,9 +2344,7 @@ public class GrnGvnController {
 			accHeader.setApprovedDatetime(dateFormat.format(cal.getTime()));
 
 			accHeader = restTemplate.postForObject(Constants.url + "updateGrnGvnHeader", accHeader, GrnGvnHeader.class);
-             
-			
-			
+
 			System.out.println("GRN HEADER rESPONSE " + accHeader.toString());
 
 			//
@@ -2246,25 +2374,22 @@ public class GrnGvnController {
 
 			e.printStackTrace();
 
-		}
-		finally {
-			//----code to update GrnGvnDate----
+		} finally {
+			// ----code to update GrnGvnDate----
 			try {
-			if(isDateUpdate==1)
-			{
-								
-				MultiValueMap<String, Object> map1 = new LinkedMultiValueMap<String, Object>();
-				map1.add("grnGvnHeaderId",key);
-				map1.add("grnGvnDate",DateConvertor.convertToYMD(date));
-				RestTemplate restTemp = new RestTemplate();
+				if (isDateUpdate == 1) {
 
-				Info info = restTemp.postForObject(Constants.url + "updateGrnGvnDate", map1, Info.class);
-			}
-			}
-			catch (Exception e) {
+					MultiValueMap<String, Object> map1 = new LinkedMultiValueMap<String, Object>();
+					map1.add("grnGvnHeaderId", key);
+					map1.add("grnGvnDate", DateConvertor.convertToYMD(date));
+					RestTemplate restTemp = new RestTemplate();
+
+					Info info = restTemp.postForObject(Constants.url + "updateGrnGvnDate", map1, Info.class);
+				}
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			//------------------------------------
+			// ------------------------------------
 		}
 
 		// return "redirect:/getAccGrnDetail/" + globalAccHeaderId;
@@ -2273,5 +2398,7 @@ public class GrnGvnController {
 		accGrnHeaderToDate = null;
 		return "redirect:/getGrnHeaderForAcc";
 	}
+	
+
 
 }
