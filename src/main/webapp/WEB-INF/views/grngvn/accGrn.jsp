@@ -925,6 +925,9 @@ function getDate(){
 	<script>
 function calcGrn(grnType,baseRate,grnId,sgstPer,cgstPer,grnQty,curQty,discPer){
 	
+	var per=${percent1};
+	//alert(per)
+	
 	var grandTotal;
 	var aprTotalTax;
 	var grnRate;
@@ -934,7 +937,7 @@ function calcGrn(grnType,baseRate,grnId,sgstPer,cgstPer,grnQty,curQty,discPer){
 	var acc_grn_qty=$("#acc_grn_qty"+grnId).val();
 
 	if(grnType==0){
-		grnRate=baseRate*85/100;
+		grnRate=baseRate*per/100;
 	}
 	
 	if(grnType==1){
