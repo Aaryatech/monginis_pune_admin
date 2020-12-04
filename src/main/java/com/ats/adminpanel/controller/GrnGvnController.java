@@ -1133,6 +1133,7 @@ public class GrnGvnController {
 			float grandTotal;
 			if (detail.getGrnType() == 0) {
 
+				System.err.println("Base Rate - "+detail.getBaseRate()+"           Percent - "+percent1+"           Item - "+detail.getItemName());
 				grnRate = detail.getBaseRate() * percent1 / 100;
 			}
 
@@ -1255,12 +1256,13 @@ public class GrnGvnController {
 					
 					
 					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy");
 					java.util.Date dt1,dt2;
 			
 					int percent1=85,percent2=75;
 					
 					try {
-						dt1=sdf.parse(detail.getRefInvoiceDate());
+						dt1=sdf1.parse(detail.getRefInvoiceDate());
 						dt2=sdf.parse("2020-12-01");
 						
 						if(dt1.compareTo(dt2)>0) {
@@ -1647,12 +1649,13 @@ public class GrnGvnController {
 					
 					
 					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy");
 					java.util.Date dt1,dt2;
 			
 					int percent1=85,percent2=75;
 					
 					try {
-						dt1=sdf.parse(detail.getRefInvoiceDate());
+						dt1=sdf1.parse(detail.getRefInvoiceDate());
 						dt2=sdf.parse("2020-12-01");
 						
 						if(dt1.compareTo(dt2)>0) {
@@ -2056,27 +2059,33 @@ public class GrnGvnController {
 						float grandTotal;
 
 						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+						SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy");
 						java.util.Date dt1,dt2;
 				
 						int percent1=85,percent2=75;
 						
 						try {
-							dt1=sdf.parse(detail.getRefInvoiceDate());
+							dt1=sdf1.parse(detail.getRefInvoiceDate());
 							dt2=sdf.parse("2020-12-01");
+							
+							
+							//System.err.println("DATE 1 -------- "+detail.getRefInvoiceDate()+ "      "+dt1);
 							
 							if(dt1.compareTo(dt2)>0) {
 								percent1=85;
 								percent2=75;
-								//System.out.println("Date 1 occurs after Date 2");
+								System.out.println("Date 1 occurs after Date 2");
 							}else if(dt1.compareTo(dt2)<0) {
 								percent1=80;
 								percent2=70;
-								//System.out.println("Date 1 occurs before Date 2");
+								System.out.println("Date 1 occurs before Date 2");
 							}else if(dt1.compareTo(dt2)==0) {
 								percent1=85;
 								percent2=75;
-								//System.out.println("Both are same dates");
-							}
+								System.out.println("Both are same dates");
+							} 
+							
+							System.err.println("--------------------------------- "+percent1);
 							
 							
 						} catch (ParseException e) {
@@ -2177,9 +2186,11 @@ public class GrnGvnController {
 
 			// new code
 
-			System.out.println("Data List " + dataList.toString());
+			System.err.println("Data List " + dataList.toString());
+			
+			
 
-			Info updateAccGrn = restTemplate.postForObject(Constants.url + "updateAccGrn", dataList, Info.class);
+			Info updateAccGrn = restTemplate.postForObject(Constants.url + "updateAccGrn111", dataList, Info.class);
 
 			if (updateAccGrn.getError() == false) {
 
