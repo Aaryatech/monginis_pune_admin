@@ -262,9 +262,14 @@
 									<c:choose>
 										<c:when test="${headerH.creditHeader.isGrn==1}">
 											<c:choose>
-												<c:when test="${crnDetail.grnType==0}">20</c:when>
+												<%-- <c:when test="${crnDetail.grnType==0}">20</c:when>
 												<c:when test="${crnDetail.grnType==1}">10</c:when>
-												<c:when test="${crnDetail.grnType==2}">0</c:when>
+												<c:when test="${crnDetail.grnType==2}">0</c:when> --%>
+												
+												<c:when test="${crnDetail.grnType==0}">-</c:when>
+												<c:when test="${crnDetail.grnType==1}">-</c:when>
+												<c:when test="${crnDetail.grnType==2}">-</c:when>
+												
 												<c:otherwise></c:otherwise>
 											</c:choose>
 										</c:when>

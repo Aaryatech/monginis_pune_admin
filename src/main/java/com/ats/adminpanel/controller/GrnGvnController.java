@@ -2190,7 +2190,7 @@ public class GrnGvnController {
 			
 			
 
-			Info updateAccGrn = restTemplate.postForObject(Constants.url + "updateAccGrn111", dataList, Info.class);
+			Info updateAccGrn = restTemplate.postForObject(Constants.url + "updateAccGrn", dataList, Info.class);
 
 			if (updateAccGrn.getError() == false) {
 
