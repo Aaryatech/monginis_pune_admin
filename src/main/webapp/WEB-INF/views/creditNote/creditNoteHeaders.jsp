@@ -4,6 +4,278 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <jsp:include page="/WEB-INF/views/include/header.jsp"></jsp:include>
+
+
+<style>
+
+/* Absolute Center Spinner */
+.loading {
+	position: fixed;
+	z-index: 999;
+	height: 2em;
+	width: 2em;
+	overflow: show;
+	margin: auto;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+}
+
+/* Transparent Overlay */
+.loading:before {
+	content: '';
+	display: block;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: radial-gradient(rgba(20, 20, 20, .8), rgba(0, 0, 0, .8));
+	background: -webkit-radial-gradient(rgba(20, 20, 20, .8),
+		rgba(0, 0, 0, .8));
+}
+
+/* :not(:required) hides these rules from IE9 and below */
+.loading:not (:required ) {
+	/* hide "loading..." text */
+	font: 0/0 a;
+	color: transparent;
+	text-shadow: none;
+	background-color: transparent;
+	border: 0;
+}
+
+.loading:not (:required ):after {
+	content: '';
+	display: block;
+	font-size: 10px;
+	width: 1em;
+	height: 1em;
+	margin-top: -0.5em;
+	-webkit-animation: spinner 150ms infinite linear;
+	-moz-animation: spinner 150ms infinite linear;
+	-ms-animation: spinner 150ms infinite linear;
+	-o-animation: spinner 150ms infinite linear;
+	animation: spinner 150ms infinite linear;
+	border-radius: 0.5em;
+	-webkit-box-shadow: rgba(255, 255, 255, 0.75) 1.5em 0 0 0,
+		rgba(255, 255, 255, 0.75) 1.1em 1.1em 0 0, rgba(255, 255, 255, 0.75) 0
+		1.5em 0 0, rgba(255, 255, 255, 0.75) -1.1em 1.1em 0 0,
+		rgba(255, 255, 255, 0.75) -1.5em 0 0 0, rgba(255, 255, 255, 0.75)
+		-1.1em -1.1em 0 0, rgba(255, 255, 255, 0.75) 0 -1.5em 0 0,
+		rgba(255, 255, 255, 0.75) 1.1em -1.1em 0 0;
+	box-shadow: rgba(255, 255, 255, 0.75) 1.5em 0 0 0,
+		rgba(255, 255, 255, 0.75) 1.1em 1.1em 0 0, rgba(255, 255, 255, 0.75) 0
+		1.5em 0 0, rgba(255, 255, 255, 0.75) -1.1em 1.1em 0 0,
+		rgba(255, 255, 255, 0.75) -1.5em 0 0 0, rgba(255, 255, 255, 0.75)
+		-1.1em -1.1em 0 0, rgba(255, 255, 255, 0.75) 0 -1.5em 0 0,
+		rgba(255, 255, 255, 0.75) 1.1em -1.1em 0 0;
+}
+
+/* Animation */
+@
+-webkit-keyframes spinner { 0% {
+	-webkit-transform: rotate(0deg);
+	-moz-transform: rotate(0deg);
+	-ms-transform: rotate(0deg);
+	-o-transform: rotate(0deg);
+	transform: rotate(0deg);
+}
+
+100%
+{
+-webkit-transform
+:
+ 
+rotate
+(360deg);
+
+    
+-moz-transform
+:
+ 
+rotate
+(360deg);
+
+    
+-ms-transform
+:
+ 
+rotate
+(360deg);
+
+    
+-o-transform
+:
+ 
+rotate
+(360deg);
+
+    
+transform
+:
+ 
+rotate
+(360deg);
+
+  
+}
+}
+@
+-moz-keyframes spinner { 0% {
+	-webkit-transform: rotate(0deg);
+	-moz-transform: rotate(0deg);
+	-ms-transform: rotate(0deg);
+	-o-transform: rotate(0deg);
+	transform: rotate(0deg);
+}
+
+100%
+{
+-webkit-transform
+:
+ 
+rotate
+(360deg);
+
+    
+-moz-transform
+:
+ 
+rotate
+(360deg);
+
+    
+-ms-transform
+:
+ 
+rotate
+(360deg);
+
+    
+-o-transform
+:
+ 
+rotate
+(360deg);
+
+    
+transform
+:
+ 
+rotate
+(360deg);
+
+  
+}
+}
+@
+-o-keyframes spinner { 0% {
+	-webkit-transform: rotate(0deg);
+	-moz-transform: rotate(0deg);
+	-ms-transform: rotate(0deg);
+	-o-transform: rotate(0deg);
+	transform: rotate(0deg);
+}
+
+100%
+{
+-webkit-transform
+:
+ 
+rotate
+(360deg);
+
+    
+-moz-transform
+:
+ 
+rotate
+(360deg);
+
+    
+-ms-transform
+:
+ 
+rotate
+(360deg);
+
+    
+-o-transform
+:
+ 
+rotate
+(360deg);
+
+    
+transform
+:
+ 
+rotate
+(360deg);
+
+  
+}
+}
+@
+keyframes spinner { 0% {
+	-webkit-transform: rotate(0deg);
+	-moz-transform: rotate(0deg);
+	-ms-transform: rotate(0deg);
+	-o-transform: rotate(0deg);
+	transform: rotate(0deg);
+}
+100%
+{
+-webkit-transform
+:
+ 
+rotate
+(360deg);
+
+    
+-moz-transform
+:
+ 
+rotate
+(360deg);
+
+    
+-ms-transform
+:
+ 
+rotate
+(360deg);
+
+    
+-o-transform
+:
+ 
+rotate
+(360deg);
+
+    
+transform
+:
+ 
+rotate
+(360deg);
+
+  
+}
+}
+</style>
+
+
+
+
+
+
+
+
+
+
 <body>
 
 	<jsp:include page="/WEB-INF/views/include/logout.jsp"></jsp:include>
@@ -15,6 +287,11 @@
 	<c:url value="/excelForCrnExcel" var="excelForCrnExcel" />
 
 	<div class="container" id="main-container">
+
+
+		<div class="loading" id="loaderFullScr" style="display: none;"></div>
+
+
 
 		<!-- BEGIN Sidebar -->
 		<div id="sidebar" class="navbar-collapse collapse">
@@ -65,9 +342,9 @@
 									<label class="col-sm-3 col-lg-2 control-label">From
 										Date</label>
 									<div class="col-sm-5 col-lg-3 controls">
-										<input class="form-control date-picker" id="from_date" autocomplete="off"
-											size="16" type="text" name="from_date" value="${fromDate}"
-											required />
+										<input class="form-control date-picker" id="from_date"
+											autocomplete="off" size="16" type="text" name="from_date"
+											value="${fromDate}" required />
 									</div>
 									<!-- </div>
 
@@ -75,8 +352,9 @@
 								<div class="form-group"> -->
 									<label class="col-sm-3 col-lg-2 control-label">To Date</label>
 									<div class="col-sm-5 col-lg-3 controls">
-										<input class="form-control date-picker" id="to_date" size="16" autocomplete="off"
-											type="text" value="${toDate}" name="to_date" required />
+										<input class="form-control date-picker" id="to_date" size="16"
+											autocomplete="off" type="text" value="${toDate}"
+											name="to_date" required />
 									</div>
 
 									<!-- <div
@@ -156,7 +434,7 @@
 											<table width="100%"
 												class="table table-advance table-responsive table-position"
 												id="table1">
-												<thead  style="background-color:#f3b5db; ">
+												<thead style="background-color: #f3b5db;">
 													<tr>
 														<th></th>
 														<th>Sr No <input type="checkbox"
@@ -176,7 +454,7 @@
 											</table>
 										</div>
 
-									<!-- 	<div class="form-group">
+										<!-- 	<div class="form-group">
 											<label class="col-sm-3 col-lg-2 control-label"> </label>
 											<div class="col-sm-2 col-lg-2 controls">
 												<input type="button" value="PDF Report "
@@ -224,10 +502,13 @@
 												<input type="button" id="expExcel" class="btn btn-primary"
 													value="EXP TO Excel Itemwise(ERP)" onclick="createExel();">
 											</div>
-		<div class="col-sm-2 col-lg-2 controls"> <input type="button" id="expExcel" class="btn btn-primary" value="Excel Hsnwise Summary" onclick="createExelHsnwise();" >
-</div>
+											<div class="col-sm-2 col-lg-2 controls">
+												<input type="button" id="expExcel" class="btn btn-primary"
+													value="Excel Hsnwise Summary"
+													onclick="createExelHsnwise();">
+											</div>
 										</div>
-										
+
 
 
 										<!-- <div class="form-group">
@@ -342,7 +623,7 @@
 								fromDate : fromDate,
 								toDate : toDate,
 								fr_id_list : JSON.stringify(selectedFr),
-								isGrn :isGrn,
+								isGrn : isGrn,
 								ajax : 'true',
 
 							},
@@ -428,43 +709,43 @@
 		}
 	</script>
 	<script>
-	
-	function createExelHsnwise() {
-		 
-	   var select_to_print = document.forms[1];
-		var txt = "";
-		var i;
-		var flag=0;
-		var all=0;
-		 for (i = 0; i < select_to_print.length; i++) {
-			if (select_to_print[i].checked  && select_to_print[i].value!="on") {
-	    		txt = txt + select_to_print[i].value + ",";
-	    		flag=1;
-		}
-		} 
-		 if(flag==1)
-			 {
-		$
-				.getJSON(
-						'${excelForCrnExcel}',
-						{
-							checkboxes : txt ,
-						
-							ajax : 'true'
-						},
-						function(data) {
-							
-						 //alert("Excel Ready");
-							 exportToExcel();
-						 
-						});
-			 }
-		 else
-			 {
-			 alert("Please select minimum 1 CRN Note ");
-			 }
+		function createExelHsnwise() {
 
-	}
+			var select_to_print = document.forms[1];
+			var txt = "";
+			var i;
+			var flag = 0;
+			var all = 0;
+			for (i = 0; i < select_to_print.length; i++) {
+				if (select_to_print[i].checked
+						&& select_to_print[i].value != "on") {
+					txt = txt + select_to_print[i].value + ",";
+					flag = 1;
+				}
+			}
+			if (flag == 1) {
+				
+				document.getElementById("loaderFullScr").style.display="block";
+				
+				$.getJSON('${excelForCrnExcel}', {
+					checkboxes : txt,
+
+					ajax : 'true'
+				}, function(data) {
+
+					//alert("Excel Ready");
+					
+					
+					document.getElementById("loaderFullScr").style.display="none";
+					
+					exportToExcel();
+
+				});
+			} else {
+				alert("Please select minimum 1 CRN Note ");
+			}
+
+		}
 	</script>
 	<script>
 		function genPdf() {
@@ -635,6 +916,8 @@
 		 window.open("${pageContext.request.contextPath}/exportToExcel"); 
 		 } */
 	</script>
+	
+	
 
 </body>
 </html>

@@ -1523,7 +1523,7 @@ public class CreditNoteController {
 			// System.out.println("checked of zero " + checked[0]);
 
 			for (int i = 0; i < checked.length; i++) {
-				System.err.println("Value checked  " + checked[i]);
+				//System.err.println("Value checked  " + checked[i]);
 				crnIdList = crnIdList + "," + checked[i];
 			}
 
@@ -1561,7 +1561,7 @@ public class CreditNoteController {
 			
 			
 			
-			System.err.println("SUMMARY ------> "+crnSummaryNewList);
+			//System.err.println("SUMMARY ------> "+crnSummaryNewList);
 
 			DateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
 
@@ -1611,7 +1611,7 @@ public class CreditNoteController {
 					}
 
 				} catch (Exception e) {
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 				
 				cNoteHeaderPrint.setCrnDetailsSummaryList(crnSummaryList);
