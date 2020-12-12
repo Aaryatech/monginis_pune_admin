@@ -55,6 +55,7 @@ import com.ats.adminpanel.model.AllFrIdNameList;
 import com.ats.adminpanel.model.CreditNoteList;
 import com.ats.adminpanel.model.CrnHsnwiseExcelReport;
 import com.ats.adminpanel.model.ExportToExcel;
+import com.ats.adminpanel.model.GetMenuShow;
 import com.ats.adminpanel.model.HsnwiseBillExcelSummary;
 import com.ats.adminpanel.model.Info;
 import com.ats.adminpanel.model.SalesVoucherList;
@@ -63,6 +64,7 @@ import com.ats.adminpanel.model.creditnote.CreditNoteHeaderPrint;
 import com.ats.adminpanel.model.creditnote.CreditNoteHeaderPrintList;
 import com.ats.adminpanel.model.creditnote.CreditPrintBean;
 import com.ats.adminpanel.model.creditnote.CrnDetailsSummary;
+import com.ats.adminpanel.model.creditnote.CrnDetailsSummaryNew;
 import com.ats.adminpanel.model.creditnote.CrnDetailsTaxSummary;
 import com.ats.adminpanel.model.creditnote.CrnSrNoDateBean;
 import com.ats.adminpanel.model.creditnote.CumulativePrintCrn;
@@ -104,7 +106,8 @@ public class CreditNoteController {
 	public static float roundUp(float d) {
 		return BigDecimal.valueOf(d).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
 	}
-	public List<String>  crnIdArrayList=null;
+
+	public List<String> crnIdArrayList = null;
 
 	GetGrnGvnForCreditNoteList getGrnGvnForCreditNoteList;
 	String selectedFr = "";
@@ -1095,7 +1098,7 @@ public class CreditNoteController {
 
 			String date = request.getParameter("date");
 			crnId = Integer.parseInt(request.getParameter("crnId"));
-			String crnInvNo = request.getParameter("crnInvNo"); 
+			String crnInvNo = request.getParameter("crnInvNo");
 
 			HttpSession session = request.getSession();
 			UserResponse userResponse = (UserResponse) session.getAttribute("UserDetail");
@@ -1513,11 +1516,11 @@ public class CreditNoteController {
 
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 
-			System.out.println("In detail Page");
+			// System.out.println("In detail Page");
 
 			// String[] checked = request.getParameterValues("select_to_agree");
 			String crnIdList = new String();
-			System.out.println("checked of zero " + checked[0]);
+			// System.out.println("checked of zero " + checked[0]);
 
 			for (int i = 0; i < checked.length; i++) {
 				System.err.println("Value checked  " + checked[i]);
@@ -1531,13 +1534,11 @@ public class CreditNoteController {
 					GetCreditNoteHeadersList.class);
 
 			creditHeaderList = headerResponse.getCreditNoteHeaders();
-			System.err.println("Crn Id List " + crnIdList);
+			// System.err.println("Crn Id List " + crnIdList);
 
-			System.out.println("Headers = " + creditHeaderList.toString());
+			// System.out.println("Headers = " + creditHeaderList.toString());
 			crnIdList = crnIdList.substring(1, crnIdList.length());
-			System.err.println("Crn Id List on removing First comma " + crnIdList);
-
-			// Getting crn Details
+		
 
 			map = new LinkedMultiValueMap<String, Object>();
 			map.add("crnId", crnIdList);
@@ -1547,56 +1548,73 @@ public class CreditNoteController {
 
 			crnDetailList = crnDetailResponse.getCrnDetails();
 
-			/*
-			 * GetCrnDetails crnPrintDetail = new GetCrnDetails();
-			 * 
-			 * List<GetCreditNoteHeaders> tempHeaderList = creditHeaderList;
-			 * 
-			 * creditHeaderList=new ArrayList<>();
-			 * 
-			 * 
-			 * 
-			 * 
-			 * for(int i=0;i<checked.length;i++) {
-			 * 
-			 * for(int j=0;j<tempHeaderList.size();j++) {
-			 * 
-			 * if(Integer.parseInt(checked[i])==tempHeaderList.get(j).getCrnId()) {
-			 * 
-			 * System.err.println("crn Id added " +checked[i]);
-			 * creditHeaderList.add(tempHeaderList.get(j));
-			 * 
-			 * } }
-			 * 
-			 * }
-			 */
+//			List<CrnDetailsSummaryNew> crnSummaryNewList = restTemplate
+//					.postForObject(Constants.url + "getCrnDetailsSummaryNewByCrnIds", map, List.class);
+			
+			CrnDetailsSummaryNew[] messageResponse = restTemplate.postForObject(Constants.url + "/getCrnDetailsSummaryNewByCrnIds",map,
+					CrnDetailsSummaryNew[].class);
 
-			// List<GetCrnDetails> crnPrintDetailList=new ArrayList<>()
+			ModelAndView mav = new ModelAndView("menu/listsMenu");
+
+			List<CrnDetailsSummaryNew>  crnSummaryNewList = new ArrayList<CrnDetailsSummaryNew>(Arrays.asList(messageResponse));
+			
+			
+			
+			
+			System.err.println("SUMMARY ------> "+crnSummaryNewList);
 
 			DateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
 
 			List<CreditPrintBean> printList = new ArrayList<>();
 
-			System.err.println("header data " + creditHeaderList.toString());
-			System.err.println(
-					"Size of Header = " + creditHeaderList.size() + "Size of Detail =  " + crnDetailList.toString());
+	
 			CreditPrintBean printBean = new CreditPrintBean();
 
 			for (int i = 0; i < creditHeaderList.size(); i++) {
 				printBean = new CreditPrintBean();
 				CreditNoteHeaderPrint cNoteHeaderPrint = new CreditNoteHeaderPrint();
 
-				System.err.println(creditHeaderList.size() + "I = " + i);
+//				try {
+//					map = new LinkedMultiValueMap<String, Object>();
+//					map.add("crnId", creditHeaderList.get(i).getCrnId());
+//
+//					List<CrnDetailsSummary> crnSummaryList = restTemplate
+//							.postForObject(Constants.url + "getCrnDetailsSummary", map, List.class);
+//					cNoteHeaderPrint.setCrnDetailsSummaryList(crnSummaryList);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+				
+				List<CrnDetailsSummary> crnSummaryList=new ArrayList<>();
+
 				try {
-					map = new LinkedMultiValueMap<String, Object>();
-					map.add("crnId", creditHeaderList.get(i).getCrnId());
-					List<CrnDetailsSummary> crnSummaryList = restTemplate
-							.postForObject(Constants.url + "getCrnDetailsSummary", map, List.class);
-					cNoteHeaderPrint.setCrnDetailsSummaryList(crnSummaryList);
-					System.err.println(crnSummaryList.toString());
+
+					for (int j = 0; j < crnSummaryNewList.size(); j++) {
+
+						if (creditHeaderList.get(i).getCrnId() == crnSummaryNewList.get(j).getCrnId()) {
+							
+							CrnDetailsSummary det=new CrnDetailsSummary();
+							
+							det.setItemHsncd(crnSummaryNewList.get(j).getItemHsncd());
+							det.setItemHsncdesc(crnSummaryNewList.get(j).getItemHsncdesc());
+							det.setGrnGvnQty(crnSummaryNewList.get(j).getGrnGvnQty());
+							det.setTaxableAmt(crnSummaryNewList.get(j).getTaxableAmt());
+							det.setCgstPer(crnSummaryNewList.get(j).getCgstPer());
+							det.setCgstRs(crnSummaryNewList.get(j).getCgstRs());
+							det.setSgstPer(crnSummaryNewList.get(j).getSgstPer());
+							det.setSgstRs(crnSummaryNewList.get(j).getSgstRs());
+							det.setIgstPer(crnSummaryNewList.get(j).getIgstPer());
+							det.setIgstRs(crnSummaryNewList.get(j).getIgstRs());
+							
+							crnSummaryList.add(det);
+						}
+					}
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+				
+				cNoteHeaderPrint.setCrnDetailsSummaryList(crnSummaryList);
 
 				cNoteHeaderPrint.setFrAddress(creditHeaderList.get(i).getFrAddress());
 				cNoteHeaderPrint.setFrId(creditHeaderList.get(i).getFrId());
@@ -1653,19 +1671,6 @@ public class CreditNoteController {
 							srNoDateList.add(bean);
 
 						}
-						/*
-						 * if(!srNoDateList.contains(crnDetailList.get(j).getGrngvnSrno())) {
-						 * 
-						 * CrnSrNoDateBean bean=new CrnSrNoDateBean();
-						 * bean.setGrnGvnDate(crnDetailList.get(j).getGrnGvnDate());
-						 * bean.setSrNo(crnDetailList.get(j).getGrngvnSrno());
-						 * 
-						 * //srNoDateList.get(j).setGrnGvnDate(crnDetailList.get(j).getGrnGvnDate());
-						 * //srNoDateList.get(j).setSrNo(crnDetailList.get(j).getGrngvnSrno());
-						 * srNoDateList.add(bean);
-						 * 
-						 * }
-						 */
 
 						if (initDateFrom.before(fmt.parse(crnDetailList.get(j).getGrnGvnDate()))) {
 
@@ -1696,14 +1701,14 @@ public class CreditNoteController {
 				printBean.setCreditHeader(cNoteHeaderPrint);
 
 				printList.add(printBean);
-				System.err.println("printList = " + printList.toString());
+				// System.err.println("printList = " + printList.toString());
 			} // end of outer for
 
-			System.err.println("printList = " + printList.toString());
+			// System.err.println("printList = " + printList.toString());
 			model.addObject("crnPrint", printList);
 			model.addObject("FACTORYNAME", Constants.FACTORYNAME);
 			model.addObject("FACTORYADDRESS", Constants.FACTORYADDRESS);
-			System.out.println("crn Detail List******** " + crnDetailList);
+			// System.out.println("crn Detail List******** " + crnDetailList);
 
 		} catch (Exception e) {
 			System.err.println("Exce Occured ");
@@ -1871,129 +1876,96 @@ public class CreditNoteController {
 
 		return headerList;
 	}
+
 	@RequestMapping(value = "/createCumPrint", method = RequestMethod.GET)
-	public @ResponseBody boolean createCumPrint(HttpServletRequest request,
-			HttpServletResponse response) {
-		boolean flag=false;
+	public @ResponseBody boolean createCumPrint(HttpServletRequest request, HttpServletResponse response) {
+		boolean flag = false;
 		try {
-			String crnIdList=request.getParameter("checkboxes");
-			System.err.println("crnIdList"+crnIdList.toString());
+			String crnIdList = request.getParameter("checkboxes");
+			System.err.println("crnIdList" + crnIdList.toString());
 
-			crnIdArrayList=new ArrayList<>();
-			if(crnIdList!="")
-			{
-		        String[] arrOfStr = crnIdList.split("_"); 
-				System.err.println("arrOfStr"+arrOfStr);
+			crnIdArrayList = new ArrayList<>();
+			if (crnIdList != "") {
+				String[] arrOfStr = crnIdList.split("_");
+				System.err.println("arrOfStr" + arrOfStr);
 
-			for(String s:arrOfStr)
-			{
-				System.err.println("s"+s);
-				crnIdArrayList.add(s);
+				for (String s : arrOfStr) {
+					System.err.println("s" + s);
+					crnIdArrayList.add(s);
+				}
+				flag = true;
 			}
-				flag=true;
-			}
-			System.err.println("crnIdArrayList"+crnIdArrayList.toString());
-			System.err.println("crnIdArrayList11"+crnIdArrayList.get(0));
-		}catch (Exception e) {
+			System.err.println("crnIdArrayList" + crnIdArrayList.toString());
+			System.err.println("crnIdArrayList11" + crnIdArrayList.get(0));
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return flag;
 	}
+
 	@RequestMapping(value = "pdf/getCrnCumulativePrintHeaders", method = RequestMethod.GET)
 	public ModelAndView getCrnCumulativePrintHeaders(HttpServletRequest request, HttpServletResponse response) {
 
 		ModelAndView model = new ModelAndView("creditNote/pdf/crncumulativeprintpdf");
-		List<CumulativePrintCrn> cumulativePrintCrnList=new ArrayList<CumulativePrintCrn>();
+		List<CumulativePrintCrn> cumulativePrintCrnList = new ArrayList<CumulativePrintCrn>();
 
 		try {
-			System.err.println("crnIdArrayList"+crnIdArrayList.get(0));
+			System.err.println("crnIdArrayList" + crnIdArrayList.get(0));
 
-			for(String crnIdList:crnIdArrayList) {
+			for (String crnIdList : crnIdArrayList) {
 
-				 crnIdList = crnIdList.substring(1, crnIdList.length() -1);
-					System.err.println("crnIdList"+crnIdList);
+				crnIdList = crnIdList.substring(1, crnIdList.length() - 1);
+				System.err.println("crnIdList" + crnIdList);
 
+				CumulativePrintCrn cumulativePrintCrn = new CumulativePrintCrn();
 
-				CumulativePrintCrn cumulativePrintCrn=new CumulativePrintCrn();
+				LinkedHashMap<String, CrnDetailsTaxSummary> totalSummaryList = new LinkedHashMap<String, CrnDetailsTaxSummary>();
 
-			LinkedHashMap<String, CrnDetailsTaxSummary> totalSummaryList = new LinkedHashMap<String, CrnDetailsTaxSummary>();
+				RestTemplate restTemplate = new RestTemplate();
 
-			RestTemplate restTemplate = new RestTemplate();
+				MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 
-			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+				map.add("crnIdList", crnIdList);
+				headerResponse = restTemplate.postForObject(Constants.url + "getCreditNoteHeadersByCrnIds", map,
+						GetCreditNoteHeadersList.class);
 
-			map.add("crnIdList",crnIdList);
-			headerResponse = restTemplate.postForObject(Constants.url + "getCreditNoteHeadersByCrnIds", map,
-					GetCreditNoteHeadersList.class);
+				creditHeaderList = headerResponse.getCreditNoteHeaders();
+				System.err.println("Crn Id List " + crnIdList);
 
-			creditHeaderList = headerResponse.getCreditNoteHeaders();
-			System.err.println("Crn Id List " + crnIdList);
+				System.out.println("Headers = " + creditHeaderList.toString());
+				// crnIdList = crnIdList.substring(1, crnIdList.length());
 
-			System.out.println("Headers = " + creditHeaderList.toString());
-			//crnIdList = crnIdList.substring(1, crnIdList.length());
+				map = new LinkedMultiValueMap<String, Object>();
+				map.add("crnId", crnIdList);
+				crnDetailResponse = restTemplate.postForObject(Constants.url + "getCrnDetails", map,
+						GetCrnDetailsList.class);
+				crnDetailList = new ArrayList<>();
 
-			map = new LinkedMultiValueMap<String, Object>();
-			map.add("crnId", crnIdList);
-			crnDetailResponse = restTemplate.postForObject(Constants.url + "getCrnDetails", map,
-					GetCrnDetailsList.class);
-			crnDetailList = new ArrayList<>();
+				crnDetailList = crnDetailResponse.getCrnDetails();
 
-			crnDetailList = crnDetailResponse.getCrnDetails();
+				DateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
 
-			DateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
+				List<CreditPrintBean> printList = new ArrayList<>();
 
-			List<CreditPrintBean> printList = new ArrayList<>();
+				CreditPrintBean printBean = new CreditPrintBean();
+				for (int i = 0; i < creditHeaderList.size(); i++) {
+					printBean = new CreditPrintBean();
+					CreditNoteHeaderPrint cNoteHeaderPrint = new CreditNoteHeaderPrint();
 
-			CreditPrintBean printBean = new CreditPrintBean();
-			for (int i = 0; i < creditHeaderList.size(); i++) {
-				printBean = new CreditPrintBean();
-				CreditNoteHeaderPrint cNoteHeaderPrint = new CreditNoteHeaderPrint();
+					System.err.println(creditHeaderList.size() + "I = " + i);
+					try {
+						map = new LinkedMultiValueMap<String, Object>();
+						map.add("crnId", creditHeaderList.get(i).getCrnId());
+						CrnDetailsSummary[] crnSummaryList = restTemplate
+								.postForObject(Constants.url + "getCrnDetailsSummary", map, CrnDetailsSummary[].class);
 
-				System.err.println(creditHeaderList.size() + "I = " + i);
-				try {
-					map = new LinkedMultiValueMap<String, Object>();
-					map.add("crnId", creditHeaderList.get(i).getCrnId());
-					CrnDetailsSummary[] crnSummaryList = restTemplate
-							.postForObject(Constants.url + "getCrnDetailsSummary", map, CrnDetailsSummary[].class);
-
-					ArrayList<CrnDetailsSummary> crnSummaryListRes = new ArrayList<CrnDetailsSummary>(
-							Arrays.asList(crnSummaryList));
-					cNoteHeaderPrint.setCrnDetailsSummaryList(crnSummaryListRes);
-					crnSummaryListRes.remove(null);
-					if (totalSummaryList.isEmpty()) {
-						for (CrnDetailsSummary crnDetailsSummary : crnSummaryListRes) {
-							CrnDetailsTaxSummary crnDetailsTaxSummary = new CrnDetailsTaxSummary(
-									crnDetailsSummary.getItemHsncd() + "" + creditHeaderList.get(i).getCrnId(),
-									crnDetailsSummary.getItemHsncd(), crnDetailsSummary.getItemHsncdesc(),
-									crnDetailsSummary.getGrnGvnQty(), crnDetailsSummary.getTaxableAmt(),
-									crnDetailsSummary.getCgstPer(), crnDetailsSummary.getCgstRs(),
-									crnDetailsSummary.getSgstPer(), crnDetailsSummary.getSgstRs(),
-									crnDetailsSummary.getIgstPer(), crnDetailsSummary.getIgstRs());
-							totalSummaryList.put(crnDetailsSummary.getItemHsncd(), crnDetailsTaxSummary);
-						}
-					} else {
-
-						System.err.println("crnSummaryListRes:---->" + crnSummaryListRes.toString());
-						for (CrnDetailsSummary crnDetailsSummary : crnSummaryListRes) {
-							int flag = 0;
-							for (Map.Entry<String, CrnDetailsTaxSummary> entry : totalSummaryList.entrySet()) {
-
-								if (crnDetailsSummary.getItemHsncd().equalsIgnoreCase(entry.getKey())) {
-									flag = 1;
-									entry.getValue().setGrnGvnQty(
-											entry.getValue().getGrnGvnQty() + crnDetailsSummary.getGrnGvnQty());
-									entry.getValue()
-											.setCgstRs(entry.getValue().getCgstRs() + crnDetailsSummary.getCgstRs());
-									entry.getValue()
-											.setSgstRs(entry.getValue().getSgstRs() + crnDetailsSummary.getSgstRs());
-									entry.getValue()
-											.setIgstRs(entry.getValue().getIgstRs() + crnDetailsSummary.getIgstRs());
-									entry.getValue().setTaxableAmt(
-											entry.getValue().getTaxableAmt() + crnDetailsSummary.getTaxableAmt());
-								}
-							}
-							if (flag == 0) {
+						ArrayList<CrnDetailsSummary> crnSummaryListRes = new ArrayList<CrnDetailsSummary>(
+								Arrays.asList(crnSummaryList));
+						cNoteHeaderPrint.setCrnDetailsSummaryList(crnSummaryListRes);
+						crnSummaryListRes.remove(null);
+						if (totalSummaryList.isEmpty()) {
+							for (CrnDetailsSummary crnDetailsSummary : crnSummaryListRes) {
 								CrnDetailsTaxSummary crnDetailsTaxSummary = new CrnDetailsTaxSummary(
 										crnDetailsSummary.getItemHsncd() + "" + creditHeaderList.get(i).getCrnId(),
 										crnDetailsSummary.getItemHsncd(), crnDetailsSummary.getItemHsncdesc(),
@@ -2001,112 +1973,143 @@ public class CreditNoteController {
 										crnDetailsSummary.getCgstPer(), crnDetailsSummary.getCgstRs(),
 										crnDetailsSummary.getSgstPer(), crnDetailsSummary.getSgstRs(),
 										crnDetailsSummary.getIgstPer(), crnDetailsSummary.getIgstRs());
-								totalSummaryList.put(crnDetailsTaxSummary.getItemHsncd(), crnDetailsTaxSummary);
+								totalSummaryList.put(crnDetailsSummary.getItemHsncd(), crnDetailsTaxSummary);
+							}
+						} else {
+
+							System.err.println("crnSummaryListRes:---->" + crnSummaryListRes.toString());
+							for (CrnDetailsSummary crnDetailsSummary : crnSummaryListRes) {
+								int flag = 0;
+								for (Map.Entry<String, CrnDetailsTaxSummary> entry : totalSummaryList.entrySet()) {
+
+									if (crnDetailsSummary.getItemHsncd().equalsIgnoreCase(entry.getKey())) {
+										flag = 1;
+										entry.getValue().setGrnGvnQty(
+												entry.getValue().getGrnGvnQty() + crnDetailsSummary.getGrnGvnQty());
+										entry.getValue().setCgstRs(
+												entry.getValue().getCgstRs() + crnDetailsSummary.getCgstRs());
+										entry.getValue().setSgstRs(
+												entry.getValue().getSgstRs() + crnDetailsSummary.getSgstRs());
+										entry.getValue().setIgstRs(
+												entry.getValue().getIgstRs() + crnDetailsSummary.getIgstRs());
+										entry.getValue().setTaxableAmt(
+												entry.getValue().getTaxableAmt() + crnDetailsSummary.getTaxableAmt());
+									}
+								}
+								if (flag == 0) {
+									CrnDetailsTaxSummary crnDetailsTaxSummary = new CrnDetailsTaxSummary(
+											crnDetailsSummary.getItemHsncd() + "" + creditHeaderList.get(i).getCrnId(),
+											crnDetailsSummary.getItemHsncd(), crnDetailsSummary.getItemHsncdesc(),
+											crnDetailsSummary.getGrnGvnQty(), crnDetailsSummary.getTaxableAmt(),
+											crnDetailsSummary.getCgstPer(), crnDetailsSummary.getCgstRs(),
+											crnDetailsSummary.getSgstPer(), crnDetailsSummary.getSgstRs(),
+											crnDetailsSummary.getIgstPer(), crnDetailsSummary.getIgstRs());
+									totalSummaryList.put(crnDetailsTaxSummary.getItemHsncd(), crnDetailsTaxSummary);
+								}
+
 							}
 
 						}
 
+						System.err.println("crnSummaryListRes:---->" + crnSummaryListRes.toString());
+						System.err.println("------------->" + totalSummaryList.toString());
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
 
-					System.err.println("crnSummaryListRes:---->" + crnSummaryListRes.toString());
-					System.err.println("------------->" + totalSummaryList.toString());
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+					cNoteHeaderPrint.setFrAddress(creditHeaderList.get(i).getFrAddress());
+					cNoteHeaderPrint.setFrId(creditHeaderList.get(i).getFrId());
 
-				cNoteHeaderPrint.setFrAddress(creditHeaderList.get(i).getFrAddress());
-				cNoteHeaderPrint.setFrId(creditHeaderList.get(i).getFrId());
+					cNoteHeaderPrint.setFrName(creditHeaderList.get(i).getFrName());
+					cNoteHeaderPrint.setCrnId(creditHeaderList.get(i).getCrnId());
+					cNoteHeaderPrint.setCrnDate(creditHeaderList.get(i).getCrnDate());
 
-				cNoteHeaderPrint.setFrName(creditHeaderList.get(i).getFrName());
-				cNoteHeaderPrint.setCrnId(creditHeaderList.get(i).getCrnId());
-				cNoteHeaderPrint.setCrnDate(creditHeaderList.get(i).getCrnDate());
+					cNoteHeaderPrint.setFrGstNo(creditHeaderList.get(i).getFrGstNo());
+					cNoteHeaderPrint.setIsGrn(creditHeaderList.get(i).getIsGrn());
 
-				cNoteHeaderPrint.setFrGstNo(creditHeaderList.get(i).getFrGstNo());
-				cNoteHeaderPrint.setIsGrn(creditHeaderList.get(i).getIsGrn());
+					List<GetCrnDetails> crnPrintDetailList = new ArrayList<>();
 
-				List<GetCrnDetails> crnPrintDetailList = new ArrayList<>();
+					List<String> srNoList = new ArrayList<String>();
+					List<CrnSrNoDateBean> srNoDateList = new ArrayList<CrnSrNoDateBean>();
 
-				List<String> srNoList = new ArrayList<String>();
-				List<CrnSrNoDateBean> srNoDateList = new ArrayList<CrnSrNoDateBean>();
+					String fDate = null, tDate = null;
 
-				String fDate = null, tDate = null;
+					for (int j = 0; j < crnDetailList.size(); j++) {
 
-				for (int j = 0; j < crnDetailList.size(); j++) {
+						// System.err.println("J = " + j);
 
-					// System.err.println("J = " + j);
+						if (creditHeaderList.get(i).getCrnId() == crnDetailList.get(j).getCrnId()) {
 
-					if (creditHeaderList.get(i).getCrnId() == crnDetailList.get(j).getCrnId()) {
+							// System.err.println("Match found = " + j);
 
-						// System.err.println("Match found = " + j);
+							crnPrintDetailList.add(crnDetailList.get(j));
 
-						crnPrintDetailList.add(crnDetailList.get(j));
+							Date initDateFrom = fmt.parse(crnDetailList.get(0).getGrnGvnDate());
+							Date toLastDate = fmt.parse(crnDetailList.get(0).getGrnGvnDate());
 
-						Date initDateFrom = fmt.parse(crnDetailList.get(0).getGrnGvnDate());
-						Date toLastDate = fmt.parse(crnDetailList.get(0).getGrnGvnDate());
+							/*
+							 * if (!srNoList.contains(crnDetailList.get(j).getGrngvnSrno())) {
+							 * srNoList.add(crnDetailList.get(j).getGrngvnSrno()); }
+							 */
 
-						/*
-						 * if (!srNoList.contains(crnDetailList.get(j).getGrngvnSrno())) {
-						 * srNoList.add(crnDetailList.get(j).getGrngvnSrno()); }
-						 */
+							boolean isPrev = false;
+							for (CrnSrNoDateBean bean : srNoDateList) {
 
-						boolean isPrev = false;
-						for (CrnSrNoDateBean bean : srNoDateList) {
+								if (bean.getSrNo().equalsIgnoreCase(crnDetailList.get(j).getGrngvnSrno())) {
+									isPrev = true;
+								}
 
-							if (bean.getSrNo().equalsIgnoreCase(crnDetailList.get(j).getGrngvnSrno())) {
-								isPrev = true;
 							}
 
-						}
+							if (!isPrev) {
 
-						if (!isPrev) {
+								CrnSrNoDateBean bean = new CrnSrNoDateBean();
+								bean.setGrnGvnDate(crnDetailList.get(j).getGrnGvnDate());
+								bean.setSrNo(crnDetailList.get(j).getGrngvnSrno());
 
-							CrnSrNoDateBean bean = new CrnSrNoDateBean();
-							bean.setGrnGvnDate(crnDetailList.get(j).getGrnGvnDate());
-							bean.setSrNo(crnDetailList.get(j).getGrngvnSrno());
+								// srNoDateList.get(j).setGrnGvnDate(crnDetailList.get(j).getGrnGvnDate());
+								// srNoDateList.get(j).setSrNo(crnDetailList.get(j).getGrngvnSrno());
+								srNoDateList.add(bean);
 
-							// srNoDateList.get(j).setGrnGvnDate(crnDetailList.get(j).getGrnGvnDate());
-							// srNoDateList.get(j).setSrNo(crnDetailList.get(j).getGrngvnSrno());
-							srNoDateList.add(bean);
+							}
 
-						}
+							if (initDateFrom.before(fmt.parse(crnDetailList.get(j).getGrnGvnDate()))) {
 
-						if (initDateFrom.before(fmt.parse(crnDetailList.get(j).getGrnGvnDate()))) {
+							} else {
+								initDateFrom = fmt.parse(crnDetailList.get(j).getGrnGvnDate());
+							}
 
-						} else {
-							initDateFrom = fmt.parse(crnDetailList.get(j).getGrnGvnDate());
-						}
+							if (toLastDate.after(fmt.parse(crnDetailList.get(j).getGrnGvnDate()))) {
 
-						if (toLastDate.after(fmt.parse(crnDetailList.get(j).getGrnGvnDate()))) {
+							} else {
+								toLastDate = fmt.parse(crnDetailList.get(j).getGrnGvnDate());
+							}
+							fDate = fmt.format(initDateFrom);
+							tDate = fmt.format(toLastDate);
+						} // end of if
 
-						} else {
-							toLastDate = fmt.parse(crnDetailList.get(j).getGrnGvnDate());
-						}
-						fDate = fmt.format(initDateFrom);
-						tDate = fmt.format(toLastDate);
-					} // end of if
+					} // end of Inner for
 
-				} // end of Inner for
+					cNoteHeaderPrint.setFromDate(fDate);
+					cNoteHeaderPrint.setToDate(tDate);
 
-				cNoteHeaderPrint.setFromDate(fDate);
-				cNoteHeaderPrint.setToDate(tDate);
+					cNoteHeaderPrint.setCrnDetails(crnPrintDetailList);
+					cNoteHeaderPrint.setCrnNo(creditHeaderList.get(i).getCrnNo());
+					cNoteHeaderPrint.setSrNoDateList(srNoDateList);
+					cNoteHeaderPrint.setSrNoList(srNoList);
+					cNoteHeaderPrint.setExInt1(creditHeaderList.get(i).getExInt1());
+					cNoteHeaderPrint.setExVarchar1(creditHeaderList.get(i).getExVarchar1());
+					printBean.setCreditHeader(cNoteHeaderPrint);
 
-				cNoteHeaderPrint.setCrnDetails(crnPrintDetailList);
-				cNoteHeaderPrint.setCrnNo(creditHeaderList.get(i).getCrnNo());
-				cNoteHeaderPrint.setSrNoDateList(srNoDateList);
-				cNoteHeaderPrint.setSrNoList(srNoList);
-				cNoteHeaderPrint.setExInt1(creditHeaderList.get(i).getExInt1());
-				cNoteHeaderPrint.setExVarchar1(creditHeaderList.get(i).getExVarchar1());
-				printBean.setCreditHeader(cNoteHeaderPrint);
+					printList.add(printBean);
+					System.err.println("printList = " + printList.toString());
+				} // end of outer for
 
-				printList.add(printBean);
 				System.err.println("printList = " + printList.toString());
-			} // end of outer for
-
-			System.err.println("printList = " + printList.toString());
-			cumulativePrintCrn.setTotalSummaryList(totalSummaryList);
-			cumulativePrintCrn.setCrnPrint(printList);
-			cumulativePrintCrnList.add(cumulativePrintCrn);
-			System.out.println("crn Detail List******** " + crnDetailList);
+				cumulativePrintCrn.setTotalSummaryList(totalSummaryList);
+				cumulativePrintCrn.setCrnPrint(printList);
+				cumulativePrintCrnList.add(cumulativePrintCrn);
+				System.out.println("crn Detail List******** " + crnDetailList);
 			}
 			model.addObject("cumulativePrintCrnList", cumulativePrintCrnList);
 			model.addObject("FACTORYNAME", Constants.FACTORYNAME);
@@ -2119,7 +2122,7 @@ public class CreditNoteController {
 
 		return model;
 	}
-	
+
 	@RequestMapping(value = "pdf/getCrnCumulativeHeaders/{checked}", method = RequestMethod.GET)
 	public ModelAndView getCrnCumulativeHeaders(HttpServletRequest request, HttpServletResponse response,
 			@PathVariable("checked") String[] checked) {
@@ -2334,5 +2337,5 @@ public class CreditNoteController {
 		return model;
 	}
 	// ---------------------------------------------------------------------------------------------------------------
-	
+
 }
