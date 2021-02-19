@@ -14,6 +14,19 @@ public class FrSetting {
 
 	private int spNo;
 	
+private String exVarchar;
+	
+	
+
+	public String getExVarchar() {
+		return exVarchar;
+	}
+
+
+	public void setExVarchar(String exVarchar) {
+		this.exVarchar = exVarchar;
+	}
+	
 	
 	public int getSpNo() {
 		return spNo;

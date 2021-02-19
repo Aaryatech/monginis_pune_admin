@@ -72,7 +72,7 @@ page-break-inside: auto !important
 					<!-- </p>
 					<p
 						style="color: #000; font-size: 13px; text-align: left; margin: 0px;"> -->
-						Invoice Date: &nbsp;&nbsp;&nbsp;<b>${frDetails.billDate}</b>
+						Invoice Date:&nbsp;<b>${frDetails.billDate}</b>
 					</p>
 					<p
 						style="color: #000; font-size: 13px; text-align: left; margin: 0px;">Is reverse tax Applicable?(Yes/No): No</p>
@@ -342,7 +342,7 @@ page-break-inside: auto !important
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			<!-- </p>
 					<p
 						style="color: #000; font-size: 13px; text-align: left; margin: 0px;"> -->
-						Invoice Date: &nbsp;&nbsp;&nbsp;<b>${frDetails.billDate}</b>
+						Invoice Date: &nbsp;<b>${frDetails.billDate}</b>
 					</p>
 					<p
 						style="color: #000; font-size: 13px; text-align: left; margin: 0px;">Is reverse tax Applicable?(Yes/No): No</p>

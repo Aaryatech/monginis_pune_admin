@@ -510,7 +510,7 @@ public class ManualGrnController {
 			postGrnList.setGrnGvnHeader(grnHeader);
 			Info insertGrn = null;
 			if (postGrnList != null) {
-				//insertGrn = restTemplate.postForObject(Constants.url + "insertGrnGvn", postGrnList, Info.class);
+				insertGrn = restTemplate.postForObject(Constants.url + "insertGrnGvn", postGrnList, Info.class);
 
 			}
 			// Info insertGrn=null;

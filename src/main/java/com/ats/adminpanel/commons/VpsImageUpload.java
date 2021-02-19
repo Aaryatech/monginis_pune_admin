@@ -12,9 +12,25 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class VpsImageUpload {
 	
+	public static final String UPLOADBASEPATH = "/opt/cpanel/ea-tomcat85/webapps/uploadspune/";
 
 	
-	public static final String FR_FOLDER = "/home/supertom/apache-tomcat-8.5.35/webapps/uploads/FR/";
+	public static final String FR_FOLDER = UPLOADBASEPATH+"FR/";
+	public static final String ITEM_FOLDER = UPLOADBASEPATH+"ITEM/";
+
+	public static final String MSG_FOLDER = UPLOADBASEPATH+"MSG/";
+	
+	public static final String M_SP_CAKE_FOLDER = UPLOADBASEPATH+"MSPCAKE/";
+	
+	public static final String RAW_MAT_IMAGE_FOLDER = UPLOADBASEPATH+"RAWMAT/";
+
+	public static final String GATE_ENTRY_IMAGE_FOLDER = UPLOADBASEPATH+"GATEENTRY/";
+	
+	public static final String LOGIS_BILL_FILE= UPLOADBASEPATH+"MSPCAKE/";
+
+	
+	
+/*	public static final String FR_FOLDER = "/home/supertom/apache-tomcat-8.5.35/webapps/uploads/FR/";
 	public static final String ITEM_FOLDER = "/home/supertom/apache-tomcat-8.5.35/webapps/uploads/ITEM/";
 
 	public static final String MSG_FOLDER = "/home/supertom/apache-tomcat-8.5.35/webapps/uploads/MSG/";
@@ -26,7 +42,7 @@ public class VpsImageUpload {
 	public static final String GATE_ENTRY_IMAGE_FOLDER = "/home/supertom/apache-tomcat-8.5.35/webapps/uploads/GATEENTRY/";
 	
 	public static final String LOGIS_BILL_FILE= "/home/supertom/apache-tomcat-8.5.35/webapps/uploads/MSPCAKE/";
-
+*/
 	
 
 
