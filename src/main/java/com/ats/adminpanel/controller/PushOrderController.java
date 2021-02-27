@@ -467,7 +467,7 @@ public class PushOrderController {
 											order.setOrderRate(items.get(j).getItemRate3());
 											order.setOrderMrp(items.get(j).getItemMrp3());
 										}
-										order.setGrnType(franchaseeList.get(k).getGrnTwo());// new
+										order.setGrnType(items.get(j).getGrnTwo());// new
 									}
 								}
 							}
