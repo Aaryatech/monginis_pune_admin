@@ -103,9 +103,9 @@
 	                                 </div>
 	                                 
 		                             <div class="form-group">
-											<label class="col-sm-3 col-lg-2 control-label">Franchise Target</label>
+											<label class="col-sm-3 col-lg-2 control-label">Franchise PIN </label>
 											<div class="col-sm-9 col-lg-4 controls">
-												<input type="text" name="fr_target" id="fr_target" placeholder="Franchisee Target"
+												<input type="text" maxlength="6" name="fr_target" id="fr_target" placeholder="Pin code"
 													class="form-control" data-rule-required="true"
 													data-rule-number="true" value="${franchiseeList.frTarget}"
 													onKeyPress="return isNumberCommaDot(event)"/>

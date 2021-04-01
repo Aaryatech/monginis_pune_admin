@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%><%@ taglib
 	uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
 
 <style>
 	table{
@@ -15,7 +16,13 @@
 	<c:url var="callGetBillListProcess" value="/getBillListProcess" />
 
 	<div class="container" id="main-container">
-
+<div id="overlay2">
+			<div id="text2">
+				<img
+					src="${pageContext.request.contextPath}/resources/img/loader1.gif"
+					alt="pune_logo">
+			</div>
+		</div>
 		<!-- BEGIN Sidebar -->
 		<div id="sidebar" class="navbar-collapse collapse">
 
@@ -155,7 +162,7 @@
 										<select class="form-control chosen" multiple="multiple"
 											tabindex="6" name="fr_id" id="fr_id">
 
-											<option value="-1">All</option>
+											<option selected value="-1">All</option>
 											<c:forEach items="${allFrIdNameList}" var="allFrIdNameList"
 												varStatus="count">
 												<option value="${allFrIdNameList.frId}">${allFrIdNameList.frName}</option>
@@ -297,9 +304,12 @@
 															var="billHeadersList" varStatus="count">
 
 															<tr>
+															
+															<c:set var="dateParts" value="${fn:split(billHeadersList.exVarchar1, '~')}" />
+															
 															<td class="col-sm-1"><input type="checkbox" name="select_to_print"
 																id="${billHeadersList.billNo}"
-																value="${billHeadersList.billNo}"/></td>
+																value="${billHeadersList.billNo}"/> ${dateParts[1]}</td>
 																<td class="col-sm-1"><c:out
 																		value="${count.index+1}" /></td>
 																<td class="col-md-1" align="left"><c:out
@@ -422,6 +432,71 @@
 										</div>
 
 	<input type="button" id="btn_submit" class="btn btn-primary" onclick="submitBill()"	value="BillDetail" />
+	
+	<input
+											type="button" id="btn_submit" class="btn btn-primary"
+											onclick="showVehNo()" value="Gen E-INVOICE Bill" /> <input
+											type="button" id="btn_submit" class="btn btn-primary"
+											onclick="showCancelEWB()" style="display:none;" value="Cancel E-way Bill" />
+
+
+										<div class="form-group"></div>
+
+										<div id="eway_submit" style="display: none">
+
+											<%-- <input type="text" name="vehNo" id="vehNo"
+												style="width: 20%;" list="vehlist">
+
+											<datalist id="vehlist">
+												<c:forEach var="veh" items="${vehicleList}"
+													varStatus="count">
+													<option value="${veh.vehNo}">
+												</c:forEach>
+
+											</datalist> --%>
+
+
+											<input type="button" id="genEwayBill_button"
+												class="btn btn-primary" value="Gen E-Invoice"
+												style="width: 20%;" /> <input type="button"
+												id="genEwayBillJson_button" class="btn btn-primary"
+												value="E-Invoice Bill JSON Format"
+												style="width: 20%; display: none;" />
+
+										</div>
+
+										<div id="eway_cancel" style="display: none">
+
+											<input type="text" name="cancelRemark" id="cancelRemark"
+												style="width: 40%;" value="Data entry clerical error">
+
+											<input type="button" id="cancelEwayBill_button"
+												class="btn btn-primary" value="Cancel E-Invoice"
+												style="width: 20%;">
+
+										</div>
+
+
+
+
+										<div class="table-wrap">
+
+											<table id="table2" class="table table-advance" border="1"
+												style="display: none">
+												<thead>
+													<tr style="background-color: red;">
+														<th class="col-sm-1" align="left">Sr No</th>
+														<th class="col-md-2" align="left">Invoice No</th>
+														<th class="col-md-2" align="left">Error Code</th>
+														<th class="col-md-4" align="left">Error Desc</th>
+													</tr>
+												</thead>
+												<tbody>
+
+
+												</tbody>
+											</table>
+										</div>
 
 									</div>
 							</form>
@@ -532,6 +607,179 @@
 			});
 
 		});
+		
+		function showVehNo(){
+			document.getElementById("eway_submit").style.display="block";
+			//document.getElementById("vehNo").style.display="block";
+		}
+
+		function showCancelEWB(){
+			document.getElementById("eway_cancel").style.display="block";
+			//document.getElementById("vehNo").style.display="block";
+		}
+
+		
+		$('#genEwayBill_button')
+		.click(
+				function() {
+					
+					document.getElementById("overlay2").style.display = "block";
+					
+					//var vehNo=document.getElementById("vehNo").value;
+					//alert("vehNo"+vehNo);
+					var form = document.getElementById("validation-form")
+					var atLeastOneIsChecked = $('input:checkbox').is(':checked');
+					//alert(atLeastOneIsChecked);
+					if(atLeastOneIsChecked){
+					$.ajax({
+       type: "POST",
+            url: "${pageContext.request.contextPath}/genEInvBill",
+            data: $("#validation-form").serialize(),
+            dataType: 'json',
+    success: function(data){
+    	
+    	document.getElementById("overlay2").style.display = "none";
+    	
+    	//alert(JSON.stringify(data));
+    if(data.length>0)
+    {			document.getElementById("table2").style.display="block";
+
+		$('#table2 td').remove();
+		if (data == "") {
+			alert("No Bill Found");
+		}
+
+		$
+				.each(
+						data,
+						function(key, bill) {
+							
+
+							var tr = $('<tr></tr>');
+							
+							tr
+									.append($(
+											'<td class="col-sm-1"></td>')
+											.html(
+													key + 1));
+
+							tr
+									.append($(
+											'<td class="col-md-1"></td>')
+											.html(
+													bill.invoiceNo));
+							tr
+							.append($(
+									'<td class="col-md-1"></td>')
+									.html(
+											bill.errorCode));
+							tr
+							.append($(
+									'<td class="col-md-1"></td>')
+									.html(
+											bill.message));
+							
+							
+							$('#table2 tbody').append(
+									tr);
+							
+						});
+		
+    }
+    
+    callSearch();
+    }
+    })
+				}
+    else{
+    	alert("Please select  some bills by checking checkbox")
+    }
+    /* .done(function() {
+    setTimeout(function(){
+ 
+    },500);
+    }); */
+					
+					
+					//form.action = "${pageContext.request.contextPath}/checkToken";
+					//form.submit();
+				});	
+	</script>
+	
+	<script type="text/javascript">
+	
+	
+	$('#cancelEwayBill_button')
+	.click(
+			function() {
+				
+				document.getElementById("overlay2").style.display = "block";
+				$('#table2 td').remove();
+				//var vehNo=document.getElementById("vehNo").value;
+				//alert("vehNo"+vehNo);
+				var form = document.getElementById("validation-form")
+				
+				$.ajax({
+   type: "POST",
+        url: "${pageContext.request.contextPath}/cancelEInvBill",
+        data: $("#validation-form").serialize(),
+        dataType: 'json',
+success: function(data){
+	
+	document.getElementById("overlay2").style.display = "none";
+	
+	//alert(JSON.stringify(data));
+if(data.length>0)
+{			document.getElementById("table2").style.display="block";
+
+	$('#table2 td').remove();
+	if (data == "") {
+		alert("No Bill Found");
+	}
+
+	$
+			.each(
+					data,
+					function(key, bill) {
+						
+
+						var tr = $('<tr></tr>');
+						
+						tr
+								.append($(
+										'<td class="col-sm-1"></td>')
+										.html(
+												key + 1));
+
+						tr
+								.append($(
+										'<td class="col-md-1"></td>')
+										.html(
+												bill.invoiceNo));
+						tr
+						.append($(
+								'<td class="col-md-1"></td>')
+								.html(
+										bill.errorCode));
+						tr
+						.append($(
+								'<td class="col-md-1"></td>')
+								.html(
+										bill.message));
+						
+						
+						$('#table2 tbody').append(
+								tr);
+						
+					});
+	
+}
+
+callSearch();
+}
+})
+			});	
+	
 	</script>
 <script type="text/javascript">
 	function validate() {
@@ -658,11 +906,20 @@
 													
 
 													var tr = $('<tr></tr>');
+													var eInv=bill.exVarchar1;
+													var ackNo = "-";
+													var ak="-"
+													try{
+														ackNo = eInv.split("~");
+														ak=ackNo[1];
+													}catch (e) {
+														ak="-"
+													}
 													tr
 													.append($(
 															'<td class="col-sm-1"></td>')
 															.html(
-																	"<input type='checkbox' name='select_to_print' id="+bill.billNo+" value="+bill.billNo+" />"));
+																	"<input type='checkbox' name='select_to_print' id="+bill.billNo+" value="+bill.billNo+" />"+ak));
 
 				
 													tr

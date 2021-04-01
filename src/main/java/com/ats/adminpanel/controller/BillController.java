@@ -2106,14 +2106,14 @@ public class BillController {
 			String routeId = "0";
 			String frIdString = "";
 
-			System.out.println("inside getBillListProcess ajax call");
+			//System.out.println("inside getBillListProcess ajax call");
 
 			frIdString = request.getParameter("fr_id_list");
 			String fromDate = request.getParameter("from_date");
 			String toDate = request.getParameter("to_date");
 			routeId = request.getParameter("route_id");
 
-			System.out.println("routeId= " + routeId);
+			//System.out.println("routeId= " + routeId);
 
 			boolean isAllFrSelected = false;
 
@@ -2123,7 +2123,7 @@ public class BillController {
 			List<String> franchIds = new ArrayList();
 			franchIds = Arrays.asList(frIdString);
 
-			System.out.println("fr Id ArrayList " + franchIds.toString());
+			//System.out.println("fr Id ArrayList " + franchIds.toString());
 
 			if (franchIds.contains("-1")) {
 				isAllFrSelected = true;
@@ -2139,7 +2139,7 @@ public class BillController {
 
 				List<FrNameIdByRouteId> frNameIdByRouteIdList = frNameId.getFrNameIdByRouteIds();
 
-				System.out.println("route wise franchisee " + frNameIdByRouteIdList.toString());
+				//System.out.println("route wise franchisee " + frNameIdByRouteIdList.toString());
 
 				StringBuilder sbForRouteFrId = new StringBuilder();
 				for (int i = 0; i < frNameIdByRouteIdList.size(); i++) {
@@ -2150,7 +2150,7 @@ public class BillController {
 
 				String strFrIdRouteWise = sbForRouteFrId.toString();
 				frIdString = strFrIdRouteWise.substring(0, strFrIdRouteWise.length() - 1);
-				System.out.println("fr Id Route WISE = " + frIdString);
+				//System.out.println("fr Id Route WISE = " + frIdString);
 
 			} // end of if
 
@@ -2158,14 +2158,14 @@ public class BillController {
 
 				map.add("fromDate", fromDate);
 				map.add("toDate", toDate);
-				System.out.println("Inside is All fr Selected " + isAllFrSelected);
+				//System.out.println("Inside is All fr Selected " + isAllFrSelected);
 
 				GetBillHeaderResponse billHeaderResponse = restTemplate
 						.postForObject(Constants.url + "getBillHeaderForAllFr", map, GetBillHeaderResponse.class);
 
 				billHeadersList = billHeaderResponse.getGetBillHeaders();
 
-				System.out.println("bill header  " + billHeadersList.toString());
+			//	System.out.println("bill header  " + billHeadersList.toString());
 
 			} else { // few franchisee selected
 
@@ -2180,7 +2180,7 @@ public class BillController {
 
 			}
 
-			System.out.println("bill header  " + billHeadersList.toString());
+			//System.out.println("bill header  " + billHeadersList.toString());
 		} catch (Exception e) {
 
 			System.out.println("Ex in getting billHeader List " + e.getMessage());

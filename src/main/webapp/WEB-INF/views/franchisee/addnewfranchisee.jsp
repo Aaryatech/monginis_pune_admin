@@ -172,11 +172,10 @@
 										</div>
 
 										<div class="form-group">
-											<label class="col-sm-3 col-lg-2 control-label">Target
-												Per Year</label>
+											<label class="col-sm-3 col-lg-2 control-label">Fr Pincode</label>
 											<div class="col-sm-9 col-lg-4 controls">
-												<input type="text" name="fr_target" id="fr_target"
-													placeholder="Target Per Year" class="form-control"
+												<input type="text" maxlength="6" name="fr_target" id="fr_target"
+													placeholder="Pin code" class="form-control"
 													data-rule-required="true" data-rule-number="true"
 													onKeyPress="return isNumberCommaDot(event)" />
 											</div>
