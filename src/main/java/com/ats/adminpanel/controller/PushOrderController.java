@@ -467,6 +467,7 @@ public class PushOrderController {
 											order.setOrderRate(items.get(j).getItemRate3());
 											order.setOrderMrp(items.get(j).getItemMrp3());
 										}
+										System.out.println(items.get(j).getId()+"--------------1111"+items.get(j).getGrnTwo()+"-------");
 										order.setGrnType(items.get(j).getGrnTwo());// new
 									}
 								}
@@ -534,7 +535,9 @@ public class PushOrderController {
 										order.setOrderRate(items.get(j).getItemRate3());
 										order.setOrderMrp(items.get(j).getItemMrp3());
 									}
-									order.setGrnType(franchaseeList.get(k).getGrnTwo());// new
+									//order.setGrnType(franchaseeList.get(k).getGrnTwo());// new
+									System.out.println(items.get(j).getId()+"--------------2222"+items.get(j).getGrnTwo()+"-------");
+									order.setGrnType(items.get(j).getGrnTwo());// new
 								}
 							}
 						}
