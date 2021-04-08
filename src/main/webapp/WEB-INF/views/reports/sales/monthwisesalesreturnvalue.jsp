@@ -62,6 +62,7 @@
 
 									<option value="2019-2020">2019-2020</option>
 									<option value="2020-2021">2020-2021</option>
+									<option value="2020-2021">2021-2022</option>
 								</select>
 							</div>
 							<input type="submit" id="submit" class="btn btn-primary"
