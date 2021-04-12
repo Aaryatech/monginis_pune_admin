@@ -40,6 +40,21 @@ public class EInvBillDetail {
 	private double igstPer;
 	private double cessPer;
 	
+	private int grnType;//SAC 09-04-2021
+	private int isGrn;//SAC 09-04-2021
+	
+	public int getGrnType() {
+		return grnType;
+	}
+	public void setGrnType(int grnType) {
+		this.grnType = grnType;
+	}
+	public int getIsGrn() {
+		return isGrn;
+	}
+	public void setIsGrn(int isGrn) {
+		this.isGrn = isGrn;
+	}
 	
 	
 	public double getCessRs() {

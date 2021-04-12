@@ -37,49 +37,15 @@
 }
 
 /* :not(:required) hides these rules from IE9 and below */
-.loading
-:not
- 
-(
-:required
- 
-)
-{
-/* hide "loading..." text */
-font
-:
- 
-0/0
-a
-;
-
-	
-color
-:
- 
-transparent
-;
-
-	
-text-shadow
-:
- 
-none
-;
-
-	
-background-color
-:
- 
-transparent
-;
-
-	
-border
-:
- 
-0;
+.loading:not (:required ) {
+	/* hide "loading..." text */
+	font: 0/0 a;
+	color: transparent;
+	text-shadow: none;
+	background-color: transparent;
+	border: 0;
 }
+
 .loading:not (:required ):after {
 	content: '';
 	display: block;
@@ -120,90 +86,40 @@ border
 100%
 {
 -webkit-transform
-
-
 :
-
  
-
 rotate
-
-
-(360
-deg
-);
-
+(360deg);
 
     
-
 -moz-transform
-
-
 :
-
  
-
 rotate
-
-
-(360
-deg
-);
-
+(360deg);
 
     
-
 -ms-transform
-
-
 :
-
  
-
 rotate
-
-
-(360
-deg
-);
-
+(360deg);
 
     
-
 -o-transform
-
-
 :
-
  
-
 rotate
-
-
-(360
-deg
-);
-
+(360deg);
 
     
-
 transform
-
-
 :
-
  
-
 rotate
-
-
-(360
-deg
-);
-
+(360deg);
 
   
-
 }
 }
 @
@@ -218,90 +134,40 @@ deg
 100%
 {
 -webkit-transform
-
-
 :
-
  
-
 rotate
-
-
-(360
-deg
-);
-
+(360deg);
 
     
-
 -moz-transform
-
-
 :
-
  
-
 rotate
-
-
-(360
-deg
-);
-
+(360deg);
 
     
-
 -ms-transform
-
-
 :
-
  
-
 rotate
-
-
-(360
-deg
-);
-
+(360deg);
 
     
-
 -o-transform
-
-
 :
-
  
-
 rotate
-
-
-(360
-deg
-);
-
+(360deg);
 
     
-
 transform
-
-
 :
-
  
-
 rotate
-
-
-(360
-deg
-);
-
+(360deg);
 
   
-
 }
 }
 @
@@ -316,90 +182,40 @@ deg
 100%
 {
 -webkit-transform
-
-
 :
-
  
-
 rotate
-
-
-(360
-deg
-);
-
+(360deg);
 
     
-
 -moz-transform
-
-
 :
-
  
-
 rotate
-
-
-(360
-deg
-);
-
+(360deg);
 
     
-
 -ms-transform
-
-
 :
-
  
-
 rotate
-
-
-(360
-deg
-);
-
+(360deg);
 
     
-
 -o-transform
-
-
 :
-
  
-
 rotate
-
-
-(360
-deg
-);
-
+(360deg);
 
     
-
 transform
-
-
 :
-
  
-
 rotate
-
-
-(360
-deg
-);
-
+(360deg);
 
   
-
 }
 }
 @
@@ -413,90 +229,40 @@ keyframes spinner { 0% {
 100%
 {
 -webkit-transform
-
-
 :
-
  
-
 rotate
-
-
-(360
-deg
-);
-
+(360deg);
 
     
-
 -moz-transform
-
-
 :
-
  
-
 rotate
-
-
-(360
-deg
-);
-
+(360deg);
 
     
-
 -ms-transform
-
-
 :
-
  
-
 rotate
-
-
-(360
-deg
-);
-
+(360deg);
 
     
-
 -o-transform
-
-
 :
-
  
-
 rotate
-
-
-(360
-deg
-);
-
+(360deg);
 
     
-
 transform
-
-
 :
-
  
-
 rotate
-
-
-(360
-deg
-);
-
+(360deg);
 
   
-
 }
 }
 </style>
@@ -521,7 +287,13 @@ deg
 	<c:url value="/excelForCrnExcel" var="excelForCrnExcel" />
 
 	<div class="container" id="main-container">
-
+<div id="overlay2">
+			<div id="text2">
+				<img
+					src="${pageContext.request.contextPath}/resources/img/loader1.gif"
+					alt="pune_logo">
+			</div>
+		</div>
 
 		<div class="loading" id="loaderFullScr" style="display: none;"></div>
 
@@ -541,14 +313,6 @@ deg
 
 		<!-- BEGIN Content -->
 		<div id="main-content">
-			<div id="overlay2">
-				<div id="text2">
-					<img
-						src="${pageContext.request.contextPath}/resources/img/loader1.gif"
-						alt="pune_logo">
-				</div>
-			</div>
-
 			<!-- BEGIN Page Title -->
 			<div class="page-title">
 				<div>
@@ -578,7 +342,7 @@ deg
 
 						<div class="box-content">
 							<form action="" class="form-horizontal" method="get"
-								id="validation-form1">
+								id="validation-form">
 
 								<div class="form-group">
 									<label class="col-sm-3 col-lg-2 control-label">From
@@ -614,7 +378,7 @@ deg
 
 										<select data-placeholder="Choose Franchisee"
 											class="form-control chosen" multiple="multiple" tabindex="6"
-											id="selectFr" name="selectFr" onchange="getDate()">
+											id="selectFr" name="selectFr">
 											<option value="-1"><c:out value="All" /></option>
 
 											<c:forEach items="${unSelectedFrList}" var="fr"
@@ -679,8 +443,8 @@ deg
 												<thead style="background-color: #f3b5db;">
 													<tr>
 														<th></th>
-														<th>Sr No <input type="checkbox"
-															name="select_to_agree" onclick="selectBillNo(this)" /></th>
+														<th>Sr No <input type="checkbox" name="select_to_agree"
+															onClick="selectBillNo(this)" /></th>
 														<th class="col-md-1">Date</th>
 														<th class="col-md-2">Crn Id</th>
 														<th class="col-md-2">Franchise Name</th>
@@ -750,11 +514,37 @@ deg
 													onclick="createExelHsnwise();">
 											</div>
 										</div>
-										<input type="button" id="btn_submit" class="btn btn-primary"
+
+
+
+										<!-- <div class="form-group">
+										
+										<div
+											class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-5">
+											<input type="button" value="Generate PDF Franchise" onclick="genPdf()"
+												class="btn btn-primary">
+												<input type="button" id="expExcel" class="btn btn-primary" value="EXPORT TO Excel Franchise" onclick="createExel();" >
+										</div>
+										
+										
+										<div
+											class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-5">
+											<input type="button" value="Generate Report PDF" onclick="genPdfReport()"
+												class="btn btn-primary">
+												<input type="button" id="expExcel" class="btn btn-primary" value="EXPORT TO Excel Report" onclick="createExelReport();" >
+										</div>
+										</div> -->
+
+										<!-- </form> -->
+									</div>
+									
+									<input type="button" id="btn_submit" class="btn btn-primary" onclick="submitBill()"	value="BillDetail" />
+	
+	<input
+											type="button" id="btn_submit" class="btn btn-primary"
 											onclick="showVehNo()" value="Gen E-INVOICE Bill" /> <input
 											type="button" id="btn_submit" class="btn btn-primary"
-											onclick="showCancelEWB()" style="display: none;"
-											value="Cancel E-way Bill" />
+											onclick="showCancelEWB()" style="display:none;" value="Cancel E-way Bill" />
 
 
 										<div class="form-group"></div>
@@ -814,28 +604,6 @@ deg
 												</tbody>
 											</table>
 										</div>
-
-
-										<!-- <div class="form-group">
-										
-										<div
-											class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-5">
-											<input type="button" value="Generate PDF Franchise" onclick="genPdf()"
-												class="btn btn-primary">
-												<input type="button" id="expExcel" class="btn btn-primary" value="EXPORT TO Excel Franchise" onclick="createExel();" >
-										</div>
-										
-										
-										<div
-											class="col-sm-25 col-sm-offset-3 col-lg-30 col-lg-offset-5">
-											<input type="button" value="Generate Report PDF" onclick="genPdfReport()"
-												class="btn btn-primary">
-												<input type="button" id="expExcel" class="btn btn-primary" value="EXPORT TO Excel Report" onclick="createExelReport();" >
-										</div>
-										</div> -->
-
-										<!-- </form> -->
-									</div>
 								</div>
 							</form>
 						</div>
@@ -999,107 +767,127 @@ deg
 							});
 
 		}
-	</script>
-	<script type="text/javascript">
-		function showVehNo() {
-			document.getElementById("eway_submit").style.display = "block";
+		
+		function showVehNo(){
+			document.getElementById("eway_submit").style.display="block";
 			//document.getElementById("vehNo").style.display="block";
 		}
 
-		function showCancelEWB() {
-			document.getElementById("eway_cancel").style.display = "block";
+		function showCancelEWB(){
+			document.getElementById("eway_cancel").style.display="block";
 			//document.getElementById("vehNo").style.display="block";
 		}
 
+		
 		$('#genEwayBill_button')
-				.click(
-						function() {
+		.click(
+				function() {
+					
+					document.getElementById("overlay2").style.display = "block";
+					
+					//var vehNo=document.getElementById("vehNo").value;
+					//alert("vehNo"+vehNo);
+					var form = document.getElementById("validation-form")
+					var atLeastOneIsChecked = $('input:checkbox').is(':checked');
+					//alert(atLeastOneIsChecked);
+					if(atLeastOneIsChecked){
+						var select_to_agree = document.getElementsByName('select_to_agree');
+						alert(JSON.stringify(select_to_agree))
+						
+						checkboxes = document.getElementsByName('select_to_agree');
 
-							document.getElementById("overlay2").style.display = "block";
+			var selArray;
 
-							var form = document.getElementById("validation-form")
-									$('#validation-form').attr('method', 'post');
+			for (var x = 0; x < checkboxes.length; x++) {
+				if (document.getElementById("select_to_agree" + x).checked == true) {
+					if (x == 0) {
+						selArray = document.getElementById("select_to_agree"
+								+ x).value;
+					} else {
+						selArray = selArray
+								+ ","
+								+ document
+										.getElementById("select_to_agree" + x).value;
+					}
+				}
 
-							var atLeastOneIsChecked = $('input:checkbox').is(
-									':checked');
+			}
+			alert("selArray" , +JSON.stringify(selArray));
+			var fd = new FormData();
+			fd.append('select_to_agree', selArray);
+					$.ajax({
+       type: "POST",
+            url: "${pageContext.request.contextPath}/credNoteEInv/genEInvBill",
+            data: fd,
+            dataType: 'json',
+    success: function(data){
+    	
+    	document.getElementById("overlay2").style.display = "none";
+    	
+    	//alert(JSON.stringify(data));
+    if(data.length>0)
+    {			document.getElementById("table2").style.display="block";
+
+		$('#table2 td').remove();
+		if (data == "") {
+			alert("No Bill Found");
+		}
+
+		$
+				.each(
+						data,
+						function(key, bill) {
 							
-							//form.action ="${pageContext.request.contextPath}/genEInvBill1";
-						   // form.submit();
-							//alert(atLeastOneIsChecked);
-							if (atLeastOneIsChecked) {
-								var select_to_agree = document
-										.getElementsByName('select_to_agree');
-								//alert(JSON.stringify(select_to_agree))
-								checkboxes = document
-										.getElementsByName("select_to_agree");
-								$
-										.ajax({
-											type : "POST",
-											url : "${pageContext.request.contextPath}/genEInvBill1",
-											data : $('#validation-form').serialize(),
-											dataType : 'json',
-											success : function(data) {
 
-												document
-														.getElementById("overlay2").style.display = "none";
+							var tr = $('<tr></tr>');
+							
+							tr
+									.append($(
+											'<td class="col-sm-1"></td>')
+											.html(
+													key + 1));
 
-												//alert(JSON.stringify(data));
-												if (data.length > 0) {
-													document
-															.getElementById("table2").style.display = "block";
-
-													$('#table2 td').remove();
-													if (data == "") {
-														alert("No Bill Found");
-													}
-
-													$
-															.each(
-																	data,
-																	function(
-																			key,
-																			bill) {
-
-																		var tr = $('<tr></tr>');
-
-																		tr
-																				.append($(
-																						'<td class="col-sm-1"></td>')
-																						.html(
-																								key + 1));
-
-																		tr
-																				.append($(
-																						'<td class="col-md-1"></td>')
-																						.html(
-																								bill.invoiceNo));
-																		tr
-																				.append($(
-																						'<td class="col-md-1"></td>')
-																						.html(
-																								bill.errorCode));
-																		tr
-																				.append($(
-																						'<td class="col-md-1"></td>')
-																						.html(
-																								bill.message));
-
-																		$(
-																				'#table2 tbody')
-																				.append(
-																						tr);
-
-																	});
-
-												}
-
-												getHeader();
-											}
-										})
-							} else {
-								alert("Please select  some bills by checking checkbox")
-							}
+							tr
+									.append($(
+											'<td class="col-md-1"></td>')
+											.html(
+													bill.invoiceNo));
+							tr
+							.append($(
+									'<td class="col-md-1"></td>')
+									.html(
+											bill.errorCode));
+							tr
+							.append($(
+									'<td class="col-md-1"></td>')
+									.html(
+											bill.message));
+							
+							
+							$('#table2 tbody').append(
+									tr);
+							
 						});
+		
+    }
+    
+    getHeader();
+    }
+    })
+				}
+    else{
+    	alert("Please select  some bills by checking checkbox")
+    }
+    /* .done(function() {
+    setTimeout(function(){
+ 
+    },500);
+    }); */
+					
+					
+					//form.action = "${pageContext.request.contextPath}/checkToken";
+					//form.submit();
+				});	
 	</script>
 
 	<script type="text/javascript">
@@ -1130,26 +918,23 @@ deg
 				}
 			}
 			if (flag == 1) {
+				
+				document.getElementById("loaderFullScr").style.display="block";
+				
+				$.getJSON('${excelForCrnExcel}', {
+					checkboxes : txt,
 
-				document.getElementById("loaderFullScr").style.display = "block";
+					ajax : 'true'
+				}, function(data) {
 
-				$
-						.getJSON(
-								'${excelForCrnExcel}',
-								{
-									checkboxes : txt,
+					//alert("Excel Ready");
+					
+					
+					document.getElementById("loaderFullScr").style.display="none";
+					
+					exportToExcel();
 
-									ajax : 'true'
-								},
-								function(data) {
-
-									//alert("Excel Ready");
-
-									document.getElementById("loaderFullScr").style.display = "none";
-
-									exportToExcel();
-
-								});
+				});
 			} else {
 				alert("Please select minimum 1 CRN Note ");
 			}
@@ -1325,8 +1110,8 @@ deg
 		 window.open("${pageContext.request.contextPath}/exportToExcel"); 
 		 } */
 	</script>
-
-
+	
+	
 
 </body>
 </html>
