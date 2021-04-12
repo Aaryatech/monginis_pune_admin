@@ -40,11 +40,20 @@ public class GetCreditNoteHeaders {
 	int exInt1;//new for pune billno of bill to show headers
 	
 	String exVarchar1;//new for pune  invno of bill to show headers
-	
+	String exVarchar2;//new for pune  IRN AND ACK NO EINV SAC 12-04-2021
 	private String grnGvnSrNoList;//new on 17 apr
 	
 	
 	
+	
+	public String getExVarchar2() {
+		return exVarchar2;
+	}
+
+	public void setExVarchar2(String exVarchar2) {
+		this.exVarchar2 = exVarchar2;
+	}
+
 	public String getGrnGvnSrNoList() {
 		return grnGvnSrNoList;
 	}
@@ -206,7 +215,8 @@ public class GetCreditNoteHeaders {
 				+ crnGrandTotal + ", roundOff=" + roundOff + ", createdDateTime=" + createdDateTime + ", isTallySync="
 				+ isTallySync + ", isDeposited=" + isDeposited + ", frName=" + frName + ", frAddress=" + frAddress
 				+ ", frGstNo=" + frGstNo + ", isSameState=" + isSameState + ", isGrn=" + isGrn + ", exInt1=" + exInt1
-				+ ", exVarchar1=" + exVarchar1 + ", grnGvnSrNoList=" + grnGvnSrNoList + "]";
+				+ ", exVarchar1=" + exVarchar1 + ", exVarchar2=" + exVarchar2 + ", grnGvnSrNoList=" + grnGvnSrNoList
+				+ "]";
 	}
      
 }

@@ -459,7 +459,7 @@ DecimalFormat df = new DecimalFormat("#.00");
 
 							System.err.println("map  " + map);
 							ErrorMessage updateEInvDataInBill = restTemplate
-									.postForObject(Constants.url + "/updateIRNForEInvInBill1", map, ErrorMessage.class);
+									.postForObject(Constants.url + "/updateIRNForEInvInCN", map, ErrorMessage.class);
 						}
 						// einvSuccessList.add(einvSuccess);
 						// System.err.println("ewaySuccRes HERE " + einvSuccess.toString());

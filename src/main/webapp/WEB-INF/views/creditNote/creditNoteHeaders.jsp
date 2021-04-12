@@ -541,13 +541,7 @@ deg
 
 		<!-- BEGIN Content -->
 		<div id="main-content">
-			<div id="overlay2">
-				<div id="text2">
-					<img
-						src="${pageContext.request.contextPath}/resources/img/loader1.gif"
-						alt="pune_logo">
-				</div>
-			</div>
+			
 
 			<!-- BEGIN Page Title -->
 			<div class="page-title">
@@ -614,7 +608,7 @@ deg
 
 										<select data-placeholder="Choose Franchisee"
 											class="form-control chosen" multiple="multiple" tabindex="6"
-											id="selectFr" name="selectFr" onchange="getDate()">
+											id="selectFr" name="selectFr">
 											<option value="-1"><c:out value="All" /></option>
 
 											<c:forEach items="${unSelectedFrList}" var="fr"
@@ -722,6 +716,13 @@ deg
 											</div>
 
 										</div> -->
+										<div id="overlay2" 	style="display: none;">
+				<div id="text2">
+					<img
+						src="${pageContext.request.contextPath}/resources/img/loader1.gif"
+						alt="pune_logo">
+				</div>
+			</div>
 										<div class="form-group">
 											<div class="col-sm-2 col-lg-2 controls">
 												<input type="button" value="PDF Report "
@@ -934,6 +935,8 @@ deg
 							},
 							function(data) {
 								var len = data.length;
+							//	document.getElementById("overlay2").style.display = "block";
+								$("overlay2").show();
 
 								$('#table1 td').remove();
 
@@ -941,14 +944,22 @@ deg
 										.each(
 												data,
 												function(key, headers) {
-
+													var eInv=headers.exVarchar2;
+													var ackNo = "-";
+													var ak="-"
+													try{
+														ackNo = eInv.split("~");
+														ak=ackNo[1];
+													}catch (e) {
+														ak="-"
+													}
 													var tr = $('<tr></tr>');
 
 													tr.append($('<td></td>')
 															.html(key + 1));
 
 													tr
-															.append($('<td><input type=checkbox name="select_to_agree" id="select_to_agree'+key+'"  value='+headers.crnId+'></td>'));
+															.append($('<td><input type=checkbox name="select_to_agree" id="select_to_agree'+key+'"  value='+headers.crnId+'>'+ak+'</td>'));
 
 													tr
 															.append($(
@@ -997,7 +1008,8 @@ deg
 												})
 
 							});
-
+			//document.getElementById("overlay2").hide();
+			$("overlay2").hide();
 		}
 	</script>
 	<script type="text/javascript">
@@ -1015,10 +1027,10 @@ deg
 				.click(
 						function() {
 
-							document.getElementById("overlay2").style.display = "block";
+							
 
-							var form = document.getElementById("validation-form")
-									$('#validation-form').attr('method', 'post');
+							//var form = document.getElementById("validation-form")
+									//$('#validation-form').attr('method', 'post');
 
 							var atLeastOneIsChecked = $('input:checkbox').is(
 									':checked');
@@ -1027,6 +1039,7 @@ deg
 						   // form.submit();
 							//alert(atLeastOneIsChecked);
 							if (atLeastOneIsChecked) {
+								document.getElementById("overlay2").style.display = "block";
 								var select_to_agree = document
 										.getElementsByName('select_to_agree');
 								//alert(JSON.stringify(select_to_agree))
@@ -1051,6 +1064,7 @@ deg
 													$('#table2 td').remove();
 													if (data == "") {
 														alert("No Bill Found");
+														$("overlay2").hide();
 													}
 
 													$
@@ -1098,7 +1112,12 @@ deg
 										})
 							} else {
 								alert("Please select  some bills by checking checkbox")
+								$("overlay2").hide();
+								//document.getElementById("overlay2").style.display = "none";
+
 							}
+							//document.getElementById("overlay2").style.display = "none";
+							$("overlay2").hide();
 						});
 	</script>
 
@@ -1109,6 +1128,7 @@ deg
 
 			//alert("HHHHHH");
 			var form = document.getElementById("validation-form");
+			$('#validation-form').attr('method', 'get');
 			form.action = "${pageContext.request.contextPath}/getCrnDetailList/"
 					+ crnId;
 			form.submit();
