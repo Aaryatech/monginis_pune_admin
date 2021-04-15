@@ -233,7 +233,9 @@ DecimalFormat df = new DecimalFormat("#.00");
 						}
 					}
 					System.err.println("Ret Per "+retPer +"Disc per  " +billDetail.getDiscPer());
-					double baseRate = billDetail.getBaseRate() * (retPer-billDetail.getDiscPer()) / 100;
+					//double baseRate = billDetail.getBaseRate() * (retPer-billDetail.getDiscPer()) / 100;
+					double baseRate1 = billDetail.getBaseRate() * (retPer) / 100;
+					double baseRate=baseRate1*billDetail.getDiscPer()/100;
 					System.err.println("billDetail.getBaseRate()" +billDetail.getBaseRate() +"calc base rate " +baseRate);
 					System.err.println("billDetail.getDiscPer()" +billDetail.getDiscPer());
 					billDetail.setBaseRate(baseRate);

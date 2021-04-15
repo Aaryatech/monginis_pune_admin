@@ -674,7 +674,7 @@ deg
 													<tr>
 														<th></th>
 														<th>Sr No <input type="checkbox"
-															name="select_to_agree" onclick="selectBillNo(this)" /></th>
+															 onclick="selectBillNo(this)" /></th>
 														<th class="col-md-1">Date</th>
 														<th class="col-md-2">Crn Id</th>
 														<th class="col-md-2">Franchise Name</th>
