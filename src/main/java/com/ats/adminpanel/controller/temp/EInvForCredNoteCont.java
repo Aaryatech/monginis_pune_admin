@@ -157,10 +157,10 @@ public class EInvForCredNoteCont {
 				buyerDtls.setAddr1(frData.getFrAddress().trim());
 				// buyerDtls.setGstin("29AWGPV7107B1Z1");
 				try {
-				if (bill.getPartyGstin().trim().length() < 15) {
+				if (frData.getFrGstNo().trim().length() < 15) {
 					buyerDtls.setGstin("URP");
 				} else {
-					buyerDtls.setGstin(bill.getPartyGstin().trim());
+					buyerDtls.setGstin(frData.getFrGstNo().trim());
 				}
 				}catch (Exception e) {
 					//buyerDtls.setGstin("URP");
@@ -235,7 +235,7 @@ DecimalFormat df = new DecimalFormat("#.00");
 					System.err.println("Ret Per "+retPer +"Disc per  " +billDetail.getDiscPer());
 					//double baseRate = billDetail.getBaseRate() * (retPer-billDetail.getDiscPer()) / 100;
 					double baseRate1 = billDetail.getBaseRate() * (retPer) / 100;
-					double baseRate=baseRate1*billDetail.getDiscPer()/100;
+					double baseRate=baseRate1-baseRate1*billDetail.getDiscPer()/100;
 					System.err.println("billDetail.getBaseRate()" +billDetail.getBaseRate() +"calc base rate " +baseRate);
 					System.err.println("billDetail.getDiscPer()" +billDetail.getDiscPer());
 					billDetail.setBaseRate(baseRate);
