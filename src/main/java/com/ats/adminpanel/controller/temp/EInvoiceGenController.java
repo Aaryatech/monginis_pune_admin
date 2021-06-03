@@ -5,6 +5,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -50,6 +51,7 @@ import com.ats.adminpanel.model.einv.TranDetails;
 import com.ats.adminpanel.model.einv.ValDetails;
 import com.ats.adminpanel.model.franchisee.FranchiseSup;
 import com.ats.adminpanel.model.franchisee.FranchiseeList;
+import com.ats.adminpanel.model.setting.NewSetting;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
@@ -131,6 +133,15 @@ public class EInvoiceGenController {
 			String GSTIN = "34AACCC1596Q002";
 			String BuyerGSTIN = "34AAGCM8851L1ZZ";
 			// String GSTIN="27ABOFM3012D1ZK";
+			
+			
+			map = new LinkedMultiValueMap<String, Object>();
+			map.add("settingKey", "SERVICE_HSN_CODE");
+			NewSetting settingValue= restTemplate.postForObject(Constants.url + "/findNewSettingByKey", map, NewSetting.class);	
+			List<String> serviceHsnCodeList = Arrays.asList(settingValue.getSettingValue1().split("\\s*,\\s*"));
+
+			 System.err.println("serviceHsnCodeList" +serviceHsnCodeList);
+			 
 			for (int i = 0; i < billHeaderList.size(); i++) {
 				einvSuccess = new RespPlGenIRN();
 				EInvBillHeader bill = billHeaderList.get(i);
@@ -215,7 +226,19 @@ public class EInvoiceGenController {
 					item.setHsnCd(billDetail.getHsnCode());
 					item.setPrdDesc(billDetail.getItemName());
 					item.setSlNo(""+(k + 1));
+					
 					item.setIsServc("N");
+					try {
+					for(int s=0;s<serviceHsnCodeList.size();s++) {
+						if(serviceHsnCodeList.get(s).trim().equalsIgnoreCase(billDetail.getHsnCode().trim())) {
+							
+							item.setIsServc("Y");
+							break;
+						}
+					}
+					}catch (Exception e) {
+						System.err.println("Service HSN Code Exeption");
+					}
 
 					if (billDetail.getIgstRs() > 0) {
 						item.setGstRt(billDetail.getIgstPer());
